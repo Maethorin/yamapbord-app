@@ -1,3 +1,10 @@
+
+$imageUrl: "/img/";
+
+@mixin image-background($imageFile) {
+  background-image: url($imageUrl + $imageFile);
+}
+
 $bootstrap-sass-asset-helper: false !default;
 // Darkly 3.3.7
 // Variables

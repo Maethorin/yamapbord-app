@@ -1,0 +1,32 @@
+<div class="{{column.name | lowercase}}" ng-class="addColumnSize(column.name)">
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <div class="col-md-12">
+        <h3><span ng-bind="column.label"></span><span class="badge badge-{{column.name | lowercase }}" ng-bind="pointsPerStoryStatus[column.name]"></span></h3>
+      </div>
+    </div>
+    <div class="panel-body column" data-column="{{column.name}}" data-drop="true">
+      <div
+        ng-repeat="story in stories[column.name]"
+        class="panel panel-default story">
+        <div class="panel-heading" data-toggle="tooltip" title="{{story.statement}}" tooltip-trigger="mouseenter" tooltip-animation="false" tooltip-placement="top" tooltip-popup-delay="0" tooltip-append-to-body="false">
+          <div class="col-md-12">
+            <span class="story-type" ng-class="story.typeCode | lowercase " title="{{story.typeName}}"></span>
+            <span class="story-name" ng-click="toggleCompleteStoryPopup(story)">{{story.name | limitTo: 28}}{{story.name.length > 28 ? '...' : ''}}</span>
+            <span class="badge badge-{{story.points}}">{{story.points}}</span>
+          </div>
+        </div>
+        <div class="panel-body" ng-if="story.hasTasks">
+          <ul class="list-group">
+            <li class="list-group-item" ng-class="{'list-group-item-success': task.complete, 'list-group-item-warning': !task.complete }" ng-repeat="task in story.tasks">
+              <i class="fa fa-fw" ng-if="column.name == 'STAR'" ng-click="changeTaskStatus(task, $index, story)" ng-class="{'fa-square-o': !task.changing && !task.complete, 'fa-spinner fa-spin': task.changing, 'fa-check-square-o': !task.changing && task.complete}"></i>
+              {{ task.task }}
+            </li>
+          </ul>
+        </div>
+        <div class="panel-footer">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

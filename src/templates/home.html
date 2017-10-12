@@ -68,4 +68,60 @@
     </div>
     <button type="button" class="btn-scroll-end btn btn-default btn-xs" ng-click="scrollOptions.scrollPosX = 10000"><i class="fa fa-chevron-circle-right"></i></button>
   </div>
+  <!--<div class="row burn-up">-->
+    <!--<div class="col-md-12">-->
+      <!--<div class="panel panel-default">-->
+        <!--<div class="panel-heading">-->
+          <!--<h3>Burn Up</h3>-->
+        <!--</div>-->
+        <!--<div class="panel-body">-->
+          <!--<div class="col-md-12">-->
+            <!--<i class="fa fa-battery-half fa-2x fa-fw fa-rotate-270"></i><span class="points" ng-class="columnPoint.column" ng-repeat="columnPoint in pointsPerColumn">{{columnPoint.point}}</span>-->
+          <!--</div>-->
+          <!--<div class="col-md-12">-->
+            <!--<i class="fa fa-calendar fa-2x fa-fw"></i><span class="day" ng-style="{'width': devDay.points * 23 + 'px'}" ng-class="{'passed': devDay.passed, 'is-today': devDay.isToday}" ng-repeat="devDay in devDays">{{devDay.day}}</span>-->
+          <!--</div>-->
+        <!--</div>-->
+      <!--</div>-->
+    <!--</div>-->
+  <!--</div>-->
+  <div class="row board" ng-if="selectedSprint !== null">
+    <ng-include ng-repeat="column in columns" src="columnTemplate"></ng-include>
+
+    <div class="popup-complete-story" ng-class="{'opened': completeStoryPopupOpened}">
+      <div class="panel panel-default panel-complete-story">
+        <div class="panel-heading" title="{{selectedStory.statement}}">
+          <div class="col-md-12">
+            <span class="story-type-name" ng-class="selectedStory.typeCode | lowercase " title="{{selectedStory.typeName}}" ng-bind="selectedStory.typeName"></span>
+            <span class="story-name">{{selectedStory.name}}</span>
+            <span class="story-status" ng-class="selectedStory.status | lowercase" ng-bind="selectedStory.statusName"></span>
+            <span class="badge badge-{{selectedStory.points}}">{{selectedStory.points}}</span>
+          </div>
+        </div>
+        <div class="panel-body">
+          <div class="story-statement" ng-bind="selectedStory.statement"></div>
+          <h4>Tasks:</h4>
+          <ul class="list-group">
+            <li class="list-group-item" ng-class="{'list-group-item-success': task.complete, 'list-group-item-warning': !task.complete }" ng-repeat="task in selectedStory.tasks">
+              <i class="fa fa-fw" ng-click="changeTaskStatus(task, $index, selectedStory)" ng-class="{'fa-square-o': !task.changing && !task.complete, 'fa-spinner fa-spin': task.changing, 'fa-check-square-o': !task.changing && task.complete}"></i>
+              {{ task.task }}
+            </li>
+          </ul>
+        </div>
+        <div class="panel-footer">
+          <button type="button" class="btn btn-danger btn-go-back-story" ng-click="moveStoryBack(selectedStory)">
+            <i class="fa fa-chevron-left"></i>
+            <i class="fa fa-chevron-left minus-margin"></i>
+            Go Story Back
+          </button>
+          <button type="button" class="btn btn-primary" ng-click="toggleCompleteStoryPopup(null)">Close</button>
+          <button type="button" class="btn btn-success btn-go-forward-story" ng-click="moveStoryForward(selectedStory)">
+            Go Story Forward
+            <i class="fa fa-chevron-right minus-margin"></i>
+            <i class="fa fa-chevron-right"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
