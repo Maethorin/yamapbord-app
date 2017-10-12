@@ -1,6 +1,6 @@
 'use strict';
 
-scrumInCeresControllers.controller('HomeController', ['$rootScope', '$scope', 'Alert', 'MeService', 'Project', function($rootScope, $scope, Alert, MeService, Project) {
+scrumInCeresControllers.controller('HomeController', ['$rootScope', '$scope', 'Alert', 'MeService', 'Project', 'Story', function($rootScope, $scope, Alert, MeService, Project,Story) {
   $scope.projects = [];
   $scope.search = {
     expression: ''
@@ -17,8 +17,7 @@ scrumInCeresControllers.controller('HomeController', ['$rootScope', '$scope', 'A
       Project.query(
         function(response) {
           $scope.projects = response;
-          // TODO: pra qdo trocar o projeto e a lista de sprints mudar
-          // $scope.$broadcast('content.changed');
+          $scope.viewProject(response[1]);
         }
       )
     },
@@ -28,18 +27,22 @@ scrumInCeresControllers.controller('HomeController', ['$rootScope', '$scope', 'A
 
   $scope.viewProject = function(project) {
     $scope.selectedProject = project;
-    $scope.selectedProject.sprints = [
-      {
-        startDate: {year: '2017', month: 'OUT', day: '16'},
-        endDate: {year: '2017', month: 'OUT', day: '23'},
-        name: 'Sprint A',
-        objective: 'Finishing this board'
+
+    _.forEach($scope.selectedProject.sprints, function(sprint) {
+      if (sprint.statusSlug === 'sprint-current') {
+        $scope.currentSprint = sprint;
       }
-    ];
+    })
   };
 
   $scope.selectSprint = function(sprint) {
     $scope.selectedSprint = sprint;
+    Story.query(
+      {projectId:  $scope.selectedProject.id, sprintId: sprint.id},
+      function(response) {
+        $scope.selectedSprint.stories = response;
+      }
+    )
   };
 
   $scope.goToCurrentSprintInTimeline = function() {
@@ -47,8 +50,8 @@ scrumInCeresControllers.controller('HomeController', ['$rootScope', '$scope', 'A
       var currentSprintElementPosition = angular.element('.timeline-event.current')[0].getBoundingClientRect();
       $scope.currentTimelineSprintLeftPosition = currentSprintElementPosition.left;
     }
-    $scope.scrollOptions.scrollPosX = $scope.currentTimelineSprintLeftPosition - 45;
-    $scope.selectedSprint = $scope.currentSprint;
+    $scope.scrollOptions.scrollPosX = $scope.currentTimelineSprintLeftPosition - 55;
+    $scope.selectSprint($scope.currentSprint);
   };
 
   $scope.searchStories = function() {
@@ -62,211 +65,4 @@ scrumInCeresControllers.controller('HomeController', ['$rootScope', '$scope', 'A
   $scope.logout = function() {
 
   };
-
-  $scope.selectedProject.sprints = [
-    {
-      id: 1,
-      startDate: {year: '2017', month: 'SET', day: '15'},
-      endDate: {year: '2017', month: 'SET', day: '30'},
-      name: 'Sprint #1',
-      objective: 'Finishing this board',
-      storiesQuantity: 8,
-      points: 45,
-      status: 'SUCC',
-      statusSlug: 'sprint-success'
-    },
-    {
-      id: 1,
-      startDate: {year: '2017', month: 'SET', day: '15'},
-      endDate: {year: '2017', month: 'SET', day: '30'},
-      name: 'Sprint #1',
-      objective: 'Finishing this board',
-      storiesQuantity: 8,
-      points: 45,
-      status: 'SUCC',
-      statusSlug: 'sprint-success'
-    },
-    {
-      id: 1,
-      startDate: {year: '2017', month: 'SET', day: '15'},
-      endDate: {year: '2017', month: 'SET', day: '30'},
-      name: 'Sprint #1',
-      objective: 'Finishing this board',
-      storiesQuantity: 8,
-      points: 45,
-      status: 'SUCC',
-      statusSlug: 'sprint-success'
-    },
-    {
-      id: 1,
-      startDate: {year: '2017', month: 'SET', day: '15'},
-      endDate: {year: '2017', month: 'SET', day: '30'},
-      name: 'Sprint #1',
-      objective: 'Finishing this board',
-      storiesQuantity: 8,
-      points: 45,
-      status: 'SUCC',
-      statusSlug: 'sprint-success'
-    },
-    {
-      id: 1,
-      startDate: {year: '2017', month: 'SET', day: '15'},
-      endDate: {year: '2017', month: 'SET', day: '30'},
-      name: 'Sprint #1',
-      objective: 'Finishing this board',
-      storiesQuantity: 8,
-      points: 45,
-      status: 'SUCC',
-      statusSlug: 'sprint-success'
-    },
-    {
-      id: 1,
-      startDate: {year: '2017', month: 'SET', day: '15'},
-      endDate: {year: '2017', month: 'SET', day: '30'},
-      name: 'Sprint #1',
-      objective: 'Finishing this board',
-      storiesQuantity: 8,
-      points: 45,
-      status: 'SUCC',
-      statusSlug: 'sprint-success'
-    },
-    {
-      id: 1,
-      startDate: {year: '2017', month: 'SET', day: '15'},
-      endDate: {year: '2017', month: 'SET', day: '30'},
-      name: 'Sprint #1',
-      objective: 'Finishing this board',
-      storiesQuantity: 8,
-      points: 45,
-      status: 'SUCC',
-      statusSlug: 'sprint-success'
-    },
-    {
-      id: 1,
-      startDate: {year: '2017', month: 'SET', day: '15'},
-      endDate: {year: '2017', month: 'SET', day: '30'},
-      name: 'Sprint #1',
-      objective: 'Finishing this board',
-      storiesQuantity: 8,
-      points: 45,
-      status: 'SUCC',
-      statusSlug: 'sprint-success'
-    },
-    {
-      id: 2,
-      startDate: {year: '2017', month: 'OUT', day: '03'},
-      endDate: {year: '2017', month: 'OUT', day: '14'},
-      name: 'Sprint #2',
-      objective: 'Finishing this board',
-      storiesQuantity: 8,
-      points: 45,
-      status: 'FAIL',
-      statusSlug: 'sprint-fail'
-    },
-    {
-      id: 3,
-      startDate: {year: '2017', month: 'OUT', day: '16'},
-      endDate: {year: '2017', month: 'OUT', day: '23'},
-      name: 'Sprint #3',
-      objective: 'Finishing this board',
-      storiesQuantity: 8,
-      points: 45,
-      status: 'CURR',
-      statusSlug: 'sprint-current'
-    },
-    {
-      id: 4,
-      startDate: {year: '2017', month: 'OUT', day: '25'},
-      endDate: {year: '2017', month: 'NOV', day: '05'},
-      name: 'Sprint #4',
-      objective: 'Finishing this board',
-      storiesQuantity: 8,
-      points: 45,
-      status: 'PLAN',
-      statusSlug: 'sprint-planned'
-    },
-    {
-      id: 4,
-      startDate: {year: '2017', month: 'OUT', day: '25'},
-      endDate: {year: '2017', month: 'NOV', day: '05'},
-      name: 'Sprint #4',
-      objective: 'Finishing this board',
-      storiesQuantity: 8,
-      points: 45,
-      status: 'PLAN',
-      statusSlug: 'sprint-planned'
-    },
-    {
-      id: 4,
-      startDate: {year: '2017', month: 'OUT', day: '25'},
-      endDate: {year: '2017', month: 'NOV', day: '05'},
-      name: 'Sprint #4',
-      objective: 'Finishing this board',
-      storiesQuantity: 8,
-      points: 45,
-      status: 'PLAN',
-      statusSlug: 'sprint-planned'
-    },
-    {
-      id: 4,
-      startDate: {year: '2017', month: 'OUT', day: '25'},
-      endDate: {year: '2017', month: 'NOV', day: '05'},
-      name: 'Sprint #4',
-      objective: 'Finishing this board',
-      storiesQuantity: 8,
-      points: 45,
-      status: 'PLAN',
-      statusSlug: 'sprint-planned'
-    },
-    {
-      id: 4,
-      startDate: {year: '2017', month: 'OUT', day: '25'},
-      endDate: {year: '2017', month: 'NOV', day: '05'},
-      name: 'Sprint #4',
-      objective: 'Finishing this board',
-      storiesQuantity: 8,
-      points: 45,
-      status: 'PLAN',
-      statusSlug: 'sprint-planned'
-    },
-    {
-      id: 4,
-      startDate: {year: '2017', month: 'OUT', day: '25'},
-      endDate: {year: '2017', month: 'NOV', day: '05'},
-      name: 'Sprint #4',
-      objective: 'Finishing this board',
-      storiesQuantity: 8,
-      points: 45,
-      status: 'PLAN',
-      statusSlug: 'sprint-planned'
-    },
-    {
-      id: 4,
-      startDate: {year: '2017', month: 'OUT', day: '25'},
-      endDate: {year: '2017', month: 'NOV', day: '05'},
-      name: 'Sprint #4',
-      objective: 'Finishing this board',
-      storiesQuantity: 8,
-      points: 45,
-      status: 'PLAN',
-      statusSlug: 'sprint-planned'
-    },
-    {
-      id: 4,
-      startDate: {year: '2017', month: 'OUT', day: '25'},
-      endDate: {year: '2017', month: 'NOV', day: '05'},
-      name: 'Sprint #4',
-      objective: 'Finishing this board',
-      storiesQuantity: 8,
-      points: 45,
-      status: 'PLAN',
-      statusSlug: 'sprint-planned'
-    }
-  ];
-
-  _.forEach($scope.selectedProject.sprints, function(sprint) {
-    if (sprint.statusSlug === 'sprint-current') {
-      $scope.currentSprint = sprint;
-    }
-  })
 }]);

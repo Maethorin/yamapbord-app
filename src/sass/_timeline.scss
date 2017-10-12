@@ -1,26 +1,29 @@
 .timeline {
   margin-top: 62px;
   background-color: $gray;
+  text-align: center;
   .btn-scroll-home {
-    float: left;
+    display: inline-block;
     height: 80px;
     margin: 4px 0;
     font-size: 18px;
+    vertical-align: middle;
   }
   .btn-scroll-end {
-    float: right;
+    display: inline-block;
     height: 80px;
     margin: 4px 0;
     font-size: 18px;
+    vertical-align: middle;
   }
   .timeline-events {
     white-space: nowrap;
     padding: 11px 0 0;
-    width: 97%;
+    width: 95%;
     height: 97px;
-    float: left;
+    display: inline-block;
     background-color: $gray-light;
-
+    vertical-align: middle;
     .timeline-event {
       background-color: $gray-lighter;
       width: 230px;
@@ -87,7 +90,7 @@
             &.sprint-success {
               background-color: $brand-success;
             }
-            &.sprint-fail {
+            &.sprint-failure {
               background-color: $brand-danger;
             }
             &.sprint-current {
