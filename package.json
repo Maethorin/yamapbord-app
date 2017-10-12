@@ -1,0 +1,27 @@
+{
+  "name": "scruminceres",
+  "version": "1.0.0",
+  "description": "Scrum InCeres",
+  "dependencies": {
+    "bower": "^1.8.0",
+    "grunt": "^1.0.1",
+    "grunt-cli": "^1.2.0",
+    "grunt-contrib-clean": "^1.0.0",
+    "grunt-contrib-compass": "^1.1.1",
+    "grunt-contrib-concat": "^1.0.1",
+    "grunt-contrib-connect": "^1.0.2",
+    "grunt-contrib-copy": "^1.0.0",
+    "grunt-contrib-uglify": "^2.0.0",
+    "grunt-contrib-watch": "^1.0.0",
+    "grunt-injector": "^1.1.0",
+    "grunt-open": "^0.2.3",
+    "grunt-replace": "^1.0.1"
+  },
+  "devDependencies": {
+    "jasmine": "^2.5.2",
+    "karma": "^1.4.0",
+    "karma-chrome-launcher": "^2.0.0",
+    "karma-jasmine": "^1.1.0",
+    "karma-json-fixtures-preprocessor": "^0.0.6"
+  }
+}

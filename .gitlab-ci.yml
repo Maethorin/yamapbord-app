@@ -1,0 +1,6 @@
+image: karma-phantomjs
+before_script:
+  - bower install --allow-root
+test:
+  script:
+    - karma start spec/karma.conf.js --single-run

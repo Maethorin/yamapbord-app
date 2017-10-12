@@ -1,0 +1,5 @@
+{
+  "env": "production",
+  "backendURL": "http://scruminceres.inceres.com.br/api",
+  "fbiURL": "http://dashboard.inceres.com.br/#!/login"
+}

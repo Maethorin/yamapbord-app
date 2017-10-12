@@ -1,0 +1,12 @@
+npm-debug.log
+.DS_Store
+Session.vim
+*/.DS_Store
+*/*/.DS_Store
+
+config/development.json
+node_modules/
+src/lib/
+.idea/
+www/
+.sass-cache/

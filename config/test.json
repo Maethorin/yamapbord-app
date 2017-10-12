@@ -1,0 +1,4 @@
+{
+  "env": "test",
+  "backendURL": "http://localhost:3001"
+}

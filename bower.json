@@ -1,0 +1,27 @@
+{
+  "name": "scruminceres",
+  "version": "1.0.0",
+  "description": "Scrum InCeres",
+  "dependencies": {
+    "lodash": "^4.11.2",
+    "moment": "^2.17.1",
+    "bootstrap-sass": "^3.3.7",
+    "fontawesome": "^4.7.0",
+    "angular": "^1.6.0",
+    "angular-resource": "^1.6.0",
+    "angular-animate": "^1.6.0",
+    "angular-mocks": "^1.6.0",
+    "angular-input-masks": "^2.5.0",
+    "angular-ui-router": "^0.4.2",
+    "angular-sweetalert-2": "latest",
+    "angular-cookies": "^1.6.4",
+    "angular-chart.js": "^1.1.1",
+    "angular-bootstrap": "^2.5.0",
+    "angular-touch": "^1.6.6",
+    "ng-scrollbar": "^0.0.8",
+    "ng-scrollable": "^0.2.6"
+  },
+  "resolutions": {
+    "angular": "1.6.4"
+  }
+}

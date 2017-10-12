@@ -1,0 +1,110 @@
+.timeline {
+  margin-top: 62px;
+  background-color: $gray;
+  .btn-scroll-home {
+    float: left;
+    height: 80px;
+    margin: 4px 0;
+    font-size: 18px;
+  }
+  .btn-scroll-end {
+    float: right;
+    height: 80px;
+    margin: 4px 0;
+    font-size: 18px;
+  }
+  .timeline-events {
+    white-space: nowrap;
+    padding: 11px 0 0;
+    width: 97%;
+    height: 97px;
+    float: left;
+    background-color: $gray-light;
+
+    .timeline-event {
+      background-color: $gray-lighter;
+      width: 230px;
+      height: 70px;
+      padding: 5px;
+      margin: 0 10px;
+      display: inline-block;
+      border-radius: 4px;
+      cursor: pointer;
+      &:hover {
+        background-color: lighten($gray-lighter, 10%);
+      }
+      &.selected {
+        background-color: lighten($gray-lighter, 20%);
+      }
+      .start-date, .end-date {
+        float: left;
+        border: 2px solid $brand-info;
+        border-radius: 2px;
+        text-align: center;
+        color: $brand-info;
+        width: 35px;
+        .month {
+          font-size: 9px;
+          border-bottom: 2px solid $brand-info;
+        }
+        .day {
+          font-size: 20px;
+        }
+        .year {
+          font-size: 9px;
+          border-top: 2px solid $brand-info;
+        }
+      }
+      .sprint-data {
+        float: left;
+        color: $brand-primary;
+        padding: 0 10px;
+        width: 150px;
+        text-align: center;
+        .sprint-name {
+          font-weight: bold;
+          text-align: center;
+        }
+        .stories-quantity, .sprint-points {
+          float: left;
+          text-align: center;
+          font-size: 10px;
+          span {
+            font-size: 20px;
+            display: block;
+          }
+        }
+        .sprint-status {
+          float: left;
+          width: 70px;
+          text-align: center;
+          padding-top: 6px;
+          span {
+            font-size: 14px;
+            padding: 3px 5px;
+            border-radius: 3px;
+            color: #F9F9F9;
+            &.sprint-success {
+              background-color: $brand-success;
+            }
+            &.sprint-fail {
+              background-color: $brand-danger;
+            }
+            &.sprint-current {
+              background-color: $brand-warning;
+            }
+            &.sprint-planned {
+              background-color: $brand-primary;
+            }
+          }
+        }
+        .sprint-points {
+          float: right;
+        }
+      }
+      .end-date {
+        float: right;
+      }
+    }
+  }
+}
