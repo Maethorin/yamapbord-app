@@ -1,12 +1,6 @@
 'use strict';
 
-scrumInCeresControllers.controller('HomeController', ['$rootScope', '$scope', 'Alert', 'MeService', 'Project', 'Story', function($rootScope, $scope, Alert, MeService, Project,Story) {
-  $scope.projects = [];
-  $scope.search = {
-    expression: ''
-  };
-
-  $scope.selectedProject = {};
+scrumInCeresControllers.controller('HomeController', ['$rootScope', '$scope', 'Alert', 'Story', function($rootScope, $scope, Alert, Story) {
   $scope.timeline = null;
   $scope.scrollOptions = {scrollX: 'bottom',scrollY: 'none', useBothWheelAxes: true, scrollPosX: 0, preventWheelEvents: true};
   $scope.currentTimelineSprintLeftPosition = null;
@@ -41,35 +35,24 @@ scrumInCeresControllers.controller('HomeController', ['$rootScope', '$scope', 'A
     'REJE': 'Rejected'
   };
 
-  MeService.getInfo().then(
-    function(info) {
-      Project.query(
-        function(response) {
-          $scope.projects = response;
-          // $scope.viewProject(response[1]);
-        }
-      )
-    },
-    function(error) {
+  $rootScope.$watch('selectedProject', function(project) {
+    if (!project) {
+      return false;
     }
-  );
-
-  $scope.viewProject = function(project) {
-    $scope.selectedProject = project;
     $scope.currentSprint = null;
     $scope.selectedSprint = null;
 
-    _.forEach($scope.selectedProject.sprints, function(sprint) {
+    _.forEach($rootScope.selectedProject.sprints, function(sprint) {
       if (sprint.statusSlug === 'sprint-current') {
         $scope.currentSprint = sprint;
       }
     })
-  };
+  });
 
   $scope.selectSprint = function(sprint) {
     $scope.selectedSprint = sprint;
     Story.query(
-      {projectId:  $scope.selectedProject.id, sprintId: sprint.id},
+      {projectId:  $rootScope.selectedProject.id, sprintId: sprint.id},
       function(response) {
         $scope.selectedSprint.stories = response;
         $scope.updateStoryData();
@@ -84,14 +67,14 @@ scrumInCeresControllers.controller('HomeController', ['$rootScope', '$scope', 'A
     return 'col-md-2';
   };
 
-  $scope.goToCurrentSprintInTimeline = function() {
+  $rootScope.$on('currentSprint.select', function() {
     if ($scope.currentTimelineSprintLeftPosition === null) {
       var currentSprintElementPosition = angular.element('.timeline-event.current')[0].getBoundingClientRect();
       $scope.currentTimelineSprintLeftPosition = currentSprintElementPosition.left;
     }
     $scope.scrollOptions.scrollPosX = $scope.currentTimelineSprintLeftPosition - 55;
     $scope.selectSprint($scope.currentSprint);
-  };
+  });
 
   $scope.updateStoryData = function() {
 
@@ -172,7 +155,7 @@ scrumInCeresControllers.controller('HomeController', ['$rootScope', '$scope', 'A
     }
     task.changing = true;
     Story.update(
-      {projectId:  $scope.selectedProject.id, sprintId: $scope.selectedSprint.id, id: story.id},
+      {projectId:  $rootScope.selectedProject.id, sprintId: $scope.selectedSprint.id, id: story.id},
       {'toggleTask': $index},
       function(response) {
         task.changing = false;
@@ -211,22 +194,10 @@ scrumInCeresControllers.controller('HomeController', ['$rootScope', '$scope', 'A
     saveStoryStatus(story);
   };
 
-  $scope.searchStories = function() {
-
-  };
-
-  $scope.showMyInfo = function() {
-
-  };
-
-  $scope.logout = function() {
-
-  };
-
   function saveStoryStatus(story) {
     story.updating = true;
     Story.update(
-      {projectId:  $scope.selectedProject.id, sprintId: $scope.selectedSprint.id, id: story.id},
+      {projectId:  $rootScope.selectedProject.id, sprintId: $scope.selectedSprint.id, id: story.id},
       {'status': story.status},
       function(response) {
         story.updating = false;
