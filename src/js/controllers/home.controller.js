@@ -15,6 +15,7 @@ scrumInCeresControllers.controller('HomeController', ['$rootScope', '$scope', 'A
   $scope.selectedSprint = null;
   $scope.selectedStory = null;
   $scope.completeStoryPopupOpened = false;
+  $scope.today = moment();
 
   $scope.columns = [
     {name: 'PLAN', label: 'Planned'},
@@ -45,7 +46,7 @@ scrumInCeresControllers.controller('HomeController', ['$rootScope', '$scope', 'A
       Project.query(
         function(response) {
           $scope.projects = response;
-          $scope.viewProject(response[1]);
+          // $scope.viewProject(response[1]);
         }
       )
     },
@@ -55,6 +56,8 @@ scrumInCeresControllers.controller('HomeController', ['$rootScope', '$scope', 'A
 
   $scope.viewProject = function(project) {
     $scope.selectedProject = project;
+    $scope.currentSprint = null;
+    $scope.selectedSprint = null;
 
     _.forEach($scope.selectedProject.sprints, function(sprint) {
       if (sprint.statusSlug === 'sprint-current') {
@@ -119,6 +122,48 @@ scrumInCeresControllers.controller('HomeController', ['$rootScope', '$scope', 'A
       $scope.pointsPerStoryTypeStatus[story.status] += story.points;
       story.hasTasks = ['PLAN', 'STAR'].indexOf(story.status) > -1;
     });
+
+
+    var start = moment($scope.selectedSprint.startDateText);
+    var finish = moment($scope.selectedSprint.endDateText);
+    var days = parseInt((finish - start) / (1000 * 60 * 60 * 24)) + start.date() - 2;
+    $scope.devDays = [];
+    for (var dayNumber = start.date(); dayNumber <= days; dayNumber++) {
+      start.date(start.date() + 1);
+      if (start.day() !== 0 && start.day() !== 6) {
+        var passed = $scope.today.month() > start.month() || ($scope.today.date() > start.date() && $scope.today.month() === start.month());
+        var isToday = $scope.today.month() === start.month() && $scope.today.date() === start.date();
+        $scope.devDays.push({
+          id: dayNumber,
+          day: '{0}/{1}'.format([start.date().paddingLeft(2), (start.month() + 1).paddingLeft(2)]),
+          points: 0,
+          passed: passed,
+          isToday: isToday
+        });
+      }
+    }
+
+    for (var devdayIndex = 0; devdayIndex < $scope.devDays.length; devdayIndex++) {
+      $scope.devDays[devdayIndex].points = $scope.selectedSprint.points / $scope.devDays.length;
+    }
+
+    var accumulatedPoint = 1;
+    $scope.pointsPerColumn = [];
+    function addPointsToColumn(columnName) {
+      _.forEach(_.range(1, $scope.pointsPerStoryTypeStatus[columnName] + 1), function() {
+        $scope.pointsPerColumn.push({column: columnName, point: accumulatedPoint});
+        accumulatedPoint += 1;
+      });
+    }
+
+    addPointsToColumn('PLAN');
+    addPointsToColumn('STAR');
+    addPointsToColumn('FINI');
+    addPointsToColumn('ITST');
+    addPointsToColumn('RTDP');
+    addPointsToColumn('DPYD');
+    addPointsToColumn('ACCP');
+    addPointsToColumn('REJE');
   };
 
   $scope.changeTaskStatus = function(task, $index, story) {

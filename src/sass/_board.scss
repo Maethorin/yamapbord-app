@@ -1,5 +1,5 @@
-$graph-part-width: 23px;
-$background-plan: #be0010;
+$graph-part-width: 20px;
+$background-plan: #f89411;
 $background-star: #C16E00;
 $background-fini: #D7CE00;
 $background-itst: #b0d01e;
@@ -21,7 +21,16 @@ h4 {
 }
 
 .burn-up {
-  margin-bottom: 20px;
+  margin-bottom: 5px;
+  .panel-default {
+    margin-bottom: 0;
+    .panel-heading {
+      padding: 2px;
+    }
+    .panel-body {
+      padding: 10px;
+    }
+  }
   .col-md-2 {
     text-align: right;
     line-height: 35px;
@@ -30,19 +39,19 @@ h4 {
     padding-right: 15px;
   }
   i {
-    font-size: 25px;
+    font-size: 18px;
     vertical-align: middle;
-    color: #666;
+    color: $gray-lighter;
     margin-right: 10px;
   }
   span {
     display: inline-block;
     width: $graph-part-width;
-    height: 40px;
+    height: 30px;
     border: 1px solid #CECECE;
     text-align: center;
-    line-height: 35px;
-    font-size: 12px;
+    line-height: 29px;
+    font-size: 11px;
     font-weight: bold;
     color: #DDD;
     &.day {
@@ -104,7 +113,7 @@ h4 {
 }
 
 .board {
-  height: 82vh;
+  height: 71vh;
   overflow: hidden;
   .column-container {
     &.col-md-3, &.col-md-2 {
@@ -153,10 +162,10 @@ h4 {
     }
   }
   .column {
-    height: 75.4vh;
+    height: 65.4vh;
     padding-right: 0;
     &.fini, &.itst, &.rtdp, &.dpyd, &.accp, &.reje {
-      height: 35vh;
+      height: 30vh;
     }
     .story {
       margin-right: 15px;
