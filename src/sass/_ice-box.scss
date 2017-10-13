@@ -1,0 +1,71 @@
+.ice-box {
+  margin-top: 80px;
+  .story-container {
+    .panel-edit-story {
+      .panel-heading {
+        overflow: hidden;
+        .story-name {
+          font-size: 15px;
+          vertical-align: middle;
+          display: inline-block;
+          width: 90%;
+          padding-left: 5px;
+        }
+        .btn-save-story {
+          float: right;
+          font-size: 19px;
+          padding: 0 11px;
+        }
+      }
+    }
+  }
+
+  .story-data {
+    width: 100%;
+    .btn-story-type {
+      background-repeat: no-repeat;
+      background-position: 9px 7px;
+      padding-left: 34px;
+      font-size: 14px;
+      width: 120px;
+      text-align: left;
+      span {
+        &.caret {
+          margin-left: 0;
+          float: right;
+          margin-top: 8px;
+        }
+      }
+      @include story-types();
+    }
+    .story-type-option {
+      background-repeat: no-repeat;
+      background-position: 9px 7px;
+      padding-left: 34px;
+      cursor: pointer;
+      @include story-types();
+    }
+    .points {
+      float: right;
+      label {
+        font-size: 14px;
+        &.active {
+          box-shadow: inset 0 0 0 2px #FFF;
+          color: #FFF;
+        }
+      }
+    }
+  }
+
+  .popup-complete-story {
+    .panel-edit-story {
+      margin: 10% 30%;
+      .panel-heading {
+        overflow: hidden;
+      }
+    }
+    .panel-footer {
+      text-align: center;
+    }
+  }
+}

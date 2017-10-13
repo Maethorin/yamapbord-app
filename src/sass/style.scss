@@ -4,8 +4,7 @@
 @import "login";
 @import "timeline";
 @import "board";
-
-$cor-azul: #3fa0e8;
+@import "ice-box";
 
 .center {
   text-align: center;
@@ -17,4 +16,53 @@ $cor-azul: #3fa0e8;
       cursor: pointer;
     }
   }
+}
+
+.story-statement {
+  background-color: $gray;
+  color: #FAFAFA;
+  padding: 10px;
+  border-radius: 5px;
+  margin: 20px 0;
+}
+h4 {
+  font-size: 18px;
+  margin: 10px 0;
+  padding-bottom: 5px;
+  color: $gray-lighter;
+  border-bottom: 1px solid $gray-lighter;
+}
+.list-group {
+  .list-group-item {
+    font-size: 16px;
+    .fa {
+      font-size: 18px;
+    }
+  }
+}
+
+.panel-heading, .story-data, .board .panel-heading {
+  $index: 1;
+  @each $point in $story-points {
+    @include story-point-background($point, $index);
+    $index: $index + 1;
+  }
+}
+
+.story-type-name {
+  background: $gray no-repeat 5px 3px;
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 5px;
+  margin-top: 2px;
+  padding: 1px 10px 2px 28px;
+  border-radius: 3px;
+  color: #FFF;
+  @include story-types();
+}
+
+.story-status {
+  padding: 5px 10px;
+  border-radius: 4px;
+  @include story-status-backgrounds();
 }

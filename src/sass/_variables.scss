@@ -1,9 +1,61 @@
-
+$graph-part-width: 20px;
 $imageUrl: "/img/";
+$cor-azul: #3fa0e8;
+$story-types: fea bug cho tec;
+$story-statuses: plan star fini itst rtdp dpyd accp reje;
+$story-statuses-colors:
+  #f89411
+  #C16E00
+  #D7CE00
+  #b0d01e
+  #0bbd0d
+  #719c99
+  #388b39
+  #ca0200;
+$story-points: 0 1 2 3 5 8;
+$story-points-colors:
+  #00d4d6
+  #00c0c2
+  #00acae
+  #00989a
+  #008486
+  #007072;
 
 @mixin image-background($imageFile) {
   background-image: url($imageUrl + $imageFile);
 }
+
+@mixin story-type-background($story-type) {
+  @include image-background("story-type-#{$story-type}.png");
+}
+
+@mixin story-point-background($point, $index) {
+  .badge-#{$point} {
+    background-color: nth($story-points-colors, $index);
+  }
+}
+
+@mixin story-types() {
+  @each $story-type in $story-types {
+    &.#{$story-type} {
+      @include story-type-background($story-type)
+    }
+  }
+}
+
+@mixin story-status-backgrounds() {
+  $index: 1;
+  @each $story-status in $story-statuses {
+    &.#{$story-status} {
+      background-color: nth($story-statuses-colors, $index);
+      @if $story-status == fini or $story-status == itst {
+        color: #333;
+      }
+    }
+    $index: $index + 1;
+  }
+}
+
 
 $bootstrap-sass-asset-helper: false !default;
 // Darkly 3.3.7

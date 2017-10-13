@@ -1,0 +1,64 @@
+<div class="container-fluid ice-box">
+  <div class="story-container col-md-4" ng-repeat="story in stories">
+    <div class="panel panel-default panel-edit-story">
+      <div class="panel-heading" title="{{story.statement}}">
+        <span class="story-name">{{story.name}}</span>
+        <button class="btn btn-primary btn-sm btn-save-story" ng-click="selectStoryToEdit(story)"><i class="fa fa-edit"></i></button>
+      </div>
+      <div class="panel-body">
+        <div class="story-data">
+          <span class="btn btn-default btn-sm btn-story-type" ng-class="story.typeCode | lowercase">{{story.typeName}}</span>
+          <div class="points btn-group">
+            <label class="btn btn-primary btn-sm badge-{{point}}" ng-model="story.points" ng-class="{'active': point == story.points}" uib-btn-radio="point" ng-repeat="point in points" ng-bind="point"></label>
+          </div>
+        </div>
+
+        <div class="story-statement" ng-bind="story.statement"></div>
+        <h4>Tasks:</h4>
+        <ul class="list-group">
+          <li class="list-group-item" ng-repeat="task in story.tasks">
+            {{ task.task }}
+          </li>
+        </ul>
+      </div>
+      <div class="panel-footer">
+      </div>
+    </div>
+  </div>
+
+  <div class="popup-complete-story" ng-class="{'opened': completeStoryPopupOpened}">
+    <div class="panel panel-default panel-edit-story">
+      <div class="panel-heading" title="{{selectedStory.statement}}">
+        <div class="col-md-12">
+          <span class="story-name">{{selectedStory.name}}</span>
+        </div>
+      </div>
+      <div class="panel-body">
+        <div class="story-data">
+          <div class="btn-group" uib-dropdown keyboard-nav>
+            <button type="button" class="btn btn-primary btn-sm btn-story-type" ng-class="selectedStory.typeCode | lowercase" uib-dropdown-toggle>
+              {{selectedStory.typeName}} <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="simple-btn-keyboard-nav">
+              <li role="menuitem" ng-repeat="type in storyTypes"><a ng-click="setStoryType(selectedStory, type)" class="story-type-option" ng-class="type.code | lowercase" ng-bind="type.name"></a></li>
+            </ul>
+          </div>
+          <div class="points btn-group">
+            <label class="btn btn-primary btn-sm badge-{{point}}" ng-model="selectedStory.points" ng-class="{'active': point == selectedStory.points}" uib-btn-radio="point" ng-repeat="point in points" ng-bind="point"></label>
+          </div>
+        </div>
+        <div class="story-statement" ng-bind="selectedStory.statement"></div>
+        <h4>Tasks:</h4>
+        <ul class="list-group">
+          <li class="list-group-item" ng-repeat="task in selectedStory.tasks">
+            {{ task.task }}
+          </li>
+        </ul>
+      </div>
+      <div class="panel-footer">
+        <button type="button" class="btn btn-danger" ng-click="saveSelectedStory()"><i class="fa fa-close"></i> Cancel</button>
+        <button type="button" class="btn btn-success" ng-click="cancelSaveSelectedStory()"><i class="fa fa-save"></i> Save</button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,13 +1,3 @@
-$graph-part-width: 20px;
-$background-plan: #f89411;
-$background-star: #C16E00;
-$background-fini: #D7CE00;
-$background-itst: #b0d01e;
-$background-rtdp: #0bbd0d;
-$background-dpyd: #719c99;
-$background-accp: #388b39;
-$background-reje: #ca0200;
-
 h3 {
   text-align: center;
   font-size: 15px;
@@ -83,32 +73,7 @@ h4 {
     }
   }
   .points {
-    &.plan {
-      background-color: $background-plan;
-    }
-    &.star {
-      background-color: $background-star;
-    }
-    &.fini {
-      background-color: $background-fini;
-      color: #888;
-    }
-    &.itst {
-      background-color: $background-itst;
-      color: #888;
-    }
-    &.rtdp {
-      background-color: $background-rtdp;
-    }
-    &.dpyd {
-      background-color: $background-dpyd;
-    }
-    &.accp {
-      background-color: $background-accp;
-    }
-    &.reje {
-      background-color: $background-reje;
-    }
+    @include story-status-backgrounds();
   }
 }
 
@@ -132,32 +97,7 @@ h4 {
       &.badge {
         color: #EEE;
         float: right;
-        &.badge-plan {
-          background-color: $background-plan;
-        }
-        &.badge-star {
-          background-color: $background-star;
-        }
-        &.badge-fini {
-          background-color: $background-fini;
-          color: #666;
-        }
-        &.badge-itst {
-          background-color: $background-itst;
-          color: #666;
-        }
-        &.badge-rtdp {
-          background-color: $background-rtdp;
-        }
-        &.badge-dpyd {
-          background-color: $background-dpyd;
-        }
-        &.badge-accp {
-          background-color: $background-accp;
-        }
-        &.badge-reje {
-          background-color: $background-reje;
-        }
+        @include story-status-backgrounds();
       }
     }
   }
@@ -193,18 +133,7 @@ h4 {
           &:hover {
             background-color: $gray-lighter;
           }
-          &.fea {
-            @include image-background("story-type-fea.png");
-          }
-          &.bug {
-            @include image-background("story-type-bug.png");
-          }
-          &.cho {
-            @include image-background("story-type-cho.png");
-          }
-          &.tec {
-            @include image-background("story-type-tec.png");
-          }
+          @include story-types();
         }
         .story-name {
           font-size: 15px;
@@ -221,24 +150,6 @@ h4 {
         }
         .badge {
           float: right;
-        }
-        .badge-0 {
-          background-color: #00d4d6;
-        }
-        .badge-1 {
-          background-color: #00c0c2;
-        }
-        .badge-2 {
-          background-color: #00acae;
-        }
-        .badge-3 {
-          background-color: #00989a;
-        }
-        .badge-5 {
-          background-color: #008486;
-        }
-        .badge-8 {
-          background-color: #007072;
         }
       }
       .panel-body {
@@ -280,124 +191,38 @@ h4 {
   }
   .panel-complete-story {
     margin: 10% 20%;
-    .panel-heading {
-      .story-type-name {
-        background: $gray no-repeat 5px 3px;
-        display: inline-block;
-        vertical-align: middle;
-        margin-right: 5px;
-        margin-top: 2px;
-        padding: 1px 10px 2px 28px;
-        border-radius: 3px;
-        color: #FFF;
-        &.fea {
-          @include image-background("story-type-fea.png");
-        }
-        &.bug {
-          @include image-background("story-type-bug.png");
-        }
-        &.cho {
-          @include image-background("story-type-cho.png");
-        }
-        &.tec {
-          @include image-background("story-type-tec.png");
-        }
-      }
-      .story-status {
-        padding: 5px 10px;
-        border-radius: 4px;
-        &.plan {
-          background-color: $background-plan;
-        }
-        &.star {
-          background-color: $background-star;
-        }
-        &.fini {
-          background-color: $background-fini;
-          color: #444;
-        }
-        &.itst {
-          background-color: $background-itst;
-          color: #444;
-        }
-        &.rtdp {
-          background-color: $background-rtdp;
-        }
-        &.dpyd {
-          background-color: $background-dpyd;
-        }
-        &.accp {
-          background-color: $background-accp;
-        }
-        &.reje {
-          background-color: $background-reje;
-        }
-      }
-      .story-name {
-        font-size: 15px;
-        vertical-align: middle;
-        display: inline-block;
-        width: 75%;
-        padding-left: 5px;
-        line-height: 25px;
-      }
-      .badge {
-        float: right;
-        font-size: 17px;
-        margin-top: 4px;
-      }
-      .badge-0 {
-        background-color: #00d4d6;
-      }
-      .badge-1 {
-        background-color: #00c0c2;
-      }
-      .badge-2 {
-        background-color: #00acae;
-      }
-      .badge-3 {
-        background-color: #00989a;
-      }
-      .badge-5 {
-        background-color: #008486;
-      }
-      .badge-8 {
-        background-color: #007072;
-      }
+  }
+}
+
+.panel-complete-story {
+  .panel-heading {
+    .story-name {
+      font-size: 15px;
+      vertical-align: middle;
+      display: inline-block;
+      width: 75%;
+      padding-left: 5px;
+      line-height: 25px;
     }
-    .panel-body {
-      padding: 20px;
-      max-height: 405px;
-      zoom: 1;
-      overflow: auto;
-      position: relative;
-      .story-statement {
-        background-color: $gray;
-        color: #FAFAFA;
-        padding: 10px;
-        border-radius: 5px;
-        margin-bottom: 20px;
-      }
-      h4 {
-        font-size: 18px;
-        margin: 10px 0;
-        padding-bottom: 5px;
-        color: $gray-lighter;
-        border-bottom: 1px solid $gray-lighter;
-      }
-      .list-group {
-        .list-group-item {
-          font-size: 16px;
-          .fa {
-            font-size: 18px;
-          }
-        }
-      }
+    .badge {
+      float: right;
+      font-size: 17px;
+      margin-top: 4px;
     }
-    .panel-footer {
-      text-align: center;
-      overflow: hidden;
+  }
+  .panel-body {
+    padding: 20px;
+    max-height: 405px;
+    zoom: 1;
+    overflow: auto;
+    position: relative;
+    .story-statement {
+      margin-top: 0;
     }
+  }
+  .panel-footer {
+    text-align: center;
+    overflow: hidden;
   }
 }
 

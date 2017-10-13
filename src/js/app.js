@@ -100,6 +100,14 @@ scrumInCeres.config(['$httpProvider', '$stateProvider', '$locationProvider', '$u
     })
 
     .state({
+      name: 'iceBoxState',
+      url: '/ice-box',
+      cache: false,
+      templateUrl: 'templates/ice-box.html',
+      controller: 'IceBoxController'
+    })
+
+    .state({
       name: 'login',
       url: '/login',
       cache: false,
@@ -132,7 +140,7 @@ scrumInCeres.run(['$rootScope', 'AuthService', 'MeService', 'Project', function(
       Project.query(
         function(response) {
           $rootScope.projects = response;
-          // $rootScope.viewProject(response[1]);
+          $rootScope.viewProject(response[1]);
         }
       )
     },
