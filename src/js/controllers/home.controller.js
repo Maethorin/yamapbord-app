@@ -20,27 +20,24 @@ scrumInCeresControllers.controller('HomeController', ['$rootScope', '$scope', 'A
     {name: 'PLAN', label: 'Planned'},
     {name: 'STAR', label: 'Started'},
     {name: 'FINI', label: 'Finished'},
+    {name: 'ITST', label: 'In Test'},
     {name: 'RTDP', label: 'Ready to Deploy'},
-    {name: 'ACCP', label: 'Accepted'}
+    {name: 'DPYD', label: 'Deployed'},
+    {name: 'ACCP', label: 'Accepted'},
+    {name: 'REJE', label: 'Rejected'}
   ];
 
-  $scope.pointsPerStoryStatus = {
-    'PLAN': 0,
-    'STAR': 0,
-    'FINI': 0,
-    'RTDP': 0,
-    'ACCP': 0
-  };
+  $scope.storyTypeSequence = ['PLAN', 'STAR', 'FINI', 'ITST', 'RTDP', 'DPYD', 'ACCP', 'REJE'];
 
-  $scope.stories = {
-    'PLAN': [],
-    'STAR': [],
-    'FINI': [],
-    'ITST': [],
-    'RTDP': [],
-    'DPYD': [],
-    'ACCP': [],
-    'REJE': []
+  $scope.storyTypeNames = {
+    'PLAN': 'Planned',
+    'STAR': 'Started',
+    'FINI': 'Finished',
+    'ITST': 'In Test',
+    'RTDP': 'Ready to Deploy',
+    'DPYD': 'Deployed',
+    'ACCP': 'Accepted',
+    'REJE': 'Rejected'
   };
 
   MeService.getInfo().then(
@@ -72,26 +69,6 @@ scrumInCeresControllers.controller('HomeController', ['$rootScope', '$scope', 'A
       {projectId:  $scope.selectedProject.id, sprintId: sprint.id},
       function(response) {
         $scope.selectedSprint.stories = response;
-
-        $scope.pointsPerStoryStatus = {
-          'PLAN': 0,
-          'STAR': 0,
-          'FINI': 0,
-          'RTDP': 0,
-          'ACCP': 0
-        };
-
-        $scope.stories = {
-          'PLAN': [],
-          'STAR': [],
-          'FINI': [],
-          'ITST': [],
-          'RTDP': [],
-          'DPYD': [],
-          'ACCP': [],
-          'REJE': []
-        };
-
         $scope.updateStoryData();
       }
     )
@@ -114,51 +91,34 @@ scrumInCeresControllers.controller('HomeController', ['$rootScope', '$scope', 'A
   };
 
   $scope.updateStoryData = function() {
+
+    $scope.pointsPerStoryTypeStatus = {
+      'PLAN': 0,
+      'STAR': 0,
+      'FINI': 0,
+      'ITST': 0,
+      'RTDP': 0,
+      'DPYD': 0,
+      'ACCP': 0,
+      'REJE': 0
+    };
+
+    $scope.stories = {
+      'PLAN': [],
+      'STAR': [],
+      'FINI': [],
+      'ITST': [],
+      'RTDP': [],
+      'DPYD': [],
+      'ACCP': [],
+      'REJE': []
+    };
+
     _.forEach($scope.selectedSprint.stories, function(story) {
       $scope.stories[story.status].push(story);
-      $scope.pointsPerStoryStatus[story.status] += story.points;
+      $scope.pointsPerStoryTypeStatus[story.status] += story.points;
       story.hasTasks = ['PLAN', 'STAR'].indexOf(story.status) > -1;
     });
-
-    // $q.all(totalPoints).then(function () {
-    //   var start = parseDate($scope.iteration.start);
-    //   var finish = parseDate($scope.iteration.finish);
-    //   var days = parseInt((finish - start) / (1000 * 60 * 60 * 24)) + start.getDate() - 2;
-    //   $scope.devDays = [];
-    //   for (var dayNumber = start.getDate(); dayNumber <= days; dayNumber++) {
-    //     start.setDate(start.getDate() + 1);
-    //     if (start.getDay() != 0 && start.getDay() != 6) {
-    //       var passed = $scope.today.getMonth() > start.getMonth() || ($scope.today.getDate() > start.getDate() && $scope.today.getMonth() == start.getMonth());
-    //       var isToday = $scope.today.getMonth() == start.getMonth() && $scope.today.getDate() == start.getDate();
-    //       $scope.devDays.push({
-    //         id: dayNumber,
-    //         day: '{0}/{1}'.format([start.getDate().paddingLeft(2), (start.getMonth() + 1).paddingLeft(2)]),
-    //         points: 0,
-    //         passed: passed,
-    //         isToday: isToday
-    //       });
-    //     }
-    //   }
-    //
-    //   totalPoints = totalPoints.reduce(function(a, b) { return a + b; });
-    //   for (var devdayIndex = 0; devdayIndex < $scope.devDays.length; devdayIndex++) {
-    //     $scope.devDays[devdayIndex].points = totalPoints / $scope.devDays.length;
-    //   }
-    //
-    //   $scope.pointsPerColumn = [];
-    //   var pointsAddes = 1;
-    //   function addPointsToColumn(columnName) {
-    //     _.forEach(range($scope.pointsPerStoryStatus[columnName]), function() {
-    //       $scope.pointsPerColumn.push({column: columnName, point: pointsAddes});
-    //       pointsAddes += 1;
-    //     });
-    //   }
-    //   addPointsToColumn('accepted');
-    //   addPointsToColumn('delivered');
-    //   addPointsToColumn('finished');
-    //   addPointsToColumn('started');
-    //   addPointsToColumn('planned');
-    // });
   };
 
   $scope.changeTaskStatus = function(task, $index, story) {
@@ -184,6 +144,28 @@ scrumInCeresControllers.controller('HomeController', ['$rootScope', '$scope', 'A
     $scope.completeStoryPopupOpened = !$scope.completeStoryPopupOpened;
   };
 
+  $scope.moveStoryBack = function(story) {
+    var actualStepIndex = $scope.storyTypeSequence.indexOf(story.status);
+    if (actualStepIndex === 0) {
+      return false;
+    }
+    story.status = $scope.storyTypeSequence[actualStepIndex - 1];
+    story.statusName = $scope.storyTypeNames[story.status];
+    $scope.updateStoryData();
+    saveStoryStatus(story);
+  };
+
+  $scope.moveStoryForward = function(story) {
+    var actualStepIndex = $scope.storyTypeSequence.indexOf(story.status);
+    if (actualStepIndex === $scope.storyTypeSequence.length - 1) {
+      return false;
+    }
+    story.status = $scope.storyTypeSequence[actualStepIndex + 1];
+    story.statusName = $scope.storyTypeNames[story.status];
+    $scope.updateStoryData();
+    saveStoryStatus(story);
+  };
+
   $scope.searchStories = function() {
 
   };
@@ -195,4 +177,18 @@ scrumInCeresControllers.controller('HomeController', ['$rootScope', '$scope', 'A
   $scope.logout = function() {
 
   };
+
+  function saveStoryStatus(story) {
+    story.updating = true;
+    Story.update(
+      {projectId:  $scope.selectedProject.id, sprintId: $scope.selectedSprint.id, id: story.id},
+      {'status': story.status},
+      function(response) {
+        story.updating = false;
+      },
+      function(error) {
+        story.updating = false;
+      }
+    )
+  }
 }]);

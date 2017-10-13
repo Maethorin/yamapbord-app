@@ -1,11 +1,11 @@
-<div class="{{column.name | lowercase}}" ng-class="addColumnSize(column.name)">
+<div class="{{column.name | lowercase}} column-container" ng-class="addColumnSize(column.name)">
   <div class="panel panel-default">
     <div class="panel-heading">
       <div class="col-md-12">
-        <h3><span ng-bind="column.label"></span><span class="badge badge-{{column.name | lowercase }}" ng-bind="pointsPerStoryStatus[column.name]"></span></h3>
+        <h3><span ng-bind="column.label"></span><span class="badge badge-{{column.name | lowercase }}" ng-bind="pointsPerStoryTypeStatus[column.name]"></span></h3>
       </div>
     </div>
-    <div class="panel-body column" data-column="{{column.name}}" data-drop="true">
+    <div class="panel-body column {{column.name | lowercase}}" ng-scrollable="columnScrollOptions[column.name]">
       <div
         ng-repeat="story in stories[column.name]"
         class="panel panel-default story">
@@ -25,6 +25,14 @@
           </ul>
         </div>
         <div class="panel-footer">
+          <button type="button" class="btn btn-danger btn-xs btn-go-back-story" ng-click="moveStoryBack(story)" ng-if="story.status !== 'PLAN'">
+            <i class="fa fa-chevron-left"></i>
+            <i class="fa fa-chevron-left minus-margin"></i>
+          </button>
+          <button type="button" class="btn btn-success btn-xs btn-go-forward-story" ng-click="moveStoryForward(story)" ng-if="story.status !== 'REJE'">
+            <i class="fa fa-chevron-right minus-margin"></i>
+            <i class="fa fa-chevron-right"></i>
+          </button>
         </div>
       </div>
     </div>

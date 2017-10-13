@@ -1,9 +1,12 @@
 $graph-part-width: 23px;
-$background-planned: #be0010;
-$background-started: #C16E00;
-$background-finished: #D7CE00;
-$background-delivered: #0409c1;
-$background-accepted: #4bb207;
+$background-plan: #be0010;
+$background-star: #C16E00;
+$background-fini: #D7CE00;
+$background-itst: #b0d01e;
+$background-rtdp: #0bbd0d;
+$background-dpyd: #719c99;
+$background-accp: #388b39;
+$background-reje: #ca0200;
 
 h3 {
   text-align: center;
@@ -72,25 +75,45 @@ h4 {
   }
   .points {
     &.plan {
-      background-color: $background-planned;
+      background-color: $background-plan;
     }
     &.star {
-      background-color: $background-started;
+      background-color: $background-star;
     }
     &.fini {
-      background-color: $background-finished;
+      background-color: $background-fini;
+      color: #888;
+    }
+    &.itst {
+      background-color: $background-itst;
       color: #888;
     }
     &.rtdp {
-      background-color: $background-delivered;
+      background-color: $background-rtdp;
+    }
+    &.dpyd {
+      background-color: $background-dpyd;
     }
     &.accp {
-      background-color: $background-accepted;
+      background-color: $background-accp;
+    }
+    &.reje {
+      background-color: $background-reje;
     }
   }
 }
 
 .board {
+  height: 82vh;
+  overflow: hidden;
+  .column-container {
+    &.col-md-3, &.col-md-2 {
+      padding: 0 5px;
+    }
+    .panel-default {
+      margin-bottom: 10px;
+    }
+  }
   .panel-heading {
     overflow: hidden;
     span {
@@ -101,27 +124,42 @@ h4 {
         color: #EEE;
         float: right;
         &.badge-plan {
-          background-color: $background-planned;
+          background-color: $background-plan;
         }
         &.badge-star {
-          background-color: $background-started;
+          background-color: $background-star;
         }
         &.badge-fini {
-          background-color: $background-finished;
+          background-color: $background-fini;
+          color: #666;
+        }
+        &.badge-itst {
+          background-color: $background-itst;
           color: #666;
         }
         &.badge-rtdp {
-          background-color: $background-delivered;
+          background-color: $background-rtdp;
+        }
+        &.badge-dpyd {
+          background-color: $background-dpyd;
         }
         &.badge-accp {
-          background-color: $background-accepted;
+          background-color: $background-accp;
+        }
+        &.badge-reje {
+          background-color: $background-reje;
         }
       }
     }
   }
   .column {
-    min-height: 1080px;
+    height: 75.4vh;
+    padding-right: 0;
+    &.fini, &.itst, &.rtdp, &.dpyd, &.accp, &.reje {
+      height: 35vh;
+    }
     .story {
+      margin-right: 15px;
       &:hover {
         @include box-shadow(2px 2px 8px 2px rgba(255, 255, 255, 0.8));
       }
@@ -197,6 +235,9 @@ h4 {
       .panel-body {
         padding: 5px;
       }
+      .panel-footer {
+        overflow: hidden;
+      }
     }
   }
 }
@@ -257,20 +298,30 @@ h4 {
         padding: 5px 10px;
         border-radius: 4px;
         &.plan {
-          background-color: $background-planned;
+          background-color: $background-plan;
         }
         &.star {
-          background-color: $background-started;
+          background-color: $background-star;
         }
         &.fini {
-          background-color: $background-finished;
+          background-color: $background-fini;
+          color: #444;
+        }
+        &.itst {
+          background-color: $background-itst;
           color: #444;
         }
         &.rtdp {
-          background-color: $background-delivered;
+          background-color: $background-rtdp;
+        }
+        &.dpyd {
+          background-color: $background-dpyd;
         }
         &.accp {
-          background-color: $background-accepted;
+          background-color: $background-accp;
+        }
+        &.reje {
+          background-color: $background-reje;
         }
       }
       .story-name {
@@ -336,18 +387,20 @@ h4 {
     }
     .panel-footer {
       text-align: center;
-      .btn-go-back-story {
-        float: left;
-        .minus-margin {
-          margin-left: -7px;
-        }
-      }
-      .btn-go-forward-story {
-        float: right;
-        .minus-margin {
-          margin-right: -7px;
-        }
-      }
+      overflow: hidden;
     }
+  }
+}
+
+.btn-go-back-story {
+  float: left;
+  .minus-margin {
+    margin-left: -7px;
+  }
+}
+.btn-go-forward-story {
+  float: right;
+  .minus-margin {
+    margin-right: -7px;
   }
 }
