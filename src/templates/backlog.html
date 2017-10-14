@@ -1,0 +1,64 @@
+<div class="container-fluid backlog">
+  <div class="sprint-container col-md-4" ng-repeat="sprint in sprints">
+    <div class="panel panel-default panel-edit-sprint">
+      <div class="panel-heading">
+        <span class="sprint-name">{{sprint.name | limitTo:65}}{{sprint.name.length > 65 ? '...' : ''}}</span>
+        <button class="btn btn-primary btn-sm btn-save-sprint" ng-click="selectSprintToEdit(sprint, $index)"><i class="fa fa-edit"></i></button>
+      </div>
+      <div class="panel-body">
+        <h4>Objective</h4>
+        <div class="sprint-objective" ng-scrollable>
+          <p ng-bind="sprint.objective"></p>
+        </div>
+        <h4 class="story-header">
+          <span class="title">Stories</span>
+          <span class="sprint-point"><span class="value" ng-bind="(sprint.points === undefined || sprint.points === null ? 'N' : sprint.points)"></span>points</span>
+        </h4>
+        <ul class="list-group sprint-stories" ng-scrollable="scrollOptions">
+          <li class="list-group-item" ng-repeat="story in sprint.stories" title="{{story.statement}}">
+            <span class="story-type-name" ng-class="story.type | lowercase" title="{{story.typeName}}"></span>
+            <span class="story-name" ng-click="toggleCompleteStoryPopup(story)">{{story.name | limitTo: 28}}{{story.name.length > 28 ? '...' : ''}}</span>
+            <span class="badge points-{{story.points === undefined || story.points === null ? 'null' : story.points}}">{{story.points === undefined || story.points === null ? 'N' : story.points}}</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!--<form name="formSprint" novalidate ng-submit="saveSelectedSprint(formSprint)">-->
+    <!--<div class="popup-complete-sprint" ng-class="{'opened': completeSprintPopupOpened}" ng-if="selectedSprint !== null">-->
+      <!--<div class="panel panel-default panel-edit-sprint">-->
+        <!--<div class="panel-heading" title="{{selectedSprint.statement}}">-->
+          <!--<div class="col-md-12">-->
+            <!--<input class="sprint-name" ng-model="selectedSprint.name" />-->
+          <!--</div>-->
+        <!--</div>-->
+        <!--<div class="panel-body">-->
+          <!--<div class="sprint-data">-->
+            <!--<div class="points btn-group">-->
+              <!--<span class="sprint-points"></span>-->
+            <!--</div>-->
+          <!--</div>-->
+          <!--<div class="sprint-objective">-->
+            <!--<textarea rows="3" ng-model="selectedSprint.objective" required></textarea>-->
+          <!--</div>-->
+          <!--<ul class="list-group sprint-storiess" ng-scrollable="scrollOptions">-->
+            <!--<li class="list-group-item" ng-repeat="story in selectedSprint.stories">-->
+              <!--{{ story.name }}-->
+              <!--<button type="button" class="btn btn-default btn-xs btn-remove-item" ng-click="removeSprintStory(selectedSprint, $index)"><i class="fa fa-trash"></i></button>-->
+            <!--</li>-->
+            <!--<li class="new-item list-group-item" ng-click="addingStoryToSprint()">-->
+              <!--<span ng-show="!newStoryVisible">Add a story</span>-->
+              <!--<button type="button" class="btn btn-default btn-xs btn-remove-item" ng-show="newStoryVisible" ng-click="cancelAddStoryToSprint($event)"><i class="fa fa-close"></i></button>-->
+              <!--<button type="button" class="btn btn-primary btn-xs btn-add-item" ng-show="newStoryVisible" ng-click="addStoryToSprint($event, selectedSprint)">Add</button>-->
+            <!--</li>-->
+          <!--</ul>-->
+        <!--</div>-->
+        <!--<div class="panel-footer">-->
+          <!--<button type="button" class="btn btn-danger" ng-click="cancelSaveSelectedSprint()"><i class="fa fa-close"></i> Cancel</button>-->
+          <!--<button type="submit" class="btn btn-success"><i class="fa fa-save"></i> Save</button>-->
+        <!--</div>-->
+      <!--</div>-->
+    <!--</div>-->
+  <!--</form>-->
+</div>

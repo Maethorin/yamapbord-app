@@ -100,6 +100,14 @@ scrumInCeres.config(['$httpProvider', '$stateProvider', '$locationProvider', '$u
     })
 
     .state({
+      name: 'backlogState',
+      url: '/backlog',
+      cache: false,
+      templateUrl: 'templates/backlog.html',
+      controller: 'BacklogController'
+    })
+
+    .state({
       name: 'iceBoxState',
       url: '/ice-box',
       cache: false,
@@ -179,6 +187,10 @@ scrumInCeres.run(['$rootScope', 'AuthService', 'MeService', 'Project', function(
 
   $rootScope.addNewStory = function() {
     $rootScope.$broadcast('story.add');
+  };
+
+  $rootScope.addNewSprint = function() {
+    $rootScope.$broadcast('sprint.add');
   };
 
   $rootScope.goToCurrentSprintInTimeline = function() {

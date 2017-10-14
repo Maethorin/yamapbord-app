@@ -1,0 +1,135 @@
+
+.backlog {
+  margin-top: 80px;
+  .sprint-container {
+    .panel-edit-sprint {
+      .panel-heading {
+        overflow: hidden;
+        .sprint-name {
+          font-size: 15px;
+          vertical-align: middle;
+          display: inline-block;
+          width: 90%;
+          padding-left: 5px;
+        }
+        .btn-save-sprint {
+          float: right;
+          font-size: 19px;
+          padding: 0 11px;
+        }
+      }
+    }
+  }
+
+  .sprint-stories {
+    height: 250px;
+    padding: 10px;
+    background-color: $gray;
+    li {
+      background-color: $gray;
+      color: #222;
+      border-color: #222;
+      width: 97%;
+      cursor: pointer;
+      &:hover {
+        background-color: $gray-darker;
+      }
+      .story-type-name {
+        display: inline-block;
+        padding: 0;
+        width: 27px;
+        height: 27px;
+        background-position: 5px 5px;
+        background-color: $gray-dark;
+      }
+      &.new-item {
+        background-color: #5e7162;
+        color: #9bb299;
+        cursor: pointer;
+        overflow: hidden;
+        &:hover {
+          background-color: darken(#5e7162, 15%);
+        }
+        .btn-add-item, .btn-remove-item {
+          float: right;
+          padding: 5px 10px;
+          font-size: 15px;
+          margin-top: 0;
+          margin-left: 5px;
+        }
+      }
+      .fa {
+        margin: 0;
+      }
+      .btn-remove-item {
+        margin-top: -5px;
+        float: right;
+        padding: 5px 10px;
+        font-size: 15px;
+      }
+    }
+  }
+
+  .story-header {
+    width: 100%;
+    overflow: hidden;
+    .title {
+      display: inline-block;
+      line-height: 36px;
+    }
+    .sprint-point {
+      text-align: center;
+      background-color: $gray-light;
+      display: inline-block;
+      padding: 2px 5px;
+      font-size: 11px;
+      border-radius: 4px;
+      border: 1px solid $gray-darker;
+      float: right;
+      .value {
+        font-size: 18px;
+        display: block;
+      }
+    }
+  }
+
+  .popup-complete-story {
+    .panel-edit-story {
+      margin: 5% 20%;
+      .panel-heading {
+        overflow: hidden;
+        .story-name {
+          vertical-align: middle;
+          display: block;
+          width: 86%;
+          padding: 2px 7px;
+          font-size: 16px;
+          height: 32px;
+          color: $gray-lighter;
+          background: $gray-dark none;
+          border: 1px solid $gray-light;
+          border-radius: 4px;
+          box-shadow: inset 0 1px 1px rgba(0,0,0,0.075);
+          float: left;
+        }
+      }
+    }
+    .panel-body {
+      .story-objective {
+        height: auto;
+        textarea {
+          width: 100%;
+          max-width: 100%;
+          background: transparent;
+          border: none;
+        }
+      }
+      .story-definitions, .story-tasks {
+        height: 45vh;
+      }
+    }
+    .panel-footer {
+      text-align: center;
+    }
+  }
+}

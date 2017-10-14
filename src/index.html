@@ -29,6 +29,7 @@
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
           <ul class="nav navbar-nav">
             <li ui-sref-active="active"><a ui-sref="boardState"><i class="fa fa-columns"></i> Board</a></li>
+            <li ui-sref-active="active"><a ui-sref="backlogState"><i class="fa fa-th-list"></i> Backlog</a></li>
             <li ui-sref-active="active"><a ui-sref="iceBoxState"><i class="fa fa-snowflake-o"></i> Ice Box</a></li>
             <li class="projects" ng-if="currentController == 'BoardController'">
               <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Select a Project <span class="caret"></span></a>
@@ -74,6 +75,9 @@
             </li>
             <li ng-if="currentController === 'IceBoxController'">
               <button type="button" class="btn btn-default navbar-btn" ng-click="addNewStory()">New Story</button>
+            </li>
+            <li ng-if="currentController === 'BacklogController'">
+              <button type="button" class="btn btn-default navbar-btn" ng-click="addNewSprint()">New Sprint</button>
             </li>
           </ul>
 

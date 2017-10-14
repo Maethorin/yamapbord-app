@@ -5,6 +5,7 @@
 @import "timeline";
 @import "board";
 @import "ice-box";
+@import "backlog";
 
 .center {
   text-align: center;
@@ -18,7 +19,7 @@
   }
 }
 
-.story-statement {
+.story-statement, .sprint-objective {
   background-color: $gray;
   color: #FAFAFA;
   padding: 10px 20px;;
@@ -48,7 +49,10 @@ h4 {
   }
 }
 
-.panel-heading, .story-data, .board .panel-heading {
+.panel-heading, .sprint-stories, .story-data, .board .panel-heading {
+  .points-null {
+    background-color: $gray-dark;
+  }
   $index: 1;
   @each $point in $story-points {
     @include story-point-background($point, $index);

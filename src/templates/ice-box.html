@@ -53,6 +53,7 @@
               </ul>
             </div>
             <div class="points btn-group">
+              <label class="btn btn-primary btn-sm points-null" ng-model="selectedStory.points" ng-class="{'active': !selectedStory.points && selectedStory.points != 0}" uib-btn-radio="null">N</label>
               <label class="btn btn-primary btn-sm points-{{point}}" ng-model="selectedStory.points" ng-class="{'active': point == selectedStory.points}" uib-btn-radio="point" ng-repeat="point in points" ng-bind="point"></label>
             </div>
           </div>
