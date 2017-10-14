@@ -2,7 +2,7 @@
 
 scrumInCeresControllers.controller('HomeController', ['$rootScope', '$scope', 'Alert', 'Story', function($rootScope, $scope, Alert, Story) {
   $scope.timeline = null;
-  $scope.scrollOptions = {scrollX: 'bottom',scrollY: 'none', useBothWheelAxes: true, scrollPosX: 0, preventWheelEvents: true};
+  $scope.scrollOptions = {scrollX: 'bottom', scrollY: 'none', useBothWheelAxes: true, scrollPosX: 0, preventWheelEvents: true};
   $scope.currentTimelineSprintLeftPosition = null;
   $scope.currentSprint = null;
   $scope.columnTemplate = '/templates/include/board-column.html';

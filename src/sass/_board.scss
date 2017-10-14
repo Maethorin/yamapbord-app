@@ -122,9 +122,9 @@ h4 {
           padding: 2px;
         }
         .story-type {
+          @include story-types();
           width: 16px;
           height: 16px;
-          background-repeat: no-repeat;
           display: inline-block;
           vertical-align: middle;
           margin-right: 5px;
@@ -133,7 +133,6 @@ h4 {
           &:hover {
             background-color: $gray-lighter;
           }
-          @include story-types();
         }
         .story-name {
           font-size: 15px;

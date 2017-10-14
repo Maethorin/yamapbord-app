@@ -13,7 +13,7 @@
           <div class="col-md-12">
             <span class="story-type" ng-class="story.typeCode | lowercase " title="{{story.typeName}}"></span>
             <span class="story-name" ng-click="toggleCompleteStoryPopup(story)">{{story.name | limitTo: 28}}{{story.name.length > 28 ? '...' : ''}}</span>
-            <span class="badge badge-{{story.points}}">{{story.points}}</span>
+            <span class="badge points-{{story.points}}">{{story.points}}</span>
           </div>
         </div>
         <div class="panel-body" ng-if="story.hasTasks">

@@ -20,10 +20,78 @@
     }
   }
 
+  .story-definitions, .story-tasks {
+    height: 250px;
+    padding: 10px;
+    background-color: $gray;
+    li {
+      background-color: $gray;
+      color: #222;
+      border-color: #222;
+      width: 97%;
+      &.new-item {
+        background-color: #5e7162;
+        color: #9bb299;
+        cursor: pointer;
+        overflow: hidden;
+        &:hover {
+          background-color: darken(#5e7162, 15%);
+        }
+        input {
+          vertical-align: middle;
+          display: block;
+          width: 88%;
+          padding: 2px 7px;
+          font-size: 16px;
+          height: 32px;
+          color: $gray-lighter;
+          background: #5e7162 none;
+          border: 1px solid #f1f1f1;
+          border-radius: 4px;
+          box-shadow: inset 0 1px 1px rgba(0,0,0,0.075);
+          float: left;
+        }
+        .btn-add-item, .btn-remove-item {
+          float: right;
+          padding: 5px 10px;
+          font-size: 15px;
+          margin-top: 0;
+          margin-left: 5px;
+        }
+      }
+      .fa {
+        margin: 0;
+      }
+      .btn-remove-item {
+        margin-top: -5px;
+        float: right;
+        padding: 5px 10px;
+        font-size: 15px;
+      }
+    }
+  }
+
   .story-data {
     width: 100%;
+    .story-type {
+      @include story-types();
+      background-position: 9px 8px;
+      background-color: $gray;
+      padding: 6px 18px 6px 34px;
+      font-size: 16px;
+      border: 1px solid #999;
+      display: inline-block;
+      border-radius: 4px;
+    }
+    .story-point {
+      display: inline-block;
+      padding: 6px 15px;
+      font-size: 18px;
+      border-radius: 4px;
+      border: 1px solid #666;
+      float: right;
+    }
     .btn-story-type {
-      background-repeat: no-repeat;
       background-position: 9px 7px;
       padding-left: 34px;
       font-size: 14px;
@@ -59,9 +127,37 @@
 
   .popup-complete-story {
     .panel-edit-story {
-      margin: 10% 30%;
+      margin: 5% 20%;
       .panel-heading {
         overflow: hidden;
+        .story-name {
+          vertical-align: middle;
+          display: block;
+          width: 86%;
+          padding: 2px 7px;
+          font-size: 16px;
+          height: 32px;
+          color: $gray-lighter;
+          background: $gray-dark none;
+          border: 1px solid $gray-light;
+          border-radius: 4px;
+          box-shadow: inset 0 1px 1px rgba(0,0,0,0.075);
+          float: left;
+        }
+      }
+    }
+    .panel-body {
+      .story-statement {
+        height: auto;
+        textarea {
+          width: 100%;
+          max-width: 100%;
+          background: transparent;
+          border: none;
+        }
+      }
+      .story-definitions, .story-tasks {
+        height: 45vh;
       }
     }
     .panel-footer {

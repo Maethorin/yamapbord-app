@@ -30,12 +30,13 @@ $story-points-colors:
 }
 
 @mixin story-point-background($point, $index) {
-  .badge-#{$point} {
+  .points-#{$point} {
     background-color: nth($story-points-colors, $index);
   }
 }
 
 @mixin story-types() {
+  background-repeat: no-repeat;
   @each $story-type in $story-types {
     &.#{$story-type} {
       @include story-type-background($story-type)
@@ -91,7 +92,7 @@ $body-bg:               $gray-darker !default;
 $text-color:            #fff !default;
 
 //** Global textual link color.
-$link-color:            desaturate(lighten($brand-success, 10%),10%) !default;
+$link-color:            #78CEA1 !default;
 //** Link hover color set via `darken()` function.
 $link-hover-color:      $link-color !default;
 //** Link hover decoration.
@@ -491,7 +492,7 @@ $nav-tabs-border-color:                     $gray !default;
 $nav-tabs-link-hover-border-color:          $gray !default;
 
 $nav-tabs-active-link-hover-bg:             $body-bg !default;
-$nav-tabs-active-link-hover-color:          $brand-success !default;
+$nav-tabs-active-link-hover-color:          darken($gray, 25%) !default;
 $nav-tabs-active-link-hover-border-color:   $nav-tabs-link-hover-border-color !default;
 
 $nav-tabs-justified-link-border-color:            $gray-lighter !default;
