@@ -1,6 +1,6 @@
 'use strict';
 
-scrumInCeresControllers.controller('IceBoxController', ['$rootScope', '$scope', 'Alert', 'IceBox', function($rootScope, $scope, Alert, IceBox) {
+scrumInCeresControllers.controller('IceBoxController', ['$rootScope', '$scope', 'Alert', 'StoryService', 'IceBox', function($rootScope, $scope, Alert, StoryService, IceBox) {
   $rootScope.selectedProject = null;
   $rootScope.currentController = 'IceBoxController';
 
@@ -11,32 +11,19 @@ scrumInCeresControllers.controller('IceBoxController', ['$rootScope', '$scope', 
   $scope.addingNewStory = false;
   $scope.selectedStoryIndex = null;
 
-  var filter = {};
-
   $scope.newTask = {task: null};
   $scope.newTaskVisible = false;
   $scope.newDefinition = {definition: null};
   $scope.newDefinitionVisible = false;
 
-  function getStories() {
-    IceBox.query(
-      filter,
-      function(response) {
-        $scope.stories = response;
-      }
-    );
-  }
-
-  getStories();
-
   $rootScope.$on('story.filter.type', function(evt, type) {
-    if (type !== null) {
-      filter.type = type.code
-    }
-    else {
-      delete filter.type;
-    }
-    getStories();
+    StoryService.filterByType(type).then(function(stories) {
+      $scope.stories = stories;
+    });
+  });
+
+  StoryService.getStories().then(function(stories) {
+    $scope.stories = stories;
   });
 
   $rootScope.$on('story.add', function() {
@@ -76,10 +63,9 @@ scrumInCeresControllers.controller('IceBoxController', ['$rootScope', '$scope', 
     }
 
     if ($scope.addingNewStory) {
-      IceBox.save(
-        $scope.selectedStory,
-        function() {
-          getStories();
+      StoryService.addToIceLog($scope.selectedStory).then(
+        function(stories) {
+          $scope.stories = stories;
           $scope.addingNewStory = false;
           $scope.selectedStory = null;
           $scope.completeStoryPopupOpened = false;
@@ -90,9 +76,7 @@ scrumInCeresControllers.controller('IceBoxController', ['$rootScope', '$scope', 
       );
       return;
     }
-    IceBox.update(
-      {id: $scope.selectedStory.id},
-      $scope.selectedStory,
+    StoryService.updateInIceLog($scope.selectedStory).then(
       function() {
         $scope.stories[$scope.selectedStoryIndex] = $scope.selectedStory;
         $scope.selectedStoryIndex = null;
