@@ -19,6 +19,53 @@
   }
 }
 
+.popup-complete-story {
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  display: none;
+  background-color: rgba(76,76,76,0.8);
+  position: fixed;
+  z-index: 1032;
+  &.opened {
+    display: block;
+  }
+  .panel-complete-story {
+    margin: 10% 20%;
+    .panel-heading {
+      overflow: hidden;
+      .story-name {
+        font-size: 15px;
+        vertical-align: middle;
+        display: inline-block;
+        width: 75%;
+        padding-left: 5px;
+        line-height: 25px;
+      }
+      .badge {
+        float: right;
+        font-size: 17px;
+        margin-top: 4px;
+      }
+    }
+    .panel-body {
+      padding: 20px;
+      max-height: 405px;
+      zoom: 1;
+      overflow: auto;
+      position: relative;
+      .story-statement {
+        margin-top: 0;
+      }
+    }
+    .panel-footer {
+      text-align: center;
+      overflow: hidden;
+    }
+  }
+}
+
 .story-statement, .sprint-objective {
   background-color: $gray;
   color: #FAFAFA;
@@ -49,9 +96,10 @@ h4 {
   }
 }
 
-.panel-heading, .sprint-stories, .story-data, .board .panel-heading {
+.panel-heading, .story-data, .board .panel-heading, .backlog .panel-heading {
   .points-null {
     background-color: $gray-dark;
+    color: #EEE;
   }
   $index: 1;
   @each $point in $story-points {

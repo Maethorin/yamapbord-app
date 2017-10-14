@@ -15,12 +15,36 @@
           <span class="sprint-point"><span class="value" ng-bind="(sprint.points === undefined || sprint.points === null ? 'N' : sprint.points)"></span>points</span>
         </h4>
         <ul class="list-group sprint-stories" ng-scrollable="scrollOptions">
-          <li class="list-group-item" ng-repeat="story in sprint.stories" title="{{story.statement}}">
+          <li class="list-group-item" ng-repeat="story in sprint.stories" title="{{story.statement}}" ng-click="toggleCompleteStoryPopup(story)">
             <span class="story-type-name" ng-class="story.type | lowercase" title="{{story.typeName}}"></span>
-            <span class="story-name" ng-click="toggleCompleteStoryPopup(story)">{{story.name | limitTo: 28}}{{story.name.length > 28 ? '...' : ''}}</span>
+            <span class="story-name">{{story.name | limitTo: 28}}{{story.name.length > 28 ? '...' : ''}}</span>
             <span class="badge points-{{story.points === undefined || story.points === null ? 'null' : story.points}}">{{story.points === undefined || story.points === null ? 'N' : story.points}}</span>
           </li>
         </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="popup-complete-story" ng-class="{'opened': completeStoryPopupOpened}">
+    <div class="panel panel-default panel-complete-story">
+      <div class="panel-heading" title="{{selectedStory.statement}}">
+        <span class="story-type-name" ng-class="selectedStory.type | lowercase " title="{{selectedStory.typeName}}" ng-bind="selectedStory.typeName"></span>
+        <span class="story-name">{{selectedStory.name}}</span>
+        <span class="story-status" ng-class="selectedStory.status | lowercase" ng-bind="selectedStory.statusName"></span>
+        <span class="badge points-{{selectedStory.points === undefined || selectedStory.points === null ? 'null' : selectedStory.points}}">{{selectedStory.points === undefined || selectedStory.points === null ? 'N' : selectedStory.points}}</span>
+      </div>
+      <div class="panel-body">
+        <div class="story-statement" ng-bind="selectedStory.statement"></div>
+        <h4>Tasks:</h4>
+        <ul class="list-group">
+          <li class="list-group-item" ng-class="{'list-group-item-success': task.complete, 'list-group-item-warning': !task.complete }" ng-repeat="task in selectedStory.tasks">
+            <i class="fa fa-fw" ng-click="changeTaskStatus(task, $index, selectedStory)" ng-class="{'fa-square-o': !task.changing && !task.complete, 'fa-spinner fa-spin': task.changing, 'fa-check-square-o': !task.changing && task.complete}"></i>
+            {{ task.task }}
+          </li>
+        </ul>
+      </div>
+      <div class="panel-footer">
+        <button type="button" class="btn btn-primary" ng-click="toggleCompleteStoryPopup(null)">Close</button>
       </div>
     </div>
   </div>
