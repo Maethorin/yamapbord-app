@@ -73,3 +73,11 @@ h4 {
   border-radius: 4px;
   @include story-status-backgrounds();
 }
+
+.dropdown-toggle {
+  &.story-type {
+    background-position: 8px 21px;
+    padding-left: 34px;
+    @include story-types();
+  }
+}

@@ -1,3 +1,19 @@
+.story-type-option {
+  background-repeat: no-repeat;
+  background-position: 9px 7px;
+  padding-left: 34px;
+  cursor: pointer;
+  @include story-types();
+}
+
+li {
+  a {
+    &.story-type-option {
+      padding-left: 34px;
+    }
+  }
+}
+
 .ice-box {
   margin-top: 80px;
   .story-container {
@@ -104,13 +120,6 @@
           margin-top: 8px;
         }
       }
-      @include story-types();
-    }
-    .story-type-option {
-      background-repeat: no-repeat;
-      background-position: 9px 7px;
-      padding-left: 34px;
-      cursor: pointer;
       @include story-types();
     }
     .points {

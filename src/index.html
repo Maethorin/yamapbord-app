@@ -28,25 +28,55 @@
 
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
           <ul class="nav navbar-nav">
-            <li class="projects">
+            <li ui-sref-active="active"><a ui-sref="boardState"><i class="fa fa-columns"></i> Board</a></li>
+            <li ui-sref-active="active"><a ui-sref="iceBoxState"><i class="fa fa-snowflake-o"></i> Ice Box</a></li>
+            <li class="projects" ng-if="currentController == 'BoardController'">
               <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Select a Project <span class="caret"></span></a>
               <ul class="dropdown-menu">
                 <li ng-repeat="project in projects"><a ng-click="viewProject(project)" ng-bind="project.name"></a></li>
               </ul>
             </li>
-            <li ui-sref-active="active"><a ui-sref="iceBoxState"><i class="fa fa-snowflake-o"></i> Ice Box</a></li>
+            <li ng-if="selectedProject !== null">
+              <p class="navbar-text">
+                <strong>Current Project: </strong><span ng-bind="selectedProject.name"></span> /
+                <strong>Team: </strong><span ng-bind="selectedProject.team.name"></span>
+              </p>
+            </li>
+            <li ng-if="currentController === 'IceBoxController'">
+              <form class="navbar-form navbar-left">
+                <div class="form-group">
+                  <div class="input-group">
+                    <input type="text" class="form-control" placeholder="Search Stories" ng-model="search.expression">
+                    <div class="input-group-btn">
+                      <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{storyFilterTextType === null ? 'By Name' : storyFilterTextType.name}} <span class="caret"></span></button>
+                      <ul class="dropdown-menu">
+                        <li><a ng-click="setStoryFilterTextType('name')">By Name</a></li>
+                        <li><a ng-click="setStoryFilterTextType('statement')">By Statement</a></li>
+                        <li><a ng-click="setStoryFilterTextType('task')">By Task</a></li>
+                        <li><a ng-click="setStoryFilterTextType('definition')">By Definition</a></li>
+                      </ul>
+                      <button type="button" ng-click="searchStories()" class="btn btn-default">Go!</button>
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </li>
+            <li ng-if="selectedProject !== null">
+              <button type="button" class="btn btn-default navbar-btn" ng-click="goToCurrentSprintInTimeline()">Go to current Sprint</button>
+            </li>
+            <li class="dropdown" ng-if="currentController === 'IceBoxController'">
+              <a class="dropdown-toggle story-type {{currentStoryTypeFilter !== null ? currentStoryTypeFilter.code.toLowerCase() : ''}}" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{currentStoryTypeFilter === null ? 'Filter by Type' : currentStoryTypeFilter.name}} <span class="caret"></span></a>
+              <ul class="dropdown-menu" role="menu">
+                <li><a ng-click="filterByStoryType(null)">All Stories</a></li>
+                <li role="separator" class="divider"></li>
+                <li ng-repeat="type in storyTypes"><a ng-click="filterByStoryType(type)" class="story-type-option" ng-class="type.code | lowercase" ng-bind="type.name"></a></li>
+              </ul>
+            </li>
+            <li ng-if="currentController === 'IceBoxController'">
+              <button type="button" class="btn btn-default navbar-btn" ng-click="addNewStory()">New Story</button>
+            </li>
           </ul>
-          <p class="navbar-text" ng-if="selectedProject !== null">
-            <strong>Current Project: </strong><span ng-bind="selectedProject.name"></span> /
-            <strong>Team: </strong><span ng-bind="selectedProject.team.name"></span>
-          </p>
-          <button type="button" class="btn btn-default navbar-btn" ng-click="goToCurrentSprintInTimeline()" ng-if="selectedProject !== null">Go to current Sprint</button>
-          <form class="navbar-form navbar-left" ng-if="selectedProject !== null">
-            <div class="form-group">
-              <input type="text" class="form-control" placeholder="Search Stories" ng-model="search.expression">
-            </div>
-            <button type="button" ng-click="searchStories()" class="btn btn-default">Go!</button>
-          </form>
+
           <ul class="nav navbar-nav navbar-right">
             <li class="dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Hello {{loggedUser.name}} <span class="caret"></span></a>

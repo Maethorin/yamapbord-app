@@ -2,6 +2,8 @@
 
 scrumInCeresControllers.controller('LoginController', ['$rootScope', '$scope', '$window', '$location', '$state','$timeout', 'AuthService', 'Login',
 function($rootScope, $scope, $window, $location, $state, $timeout, AuthService, Login) {
+  $rootScope.currentController = 'LoginController';
+
   if (AuthService.userIsLogged()) {
     $state.go('home', {}, {reload: 'home'});
   }

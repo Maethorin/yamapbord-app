@@ -1,6 +1,7 @@
 'use strict';
 
-scrumInCeresControllers.controller('HomeController', ['$rootScope', '$scope', 'Alert', 'Story', function($rootScope, $scope, Alert, Story) {
+scrumInCeresControllers.controller('BoardController', ['$rootScope', '$scope', 'Alert', 'Story', function($rootScope, $scope, Alert, Story) {
+  $rootScope.currentController = 'BoardController';
   $scope.timeline = null;
   $scope.scrollOptions = {scrollX: 'bottom', scrollY: 'none', useBothWheelAxes: true, scrollPosX: 0, preventWheelEvents: true};
   $scope.currentTimelineSprintLeftPosition = null;

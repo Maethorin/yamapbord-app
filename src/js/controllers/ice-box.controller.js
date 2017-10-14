@@ -1,29 +1,59 @@
 'use strict';
 
 scrumInCeresControllers.controller('IceBoxController', ['$rootScope', '$scope', 'Alert', 'IceBox', function($rootScope, $scope, Alert, IceBox) {
+  $rootScope.selectedProject = null;
+  $rootScope.currentController = 'IceBoxController';
+
   $scope.scrollOptions = {scrollX: 'none', scrollY: 'right', preventWheelEvents: true};
   $scope.points = [0, 1, 2, 3, 5, 8];
-  $scope.storyTypes = [
-    {code: 'FEA', name: 'Feature'},
-    {code: 'BUG', name: 'Bug'},
-    {code: 'CHO', name: 'Chore'},
-    {code: 'TEC', name: 'Techinical'}
-  ];
   $scope.completeStoryPopupOpened = false;
   $scope.selectedStory = null;
+  $scope.addingNewStory = false;
   $scope.selectedStoryIndex = null;
 
+  var filter = {};
 
   $scope.newTask = {task: null};
   $scope.newTaskVisible = false;
   $scope.newDefinition = {definition: null};
   $scope.newDefinitionVisible = false;
 
-  IceBox.query(
-    function(response) {
-      $scope.stories = response;
+  function getStories() {
+    IceBox.query(
+      filter,
+      function(response) {
+        $scope.stories = response;
+      }
+    );
+  }
+
+  getStories();
+
+  $rootScope.$on('story.filter.type', function(evt, type) {
+    if (type !== null) {
+      filter.type = type.code
     }
-  );
+    else {
+      delete filter.type;
+    }
+    getStories();
+  });
+
+  $rootScope.$on('story.add', function() {
+    $scope.addingNewStory = true;
+    $scope.selectedStory = {
+      definitionOfDone: [],
+      name: null,
+      percentageComplete: 0,
+      points: null,
+      statement: null,
+      status: 'PLAN',
+      tasks: [],
+      type: 'FEA',
+      typeName: 'Feature'
+    };
+    $scope.completeStoryPopupOpened = true;
+  });
 
   $scope.setStoryType = function(story, type) {
     story.type = type.code;
@@ -36,7 +66,30 @@ scrumInCeresControllers.controller('IceBoxController', ['$rootScope', '$scope', 
     $scope.completeStoryPopupOpened = true;
   };
 
-  $scope.saveSelectedStory = function() {
+  $scope.saveSelectedStory = function(form) {
+    if (form.$invalid) {
+      Alert.error(
+        'Sum Ten Wong',
+        'Invalid fields.'
+      );
+      return false;
+    }
+
+    if ($scope.addingNewStory) {
+      IceBox.save(
+        $scope.selectedStory,
+        function() {
+          getStories();
+          $scope.addingNewStory = false;
+          $scope.selectedStory = null;
+          $scope.completeStoryPopupOpened = false;
+        },
+        function(error) {
+          Alert.error('Sum Ten Wong', error.data.exception);
+        }
+      );
+      return;
+    }
     IceBox.update(
       {id: $scope.selectedStory.id},
       $scope.selectedStory,

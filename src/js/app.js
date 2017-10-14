@@ -89,10 +89,10 @@ scrumInCeres.config(['$httpProvider', '$stateProvider', '$locationProvider', '$u
 
   $stateProvider
     .state({
-      name: 'home',
-      url: '/',
-      templateUrl: 'templates/home.html',
-      controller: 'HomeController',
+      name: 'boardState',
+      url: '/board',
+      templateUrl: 'templates/board.html',
+      controller: 'BoardController',
       cache: false,
       headers: {
         'Cache-Control' : 'no-cache'
@@ -121,7 +121,7 @@ scrumInCeres.config(['$httpProvider', '$stateProvider', '$locationProvider', '$u
       controller: 'LogoutController'
     });
 
-  $urlRouterProvider.when('', '/');
+  $urlRouterProvider.when('', '/board');
 }]);
 
 scrumInCeres.run(['$rootScope', 'AuthService', 'MeService', 'Project', function($rootScope, AuthService, MeService, Project) {
@@ -129,18 +129,34 @@ scrumInCeres.run(['$rootScope', 'AuthService', 'MeService', 'Project', function(
   $rootScope.$on('userInfo.updated', function(evt, userInfo) {
     $rootScope.loggedUser = userInfo;
   });
+  $rootScope.currentController = null;
   $rootScope.selectedProject = null;
   $rootScope.projects = [];
   $rootScope.search = {
     expression: ''
   };
+  $rootScope.currentStoryTypeFilter = null;
+  $rootScope.storyTypes = [
+    {code: 'FEA', name: 'Feature'},
+    {code: 'BUG', name: 'Bug'},
+    {code: 'CHO', name: 'Chore'},
+    {code: 'TEC', name: 'Techinical'}
+  ];
+
+  $rootScope.storyFilterTextTypes = {
+    name: {type: 'name', name: 'By Name'},
+    statement: {type: 'statement', name: 'By Statement'},
+    task: {type: 'task', name: 'By Task'},
+    definition: {type: 'definition', name: 'By Definition'}
+  };
+  $rootScope.storyFilterTextType = null;
 
   MeService.getInfo().then(
     function(info) {
       Project.query(
         function(response) {
           $rootScope.projects = response;
-          $rootScope.viewProject(response[1]);
+          // $rootScope.viewProject(response[1]);
         }
       )
     },
@@ -148,17 +164,29 @@ scrumInCeres.run(['$rootScope', 'AuthService', 'MeService', 'Project', function(
     }
   );
 
+  $rootScope.setStoryFilterTextType = function(type) {
+    $rootScope.storyFilterTextType = $rootScope.storyFilterTextTypes[type];
+  };
+
   $rootScope.viewProject = function(project) {
     $rootScope.selectedProject = project;
+  };
+
+  $rootScope.filterByStoryType = function(type) {
+    $rootScope.currentStoryTypeFilter = type;
+    $rootScope.$broadcast('story.filter.type', type);
+  };
+
+  $rootScope.addNewStory = function() {
+    $rootScope.$broadcast('story.add');
   };
 
   $rootScope.goToCurrentSprintInTimeline = function() {
     $rootScope.$broadcast('currentSprint.select');
   };
 
-
   $rootScope.searchStories = function() {
-
+    $rootScope.$broadcast('story.search', $rootScope.storyFilterTextType);
   };
 
   $rootScope.showMyInfo = function() {

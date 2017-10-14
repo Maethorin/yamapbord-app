@@ -267,7 +267,7 @@ $input-border-focus:             #fff !default;
 $input-color-placeholder:        $gray-light !default;
 
 //** Default `.form-control` height
-$input-height-base:              ($line-height-computed + ($padding-base-vertical * 2) + 4) !default;
+$input-height-base:              43px !default;
 //** Large `.form-control` height
 $input-height-large:             (ceil($font-size-large * $line-height-large) + ($padding-large-vertical * 2) + 4) !default;
 //** Small `.form-control` height
@@ -492,7 +492,7 @@ $nav-tabs-border-color:                     $gray !default;
 $nav-tabs-link-hover-border-color:          $gray !default;
 
 $nav-tabs-active-link-hover-bg:             $body-bg !default;
-$nav-tabs-active-link-hover-color:          darken($gray, 25%) !default;
+$nav-tabs-active-link-hover-color:          darken($gray, 5%) !default;
 $nav-tabs-active-link-hover-border-color:   $nav-tabs-link-hover-border-color !default;
 
 $nav-tabs-justified-link-border-color:            $gray-lighter !default;
