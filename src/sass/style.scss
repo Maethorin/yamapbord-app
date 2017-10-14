@@ -32,7 +32,7 @@
     display: block;
   }
   .panel-complete-story {
-    margin: 10% 20%;
+    margin: 8% 20%;
     .panel-heading {
       overflow: hidden;
       .story-name {
@@ -51,12 +51,16 @@
     }
     .panel-body {
       padding: 20px;
-      max-height: 405px;
+      height: 50vh;
       zoom: 1;
       overflow: auto;
       position: relative;
       .story-statement {
         margin-top: 0;
+      }
+      .story-tasks, .story-definitions {
+        height: 30vh;
+        overflow: hidden;
       }
     }
     .panel-footer {

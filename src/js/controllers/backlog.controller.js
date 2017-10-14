@@ -14,7 +14,20 @@ scrumInCeresControllers.controller('BacklogController', ['$rootScope', '$scope',
   );
 
   $scope.toggleCompleteStoryPopup = function(story) {
-    $scope.selectedStory = story;
-    $scope.completeStoryPopupOpened = !$scope.completeStoryPopupOpened;
+    if (story === null) {
+      $scope.selectedStory = story;
+      $scope.completeStoryPopupOpened = !$scope.completeStoryPopupOpened;
+    }
+    StoryService.getFullStory(story.id).then(
+      function(response) {
+        $scope.selectedStory = story;
+        $scope.selectedStory.tasks = response.tasks;
+        $scope.selectedStory.definitionOfDone = response.definitionOfDone;
+        $scope.completeStoryPopupOpened = !$scope.completeStoryPopupOpened;
+      },
+      function(error) {
+        Alert.error('Sum Ten Wong')
+      }
+    );
   };
 }]);

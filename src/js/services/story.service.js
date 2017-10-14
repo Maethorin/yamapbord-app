@@ -63,4 +63,18 @@ scrumInCeresServices.service('StoryService', ['$q', '$rootScope', 'IceBox', func
     );
     return result.promise;
   };
+
+  this.getFullStory = function(storyId) {
+    var result = $q.defer();
+    IceBox.get(
+      {id: storyId},
+      function(response) {
+        result.resolve(response);
+      },
+      function(error) {
+        result.reject(error);
+      }
+    );
+    return result.promise;
+  };
 }]);

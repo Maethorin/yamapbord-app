@@ -35,13 +35,22 @@
       </div>
       <div class="panel-body">
         <div class="story-statement" ng-bind="selectedStory.statement"></div>
-        <h4>Tasks:</h4>
-        <ul class="list-group">
-          <li class="list-group-item" ng-class="{'list-group-item-success': task.complete, 'list-group-item-warning': !task.complete }" ng-repeat="task in selectedStory.tasks">
-            <i class="fa fa-fw" ng-click="changeTaskStatus(task, $index, selectedStory)" ng-class="{'fa-square-o': !task.changing && !task.complete, 'fa-spinner fa-spin': task.changing, 'fa-check-square-o': !task.changing && task.complete}"></i>
-            {{ task.task }}
-          </li>
-        </ul>
+        <uib-tabset active="activeJustified" justified="true">
+          <uib-tab index="0" heading="Tasks">
+            <ul class="list-group story-tasks" ng-scrollable>
+              <li class="list-group-item" ng-repeat="task in selectedStory.tasks">
+                {{ task.task }}
+              </li>
+            </ul>
+          </uib-tab>
+          <uib-tab index="1" heading="DoD">
+            <ul class="list-group story-definitions" ng-scrollable>
+              <li class="list-group-item" ng-repeat="definition in selectedStory.definitionOfDone">
+                {{ definition.definition }}
+              </li>
+            </ul>
+          </uib-tab>
+        </uib-tabset>
       </div>
       <div class="panel-footer">
         <button type="button" class="btn btn-primary" ng-click="toggleCompleteStoryPopup(null)">Close</button>

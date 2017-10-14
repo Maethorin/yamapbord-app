@@ -168,6 +168,24 @@ scrumInCeresControllers.controller('BoardController', ['$rootScope', '$scope', '
     )
   };
 
+  $scope.changeDefinitionStatus = function(definition, $index, story) {
+    if (definition.changing) {
+      return false;
+    }
+    definition.changing = true;
+    Story.update(
+      {projectId:  $rootScope.selectedProject.id, sprintId: $scope.selectedSprint.id, id: story.id},
+      {'toggleDefinition': $index},
+      function(response) {
+        definition.changing = false;
+        definition.done = !definition.done;
+      },
+      function(error) {
+        definition.changing = false;
+      }
+    )
+  };
+
   $scope.toggleCompleteStoryPopup = function(story) {
     $scope.selectedStory = story;
     $scope.completeStoryPopupOpened = !$scope.completeStoryPopupOpened;
