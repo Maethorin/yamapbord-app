@@ -1,6 +1,7 @@
 'use strict';
 
 scrumInCeresControllers.controller('IceBoxController', ['$rootScope', '$scope', 'Alert', 'IceBox', function($rootScope, $scope, Alert, IceBox) {
+  $scope.scrollOptions = {scrollX: 'none', scrollY: 'right', preventWheelEvents: true};
   $scope.points = [0, 1, 2, 3, 5, 8];
   $scope.storyTypes = [
     {code: 'FEA', name: 'Feature'},
@@ -10,7 +11,8 @@ scrumInCeresControllers.controller('IceBoxController', ['$rootScope', '$scope', 
   ];
   $scope.completeStoryPopupOpened = false;
   $scope.selectedStory = null;
-  $scope.scrollOptions = {scrollX: 'none', scrollY: 'right', preventWheelEvents: true};
+  $scope.selectedStoryIndex = null;
+
 
   $scope.newTask = {task: null};
   $scope.newTaskVisible = false;
@@ -24,22 +26,35 @@ scrumInCeresControllers.controller('IceBoxController', ['$rootScope', '$scope', 
   );
 
   $scope.setStoryType = function(story, type) {
-    story.typeCode = type.code;
+    story.type = type.code;
     story.typeName = type.name;
   };
 
-  $scope.selectStoryToEdit = function(story) {
-    $scope.selectedStory = story;
+  $scope.selectStoryToEdit = function(story, $index) {
+    $scope.selectedStory = _.cloneDeep(story);
+    $scope.selectedStoryIndex = $index;
     $scope.completeStoryPopupOpened = true;
   };
 
   $scope.saveSelectedStory = function() {
-    $scope.selectedStory = null;
-      $scope.completeStoryPopupOpened = false;
+    IceBox.update(
+      {id: $scope.selectedStory.id},
+      $scope.selectedStory,
+      function() {
+        $scope.stories[$scope.selectedStoryIndex] = $scope.selectedStory;
+        $scope.selectedStoryIndex = null;
+        $scope.selectedStory = null;
+        $scope.completeStoryPopupOpened = false;
+      },
+      function(error) {
+        Alert.error('Sum Ten Wong', error.data.exception);
+      }
+    );
   };
 
   $scope.cancelSaveSelectedStory = function() {
     $scope.selectedStory = null;
+    $scope.selectedStoryIndex = null;
     $scope.completeStoryPopupOpened = false;
   };
 
