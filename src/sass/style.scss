@@ -96,16 +96,14 @@ h4 {
   }
 }
 
-.panel-heading, .story-data, .board .panel-heading, .backlog .panel-heading {
-  .points-null {
-    background-color: $gray-dark;
-    color: #EEE;
-  }
-  $index: 1;
-  @each $point in $story-points {
-    @include story-point-background($point, $index);
-    $index: $index + 1;
-  }
+.points-null {
+  background-color: $gray-dark !important;
+  color: #EEE !important;
+}
+$index: 1;
+@each $point in $story-points {
+  @include story-point-background($point, $index);
+  $index: $index + 1;
 }
 
 .story-type-name {

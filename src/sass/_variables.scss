@@ -31,8 +31,8 @@ $story-points-colors:
 
 @mixin story-point-background($point, $index) {
   .points-#{$point} {
-    color: #EEE;
-    background-color: nth($story-points-colors, $index);
+    color: #EEE !important;
+    background-color: nth($story-points-colors, $index) !important;
   }
 }
 
