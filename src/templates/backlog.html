@@ -58,40 +58,43 @@
     </div>
   </div>
 
-  <!--<form name="formSprint" novalidate ng-submit="saveSelectedSprint(formSprint)">-->
-    <!--<div class="popup-complete-sprint" ng-class="{'opened': completeSprintPopupOpened}" ng-if="selectedSprint !== null">-->
-      <!--<div class="panel panel-default panel-edit-sprint">-->
-        <!--<div class="panel-heading" title="{{selectedSprint.statement}}">-->
-          <!--<div class="col-md-12">-->
-            <!--<input class="sprint-name" ng-model="selectedSprint.name" />-->
-          <!--</div>-->
-        <!--</div>-->
-        <!--<div class="panel-body">-->
-          <!--<div class="sprint-data">-->
-            <!--<div class="points btn-group">-->
-              <!--<span class="sprint-points"></span>-->
-            <!--</div>-->
-          <!--</div>-->
-          <!--<div class="sprint-objective">-->
-            <!--<textarea rows="3" ng-model="selectedSprint.objective" required></textarea>-->
-          <!--</div>-->
-          <!--<ul class="list-group sprint-storiess" ng-scrollable="scrollOptions">-->
-            <!--<li class="list-group-item" ng-repeat="story in selectedSprint.stories">-->
-              <!--{{ story.name }}-->
-              <!--<button type="button" class="btn btn-default btn-xs btn-remove-item" ng-click="removeSprintStory(selectedSprint, $index)"><i class="fa fa-trash"></i></button>-->
-            <!--</li>-->
-            <!--<li class="new-item list-group-item" ng-click="addingStoryToSprint()">-->
-              <!--<span ng-show="!newStoryVisible">Add a story</span>-->
-              <!--<button type="button" class="btn btn-default btn-xs btn-remove-item" ng-show="newStoryVisible" ng-click="cancelAddStoryToSprint($event)"><i class="fa fa-close"></i></button>-->
-              <!--<button type="button" class="btn btn-primary btn-xs btn-add-item" ng-show="newStoryVisible" ng-click="addStoryToSprint($event, selectedSprint)">Add</button>-->
-            <!--</li>-->
-          <!--</ul>-->
-        <!--</div>-->
-        <!--<div class="panel-footer">-->
-          <!--<button type="button" class="btn btn-danger" ng-click="cancelSaveSelectedSprint()"><i class="fa fa-close"></i> Cancel</button>-->
-          <!--<button type="submit" class="btn btn-success"><i class="fa fa-save"></i> Save</button>-->
-        <!--</div>-->
-      <!--</div>-->
-    <!--</div>-->
-  <!--</form>-->
+  <form name="formSprint" novalidate ng-submit="saveSelectedSprint(formSprint)">
+    <div class="popup-complete-sprint" ng-class="{'opened': completeSprintPopupOpened}" ng-if="selectedSprint !== null">
+      <div class="panel panel-default panel-edit-sprint">
+        <div class="panel-heading" title="{{selectedSprint.statement}}">
+          <div class="col-md-12">
+            <input class="sprint-name" ng-model="selectedSprint.name" />
+          </div>
+        </div>
+        <div class="panel-body">
+          <h4>Objective</h4>
+          <div class="sprint-objective">
+            <textarea rows="2" ng-model="selectedSprint.objective" required></textarea>
+          </div>
+          <h4 class="story-header">
+            <span class="title">Stories</span>
+            <span class="sprint-point"><span class="value" ng-bind="(selectedSprint.points === undefined || selectedSprint.points === null ? 'N' : selectedSprint.points)"></span>points</span>
+          </h4>
+          <ul class="list-group sprint-stories" ng-scrollable="scrollOptions">
+            <li class="list-group-item" ng-repeat="story in selectedSprint.stories">
+              <span class="story-type-name" ng-class="story.type | lowercase" title="{{story.typeName}}"></span>
+              <span class="story-name">{{story.name}}</span>
+              <span class="story-statement">{{story.statement}}</span>
+              <button type="button" class="btn btn-default btn-xs btn-remove-item" ng-click="removeSprintStory(selectedSprint, $index)"><i class="fa fa-trash"></i></button>
+              <span class="badge points-{{story.points === undefined || story.points === null ? 'null' : story.points}}">{{story.points === undefined || story.points === null ? 'N' : story.points}}</span>
+            </li>
+            <li class="new-item list-group-item" ng-click="addingStoryToSprint()">
+              <span ng-show="!newStoryVisible">Add a story</span>
+              <button type="button" class="btn btn-default btn-xs btn-remove-item" ng-show="newStoryVisible" ng-click="cancelAddStoryToSprint($event)"><i class="fa fa-close"></i></button>
+              <button type="button" class="btn btn-primary btn-xs btn-add-item" ng-show="newStoryVisible" ng-click="addStoryToSprint($event, selectedSprint)">Add</button>
+            </li>
+          </ul>
+        </div>
+        <div class="panel-footer">
+          <button type="button" class="btn btn-danger" ng-click="cancelSaveSelectedSprint()"><i class="fa fa-close"></i> Cancel</button>
+          <button type="submit" class="btn btn-success"><i class="fa fa-save"></i> Save</button>
+        </div>
+      </div>
+    </div>
+  </form>
 </div>
