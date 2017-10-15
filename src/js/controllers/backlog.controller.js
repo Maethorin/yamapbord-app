@@ -94,6 +94,8 @@ scrumInCeresControllers.controller('BacklogController', ['$rootScope', '$scope',
         $scope.selectedSprint,
         function() {
           getStories();
+          $scope.selectedSprint = null;
+          $scope.completeSprintPopupOpened = false;
         },
         function(error) {
           Alert.error('Sum Ten Wong', error.data.exception);
@@ -101,12 +103,16 @@ scrumInCeresControllers.controller('BacklogController', ['$rootScope', '$scope',
       );
       return;
     }
-    StoryService.updateInIceLog($scope.selectedStory).then(
+    Backlog.update(
+      {id: $scope.selectedSprint.id},
+      $scope.selectedSprint,
       function() {
-        $scope.stories[$scope.selectedStoryIndex] = $scope.selectedStory;
-        $scope.selectedStoryIndex = null;
-        $scope.selectedStory = null;
-        $scope.completeStoryPopupOpened = false;
+        $scope.selectedSprint.startDate = moment($scope.selectedSprint.startDate).format('YYYY-MM-DD');
+        $scope.selectedSprint.endDate = moment($scope.selectedSprint.endDate).format('YYYY-MM-DD');
+        $scope.sprints[$scope.selectedSprintIndex] = $scope.selectedSprint;
+        $scope.selectedSprintIndex = null;
+        $scope.selectedSprint = null;
+        $scope.completeSprintPopupOpened = false;
       },
       function(error) {
         Alert.error('Sum Ten Wong', error.data.exception);
