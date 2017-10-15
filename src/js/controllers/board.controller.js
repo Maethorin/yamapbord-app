@@ -56,11 +56,16 @@ scrumInCeresControllers.controller('BoardController', ['$rootScope', '$scope', '
 
   $scope.selectSprint = function(sprint) {
     $scope.selectedSprint = sprint;
+    Alert.loading();
     Story.query(
       {projectId:  $rootScope.selectedProject.id, sprintId: sprint.id},
       function(response) {
         $scope.selectedSprint.stories = response;
         $scope.updateStoryData();
+        Alert.close();
+      },
+      function(error) {
+        Alert.randomErrorMessage(error);
       }
     )
   };
@@ -221,11 +226,13 @@ scrumInCeresControllers.controller('BoardController', ['$rootScope', '$scope', '
 
   function saveStoryStatus(story) {
     story.updating = true;
+    Alert.loading();
     Story.update(
       {projectId:  $rootScope.selectedProject.id, sprintId: $scope.selectedSprint.id, id: story.id},
       {'status': story.status},
       function(response) {
         story.updating = false;
+        Alert.close();
       },
       function(error) {
         Alert.randomErrorMessage(error);

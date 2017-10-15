@@ -164,15 +164,22 @@ scrumInCeres.run(['$rootScope', 'AuthService', 'MeService', 'Project', 'Alert', 
   };
   $rootScope.storyFilterTextType = null;
 
+  Alert.loading();
   MeService.getInfo().then(
     function(info) {
       Project.query(
         function(response) {
           $rootScope.projects = response;
+          Alert.close();
         }
       )
     },
     function(error) {
+      if (error.status !== 401) {
+        Alert.randomErrorMessage(error);
+        return;
+      }
+      Alert.close();
     }
   );
 
@@ -207,10 +214,6 @@ scrumInCeres.run(['$rootScope', 'AuthService', 'MeService', 'Project', 'Alert', 
   };
 
   $rootScope.showMyInfo = function() {
-
-  };
-
-  $rootScope.logout = function() {
-
+    Alert.itsOpenSourceDude();
   };
 }]);

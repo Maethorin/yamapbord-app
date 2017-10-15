@@ -84,12 +84,22 @@ scrumInCeresServices.service('Alert', ['sweetAlert', function(SweetAlert) {
   };
 
   this.loading = function(title, text) {
+    if (!title) {
+      title = 'Hang On!'
+    }
+    if (!text) {
+      text = 'Dat gunn taka sum dim... uhm!'
+    }
     SweetAlert.swal({
       title: title,
       text: text,
       type: 'info',
       showConfirmButton: false,
-      allowEscapeKey: false
+      allowEscapeKey: false,
+      imageUrl: '/img/hang-on.jpg',
+      imageClass: 'alert-icon',
+      onOpen: function() {
+        SweetAlert.swal.showLoading();      }
     });
   };
 
@@ -129,6 +139,6 @@ scrumInCeresServices.service('Alert', ['sweetAlert', function(SweetAlert) {
   };
 
   this.close = function() {
-    SweetAlert.close();
+    SweetAlert.swal.close();
   };
 }]);

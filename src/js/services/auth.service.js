@@ -10,8 +10,9 @@ scrumInCeresServices.service('AuthService', ['$rootScope', '$cookies', function(
   };
 
   this.clear = function(){
-    this.token = null;
-    this.username = null;
+    $cookies.remove('scruminceresUserToken', {path: '/', domain: 'inceres.com.br'});
+    $cookies.remove('scruminceresUserName', {path: '/', domain: 'inceres.com.br'});
+    this.update();
   };
 
   this.userIsLogged = function() {

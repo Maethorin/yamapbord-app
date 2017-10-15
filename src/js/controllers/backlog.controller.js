@@ -23,12 +23,17 @@ scrumInCeresControllers.controller('BacklogController', ['$rootScope', '$scope',
   };
 
   function getStories() {
+    Alert.loading();
     Backlog.query(
       function(response) {
         $scope.sprints = response;
         _.forEach($scope.sprints, function(sprint) {
           setWorkingDays(sprint);
         });
+        Alert.close();
+      },
+      function(error) {
+        Alert.randomErrorMessage(error);
       }
     );
   }
@@ -78,12 +83,14 @@ scrumInCeresControllers.controller('BacklogController', ['$rootScope', '$scope',
       $scope.selectedStory = story;
       $scope.completeStoryPopupOpened = !$scope.completeStoryPopupOpened;
     }
+    Alert.loading();
     StoryService.getFullStory(story.id).then(
       function(response) {
         $scope.selectedStory = story;
         $scope.selectedStory.tasks = response.tasks;
         $scope.selectedStory.definitionOfDone = response.definitionOfDone;
         $scope.completeStoryPopupOpened = !$scope.completeStoryPopupOpened;
+        Alert.close();
       },
       function(error) {
         Alert.randomErrorMessage(error);
@@ -110,6 +117,7 @@ scrumInCeresControllers.controller('BacklogController', ['$rootScope', '$scope',
       return false;
     }
 
+    Alert.loading();
     if ($scope.addingNewSprint) {
       Backlog.save(
         $scope.selectedSprint,
@@ -198,6 +206,7 @@ scrumInCeresControllers.controller('BacklogController', ['$rootScope', '$scope',
   }
 
   $scope.addingStoryToSelectedSprint = function() {
+    Alert.loading();
     StoryService.getReadyUse().then(
       function(stories) {
         $scope.stories = stories;
@@ -207,6 +216,7 @@ scrumInCeresControllers.controller('BacklogController', ['$rootScope', '$scope',
           }
         });
         $scope.storiesPopupOpened = true;
+        Alert.close();
       },
       function(error) {
         Alert.randomErrorMessage(error);
@@ -236,11 +246,12 @@ scrumInCeresControllers.controller('BacklogController', ['$rootScope', '$scope',
   $scope.removeSprintStory = function(story, $index) {
     if (story.sprintId) {
       Alert.warning('Watch Out!', 'This story is already associated with this sprint. Are you sure you want to desassociate it?', function() {
+        Alert.loading();
         StoryService.updateInIceLog({id: story.id, sprintId: null}).then(
           function() {
             $scope.selectedSprint.stories.splice($index, 1);
-            Alert.randomSuccessMessage();
             recalculateSelectedSprintPoints();
+            Alert.randomSuccessMessage();
           },
           function(error) {
             Alert.randomErrorMessage(error);

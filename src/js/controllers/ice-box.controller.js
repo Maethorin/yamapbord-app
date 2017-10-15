@@ -26,8 +26,10 @@ scrumInCeresControllers.controller('IceBoxController', ['$rootScope', '$scope', 
     });
   });
 
+  Alert.loading();
   StoryService.getStories().then(function(stories) {
     $scope.stories = stories;
+    Alert.close();
   });
 
   $rootScope.$on('story.add', function() {
@@ -53,6 +55,7 @@ scrumInCeresControllers.controller('IceBoxController', ['$rootScope', '$scope', 
 
   $scope.selectStoryToEdit = function(story, $index) {
     $scope.selectedStory = _.cloneDeep(story);
+    $scope.addingNewStory = false;
     $scope.selectedStoryIndex = $index;
     $scope.completeStoryPopupOpened = true;
   };
@@ -63,6 +66,7 @@ scrumInCeresControllers.controller('IceBoxController', ['$rootScope', '$scope', 
       return false;
     }
 
+    Alert.loading();
     if ($scope.addingNewStory) {
       StoryService.addToIceLog($scope.selectedStory).then(
         function(stories) {
@@ -95,6 +99,7 @@ scrumInCeresControllers.controller('IceBoxController', ['$rootScope', '$scope', 
   $scope.cancelSaveSelectedStory = function() {
     $scope.selectedStory = null;
     $scope.selectedStoryIndex = null;
+    $scope.addingNewStory = false;
     $scope.completeStoryPopupOpened = false;
   };
 
