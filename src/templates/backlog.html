@@ -162,14 +162,14 @@
       <div class="panel-body">
         <div class="story-statement" ng-bind="selectedStory.statement"></div>
         <uib-tabset active="activeJustified" justified="true">
-          <uib-tab index="0" heading="Tasks">
+          <uib-tab index="0" heading="Tasks" select="changeScroll()">
             <ul class="list-group story-tasks" ng-scrollable>
               <li class="list-group-item" ng-repeat="task in selectedStory.tasks">
                 {{ task.task }}
               </li>
             </ul>
           </uib-tab>
-          <uib-tab index="1" heading="DoD">
+          <uib-tab index="1" heading="DoD" select="changeScroll()">
             <ul class="list-group story-definitions" ng-scrollable>
               <li class="list-group-item" ng-repeat="definition in selectedStory.definitionOfDone">
                 {{ definition.definition }}

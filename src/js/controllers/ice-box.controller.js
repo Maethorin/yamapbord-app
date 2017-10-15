@@ -16,6 +16,10 @@ scrumInCeresControllers.controller('IceBoxController', ['$rootScope', '$scope', 
   $scope.newDefinition = {definition: null};
   $scope.newDefinitionVisible = false;
 
+  $scope.changeScroll = function() {
+    $scope.$broadcast('content.changed');
+  };
+
   $rootScope.$on('story.filter.type', function(evt, type) {
     StoryService.filterByType(type).then(function(stories) {
       $scope.stories = stories;

@@ -18,6 +18,10 @@ scrumInCeresControllers.controller('BacklogController', ['$rootScope', '$scope',
   $scope.stories = [];
   $scope.newStoryVisible = false;
 
+  $scope.changeScroll = function() {
+    $scope.$broadcast('content.changed');
+  };
+
   function getStories() {
     Backlog.query(
       function(response) {

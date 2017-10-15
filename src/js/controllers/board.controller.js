@@ -12,6 +12,10 @@ scrumInCeresControllers.controller('BoardController', ['$rootScope', '$scope', '
   $scope.completeStoryPopupOpened = false;
   $scope.today = moment();
 
+  $scope.changeScroll = function() {
+    $scope.$broadcast('content.changed');
+  };
+
   $scope.columns = [
     {name: 'PLAN', label: 'Planned'},
     {name: 'STAR', label: 'Started'},
