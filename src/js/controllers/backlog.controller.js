@@ -82,6 +82,7 @@ scrumInCeresControllers.controller('BacklogController', ['$rootScope', '$scope',
     if (story === null) {
       $scope.selectedStory = story;
       $scope.completeStoryPopupOpened = !$scope.completeStoryPopupOpened;
+      return false;
     }
     Alert.loading();
     StoryService.getFullStory(story.id).then(

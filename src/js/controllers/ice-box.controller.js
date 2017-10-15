@@ -103,6 +103,29 @@ scrumInCeresControllers.controller('IceBoxController', ['$rootScope', '$scope', 
     $scope.completeStoryPopupOpened = false;
   };
 
+  function toggleEditInStoryList(element, $event) {
+    if ($event) {
+      if ($event.which === 13) {
+        $event.preventDefault();
+      }
+      return
+    }
+    if (!element.editing) {
+      element.editing = true;
+    }
+    else {
+      delete element.editing;
+    }
+  }
+
+  $scope.toggleEditStoryTask = function(task, $event) {
+    toggleEditInStoryList(task, $event);
+  };
+
+  $scope.toggleEditStoryDefinition = function(definition, $event) {
+    toggleEditInStoryList(definition, $event);
+  };
+
   $scope.addingTaskToStory = function() {
     $scope.newTaskVisible = true;
   };

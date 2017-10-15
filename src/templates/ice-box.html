@@ -64,13 +64,14 @@
           <uib-tabset active="activeJustified" justified="true">
             <uib-tab index="0" heading="Tasks" select="changeScroll()">
               <ul class="list-group story-tasks" ng-scrollable="scrollOptions">
-                <li class="list-group-item" ng-repeat="task in selectedStory.tasks">
-                  {{ task.task }}
-                  <button type="button" class="btn btn-default btn-xs btn-remove-item" ng-click="removeStoryTask(selectedStory, $index)"><i class="fa fa-trash"></i></button>
+                <li class="list-group-item" ng-repeat="task in selectedStory.tasks" ng-click="toggleEditStoryTask(task)">
+                  <input type="text" ng-model="task.task" ng-show="task.editing" focus-me="task.editing" ng-blur="toggleEditStoryTask(task)" ng-keypress="toggleEditStoryTask(task, $event)" />
+                  <span ng-bind="task.task" ng-if="!task.editing"></span>
+                  <button type="button" class="btn btn-default btn-xs btn-remove-item" ng-if="!task.editing" ng-click="removeStoryTask(selectedStory, $index)"><i class="fa fa-trash"></i></button>
                 </li>
                 <li class="new-item list-group-item" ng-click="addingTaskToStory()">
                   <span ng-show="!newTaskVisible">Add a task</span>
-                  <input type="text" ng-model="newTask.task" ng-show="newTaskVisible" focus-me="newTaskVisible" />
+                  <input type="text" ng-model="newTask.task" ng-show="newTaskVisible" focus-me="newTaskVisible" ng-blur="addTaskToStory($event, selectedStory)" />
                   <button type="button" class="btn btn-default btn-xs btn-remove-item" ng-show="newTaskVisible" ng-click="cancelAddTaskToStory($event)"><i class="fa fa-close"></i></button>
                   <button type="button" class="btn btn-primary btn-xs btn-add-item" ng-show="newTaskVisible" ng-click="addTaskToStory($event, selectedStory)">Add</button>
                 </li>
@@ -78,13 +79,14 @@
             </uib-tab>
             <uib-tab index="1" heading="DoD" select="changeScroll()">
               <ul class="list-group story-definitions" ng-scrollable="scrollOptions">
-                <li class="list-group-item" ng-repeat="definition in selectedStory.definitionOfDone">
-                  {{ definition.definition }}
-                  <button type="button" class="btn btn-default btn-xs btn-remove-item" ng-click="removeStoryDefinition(selectedStory, $index)"><i class="fa fa-trash"></i></button>
+                <li class="list-group-item" ng-repeat="definition in selectedStory.definitionOfDone" ng-click="toggleEditStoryDefinition(definition)">
+                  <input type="text" ng-model="definition.definition" ng-show="definition.editing" focus-me="definition.editing" ng-blur="toggleEditStoryDefinition(definition)" ng-keypress="toggleEditStoryDefinition(task, $event)" />
+                  <span ng-bind="definition.definition" ng-if="!definition.editing"></span>
+                  <button type="button" class="btn btn-default btn-xs btn-remove-item" ng-if="!definition.editing" ng-click="removeStoryDefinition(selectedStory, $index)"><i class="fa fa-trash"></i></button>
                 </li>
                 <li class="new-item list-group-item" ng-click="addingDefinitionToStory()">
                   <span ng-show="!newDefinitionVisible">Add a definition</span>
-                  <input type="text" ng-model="newDefinition.definition" ng-show="newDefinitionVisible" focus-me="newDefinitionVisible" />
+                  <input type="text" ng-model="newDefinition.definition" ng-show="newDefinitionVisible" focus-me="newDefinitionVisible" ng-blur="addDefinitionToStory($event, selectedStory)" />
                   <button type="button" class="btn btn-default btn-xs btn-remove-item" ng-show="newDefinitionVisible" ng-click="cancelAddDefinitionToStory($event)"><i class="fa fa-close"></i></button>
                   <button type="button" class="btn btn-primary btn-xs btn-add-item" ng-show="newDefinitionVisible" ng-click="addDefinitionToStory($event, selectedStory)">Add</button>
                 </li>
