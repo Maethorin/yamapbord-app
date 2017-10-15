@@ -296,5 +296,5 @@ module.exports = function (grunt) {
   grunt.registerTask('sandbox', ['clean:static', 'compass', 'copy', 'concat', 'replace:sandbox', 'injector:dev']);
   grunt.registerTask('staging', ['clean:static', 'compass', 'copy', 'concat', 'replace:staging', 'injector:dev']);
   grunt.registerTask('staging-noug', ['clean:static', 'compass', 'copy', 'concat', 'replace:staging', 'injector:dev']);
-  grunt.registerTask('default', ['clean:static', 'compass', 'copy', 'concat', 'replace:prod', 'uglify', 'injector:prod', 'clean:concated']);
+  grunt.registerTask('production', ['clean:static', 'compass', 'copy', 'concat', 'replace:prod', 'uglify', 'injector:prod', 'clean:concated']);
 };
