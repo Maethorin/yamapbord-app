@@ -13,6 +13,11 @@ scrumInCeresServices.service('StoryService', ['$q', '$rootScope', 'IceBox', func
     return this.getStories();
   };
 
+  this.getReadyUse = function() {
+    filter.readyToUse = true;
+    return this.getStories();
+  };
+
   this.getStories = function() {
     var result = $q.defer();
     IceBox.query(
@@ -24,6 +29,7 @@ scrumInCeresServices.service('StoryService', ['$q', '$rootScope', 'IceBox', func
         result.reject(error);
       }
     );
+    filter = {};
     return result.promise;
   };
 

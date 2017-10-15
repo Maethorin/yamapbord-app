@@ -194,7 +194,7 @@ scrumInCeresControllers.controller('BacklogController', ['$rootScope', '$scope',
   }
 
   $scope.addingStoryToSelectedSprint = function() {
-    StoryService.getStories().then(
+    StoryService.getReadyUse().then(
       function(stories) {
         $scope.stories = stories;
         _.forEach($scope.stories, function(story) {
