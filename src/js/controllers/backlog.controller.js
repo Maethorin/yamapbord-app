@@ -45,11 +45,15 @@ scrumInCeresControllers.controller('BacklogController', ['$rootScope', '$scope',
       endDate: null,
       points: null,
       status: 'PLAN',
-      projectId: null,
+      project: null,
       stories: []
     };
     $scope.completeSprintPopupOpened = true;
   });
+
+  $scope.setSelectedSprintProject = function(project) {
+    $scope.selectedSprint.project = project;
+  };
 
   $scope.toggleCompleteStoryPopup = function(story) {
     if (story === null) {

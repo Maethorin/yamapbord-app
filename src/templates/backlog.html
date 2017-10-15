@@ -71,8 +71,19 @@
     <div class="popup-complete-sprint" ng-class="{'opened': completeSprintPopupOpened}" ng-if="selectedSprint !== null">
       <div class="panel panel-default panel-edit-sprint">
         <div class="panel-heading" title="{{selectedSprint.statement}}">
-          <div class="col-md-12">
-            <input class="sprint-name" ng-model="selectedSprint.name"/>
+          <div class="col-md-9">
+            <label>Name:</label> <input class="sprint-name" ng-model="selectedSprint.name"/>
+          </div>
+          <div class="col-md-3 sprint-project">
+            <label>Project:</label>
+            <div class="btn-group" uib-dropdown>
+              <button id="single-button" type="button" class="btn btn-default btn-sm" uib-dropdown-toggle>
+                {{selectedSprint.project === null ? 'Select a project' : selectedSprint.project.name}} <span class="caret"></span>
+              </button>
+              <ul class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="single-button">
+                <li role="menuitem" ng-click="setSelectedSprintProject(project)" ng-repeat="project in projects"><a ng-bind="project.name"></a></li>
+              </ul>
+            </div>
           </div>
         </div>
         <div class="panel-body">
