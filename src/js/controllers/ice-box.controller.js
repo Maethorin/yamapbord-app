@@ -55,7 +55,7 @@ scrumInCeresControllers.controller('IceBoxController', ['$rootScope', '$scope', 
 
   $scope.saveSelectedStory = function(form) {
     if (form.$invalid) {
-      Alert.randomErrorMessage('Invalid fields.');
+      Alert.randomErrorMessage('Invalid fields.', 'Invalid fields.');
       return false;
     }
 

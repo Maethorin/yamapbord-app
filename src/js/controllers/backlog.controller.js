@@ -42,6 +42,14 @@ scrumInCeresControllers.controller('BacklogController', ['$rootScope', '$scope',
     }
   }
 
+  function recalculateSelectedSprintPoints() {
+    var points = 0;
+    _.forEach($scope.selectedSprint.stories, function(story) {
+      points += (story.points !== null ? story.points : 0);
+    });
+    $scope.selectedSprint.points = points;
+  }
+
   $rootScope.$on('sprint.add', function() {
     $scope.addingNewSprint = true;
     $scope.selectedSprint = {
@@ -79,16 +87,22 @@ scrumInCeresControllers.controller('BacklogController', ['$rootScope', '$scope',
     );
   };
 
-  $scope.selectSprintToEdit = function(sprint, $index) {
+  $scope.selectSprintToEdit = function($event, sprint, $index) {
     $scope.selectedSprint = _.cloneDeep(sprint);
     $scope.selectedSprintOriginalStories = sprint.stories;
     $scope.selectedSprintIndex = $index;
     $scope.completeSprintPopupOpened = true;
+    $event.stopPropagation();
   };
 
   $scope.saveSelectedSprint = function(form) {
     if (form.$invalid) {
-      Alert.randomErrorMessage('Invalid Fields');
+      Alert.randomErrorMessage('Invalid Fields', 'Invalid Fields');
+      return false;
+    }
+
+    if ($scope.selectedSprint.project === null) {
+      Alert.randomErrorMessage('Invalid Fields', 'The Project Dude...');
       return false;
     }
 
@@ -205,14 +219,9 @@ scrumInCeresControllers.controller('BacklogController', ['$rootScope', '$scope',
         }
       }
     });
-    var points = 0;
-    _.forEach($scope.selectedSprint.stories, function(story) {
-      points += (story.points !== null ? story.points : 0);
-    });
-    $scope.selectedSprint.points = points;
+    recalculateSelectedSprintPoints();
     $scope.stories = [];
     $scope.storiesPopupOpened = false;
-    Alert.randomSuccessMessage();
   };
 
   $scope.cancelAddSelectedSprintStories = function() {
@@ -227,6 +236,7 @@ scrumInCeresControllers.controller('BacklogController', ['$rootScope', '$scope',
           function() {
             $scope.selectedSprint.stories.splice($index, 1);
             Alert.randomSuccessMessage();
+            recalculateSelectedSprintPoints();
           },
           function(error) {
             Alert.randomErrorMessage(error);
@@ -236,7 +246,7 @@ scrumInCeresControllers.controller('BacklogController', ['$rootScope', '$scope',
     }
     else {
       $scope.selectedSprint.stories.splice($index, 1);
-      Alert.randomSuccessMessage();
+      recalculateSelectedSprintPoints();
     }
   };
 }]);

@@ -2,6 +2,9 @@
 
 scrumInCeresFilters.filter('limitWithEllipsis', function() {
   return function(text, quantity) {
+    if (text === null || text === undefined) {
+      return '';
+    }
     if (text.length <= quantity) {
       return text;
     }

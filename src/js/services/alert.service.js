@@ -18,18 +18,21 @@ scrumInCeresServices.service('Alert', ['sweetAlert', function(SweetAlert) {
     'What a Hell!!!', 'What a Heck!!!', 'Really?!?', 'Oh God why?!?', 'You got be kidding me, right?', 'Not again...', 'Came back later, maybe never!', 'I`m tyred of this, lets try other thing...'
   ];
 
-  this.randomErrorMessage = function(error) {
+  this.randomErrorMessage = function(error, message) {
     var index = Math.floor(Math.random() * randomErrorMessages.length);
     if (index ===  randomErrorMessages.length) {
       index -= 1;
     }
-    this.error('Hmpf!', randomErrorMessages[index]);
+    if (!message) {
+      message = 'Hmpf!';
+    }
+    this.error(message, randomErrorMessages[index]);
     console.log(error);
   };
 
   this.success = function(title, text, timer, usePromise) {
     if (!timer) {
-      timer = 2500;
+      timer = 2000;
     }
     if (usePromise) {
       return SweetAlert.swal({

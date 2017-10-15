@@ -4,7 +4,11 @@
   .sprint-container {
     .panel-edit-sprint {
       .panel-heading {
+        cursor: pointer;
         overflow: hidden;
+        &:hover {
+          background-color: darken($gray, 10%);
+        }
         .sprint-name {
           font-size: 15px;
           vertical-align: middle;
@@ -76,7 +80,7 @@
     background-color: $gray;
     border-radius: 5px;
     li {
-      background-color: $gray;
+      background-color: $gray-light;
       color: #222;
       border-color: #222;
       width: 97%;
@@ -156,7 +160,7 @@
       display: block;
     }
     .panel-edit-sprint {
-      margin: 3% 20%;
+      margin: 1% 10%;
       .panel-heading {
         height: 55px;
         label {
@@ -198,7 +202,7 @@
       }
       .panel-body {
         padding: 20px;
-        height: 69vh;
+        height: 83vh;
         zoom: 1;
         overflow: auto;
         position: relative;
@@ -277,7 +281,7 @@
           }
         }
         .sprint-stories {
-          height: 30vh;
+          height: 49vh;
           overflow: hidden;
           li {
             .sprint-statement {

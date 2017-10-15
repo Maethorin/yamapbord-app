@@ -1,10 +1,10 @@
 <div class="container-fluid backlog">
   <div class="sprint-container col-md-4" ng-repeat="sprint in sprints">
     <div class="panel panel-default panel-edit-sprint">
-      <div class="panel-heading">
-        <span class="sprint-name" ng-bind="sprint.name|limitWithEllipsis:65"></span>
+      <div class="panel-heading" ng-click="selectSprintToEdit($event, sprint, $index)">
+        <span class="sprint-name" title="sprint.name" ng-bind="sprint.name|limitWithEllipsis:40"></span>
         Project: <span class="sprint-project" ng-bind="sprint.project.name"></span>
-        <button class="btn btn-primary btn-sm btn-save-sprint" ng-click="selectSprintToEdit(sprint, $index)"><i class="fa fa-edit"></i></button>
+        <button class="btn btn-primary btn-sm btn-save-sprint" ng-click="selectSprintToEdit($event, sprint, $index)"><i class="fa fa-edit"></i></button>
       </div>
       <div class="panel-body">
         <h4>Dates</h4>
@@ -22,7 +22,7 @@
         </div>
         <h4 class="story-header">
           <span class="title">Stories</span>
-          <span class="sprint-point"><span class="value" ng-bind="sprint.points.points|numberOrText"></span>points</span>
+          <span class="sprint-point"><span class="value" ng-bind="sprint.points|numberOrText"></span>points</span>
         </h4>
         <ul class="list-group sprint-stories" ng-scrollable="scrollOptions">
           <li class="list-group-item" ng-repeat="story in sprint.stories" title="{{story.statement}}" ng-click="toggleCompleteStoryPopup(story)">
@@ -31,39 +31,6 @@
             <span class="badge points-{{story.points|numberOrText:'null'}}" ng-bind="story.points|numberOrText"></span>
           </li>
         </ul>
-      </div>
-    </div>
-  </div>
-
-  <div class="popup-complete-story" ng-class="{'opened': completeStoryPopupOpened}">
-    <div class="panel panel-default panel-complete-story">
-      <div class="panel-heading" title="{{selectedStory.statement}}">
-        <span class="story-type-name" ng-class="selectedStory.type | lowercase " title="{{selectedStory.typeName}}" ng-bind="selectedStory.typeName"></span>
-        <span class="story-name">{{selectedStory.name}}</span>
-        <span class="story-status" ng-class="selectedStory.status | lowercase" ng-bind="selectedStory.statusName"></span>
-        <span class="badge points-{{selectedStory.points|numberOrText:'null'}}" ng-bind="selectedStory.points.points|numberOrText"></span>
-      </div>
-      <div class="panel-body">
-        <div class="story-statement" ng-bind="selectedStory.statement"></div>
-        <uib-tabset active="activeJustified" justified="true">
-          <uib-tab index="0" heading="Tasks">
-            <ul class="list-group story-tasks" ng-scrollable>
-              <li class="list-group-item" ng-repeat="task in selectedStory.tasks">
-                {{ task.task }}
-              </li>
-            </ul>
-          </uib-tab>
-          <uib-tab index="1" heading="DoD">
-            <ul class="list-group story-definitions" ng-scrollable>
-              <li class="list-group-item" ng-repeat="definition in selectedStory.definitionOfDone">
-                {{ definition.definition }}
-              </li>
-            </ul>
-          </uib-tab>
-        </uib-tabset>
-      </div>
-      <div class="panel-footer">
-        <button type="button" class="btn btn-primary" ng-click="toggleCompleteStoryPopup(null)">Close</button>
       </div>
     </div>
   </div>
@@ -146,7 +113,7 @@
               <span class="story-name">{{story.name}}</span>
               <span class="story-statement">{{story.statement}}</span>
               <button type="button" class="btn btn-default btn-xs btn-remove-item" ng-click="removeSprintStory(story, $index)"><i class="fa fa-trash"></i></button>
-              <span class="badge points-{{story.points|numberOrText:'null'}}" ng-bind="story.points.points|numberOrText"></span>
+              <span class="badge points-{{story.points|numberOrText:'null'}}" ng-bind="story.points|numberOrText"></span>
             </li>
             <li class="new-item list-group-item" ng-click="addingStoryToSelectedSprint()">
               <span ng-show="!newStoryVisible">Add a story</span>
@@ -173,7 +140,7 @@
             <span class="story-type-name" ng-class="story.type | lowercase" title="{{story.typeName}}"></span>
             <span class="story-name">{{story.name}}</span>
             <span class="story-statement">{{story.statement}}</span>
-            <span class="badge points-{{story.points.points|numberOrText:'null'}}" ng-bind="story.points.points|numberOrText"></span>
+            <span class="badge points-{{story.points|numberOrText:'null'}}" ng-bind="story.points|numberOrText"></span>
           </li>
         </ul>
       </div>
@@ -183,4 +150,38 @@
       </div>
     </div>
   </div>
+
+  <div class="popup-complete-story" ng-class="{'opened': completeStoryPopupOpened}">
+    <div class="panel panel-default panel-complete-story">
+      <div class="panel-heading" title="{{selectedStory.statement}}">
+        <span class="story-type-name" ng-class="selectedStory.type | lowercase " title="{{selectedStory.typeName}}" ng-bind="selectedStory.typeName"></span>
+        <span class="story-name">{{selectedStory.name}}</span>
+        <span class="story-status" ng-class="selectedStory.status | lowercase" ng-bind="selectedStory.statusName"></span>
+        <span class="badge points-{{selectedStory.points|numberOrText:'null'}}" ng-bind="selectedStory.points|numberOrText"></span>
+      </div>
+      <div class="panel-body">
+        <div class="story-statement" ng-bind="selectedStory.statement"></div>
+        <uib-tabset active="activeJustified" justified="true">
+          <uib-tab index="0" heading="Tasks">
+            <ul class="list-group story-tasks" ng-scrollable>
+              <li class="list-group-item" ng-repeat="task in selectedStory.tasks">
+                {{ task.task }}
+              </li>
+            </ul>
+          </uib-tab>
+          <uib-tab index="1" heading="DoD">
+            <ul class="list-group story-definitions" ng-scrollable>
+              <li class="list-group-item" ng-repeat="definition in selectedStory.definitionOfDone">
+                {{ definition.definition }}
+              </li>
+            </ul>
+          </uib-tab>
+        </uib-tabset>
+      </div>
+      <div class="panel-footer">
+        <button type="button" class="btn btn-primary" ng-click="toggleCompleteStoryPopup(null)">Close</button>
+      </div>
+    </div>
+  </div>
+
 </div>
