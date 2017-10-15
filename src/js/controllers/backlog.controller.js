@@ -18,23 +18,24 @@ scrumInCeresControllers.controller('BacklogController', ['$rootScope', '$scope',
       function(response) {
         $scope.sprints = response;
         _.forEach($scope.sprints, function(sprint) {
-          var startDate = moment(sprint.startDate).startOf('day');
-          var endDate = moment(sprint.endDate).startOf('day');
-          sprint.workingDays = 1;
-          while(startDate.add(1, 'days').diff(endDate) < 0) {
-            if (startDate.weekday() !== 6 && startDate.weekday() !== 7) {
-              sprint.workingDays += 1;
-            }
-          }
-          sprint.startDate = moment(sprint.startDate);
-          sprint.startDate.opened = false;
-          sprint.endDate = moment(sprint.endDate);
+          setWorkingDays(sprint);
         });
       }
     );
   }
 
   getStories();
+
+  function setWorkingDays(sprint) {
+    var startDate = moment(sprint.startDate).startOf('day');
+    var endDate = moment(sprint.endDate).startOf('day');
+    sprint.workingDays = 1;
+    while(startDate.add(1, 'days').diff(endDate) < 0) {
+      if (startDate.weekday() !== 6 && startDate.weekday() !== 7) {
+        sprint.workingDays += 1;
+      }
+    }
+  }
 
   $rootScope.$on('sprint.add', function() {
     $scope.addingNewSprint = true;
@@ -118,4 +119,52 @@ scrumInCeresControllers.controller('BacklogController', ['$rootScope', '$scope',
     $scope.selectedSprintIndex = null;
     $scope.completeSprintPopupOpened = false;
   };
+
+  $scope.endDateBeforeRender = endDateBeforeRender;
+  $scope.endDateOnSetTime = endDateOnSetTime;
+  $scope.startDateBeforeRender = startDateBeforeRender;
+  $scope.startDateOnSetTime = startDateOnSetTime;
+
+  function startDateOnSetTime() {
+    $scope.$broadcast('start-date-changed');
+    setWorkingDays($scope.selectedSprint);
+  }
+
+  function endDateOnSetTime() {
+    $scope.$broadcast('end-date-changed');
+    setWorkingDays($scope.selectedSprint);
+  }
+
+  function startDateBeforeRender($dates) {
+    if ($scope.selectedSprint.endDate) {
+      var activeDate = moment($scope.selectedSprint.endDate);
+
+      $dates.filter(
+        function(date) {
+          return date.localDateValue() >= activeDate.valueOf()
+        }
+      )
+      .forEach(
+        function(date) {
+          date.selectable = false;
+        }
+      );
+    }
+  }
+
+  function endDateBeforeRender($view, $dates) {
+    if ($scope.selectedSprint.startDate) {
+      var activeDate = moment($scope.selectedSprint.startDate).subtract(1, $view).add(1, 'minute');
+
+      $dates.filter(
+        function(date) {
+          return date.localDateValue() <= activeDate.valueOf()
+        }
+      ).forEach(
+        function (date) {
+          date.selectable = false;
+        }
+      );
+    }
+  }
 }]);

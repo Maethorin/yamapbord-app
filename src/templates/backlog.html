@@ -3,6 +3,7 @@
     <div class="panel panel-default panel-edit-sprint">
       <div class="panel-heading">
         <span class="sprint-name">{{sprint.name | limitTo:65}}{{sprint.name.length > 65 ? '...' : ''}}</span>
+        Project: <span class="sprint-project" ng-bind="sprint.project.name"></span>
         <button class="btn btn-primary btn-sm btn-save-sprint" ng-click="selectSprintToEdit(sprint, $index)"><i class="fa fa-edit"></i></button>
       </div>
       <div class="panel-body">
@@ -90,12 +91,18 @@
           <h4>Dates</h4>
           <div class="dropdown start date">
             <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-              <datetimepicker ng-model="selectedSprint.startDate" datetimepicker-config="{ dropdownSelector: '#dropdownStartDate', minView:'day' }"/>
+              <datetimepicker ng-model="selectedSprint.startDate"
+                              datetimepicker-config="{dropdownSelector: '#dropdownStartDate', renderOn: 'end-date-changed', minView:'day'}"
+                              on-set-time="startDateOnSetTime()"
+                              data-before-render="startDateBeforeRender($dates)"/>
             </ul>
           </div>
           <div class="dropdown end date">
             <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-              <datetimepicker ng-model="selectedSprint.endDate" datetimepicker-config="{ dropdownSelector: '#dropdownEndDate', minView:'day' }"/>
+              <datetimepicker ng-model="selectedSprint.endDate"
+                              datetimepicker-config="{dropdownSelector: '#dropdownEndDate', renderOn: 'start-date-changed', minView:'day'}"
+                              data-on-set-time="endDateOnSetTime()"
+                              data-before-render="endDateBeforeRender($view, $dates, $leftDate, $upDate, $rightDate)"/>
             </ul>
           </div>
           <div class="sprint-dates">
@@ -103,7 +110,7 @@
               <label for="inputStartDate">Starts:</label>
               <a class="date dropdown-toggle" id="dropdownStartDate" role="button" data-toggle="dropdown" data-target=".dropdown.start.date">
                 <div class="input-group">
-                  <input type="text" id="inputStartDate" class="form-control" name="startDate" ng-model="selectedSprint.startDate" date-time-input="YYYY-DD-MM" required/>
+                  <input type="text" id="inputStartDate" class="form-control" name="startDate" ng-model="selectedSprint.startDate" date-time-input="YYYY-MM-DD" required/>
                   <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
                 </div>
               </a>
@@ -118,7 +125,7 @@
               <label for="inputEndDate">Starts:</label>
               <a class="date dropdown-toggle" id="dropdownEndDate" role="button" data-toggle="dropdown" data-target=".dropdown.end.date">
                 <div class="input-group">
-                  <input type="text" id="inputEndDate" class="form-control" name="endDate" ng-model="selectedSprint.endDate" date-time-input="YYYY-DD-MM" required/>
+                  <input type="text" id="inputEndDate" class="form-control" name="endDate" ng-model="selectedSprint.endDate" date-time-input="YYYY-MM-DD" required/>
                   <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
                 </div>
               </a>
