@@ -55,10 +55,7 @@ scrumInCeresControllers.controller('IceBoxController', ['$rootScope', '$scope', 
 
   $scope.saveSelectedStory = function(form) {
     if (form.$invalid) {
-      Alert.error(
-        'Sum Ten Wong',
-        'Invalid fields.'
-      );
+      Alert.randomErrorMessage('Invalid fields.');
       return false;
     }
 
@@ -69,9 +66,10 @@ scrumInCeresControllers.controller('IceBoxController', ['$rootScope', '$scope', 
           $scope.addingNewStory = false;
           $scope.selectedStory = null;
           $scope.completeStoryPopupOpened = false;
+          Alert.randomSuccessMessage();
         },
         function(error) {
-          Alert.error('Sum Ten Wong', error.data.exception);
+          Alert.randomErrorMessage(error);
         }
       );
       return;
@@ -82,9 +80,10 @@ scrumInCeresControllers.controller('IceBoxController', ['$rootScope', '$scope', 
         $scope.selectedStoryIndex = null;
         $scope.selectedStory = null;
         $scope.completeStoryPopupOpened = false;
+        Alert.randomSuccessMessage();
       },
       function(error) {
-        Alert.error('Sum Ten Wong', error.data.exception);
+        Alert.randomErrorMessage(error);
       }
     );
   };

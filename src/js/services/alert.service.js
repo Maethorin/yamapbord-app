@@ -2,23 +2,42 @@
 
 scrumInCeresServices.service('Alert', ['sweetAlert', function(SweetAlert) {
 
-  this.showCase = function(title, text, type){
-    return SweetAlert.swal(
-      title,
-      text,
-      type
-    );
+  var randomSuccessMessages = [
+    'That`s my boy', 'Not bad!', 'You did it!', 'Congratulations!', 'Nice Job!', 'It`s Amazing, but it works!', 'We are done here!', 'What`s next Duuude!!!'
+  ];
+
+  this.randomSuccessMessage = function() {
+    var index = Math.floor(Math.random() * randomSuccessMessages.length);
+    if (index ===  randomSuccessMessages.length) {
+      index -= 1;
+    }
+    this.success('Yaaay!', randomSuccessMessages[index])
+  };
+
+  var randomErrorMessages = [
+    'What a Hell!!!', 'What a Heck!!!', 'Really?!?', 'Oh God why?!?', 'You got be kidding me, right?', 'Not again...', 'Came back later, maybe never!', 'I`m tyred of this, lets try other thing...'
+  ];
+
+  this.randomErrorMessage = function(error) {
+    var index = Math.floor(Math.random() * randomErrorMessages.length);
+    if (index ===  randomErrorMessages.length) {
+      index -= 1;
+    }
+    this.error('Hmpf!', randomErrorMessages[index]);
+    console.log(error);
   };
 
   this.success = function(title, text, timer, usePromise) {
     if (!timer) {
-      timer = 2000;
+      timer = 2500;
     }
     if (usePromise) {
       return SweetAlert.swal({
         title: title,
         text: text,
         type: 'success',
+        imageUrl: '/img/yaaay.jpg',
+        imageClass: 'alert-icon',
         timer: timer,
         showConfirmButton: false
       });
@@ -27,17 +46,29 @@ scrumInCeresServices.service('Alert', ['sweetAlert', function(SweetAlert) {
       title: title,
       text: text,
       type: 'success',
+      imageUrl: '/img/yaaay.jpg',
+      imageClass: 'alert-icon',
       timer: timer,
       showConfirmButton: false
     }).catch(swal.noop);
   };
 
   this.info = function(title, text) {
-    return this.showCase(title, text, 'info');
+    return SweetAlert.swal({
+      title: title,
+      text: text,
+      type: 'info'
+    });
   };
 
   this.error = function(title, text) {
-    return this.showCase(title, text, 'error');
+    return SweetAlert.swal({
+      title: title,
+      text: text,
+      imageUrl: '/img/hmpf.jpg',
+      imageClass: 'alert-icon',
+      type: 'error'
+    });
   };
 
   this.loading = function(title, text) {

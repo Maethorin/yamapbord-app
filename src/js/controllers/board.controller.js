@@ -163,6 +163,7 @@ scrumInCeresControllers.controller('BoardController', ['$rootScope', '$scope', '
         task.complete = !task.complete;
       },
       function(error) {
+        Alert.randomErrorMessage(error);
         task.changing = false;
       }
     )
@@ -181,6 +182,7 @@ scrumInCeresControllers.controller('BoardController', ['$rootScope', '$scope', '
         definition.done = !definition.done;
       },
       function(error) {
+        Alert.randomErrorMessage(error);
         definition.changing = false;
       }
     )
@@ -222,6 +224,7 @@ scrumInCeresControllers.controller('BoardController', ['$rootScope', '$scope', '
         story.updating = false;
       },
       function(error) {
+        Alert.randomErrorMessage(error);
         story.updating = false;
       }
     )

@@ -74,7 +74,7 @@ scrumInCeresControllers.controller('BacklogController', ['$rootScope', '$scope',
         $scope.completeStoryPopupOpened = !$scope.completeStoryPopupOpened;
       },
       function(error) {
-        Alert.error('Sum Ten Wong')
+        Alert.randomErrorMessage(error);
       }
     );
   };
@@ -88,10 +88,7 @@ scrumInCeresControllers.controller('BacklogController', ['$rootScope', '$scope',
 
   $scope.saveSelectedSprint = function(form) {
     if (form.$invalid) {
-      Alert.error(
-        'Sum Ten Wong',
-        'Invalid fields.'
-      );
+      Alert.randomErrorMessage('Invalid Fields');
       return false;
     }
 
@@ -102,9 +99,10 @@ scrumInCeresControllers.controller('BacklogController', ['$rootScope', '$scope',
           getStories();
           $scope.selectedSprint = null;
           $scope.completeSprintPopupOpened = false;
+          Alert.randomSuccessMessage();
         },
         function(error) {
-          Alert.error('Sum Ten Wong', error.data.exception);
+          Alert.randomErrorMessage(error);
         }
       );
       return;
@@ -119,9 +117,10 @@ scrumInCeresControllers.controller('BacklogController', ['$rootScope', '$scope',
         $scope.selectedSprintIndex = null;
         $scope.selectedSprint = null;
         $scope.completeSprintPopupOpened = false;
+        Alert.randomSuccessMessage();
       },
       function(error) {
-        Alert.error('Sum Ten Wong', error.data.exception);
+        Alert.randomErrorMessage(error);
       }
     );
   };
@@ -192,7 +191,7 @@ scrumInCeresControllers.controller('BacklogController', ['$rootScope', '$scope',
         $scope.storiesPopupOpened = true;
       },
       function(error) {
-        Alert.error('Sum Tin Wong');
+        Alert.randomErrorMessage(error);
       }
     );
   };
@@ -213,6 +212,7 @@ scrumInCeresControllers.controller('BacklogController', ['$rootScope', '$scope',
     $scope.selectedSprint.points = points;
     $scope.stories = [];
     $scope.storiesPopupOpened = false;
+    Alert.randomSuccessMessage();
   };
 
   $scope.cancelAddSelectedSprintStories = function() {
@@ -226,12 +226,17 @@ scrumInCeresControllers.controller('BacklogController', ['$rootScope', '$scope',
         StoryService.updateInIceLog({id: story.id, sprintId: null}).then(
           function() {
             $scope.selectedSprint.stories.splice($index, 1);
+            Alert.randomSuccessMessage();
+          },
+          function(error) {
+            Alert.randomErrorMessage(error);
           }
         );
       });
     }
     else {
       $scope.selectedSprint.stories.splice($index, 1);
+      Alert.randomSuccessMessage();
     }
   };
 }]);
