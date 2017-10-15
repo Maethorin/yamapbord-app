@@ -56,6 +56,7 @@ var scrumInCeresServices  = angular.module('scrumInCeres.services', []);
 var scrumInCeresFactories  = angular.module('scrumInCeres.factories', []);
 var scrumInCeresResources  = angular.module('scrumInCeres.resources', []);
 var scrumInCeresDirectives  = angular.module('scrumInCeres.directives', []);
+var scrumInCeresFilters  = angular.module('scrumInCeres.filters', []);
 var scrumInCeresControllers  = angular.module('scrumInCeres.controllers', []);
 
 var scrumInCeres = angular.module(
@@ -76,6 +77,7 @@ var scrumInCeres = angular.module(
     'scrumInCeres.factories',
     'scrumInCeres.resources',
     'scrumInCeres.directives',
+    'scrumInCeres.filters',
     'scrumInCeres.controllers'
   ]
 );

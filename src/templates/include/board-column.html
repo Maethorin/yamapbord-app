@@ -12,7 +12,7 @@
         <div class="panel-heading" data-toggle="tooltip" title="{{story.statement}}" tooltip-trigger="mouseenter" tooltip-animation="false" tooltip-placement="top" tooltip-popup-delay="0" tooltip-append-to-body="false">
           <div class="col-md-12">
             <span class="story-type" ng-class="story.type | lowercase " title="{{story.typeName}}"></span>
-            <span class="story-name" ng-click="toggleCompleteStoryPopup(story)">{{story.name | limitTo: 28}}{{story.name.length > 28 ? '...' : ''}}</span>
+            <span class="story-name" ng-click="toggleCompleteStoryPopup(story)" ng-bind="story.name|limitWithEllipsis:28"></span>
             <span class="badge points-{{story.points}}">{{story.points}}</span>
           </div>
         </div>

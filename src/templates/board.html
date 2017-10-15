@@ -9,7 +9,7 @@
           <div class="year" ng-bind="sprint.startDate.year"></div>
         </div>
         <div class="sprint-data">
-          <div class="sprint-name" ng-bind="sprint.name"></div>
+          <div class="sprint-name" title="{{sprint.name}}" ng-bind="sprint.name|limitWithEllipsis:15"></div>
           <div class="stories-quantity"><span ng-bind="sprint.storiesQuantity"></span>Stories</div>
           <div class="sprint-status"><span ng-class="sprint.statusSlug" ng-bind="sprint.status"></span></div>
           <div class="sprint-points"><span ng-bind="sprint.points"></span>Points</div>

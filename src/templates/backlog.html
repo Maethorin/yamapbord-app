@@ -2,7 +2,7 @@
   <div class="sprint-container col-md-4" ng-repeat="sprint in sprints">
     <div class="panel panel-default panel-edit-sprint">
       <div class="panel-heading">
-        <span class="sprint-name">{{sprint.name | limitTo:65}}{{sprint.name.length > 65 ? '...' : ''}}</span>
+        <span class="sprint-name" ng-bind="sprint.name|limitWithEllipsis:65"></span>
         Project: <span class="sprint-project" ng-bind="sprint.project.name"></span>
         <button class="btn btn-primary btn-sm btn-save-sprint" ng-click="selectSprintToEdit(sprint, $index)"><i class="fa fa-edit"></i></button>
       </div>
@@ -22,13 +22,13 @@
         </div>
         <h4 class="story-header">
           <span class="title">Stories</span>
-          <span class="sprint-point"><span class="value" ng-bind="(sprint.points === undefined || sprint.points === null ? 'N' : sprint.points)"></span>points</span>
+          <span class="sprint-point"><span class="value" ng-bind="sprint.points.points|numberOrText"></span>points</span>
         </h4>
         <ul class="list-group sprint-stories" ng-scrollable="scrollOptions">
           <li class="list-group-item" ng-repeat="story in sprint.stories" title="{{story.statement}}" ng-click="toggleCompleteStoryPopup(story)">
             <span class="story-type-name" ng-class="story.type | lowercase" title="{{story.typeName}}"></span>
-            <span class="story-name">{{story.name | limitTo: 28}}{{story.name.length > 28 ? '...' : ''}}</span>
-            <span class="badge points-{{story.points === undefined || story.points === null ? 'null' : story.points}}">{{story.points === undefined || story.points === null ? 'N' : story.points}}</span>
+            <span class="story-name" ng-bind="story.name|limitWithEllipsis:28"></span>
+            <span class="badge points-{{story.points|numberOrText:'null'}}" ng-bind="story.points|numberOrText"></span>
           </li>
         </ul>
       </div>
@@ -41,7 +41,7 @@
         <span class="story-type-name" ng-class="selectedStory.type | lowercase " title="{{selectedStory.typeName}}" ng-bind="selectedStory.typeName"></span>
         <span class="story-name">{{selectedStory.name}}</span>
         <span class="story-status" ng-class="selectedStory.status | lowercase" ng-bind="selectedStory.statusName"></span>
-        <span class="badge points-{{selectedStory.points === undefined || selectedStory.points === null ? 'null' : selectedStory.points}}">{{selectedStory.points === undefined || selectedStory.points === null ? 'N' : selectedStory.points}}</span>
+        <span class="badge points-{{selectedStory.points|numberOrText:'null'}}" ng-bind="selectedStory.points.points|numberOrText"></span>
       </div>
       <div class="panel-body">
         <div class="story-statement" ng-bind="selectedStory.statement"></div>
@@ -138,7 +138,7 @@
           </div>
           <h4 class="story-header">
             <span class="title">Stories</span>
-            <span class="sprint-point"><span class="value" ng-bind="(selectedSprint.points === undefined || selectedSprint.points === null ? 'N' : selectedSprint.points)"></span>points</span>
+            <span class="sprint-point"><span class="value" ng-bind="selectedSprint.points|numberOrText"></span>points</span>
           </h4>
           <ul class="list-group sprint-stories" ng-scrollable="scrollOptions">
             <li class="list-group-item" ng-repeat="story in selectedSprint.stories">
@@ -146,7 +146,7 @@
               <span class="story-name">{{story.name}}</span>
               <span class="story-statement">{{story.statement}}</span>
               <button type="button" class="btn btn-default btn-xs btn-remove-item" ng-click="removeSprintStory(story, $index)"><i class="fa fa-trash"></i></button>
-              <span class="badge points-{{story.points === undefined || story.points === null ? 'null' : story.points}}">{{story.points === undefined || story.points === null ? 'N' : story.points}}</span>
+              <span class="badge points-{{story.points|numberOrText:'null'}}" ng-bind="story.points.points|numberOrText"></span>
             </li>
             <li class="new-item list-group-item" ng-click="addingStoryToSelectedSprint()">
               <span ng-show="!newStoryVisible">Add a story</span>
@@ -173,7 +173,7 @@
             <span class="story-type-name" ng-class="story.type | lowercase" title="{{story.typeName}}"></span>
             <span class="story-name">{{story.name}}</span>
             <span class="story-statement">{{story.statement}}</span>
-            <span class="badge points-{{story.points === undefined || story.points === null ? 'null' : story.points}}">{{story.points === undefined || story.points === null ? 'N' : story.points}}</span>
+            <span class="badge points-{{story.points.points|numberOrText:'null'}}" ng-bind="story.points.points|numberOrText"></span>
           </li>
         </ul>
       </div>
