@@ -219,4 +219,19 @@ scrumInCeresControllers.controller('BacklogController', ['$rootScope', '$scope',
     $scope.stories = [];
     $scope.storiesPopupOpened = false;
   };
+
+  $scope.removeSprintStory = function(story, $index) {
+    if (story.sprintId) {
+      Alert.warning('Watch Out!', 'This story is already associated with this sprint. Are you sure you want to desassociate it?', function() {
+        StoryService.updateInIceLog({id: story.id, sprintId: null}).then(
+          function() {
+            $scope.selectedSprint.stories.splice($index, 1);
+          }
+        );
+      });
+    }
+    else {
+      $scope.selectedSprint.stories.splice($index, 1);
+    }
+  };
 }]);

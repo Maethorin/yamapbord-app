@@ -52,16 +52,16 @@
         width: 110px;
         text-align: right;
         background-color: $gray;
-        padding: 2px 3px 0 0;
+        padding: 2px 4px 0 0;
+        color: $gray-lighter;
+        border-radius: 3px;
       }
     }
     .start-date {
       float: left;
-      background-color: $brand-success;
     }
     .end-date {
       float: right;
-      background-color: $brand-danger;
     }
   }
 
@@ -243,6 +243,7 @@
                 padding: 0 10px;
                 height: 30px;
                 text-align: right;
+                color: $gray-darker;
               }
               .input-group-addon {
                 padding: 3px 11px;
@@ -261,11 +262,9 @@
           }
           .start-date {
             float: left;
-            background-color: $brand-success;
           }
           .end-date {
             float: right;
-            background-color: $brand-danger;
           }
         }
         .sprint-objective {
