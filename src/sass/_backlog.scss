@@ -21,8 +21,53 @@
     }
   }
 
+  .sprint-dates {
+    overflow: hidden;
+    margin-bottom: 20px;
+    text-align: center;
+    .working-days {
+      display: inline-block;
+      .fa {
+        font-size: 22px;
+      }
+      .number {
+        font-size: 22px;
+        display: inline-block;
+        margin: 0 25px;
+      }
+      .label {
+        font-size: 12px;
+        display: block;
+      }
+    }
+    .start-date, .end-date {
+      padding: 4px 10px;
+      border-radius: 3px;
+      font-size: 18px;
+      font-weight: bold;
+      margin-top: 5px;
+      .date {
+        display: inline-block;
+        font-weight: normal;
+        width: 110px;
+        text-align: right;
+        background-color: $gray;
+        padding: 2px 3px 0 0;
+      }
+    }
+    .start-date {
+      float: left;
+      background-color: $brand-success;
+    }
+    .end-date {
+      float: right;
+      background-color: $brand-danger;
+    }
+  }
+
   .sprint-objective {
     margin: 0;
+    height: 60px;
   }
 
   .sprint-stories {
@@ -111,7 +156,7 @@
       display: block;
     }
     .panel-edit-sprint {
-      margin: 8% 20%;
+      margin: 3% 20%;
       .panel-heading {
         overflow: hidden;
         .sprint-name {
@@ -136,10 +181,68 @@
       }
       .panel-body {
         padding: 20px;
-        height: 54vh;
+        height: 69vh;
         zoom: 1;
         overflow: auto;
         position: relative;
+
+        .dropdown {
+          position: absolute;
+          &.date {
+            &.open {
+              &.start {
+                top: 120px;
+                left: 35px;
+              }
+              &.end {
+                top: 120px;
+                right: 350px;
+              }
+            }
+          }
+        }
+
+        .sprint-dates {
+          position: relative;
+          overflow: hidden;
+          margin-bottom: 20px;
+          text-align: center;
+          .start-date, .end-date {
+            padding: 6px 8px 0 10px;
+            label {
+              margin: 0;
+              vertical-align: super;
+            }
+            .input-group {
+              .form-control {
+                padding: 0 10px;
+                height: 30px;
+                text-align: right;
+              }
+              .input-group-addon {
+                padding: 3px 11px;
+                line-height: normal;
+                .fa {
+                  color: $gray-lighter;
+                  font-size: 18px;
+                }
+              }
+            }
+            .date {
+              padding: 0;
+              width: 150px;
+              background: transparent;
+            }
+          }
+          .start-date {
+            float: left;
+            background-color: $brand-success;
+          }
+          .end-date {
+            float: right;
+            background-color: $brand-danger;
+          }
+        }
         .sprint-objective {
           height: auto;
           textarea {

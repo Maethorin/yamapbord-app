@@ -6,6 +6,15 @@
         <button class="btn btn-primary btn-sm btn-save-sprint" ng-click="selectSprintToEdit(sprint, $index)"><i class="fa fa-edit"></i></button>
       </div>
       <div class="panel-body">
+        <h4>Dates</h4>
+        <div class="sprint-dates">
+          <span class="start-date">Starts: <span class="date" ng-bind="sprint.startDate"></span></span>
+          <div class="working-days">
+            <span class="label">working days</span>
+            <i class="fa fa-long-arrow-left"></i><span class="number" ng-bind="sprint.workingDays"></span><i class="fa fa-long-arrow-right"></i>
+          </div>
+          <span class="end-date">Ends: <span class="date" ng-bind="sprint.endDate"></span></span>
+        </div>
         <h4>Objective</h4>
         <div class="sprint-objective" ng-scrollable>
           <p ng-bind="sprint.objective"></p>
@@ -63,10 +72,48 @@
       <div class="panel panel-default panel-edit-sprint">
         <div class="panel-heading" title="{{selectedSprint.statement}}">
           <div class="col-md-12">
-            <input class="sprint-name" ng-model="selectedSprint.name" />
+            <input class="sprint-name" ng-model="selectedSprint.name"/>
           </div>
         </div>
         <div class="panel-body">
+          <h4>Dates</h4>
+          <div class="dropdown start date">
+            <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+              <datetimepicker ng-model="selectedSprint.startDate" datetimepicker-config="{ dropdownSelector: '#dropdownStartDate', minView:'day' }"/>
+            </ul>
+          </div>
+          <div class="dropdown end date">
+            <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+              <datetimepicker ng-model="selectedSprint.endDate" datetimepicker-config="{ dropdownSelector: '#dropdownEndDate', minView:'day' }"/>
+            </ul>
+          </div>
+          <div class="sprint-dates">
+            <div class="start-date">
+              <label for="inputStartDate">Starts:</label>
+              <a class="date dropdown-toggle" id="dropdownStartDate" role="button" data-toggle="dropdown" data-target=".dropdown.start.date">
+                <div class="input-group">
+                  <input type="text" id="inputStartDate" class="form-control" name="startDate" ng-model="selectedSprint.startDate" date-time-input="YYYY-DD-MM" required/>
+                  <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                </div>
+              </a>
+            </div>
+
+            <div class="working-days">
+              <span class="label">working days</span>
+              <i class="fa fa-long-arrow-left"></i><span class="number" ng-bind="selectedSprint.workingDays"></span><i class="fa fa-long-arrow-right"></i>
+            </div>
+
+            <div class="end-date">
+              <label for="inputEndDate">Starts:</label>
+              <a class="date dropdown-toggle" id="dropdownEndDate" role="button" data-toggle="dropdown" data-target=".dropdown.end.date">
+                <div class="input-group">
+                  <input type="text" id="inputEndDate" class="form-control" name="endDate" ng-model="selectedSprint.endDate" date-time-input="YYYY-DD-MM" required/>
+                  <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                </div>
+              </a>
+            </div>
+          </div>
+
           <h4>Objective</h4>
           <div class="sprint-objective">
             <textarea rows="2" ng-model="selectedSprint.objective" required></textarea>

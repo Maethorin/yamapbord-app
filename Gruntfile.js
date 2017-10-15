@@ -15,6 +15,7 @@ module.exports = function (grunt) {
   };
 
   var srcFolder         = 'src';
+  var nodeModulesFolder = 'node_modules';
   var libFolder         = '{0}/lib'.format([srcFolder]);
   var wwwFolder         = 'www';
   var srcJsFolder       = '{0}/js'.format([srcFolder]);
@@ -51,7 +52,8 @@ module.exports = function (grunt) {
         files: [
           {expand: true, cwd: '{0}/angular-bootstrap-toggle/dist'.format([libFolder]), src: ['angular-bootstrap-toggle.css'], flatten: true, dest: wwwExtraCssFolder},
           {expand: true, cwd: '{0}/ng-scrollable/assets'.format([libFolder]), src: ['ng-scrollable.css'], flatten: true, dest: wwwExtraCssFolder},
-          {expand: true, cwd: '{0}/sweetalert2/dist'.format([libFolder]), src: ['sweetalert2.css'], flatten: true, dest: wwwExtraCssFolder}
+          {expand: true, cwd: '{0}/sweetalert2/dist'.format([libFolder]), src: ['sweetalert2.css'], flatten: true, dest: wwwExtraCssFolder},
+          {expand: true, cwd: '{0}/angular-bootstrap-datetimepicker/src/css'.format([nodeModulesFolder]), src: ['datetimepicker.css'], flatten: true, dest: wwwExtraCssFolder}
         ]
       },
       img: {
@@ -89,7 +91,11 @@ module.exports = function (grunt) {
           "src/lib/angular-cookies/angular-cookies.js",
           "src/lib/angular-bootstrap/ui-bootstrap.js",
           "src/lib/angular-bootstrap/ui-bootstrap-tpls.js",
-          "src/lib/ng-scrollable/src/ng-scrollable.js"
+          "src/lib/ng-scrollable/src/ng-scrollable.js",
+
+          "node_modules/angular-bootstrap-datetimepicker/src/js/datetimepicker.js",
+          "node_modules/angular-bootstrap-datetimepicker/src/js/datetimepicker.templates.js",
+          "node_modules/angular-date-time-input/src/dateTimeInput.js"
         ],
         dest: componentsFile
       },

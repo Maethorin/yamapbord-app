@@ -68,6 +68,8 @@ var scrumInCeres = angular.module(
     'ui.router',
     'ui.bootstrap',
     'ui.utils.masks',
+    'ui.bootstrap.datetimepicker',
+    'ui.dateTimeInput',
     '19degrees.ngSweetAlert2',
     'scrumInCeres.services',
     'scrumInCeres.factories',

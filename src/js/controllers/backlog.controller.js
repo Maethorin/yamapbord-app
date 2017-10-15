@@ -13,11 +13,28 @@ scrumInCeresControllers.controller('BacklogController', ['$rootScope', '$scope',
   $scope.completeStoryPopupOpened = false;
   $scope.selectedStory = null;
 
-  Backlog.query(
-    function(response) {
-      $scope.sprints = response;
-    }
-  );
+  function getStories() {
+    Backlog.query(
+      function(response) {
+        $scope.sprints = response;
+        _.forEach($scope.sprints, function(sprint) {
+          var startDate = moment(sprint.startDate).startOf('day');
+          var endDate = moment(sprint.endDate).startOf('day');
+          sprint.workingDays = 1;
+          while(startDate.add(1, 'days').diff(endDate) < 0) {
+            if (startDate.weekday() !== 6 && startDate.weekday() !== 7) {
+              sprint.workingDays += 1;
+            }
+          }
+          sprint.startDate = moment(sprint.startDate);
+          sprint.startDate.opened = false;
+          sprint.endDate = moment(sprint.endDate);
+        });
+      }
+    );
+  }
+
+  getStories();
 
   $rootScope.$on('sprint.add', function() {
     $scope.addingNewSprint = true;
@@ -70,8 +87,8 @@ scrumInCeresControllers.controller('BacklogController', ['$rootScope', '$scope',
     if ($scope.addingNewSprint) {
       Backlog.save(
         $scope.selectedSprint,
-        function(response) {
-
+        function() {
+          getStories();
         },
         function(error) {
           Alert.error('Sum Ten Wong', error.data.exception);

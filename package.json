@@ -3,6 +3,8 @@
   "version": "1.0.0",
   "description": "Scrum InCeres",
   "dependencies": {
+    "angular-bootstrap-datetimepicker": "^1.1.4",
+    "angular-date-time-input": "^1.2.1",
     "bower": "^1.8.0",
     "grunt": "^1.0.1",
     "grunt-cli": "^1.2.0",
