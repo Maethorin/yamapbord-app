@@ -7,11 +7,16 @@ scrumInCeresControllers.controller('BacklogController', ['$rootScope', '$scope',
 
   $scope.completeSprintPopupOpened = false;
   $scope.selectedSprint = null;
+  $scope.selectedSprintOriginalStories = null;
   $scope.selectedSprintIndex = null;
   $scope.addingNewSprint = false;
 
   $scope.completeStoryPopupOpened = false;
   $scope.selectedStory = null;
+
+  $scope.storiesPopupOpened = false;
+  $scope.stories = [];
+  $scope.newStoryVisible = false;
 
   function getStories() {
     Backlog.query(
@@ -76,6 +81,7 @@ scrumInCeresControllers.controller('BacklogController', ['$rootScope', '$scope',
 
   $scope.selectSprintToEdit = function(sprint, $index) {
     $scope.selectedSprint = _.cloneDeep(sprint);
+    $scope.selectedSprintOriginalStories = sprint.stories;
     $scope.selectedSprintIndex = $index;
     $scope.completeSprintPopupOpened = true;
   };
@@ -173,4 +179,44 @@ scrumInCeresControllers.controller('BacklogController', ['$rootScope', '$scope',
       );
     }
   }
+
+  $scope.addingStoryToSelectedSprint = function() {
+    StoryService.getStories().then(
+      function(stories) {
+        $scope.stories = stories;
+        _.forEach($scope.stories, function(story) {
+          if (_.findIndex($scope.selectedSprint.stories, ['id', story.id]) > -1) {
+            story.selected = true;
+          }
+        });
+        $scope.storiesPopupOpened = true;
+      },
+      function(error) {
+        Alert.error('Sum Tin Wong');
+      }
+    );
+  };
+
+  $scope.saveAddSelectedSprintStories = function() {
+    $scope.selectedSprint.stories = _.clone($scope.selectedSprintOriginalStories);
+    _.forEach($scope.stories, function(story) {
+      if (story.selected) {
+        if (_.findIndex($scope.selectedSprint.stories, ['id', story.id]) === -1) {
+          $scope.selectedSprint.stories.push(story);
+        }
+      }
+    });
+    var points = 0;
+    _.forEach($scope.selectedSprint.stories, function(story) {
+      points += (story.points !== null ? story.points : 0);
+    });
+    $scope.selectedSprint.points = points;
+    $scope.stories = [];
+    $scope.storiesPopupOpened = false;
+  };
+
+  $scope.cancelAddSelectedSprintStories = function() {
+    $scope.stories = [];
+    $scope.storiesPopupOpened = false;
+  };
 }]);

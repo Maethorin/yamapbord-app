@@ -148,10 +148,8 @@
               <button type="button" class="btn btn-default btn-xs btn-remove-item" ng-click="removeSprintStory(selectedSprint, $index)"><i class="fa fa-trash"></i></button>
               <span class="badge points-{{story.points === undefined || story.points === null ? 'null' : story.points}}">{{story.points === undefined || story.points === null ? 'N' : story.points}}</span>
             </li>
-            <li class="new-item list-group-item" ng-click="addingStoryToSprint()">
+            <li class="new-item list-group-item" ng-click="addingStoryToSelectedSprint()">
               <span ng-show="!newStoryVisible">Add a story</span>
-              <button type="button" class="btn btn-default btn-xs btn-remove-item" ng-show="newStoryVisible" ng-click="cancelAddStoryToSprint($event)"><i class="fa fa-close"></i></button>
-              <button type="button" class="btn btn-primary btn-xs btn-add-item" ng-show="newStoryVisible" ng-click="addStoryToSprint($event, selectedSprint)">Add</button>
             </li>
           </ul>
         </div>
@@ -162,4 +160,27 @@
       </div>
     </div>
   </form>
+
+  <div class="popup-stories" ng-class="{'opened': storiesPopupOpened}">
+    <div class="panel panel-default panel-stories">
+      <div class="panel-heading">
+        IceLog Stories
+      </div>
+      <div class="panel-body">
+        <ul class="list-group sprint-stories" ng-scrollable="scrollOptions">
+          <li class="list-group-item" ng-repeat="story in stories" title="{{story.statement}}" ng-click="toggleCompleteStoryPopup(story)">
+            <checkbox ng-class="{'btn-primary': story.selected}" ng-click="$event.stopPropagation()" ng-model="story.selected"></checkbox>
+            <span class="story-type-name" ng-class="story.type | lowercase" title="{{story.typeName}}"></span>
+            <span class="story-name">{{story.name}}</span>
+            <span class="story-statement">{{story.statement}}</span>
+            <span class="badge points-{{story.points === undefined || story.points === null ? 'null' : story.points}}">{{story.points === undefined || story.points === null ? 'N' : story.points}}</span>
+          </li>
+        </ul>
+      </div>
+      <div class="panel-footer">
+        <button type="button" class="btn btn-danger" ng-click="cancelAddSelectedSprintStories()">Cancel</button>
+        <button type="button" class="btn btn-success" ng-click="saveAddSelectedSprintStories()">OK</button>
+      </div>
+    </div>
+  </div>
 </div>

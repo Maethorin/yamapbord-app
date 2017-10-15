@@ -16,6 +16,7 @@
     "angular-sweetalert-2": "latest",
     "angular-cookies": "^1.6.4",
     "angular-chart.js": "^1.1.1",
+    "angular-bootstrap-checkbox": "^0.5.1",
     "angular-bootstrap": "^2.5.0",
     "angular-touch": "^1.6.6",
     "ng-scrollbar": "^0.0.8",
