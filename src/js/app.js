@@ -137,7 +137,7 @@ scrumInCeres.config(['$httpProvider', '$stateProvider', '$locationProvider', '$u
   $urlRouterProvider.when('', '/board');
 }]);
 
-scrumInCeres.run(['$rootScope', 'AuthService', 'MeService', 'Project', function($rootScope, AuthService, MeService, Project) {
+scrumInCeres.run(['$rootScope', 'AuthService', 'MeService', 'Project', 'Alert', function($rootScope, AuthService, MeService, Project, Alert) {
   AuthService.update();
   $rootScope.$on('userInfo.updated', function(evt, userInfo) {
     $rootScope.loggedUser = userInfo;
@@ -169,7 +169,6 @@ scrumInCeres.run(['$rootScope', 'AuthService', 'MeService', 'Project', function(
       Project.query(
         function(response) {
           $rootScope.projects = response;
-          // $rootScope.viewProject(response[1]);
         }
       )
     },
@@ -204,6 +203,7 @@ scrumInCeres.run(['$rootScope', 'AuthService', 'MeService', 'Project', function(
 
   $rootScope.searchStories = function() {
     $rootScope.$broadcast('story.search', $rootScope.storyFilterTextType);
+    Alert.itsOpenSourceDude();
   };
 
   $rootScope.showMyInfo = function() {
