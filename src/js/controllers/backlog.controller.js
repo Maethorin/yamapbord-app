@@ -7,7 +7,7 @@ scrumInCeresControllers.controller('BacklogController', ['$rootScope', '$scope',
 
   $scope.completeSprintPopupOpened = false;
   $scope.selectedSprint = null;
-  $scope.selectedSprintOriginalStories = null;
+  $scope.selectedSprintOriginalStories = [];
   $scope.selectedSprintIndex = null;
   $scope.addingNewSprint = false;
 
@@ -227,6 +227,9 @@ scrumInCeresControllers.controller('BacklogController', ['$rootScope', '$scope',
 
   $scope.saveAddSelectedSprintStories = function() {
     $scope.selectedSprint.stories = _.clone($scope.selectedSprintOriginalStories);
+    if ($scope.selectedSprint.stories === null || $scope.selectedSprint.stories === undefined) {
+      $scope.selectedSprint.stories = [];
+    }
     _.forEach($scope.stories, function(story) {
       if (story.selected) {
         if (_.findIndex($scope.selectedSprint.stories, ['id', story.id]) === -1) {
