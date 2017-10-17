@@ -73,6 +73,7 @@ var scrumInCeres = angular.module(
     'ui.dateTimeInput',
     'ui.checkbox',
     '19degrees.ngSweetAlert2',
+    'inform',
     'scrumInCeres.services',
     'scrumInCeres.factories',
     'scrumInCeres.resources',
@@ -137,7 +138,7 @@ scrumInCeres.config(['$httpProvider', '$stateProvider', '$locationProvider', '$u
   $urlRouterProvider.when('', '/board');
 }]);
 
-scrumInCeres.run(['$rootScope', 'AuthService', 'MeService', 'Project', 'Alert', function($rootScope, AuthService, MeService, Project, Alert) {
+scrumInCeres.run(['$rootScope', '$timeout', '$q', 'AuthService', 'MeService', 'Project', 'Alert', function($rootScope, $timeout, $q, AuthService, MeService, Project, Alert) {
   AuthService.update();
   $rootScope.$on('userInfo.updated', function(evt, userInfo) {
     $rootScope.loggedUser = userInfo;
@@ -216,4 +217,29 @@ scrumInCeres.run(['$rootScope', 'AuthService', 'MeService', 'Project', 'Alert', 
   $rootScope.showMyInfo = function() {
     Alert.itsOpenSourceDude();
   };
+
+  Pusher.logToConsole = true;
+
+  var pusher = new Pusher('cf7366082066d84f2706', {
+    cluster: 'us2',
+    encrypted: true
+  });
+
+  $rootScope.pusherSocketId = null;
+  pusher.connection.bind('connected', function() {
+    $rootScope.pusherSocketId = pusher.connection.socket_id;
+  });
+
+  var channel = pusher.subscribe('scruminceres');
+  channel.bind('board', function(data) {
+    $rootScope.$broadcast('board.{message}'.format(data), data);
+  });
+
+  channel.bind('backlog', function(data) {
+    $rootScope.$broadcast('backlog.{message}'.format(data), data);
+  });
+
+  channel.bind('icebox', function(data) {
+    $rootScope.$broadcast('icebox.{message}'.format(data), data);
+  });
 }]);

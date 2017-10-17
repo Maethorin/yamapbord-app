@@ -1,11 +1,16 @@
 @import "fontawesome/scss/font-awesome";
 @import "variables";
 @import "bootstrap-sass/assets/stylesheets/bootstrap";
+@import "notifier";
 @import "login";
 @import "timeline";
 @import "board";
 @import "ice-box";
 @import "backlog";
+
+.inform-fixed {
+  top: 75px;
+}
 
 .center {
   text-align: center;

@@ -50,6 +50,7 @@ module.exports = function (grunt) {
       },
       css: {
         files: [
+          {expand: true, cwd: '{0}/angular-inform/dist'.format([libFolder]), src: ['angular-inform.css'], flatten: true, dest: wwwExtraCssFolder},
           {expand: true, cwd: '{0}/angular-bootstrap-toggle/dist'.format([libFolder]), src: ['angular-bootstrap-toggle.css'], flatten: true, dest: wwwExtraCssFolder},
           {expand: true, cwd: '{0}/ng-scrollable/assets'.format([libFolder]), src: ['ng-scrollable.css'], flatten: true, dest: wwwExtraCssFolder},
           {expand: true, cwd: '{0}/sweetalert2/dist'.format([libFolder]), src: ['sweetalert2.css'], flatten: true, dest: wwwExtraCssFolder},
@@ -93,6 +94,7 @@ module.exports = function (grunt) {
           "src/lib/angular-bootstrap/ui-bootstrap-tpls.js",
           "src/lib/ng-scrollable/src/ng-scrollable.js",
           "src/lib/angular-bootstrap-checkbox/angular-bootstrap-checkbox.js",
+          "src/lib/angular-inform/dist/angular-inform.js",
 
           "node_modules/angular-bootstrap-datetimepicker/src/js/datetimepicker.js",
           "node_modules/angular-bootstrap-datetimepicker/src/js/datetimepicker.templates.js",

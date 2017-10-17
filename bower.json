@@ -20,7 +20,8 @@
     "angular-bootstrap": "^2.5.0",
     "angular-touch": "^1.6.6",
     "ng-scrollbar": "^0.0.8",
-    "ng-scrollable": "^0.2.6"
+    "ng-scrollable": "^0.2.6",
+    "angular-inform": "^0.0.18"
   },
   "resolutions": {
     "angular": "1.6.4"

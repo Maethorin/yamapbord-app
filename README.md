@@ -4,10 +4,6 @@
     Models - Done
     Domain - Done
     Front
-* Definir Story Requester
-    Models - Done
-    Domain - Done
-    Front - NTD
 * Permitir editar Taks a qq momento
 * Comentário
     Models - Done

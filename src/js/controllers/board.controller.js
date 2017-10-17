@@ -1,6 +1,6 @@
 'use strict';
 
-scrumInCeresControllers.controller('BoardController', ['$rootScope', '$scope', 'Alert', 'Story', function($rootScope, $scope, Alert, Story) {
+scrumInCeresControllers.controller('BoardController', ['$rootScope', '$scope', 'inform', 'Alert', 'Notifier', 'Story', function($rootScope, $scope, inform, Alert, Notifier, Story) {
   $rootScope.currentController = 'BoardController';
   $scope.timeline = null;
   $scope.scrollOptions = {scrollX: 'bottom', scrollY: 'none', useBothWheelAxes: true, scrollPosX: 0, preventWheelEvents: true};
@@ -15,6 +15,10 @@ scrumInCeresControllers.controller('BoardController', ['$rootScope', '$scope', '
   $scope.changeScroll = function() {
     $scope.$broadcast('content.changed');
   };
+
+  if (!$rootScope.selectedProject) {
+    Notifier.info('Select a Project Dude!', 'Hey!');
+  }
 
   $scope.columns = [
     {name: 'PLAN', label: 'Planned'},
@@ -40,6 +44,41 @@ scrumInCeresControllers.controller('BoardController', ['$rootScope', '$scope', '
     'REJE': 'Rejected'
   };
 
+  $rootScope.$on('board.story.moved', function(event, data) {
+    if ($scope.selectedSprint === null || $scope.selectedSprint.id !== data.sprintId) {
+      return false;
+    }
+    Notifier.warning('Story moved');
+    var story = _.find($scope.selectedSprint.stories, ['id', data.storyId]);
+    story.status = data.toStatus;
+    updateStoryData();
+  });
+
+  $rootScope.$on('board.story.taskToggled', function(event, data) {
+    if ($scope.selectedSprint  === null || $scope.selectedSprint.id !== data.sprintId) {
+      return false;
+    }
+    Notifier.warning('Story task state changed');
+    var story = _.find($scope.selectedSprint.stories, ['id', data.storyId]);
+    _.forEach(story.tasks, function(task, $index) {
+      if ($index === data.index) {
+        story.tasks[$index].complete = data.state;
+      }
+    })
+  });
+
+  $rootScope.$on('board.story.taskAdded', function(event, storyId) {
+
+  });
+
+  $rootScope.$on('board.story.taskToggled', function(event, storyId) {
+
+  });
+
+  $rootScope.$on('board.story.definitionToggled', function(event, storyId) {
+
+  });
+
   $rootScope.$watch('selectedProject', function(project) {
     if (!project) {
       return false;
@@ -61,7 +100,7 @@ scrumInCeresControllers.controller('BoardController', ['$rootScope', '$scope', '
       {projectId:  $rootScope.selectedProject.id, sprintId: sprint.id},
       function(response) {
         $scope.selectedSprint.stories = response;
-        $scope.updateStoryData();
+        updateStoryData();
         Alert.close();
       },
       function(error) {
@@ -86,8 +125,7 @@ scrumInCeresControllers.controller('BoardController', ['$rootScope', '$scope', '
     $scope.selectSprint($scope.currentSprint);
   });
 
-  $scope.updateStoryData = function() {
-
+  var updateStoryData = function() {
     $scope.pointsPerStoryTypeStatus = {
       'PLAN': 0,
       'STAR': 0,
@@ -115,7 +153,6 @@ scrumInCeresControllers.controller('BoardController', ['$rootScope', '$scope', '
       $scope.pointsPerStoryTypeStatus[story.status] += story.points;
       story.hasTasks = ['PLAN', 'STAR'].indexOf(story.status) > -1;
     });
-
 
     var start = moment($scope.selectedSprint.startDateText);
     var finish = moment($scope.selectedSprint.endDateText);
@@ -209,7 +246,7 @@ scrumInCeresControllers.controller('BoardController', ['$rootScope', '$scope', '
     }
     story.status = $scope.storyTypeSequence[actualStepIndex - 1];
     story.statusName = $scope.storyTypeNames[story.status];
-    $scope.updateStoryData();
+    updateStoryData();
     saveStoryStatus(story);
   };
 
@@ -220,7 +257,7 @@ scrumInCeresControllers.controller('BoardController', ['$rootScope', '$scope', '
     }
     story.status = $scope.storyTypeSequence[actualStepIndex + 1];
     story.statusName = $scope.storyTypeNames[story.status];
-    $scope.updateStoryData();
+    updateStoryData();
     saveStoryStatus(story);
   };
 
