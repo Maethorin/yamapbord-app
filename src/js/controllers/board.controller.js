@@ -67,6 +67,15 @@ scrumInCeresControllers.controller('BoardController', ['$rootScope', '$scope', '
     })
   });
 
+  $rootScope.$on('board.story.taskAdded', function(event, data) {
+    if ($scope.selectedSprint  === null || $scope.selectedSprint.id !== data.sprintId) {
+      return false;
+    }
+    Notifier.warning('Story task added');
+    var story = _.find($scope.selectedSprint.stories, ['id', data.storyId]);
+    story.tasks.push(data.task);
+  });
+
   $rootScope.$on('board.story.taskAdded', function(event, storyId) {
 
   });

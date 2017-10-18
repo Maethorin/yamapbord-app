@@ -1,6 +1,6 @@
 'use strict';
 
-scrumInCeresControllers.controller('IceBoxController', ['$rootScope', '$scope', 'Alert', 'StoryService', 'IceBox', function($rootScope, $scope, Alert, StoryService, IceBox) {
+scrumInCeresControllers.controller('IceBoxController', ['$rootScope', '$scope', 'Alert', 'Notifier', 'StoryService', 'IceBox', function($rootScope, $scope, Alert, Notifier, StoryService, IceBox) {
   $rootScope.selectedProject = null;
   $rootScope.currentController = 'IceBoxController';
 
@@ -16,20 +16,16 @@ scrumInCeresControllers.controller('IceBoxController', ['$rootScope', '$scope', 
   $scope.newDefinition = {definition: null};
   $scope.newDefinitionVisible = false;
 
-  $scope.changeScroll = function() {
-    $scope.$broadcast('content.changed');
-  };
+  Alert.loading();
+  StoryService.getStories().then(function(stories) {
+    $scope.stories = stories;
+    Alert.close();
+  });
 
   $rootScope.$on('story.filter.type', function(evt, type) {
     StoryService.filterByType(type).then(function(stories) {
       $scope.stories = stories;
     });
-  });
-
-  Alert.loading();
-  StoryService.getStories().then(function(stories) {
-    $scope.stories = stories;
-    Alert.close();
   });
 
   $rootScope.$on('story.add', function() {
@@ -47,6 +43,43 @@ scrumInCeresControllers.controller('IceBoxController', ['$rootScope', '$scope', 
     };
     $scope.completeStoryPopupOpened = true;
   });
+
+  $rootScope.$on('icebox.story.created', function(event, data) {
+    IceBox.get(
+      {id: data.storyId},
+      function(response) {
+        Notifier.warning('Story created');
+        $scope.stories.push(response);
+      },
+      function() {
+        Notifier.danger('Changes has been made and could not be updated', 'Hey!');
+      }
+    );
+  });
+
+  $rootScope.$on('icebox.story.updated', function(event, data) {
+    IceBox.get(
+      {id: data.storyId},
+      function(response) {
+        Notifier.warning('Story updated');
+        var index = _.findIndex($scope.stories, ['id', data.storyId]);
+        $scope.stories[index] = response;
+      },
+      function() {
+        Notifier.danger('Changes has been made and could not be updated', 'Hey!');
+      }
+    );
+  });
+
+  $rootScope.$on('icebox.story.deleted', function(event, data) {
+    Notifier.warning('Story deleted');
+    var index = _.findIndex($scope.stories, ['id', data.storyId]);
+    $scope.stories.splice(index, 1);
+  });
+
+  $scope.changeScroll = function() {
+    $scope.$broadcast('content.changed');
+  };
 
   $scope.setStoryType = function(story, type) {
     story.type = type.code;

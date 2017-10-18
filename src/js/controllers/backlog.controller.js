@@ -1,6 +1,6 @@
 'use strict';
 
-scrumInCeresControllers.controller('BacklogController', ['$rootScope', '$scope', 'Alert', 'StoryService', 'Backlog', function($rootScope, $scope, Alert, StoryService, Backlog) {
+scrumInCeresControllers.controller('BacklogController', ['$rootScope', '$scope', 'Alert', 'StoryService', 'Notifier', 'Backlog', function($rootScope, $scope, Alert, StoryService, Notifier, Backlog) {
   $rootScope.selectedProject = null;
   $rootScope.currentController = 'BacklogController';
   $scope.scrollOptions = {scrollX: 'none', scrollY: 'right', preventWheelEvents: true};
@@ -59,6 +59,49 @@ scrumInCeresControllers.controller('BacklogController', ['$rootScope', '$scope',
     $scope.selectedSprint.points = points;
   }
 
+  function startDateOnSetTime() {
+    $scope.$broadcast('start-date-changed');
+    setWorkingDays($scope.selectedSprint);
+  }
+
+  function endDateOnSetTime() {
+    $scope.$broadcast('end-date-changed');
+    setWorkingDays($scope.selectedSprint);
+  }
+
+  function startDateBeforeRender($dates) {
+    if ($scope.selectedSprint.endDate) {
+      var activeDate = moment($scope.selectedSprint.endDate);
+
+      $dates.filter(
+        function(date) {
+          return date.localDateValue() >= activeDate.valueOf()
+        }
+      )
+        .forEach(
+          function(date) {
+            date.selectable = false;
+          }
+        );
+    }
+  }
+
+  function endDateBeforeRender($view, $dates) {
+    if ($scope.selectedSprint.startDate) {
+      var activeDate = moment($scope.selectedSprint.startDate).subtract(1, $view).add(1, 'minute');
+
+      $dates.filter(
+        function(date) {
+          return date.localDateValue() <= activeDate.valueOf()
+        }
+      ).forEach(
+        function (date) {
+          date.selectable = false;
+        }
+      );
+    }
+  }
+
   $rootScope.$on('sprint.add', function() {
     $scope.addingNewSprint = true;
     $scope.selectedSprint = {
@@ -72,6 +115,39 @@ scrumInCeresControllers.controller('BacklogController', ['$rootScope', '$scope',
       stories: []
     };
     $scope.completeSprintPopupOpened = true;
+  });
+
+  $rootScope.$on('backlog.sprint.created', function(event, data) {
+    Notifier.warning('Sprint created');
+    Backlog.get(
+      {id: data.sprintId},
+      function(response) {
+        $scope.sprints.push(response);
+      },
+      function() {
+        Notifier.danger('Changes has been made and could not be updated', 'Hey!');
+      }
+    );
+  });
+
+  $rootScope.$on('backlog.sprint.updated', function(event, data) {
+    Notifier.warning('Sprint updated');
+    Backlog.get(
+      {id: data.sprintId},
+      function(response) {
+        var index = _.findIndex($scope.sprints, ['id', data.sprintId]);
+        $scope.sprints[index] = response;
+      },
+      function() {
+        Notifier.danger('Changes has been made and could not be updated', 'Hey!');
+      }
+    );
+  });
+
+  $rootScope.$on('backlog.sprint.deleted', function(event, data) {
+    Notifier.warning('Sprint deleted');
+    var index = _.findIndex($scope.sprints, ['id', data.sprintId]);
+    $scope.sprints.splice(index, 1);
   });
 
   $scope.setSelectedSprintProject = function(project) {
@@ -159,52 +235,12 @@ scrumInCeresControllers.controller('BacklogController', ['$rootScope', '$scope',
   };
 
   $scope.endDateBeforeRender = endDateBeforeRender;
+
   $scope.endDateOnSetTime = endDateOnSetTime;
+
   $scope.startDateBeforeRender = startDateBeforeRender;
+
   $scope.startDateOnSetTime = startDateOnSetTime;
-
-  function startDateOnSetTime() {
-    $scope.$broadcast('start-date-changed');
-    setWorkingDays($scope.selectedSprint);
-  }
-
-  function endDateOnSetTime() {
-    $scope.$broadcast('end-date-changed');
-    setWorkingDays($scope.selectedSprint);
-  }
-
-  function startDateBeforeRender($dates) {
-    if ($scope.selectedSprint.endDate) {
-      var activeDate = moment($scope.selectedSprint.endDate);
-
-      $dates.filter(
-        function(date) {
-          return date.localDateValue() >= activeDate.valueOf()
-        }
-      )
-      .forEach(
-        function(date) {
-          date.selectable = false;
-        }
-      );
-    }
-  }
-
-  function endDateBeforeRender($view, $dates) {
-    if ($scope.selectedSprint.startDate) {
-      var activeDate = moment($scope.selectedSprint.startDate).subtract(1, $view).add(1, 'minute');
-
-      $dates.filter(
-        function(date) {
-          return date.localDateValue() <= activeDate.valueOf()
-        }
-      ).forEach(
-        function (date) {
-          date.selectable = false;
-        }
-      );
-    }
-  }
 
   $scope.addingStoryToSelectedSprint = function() {
     Alert.loading();
