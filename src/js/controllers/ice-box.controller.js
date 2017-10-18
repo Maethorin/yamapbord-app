@@ -1,6 +1,6 @@
 'use strict';
 
-scrumInCeresControllers.controller('IceBoxController', ['$rootScope', '$scope', '$filter', 'Alert', 'Notifier', 'StoryService', 'IceBox', function($rootScope, $scope, $filter, Alert, Notifier, StoryService, IceBox) {
+scrumInCeresControllers.controller('IceBoxController', ['$rootScope', '$scope', '$timeout', 'Alert', 'Notifier', 'StoryService', 'IceBox', function($rootScope, $scope, $timeout, Alert, Notifier, StoryService, IceBox) {
   $rootScope.selectedProject = null;
   $rootScope.currentController = 'IceBoxController';
 
@@ -29,20 +29,6 @@ scrumInCeresControllers.controller('IceBoxController', ['$rootScope', '$scope', 
       Alert.close();
     });
   });
-
-  // $rootScope.$on('story.search', function(event) {
-  //   Alert.loading();
-  //   StoryService.getStories().then(function(stories) {
-  //     console.log($rootScope.search.expression);
-  //     if ($rootScope.search.expression === null || $rootScope.search.expression === '') {
-  //       $scope.stories = stories;
-  //       return;
-  //     }
-  //     var property = $rootScope.search.fieldType.type;
-  //     $filter('filter')($scope.stories, {name: $rootScope.search.expression});
-  //     Alert.close();
-  //   });
-  // });
 
   $rootScope.$on('story.add', function() {
     $scope.addingNewStory = true;
@@ -183,6 +169,15 @@ scrumInCeresControllers.controller('IceBoxController', ['$rootScope', '$scope', 
     $scope.newTaskVisible = false;
     $scope.newTask = {task: null};
     $event.stopPropagation();
+  };
+
+  $scope.blurInputTaskFiled = function($event, selectedStory) {
+    $timeout(
+      function() {
+        $scope.addTaskToStory($event, selectedStory);
+      },
+      150
+    )
   };
 
   $scope.addTaskToStory = function($event, story) {

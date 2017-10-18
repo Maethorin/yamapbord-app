@@ -73,7 +73,6 @@ var scrumInCeres = angular.module(
     'ui.dateTimeInput',
     'ui.checkbox',
     '19degrees.ngSweetAlert2',
-    'inform',
     'scrumInCeres.services',
     'scrumInCeres.factories',
     'scrumInCeres.resources',

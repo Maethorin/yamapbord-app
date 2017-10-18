@@ -1,6 +1,6 @@
 'use strict';
 
-scrumInCeresControllers.controller('BoardController', ['$rootScope', '$scope', 'inform', 'Alert', 'Notifier', 'Story', function($rootScope, $scope, inform, Alert, Notifier, Story) {
+scrumInCeresControllers.controller('BoardController', ['$rootScope', '$scope', '$timeout', 'Alert', 'Notifier', 'Story', function($rootScope, $scope, $timeout, Alert, Notifier, Story) {
   $rootScope.currentController = 'BoardController';
   $scope.timeline = null;
   $scope.scrollOptions = {scrollX: 'bottom', scrollY: 'none', useBothWheelAxes: true, scrollPosX: 0, preventWheelEvents: true};
@@ -11,10 +11,8 @@ scrumInCeresControllers.controller('BoardController', ['$rootScope', '$scope', '
   $scope.selectedStory = null;
   $scope.completeStoryPopupOpened = false;
   $scope.today = moment();
-
-  $scope.changeScroll = function() {
-    $scope.$broadcast('content.changed');
-  };
+  $scope.newTask = {task: null};
+  $scope.newTaskVisible = false;
 
   if (!$rootScope.selectedProject) {
     Notifier.info('Select a Project Dude!', 'Hey!');
@@ -44,97 +42,7 @@ scrumInCeresControllers.controller('BoardController', ['$rootScope', '$scope', '
     'REJE': 'Rejected'
   };
 
-  $rootScope.$on('board.story.moved', function(event, data) {
-    if ($scope.selectedSprint === null || $scope.selectedSprint.id !== data.sprintId) {
-      return false;
-    }
-    Notifier.warning('Story moved');
-    var story = _.find($scope.selectedSprint.stories, ['id', data.storyId]);
-    story.status = data.toStatus;
-    updateStoryData();
-  });
-
-  $rootScope.$on('board.story.taskToggled', function(event, data) {
-    if ($scope.selectedSprint  === null || $scope.selectedSprint.id !== data.sprintId) {
-      return false;
-    }
-    Notifier.warning('Story task state changed');
-    var story = _.find($scope.selectedSprint.stories, ['id', data.storyId]);
-    _.forEach(story.tasks, function(task, $index) {
-      if ($index === data.index) {
-        story.tasks[$index].complete = data.state;
-      }
-    })
-  });
-
-  $rootScope.$on('board.story.taskAdded', function(event, data) {
-    if ($scope.selectedSprint  === null || $scope.selectedSprint.id !== data.sprintId) {
-      return false;
-    }
-    Notifier.warning('Story task added');
-    var story = _.find($scope.selectedSprint.stories, ['id', data.storyId]);
-    story.tasks.push(data.task);
-  });
-
-  $rootScope.$on('board.story.taskAdded', function(event, storyId) {
-
-  });
-
-  $rootScope.$on('board.story.taskToggled', function(event, storyId) {
-
-  });
-
-  $rootScope.$on('board.story.definitionToggled', function(event, storyId) {
-
-  });
-
-  $rootScope.$watch('selectedProject', function(project) {
-    if (!project) {
-      return false;
-    }
-    $scope.currentSprint = null;
-    $scope.selectedSprint = null;
-
-    _.forEach($rootScope.selectedProject.sprints, function(sprint) {
-      if (sprint.statusSlug === 'sprint-current') {
-        $scope.currentSprint = sprint;
-      }
-    })
-  });
-
-  $scope.selectSprint = function(sprint) {
-    $scope.selectedSprint = sprint;
-    Alert.loading();
-    Story.query(
-      {projectId:  $rootScope.selectedProject.id, sprintId: sprint.id},
-      function(response) {
-        $scope.selectedSprint.stories = response;
-        updateStoryData();
-        Alert.close();
-      },
-      function(error) {
-        Alert.randomErrorMessage(error);
-      }
-    )
-  };
-
-  $scope.addColumnSize = function(columnName) {
-    if (columnName === 'PLAN' || columnName === 'STAR') {
-      return 'col-md-3';
-    }
-    return 'col-md-2';
-  };
-
-  $rootScope.$on('currentSprint.select', function() {
-    if ($scope.currentTimelineSprintLeftPosition === null) {
-      var currentSprintElementPosition = angular.element('.timeline-event.current')[0].getBoundingClientRect();
-      $scope.currentTimelineSprintLeftPosition = currentSprintElementPosition.left;
-    }
-    $scope.scrollOptions.scrollPosX = $scope.currentTimelineSprintLeftPosition - 55;
-    $scope.selectSprint($scope.currentSprint);
-  });
-
-  var updateStoryData = function() {
+  function updateStoryData() {
     $scope.pointsPerStoryTypeStatus = {
       'PLAN': 0,
       'STAR': 0,
@@ -203,9 +111,135 @@ scrumInCeresControllers.controller('BoardController', ['$rootScope', '$scope', '
     addPointsToColumn('DPYD');
     addPointsToColumn('ACCP');
     addPointsToColumn('REJE');
+  }
+
+  function saveStoryStatus(story) {
+    story.updating = true;
+    Alert.loading();
+    Story.update(
+      {projectId:  $rootScope.selectedProject.id, sprintId: $scope.selectedSprint.id, id: story.id},
+      {'status': story.status},
+      function(response) {
+        story.updating = false;
+        Alert.close();
+      },
+      function(error) {
+        Alert.randomErrorMessage(error);
+        story.updating = false;
+      }
+    );
+  }
+
+  function updatingStoryTaskList() {
+    Notifier.warning('Saving tasks...');
+    $scope.selectedStory.updating = true;
+    Story.update(
+      {projectId:  $rootScope.selectedProject.id, sprintId: $scope.selectedSprint.id, id: $scope.selectedStory.id},
+      {'tasks': $scope.selectedStory.tasks},
+      function() {
+        $scope.selectedStory.updating = false;
+        Notifier.success('Done!')
+      },
+      function(error) {
+        Alert.randomErrorMessage(error);
+        $scope.selectedStory.updating = false;
+      }
+    );
+  }
+
+  $rootScope.$on('board.story.moved', function(event, data) {
+    if ($scope.selectedSprint === null || $scope.selectedSprint.id !== data.sprintId) {
+      return false;
+    }
+    Notifier.warning('Story moved');
+    var story = _.find($scope.selectedSprint.stories, ['id', data.storyId]);
+    story.status = data.toStatus;
+    updateStoryData();
+  });
+
+  $rootScope.$on('board.story.taskToggled', function(event, data) {
+    if ($scope.selectedSprint  === null || $scope.selectedSprint.id !== data.sprintId) {
+      return false;
+    }
+    Notifier.warning('Story task state changed');
+    var story = _.find($scope.selectedSprint.stories, ['id', data.storyId]);
+    _.forEach(story.tasks, function(task, $index) {
+      if ($index === data.index) {
+        story.tasks[$index].complete = data.state;
+      }
+    })
+  });
+
+  $rootScope.$on('board.story.taskChanged', function(event, data) {
+    if ($scope.selectedSprint  === null || $scope.selectedSprint.id !== data.sprintId) {
+      return false;
+    }
+    Notifier.warning('Story task changed');
+    var story = _.find($scope.selectedSprint.stories, ['id', data.storyId]);
+    story.tasks = data.tasks;
+  });
+
+  $rootScope.$on('board.story.definitionToggled', function(event, storyId) {
+    if ($scope.selectedSprint  === null || $scope.selectedSprint.id !== data.sprintId) {
+      return false;
+    }
+    Notifier.warning('Story definition state changed');
+    var story = _.find($scope.selectedSprint.stories, ['id', data.storyId]);
+    _.forEach(story.definitionOfDone, function(definition, $index) {
+      if ($index === data.index) {
+        story.definitionOfDone[$index].done = data.state;
+      }
+    })
+  });
+
+  $rootScope.$on('currentSprint.select', function() {
+    if ($scope.currentTimelineSprintLeftPosition === null) {
+      var currentSprintElementPosition = angular.element('.timeline-event.current')[0].getBoundingClientRect();
+      $scope.currentTimelineSprintLeftPosition = currentSprintElementPosition.left;
+    }
+    $scope.scrollOptions.scrollPosX = $scope.currentTimelineSprintLeftPosition - 55;
+    $scope.selectSprint($scope.currentSprint);
+  });
+
+  $rootScope.$watch('selectedProject', function(project) {
+    if (!project) {
+      return false;
+    }
+    $scope.currentSprint = null;
+    $scope.selectedSprint = null;
+
+    _.forEach($rootScope.selectedProject.sprints, function(sprint) {
+      if (sprint.statusSlug === 'sprint-current') {
+        $scope.currentSprint = sprint;
+      }
+    })
+  });
+
+  $scope.selectSprint = function(sprint) {
+    $scope.selectedSprint = sprint;
+    Alert.loading();
+    Story.query(
+      {projectId:  $rootScope.selectedProject.id, sprintId: sprint.id},
+      function(response) {
+        $scope.selectedSprint.stories = response;
+        updateStoryData();
+        Alert.close();
+      },
+      function(error) {
+        Alert.randomErrorMessage(error);
+      }
+    )
   };
 
-  $scope.changeTaskStatus = function(task, $index, story) {
+  $scope.addColumnSize = function(columnName) {
+    if (columnName === 'PLAN' || columnName === 'STAR') {
+      return 'col-md-3';
+    }
+    return 'col-md-2';
+  };
+
+  $scope.changeTaskStatus = function($event, task, $index, story) {
+    $event.stopPropagation();
     if (task.changing) {
       return false;
     }
@@ -221,7 +255,7 @@ scrumInCeresControllers.controller('BoardController', ['$rootScope', '$scope', '
         Alert.randomErrorMessage(error);
         task.changing = false;
       }
-    )
+    );
   };
 
   $scope.changeDefinitionStatus = function(definition, $index, story) {
@@ -270,20 +304,64 @@ scrumInCeresControllers.controller('BoardController', ['$rootScope', '$scope', '
     saveStoryStatus(story);
   };
 
-  function saveStoryStatus(story) {
-    story.updating = true;
-    Alert.loading();
-    Story.update(
-      {projectId:  $rootScope.selectedProject.id, sprintId: $scope.selectedSprint.id, id: story.id},
-      {'status': story.status},
-      function(response) {
-        story.updating = false;
-        Alert.close();
-      },
-      function(error) {
-        Alert.randomErrorMessage(error);
-        story.updating = false;
+  $scope.changeScroll = function() {
+    $scope.$broadcast('content.changed');
+  };
+
+  $scope.toggleEditStoryTask = function(task, $event) {
+    if ($event) {
+      if ($event.which === 13) {
+        $event.preventDefault();
       }
+      return
+    }
+    if (!task.editing) {
+      task.editing = true;
+    }
+    else {
+
+      delete task.editing;
+    }
+  };
+
+  $scope.addingTaskToStory = function() {
+    $scope.newTaskVisible = true;
+  };
+
+  $scope.cancelAddTaskToStory = function($event) {
+    $scope.newTaskVisible = false;
+    $scope.newTask = {task: null};
+    $event.stopPropagation();
+  };
+
+  $scope.blurInputTaskFiled = function($event) {
+    $timeout(
+      function() {
+        $scope.addTaskToStory($event);
+      },
+      150
     )
+  };
+
+  $scope.addTaskToStory = function($event) {
+    if ($scope.newTask.task === null) {
+      return false;
+    }
+    $scope.newTask.task = $scope.newTask.task.trim();
+    if ($scope.newTask.task === '') {
+      return false;
+    }
+    $scope.selectedStory.tasks.push({task: $scope.newTask.task, complete: false});
+    $scope.newTaskVisible = false;
+    $scope.newTask = {task: null};
+    $event.stopPropagation();
+  };
+
+  $scope.removeStoryTask = function($index) {
+    $scope.selectedStory.tasks.splice($index, 1);
+  };
+
+  $scope.saveSelectedStoryTasks = function() {
+    updatingStoryTaskList();
   }
 }]);

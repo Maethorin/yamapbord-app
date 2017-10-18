@@ -59,11 +59,23 @@
           <div class="story-statement" ng-bind="selectedStory.statement"></div>
 
           <uib-tabset active="activeJustified" justified="true">
-            <uib-tab index="0" heading="Tasks" select="changeScroll()">
+            <uib-tab index="0" select="changeScroll()">
+              <uib-tab-heading>
+                Tasks
+                <button type="button" class="btn btn-success btn-sm btn-save-task" ng-click="saveSelectedStoryTasks()"><i class="fa fa-save"></i></button>
+              </uib-tab-heading>
               <ul class="list-group story-tasks" ng-scrollable>
-                <li class="list-group-item" ng-class="{'list-group-item-success': task.complete, 'list-group-item-warning': !task.complete }" ng-repeat="task in selectedStory.tasks">
-                  <i class="fa fa-fw" ng-click="changeTaskStatus(task, $index, selectedStory)" ng-class="{'fa-square-o': !task.changing && !task.complete, 'fa-spinner fa-spin': task.changing, 'fa-check-square-o': !task.changing && task.complete}"></i>
-                  {{ task.task }}
+                <li class="list-group-item" ng-class="{'list-group-item-success': task.complete, 'list-group-item-warning': !task.complete }" ng-repeat="task in selectedStory.tasks" ng-click="toggleEditStoryTask(task)">
+                  <i class="fa fa-fw" ng-click="changeTaskStatus($event, task, $index, selectedStory)" ng-class="{'fa-square-o': !task.changing && !task.complete, 'fa-spinner fa-spin': task.changing, 'fa-check-square-o': !task.changing && task.complete}"></i>
+                  <input type="text" ng-model="task.task" ng-show="task.editing" focus-me="task.editing" ng-blur="toggleEditStoryTask(task)" ng-keypress="toggleEditStoryTask(task, $event)" />
+                  <span ng-bind="task.task" ng-if="!task.editing"></span>
+                  <button type="button" class="btn btn-default btn-xs btn-remove-item" ng-if="!task.editing" ng-click="removeStoryTask($index)"><i class="fa fa-trash"></i></button>
+                </li>
+                <li class="new-item list-group-item" ng-click="addingTaskToStory()">
+                  <span ng-show="!newTaskVisible">Add a task</span>
+                  <input type="text" ng-model="newTask.task" ng-show="newTaskVisible" focus-me="newTaskVisible" ng-blur="blurInputTaskFiled($event)" />
+                  <button type="button" class="btn btn-default btn-xs btn-remove-item" ng-show="newTaskVisible" ng-click="cancelAddTaskToStory($event)"><i class="fa fa-close"></i></button>
+                  <button type="button" class="btn btn-primary btn-xs btn-add-item" ng-show="newTaskVisible" ng-click="addTaskToStory($event)">Add</button>
                 </li>
               </ul>
             </uib-tab>

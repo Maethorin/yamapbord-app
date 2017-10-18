@@ -94,7 +94,6 @@ module.exports = function (grunt) {
           "src/lib/angular-bootstrap/ui-bootstrap-tpls.js",
           "src/lib/ng-scrollable/src/ng-scrollable.js",
           "src/lib/angular-bootstrap-checkbox/angular-bootstrap-checkbox.js",
-          "src/lib/angular-inform/dist/angular-inform.js",
 
           "node_modules/angular-bootstrap-datetimepicker/src/js/datetimepicker.js",
           "node_modules/angular-bootstrap-datetimepicker/src/js/datetimepicker.templates.js",

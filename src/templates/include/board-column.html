@@ -19,7 +19,7 @@
         <div class="panel-body" ng-if="story.hasTasks">
           <ul class="list-group">
             <li class="list-group-item" ng-class="{'list-group-item-success': task.complete, 'list-group-item-warning': !task.complete }" ng-repeat="task in story.tasks">
-              <i class="fa fa-fw" ng-if="column.name == 'STAR'" ng-click="changeTaskStatus(task, $index, story)" ng-class="{'fa-square-o': !task.changing && !task.complete, 'fa-spinner fa-spin': task.changing, 'fa-check-square-o': !task.changing && task.complete}"></i>
+              <i class="fa fa-fw" ng-if="column.name == 'STAR'" ng-click="changeTaskStatus($event, task, $index, story)" ng-class="{'fa-square-o': !task.changing && !task.complete, 'fa-spinner fa-spin': task.changing, 'fa-check-square-o': !task.changing && task.complete}"></i>
               {{ task.task }}
             </li>
           </ul>
