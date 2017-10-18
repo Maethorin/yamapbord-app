@@ -146,8 +146,10 @@ scrumInCeres.run(['$rootScope', '$timeout', '$q', 'AuthService', 'MeService', 'P
   $rootScope.currentController = null;
   $rootScope.selectedProject = null;
   $rootScope.projects = [];
+  $rootScope.filterObject = {'name': ''};
   $rootScope.search = {
-    expression: ''
+    expression: '',
+    fieldType: {type: 'name', name: 'By Name'}
   };
   $rootScope.currentStoryTypeFilter = null;
   $rootScope.storyTypes = [
@@ -160,10 +162,16 @@ scrumInCeres.run(['$rootScope', '$timeout', '$q', 'AuthService', 'MeService', 'P
   $rootScope.storyFilterTextTypes = {
     name: {type: 'name', name: 'By Name'},
     statement: {type: 'statement', name: 'By Statement'},
-    task: {type: 'task', name: 'By Task'},
-    definition: {type: 'definition', name: 'By Definition'}
+    tasks: {type: 'tasks', name: 'By Task'},
+    definition: {type: 'definitionOfDone', name: 'By Definition'}
   };
-  $rootScope.storyFilterTextType = null;
+
+  $rootScope.storyFilterObjects = {
+    name: {name: ''},
+    statement: {statement: ''},
+    tasks: {tasks: ''},
+    definition: {definitionOfDone: ''}
+  };
 
   Alert.loading();
   MeService.getInfo().then(
@@ -183,10 +191,6 @@ scrumInCeres.run(['$rootScope', '$timeout', '$q', 'AuthService', 'MeService', 'P
       Alert.close();
     }
   );
-
-  $rootScope.setStoryFilterTextType = function(type) {
-    $rootScope.storyFilterTextType = $rootScope.storyFilterTextTypes[type];
-  };
 
   $rootScope.viewProject = function(project) {
     $rootScope.selectedProject = project;
@@ -209,9 +213,14 @@ scrumInCeres.run(['$rootScope', '$timeout', '$q', 'AuthService', 'MeService', 'P
     $rootScope.$broadcast('currentSprint.select');
   };
 
+  $rootScope.setStoryFilterTextType = function(type) {
+    $rootScope.search.fieldType = $rootScope.storyFilterTextTypes[type];
+  };
+
   $rootScope.searchStories = function() {
-    $rootScope.$broadcast('story.search', $rootScope.storyFilterTextType);
-    Alert.itsOpenSourceDude();
+    $rootScope.storyFilterObjects[$rootScope.search.fieldType.type][$rootScope.search.fieldType.type] = $rootScope.search.expression;
+    $rootScope.filterObject.filter = $rootScope.storyFilterObjects[$rootScope.search.fieldType.type];
+    // $rootScope.$broadcast('story.search');
   };
 
   $rootScope.showMyInfo = function() {

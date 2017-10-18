@@ -14,6 +14,6 @@
 * Projetos deveriam ser projetos mesmo.
 * Adicionar VP e/ou Criticidade
 * Visualisar Estórias em modo de lista
-* Push Notification
+* Push Notification - Done
 * Contar estórias iniciadas
 * Pesquisar estórias em popups

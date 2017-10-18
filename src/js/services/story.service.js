@@ -1,6 +1,6 @@
 'use strict';
 
-scrumInCeresServices.service('StoryService', ['$q', '$rootScope', 'IceBox', function($q, $rootScope, IceBox) {
+scrumInCeresServices.service('StoryService', ['$rootScope', '$q', 'IceBox', function($rootScope, $q, IceBox) {
   var self = this;
   var filter = {};
   this.filterByType = function(type) {

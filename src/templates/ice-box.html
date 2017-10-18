@@ -1,5 +1,5 @@
 <div class="container-fluid ice-box">
-  <div class="story-container col-md-4" ng-repeat="story in stories">
+  <div class="story-container col-md-4" ng-repeat="story in stories|filter:filterObject.filter">
     <div class="panel panel-default panel-edit-story">
       <div class="panel-heading" title="{{story.statement}}">
         <span class="story-name" ng-bind="story.name|limitWithEllipsis:65"></span>

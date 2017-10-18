@@ -1,6 +1,6 @@
 'use strict';
 
-scrumInCeresControllers.controller('IceBoxController', ['$rootScope', '$scope', 'Alert', 'Notifier', 'StoryService', 'IceBox', function($rootScope, $scope, Alert, Notifier, StoryService, IceBox) {
+scrumInCeresControllers.controller('IceBoxController', ['$rootScope', '$scope', '$filter', 'Alert', 'Notifier', 'StoryService', 'IceBox', function($rootScope, $scope, $filter, Alert, Notifier, StoryService, IceBox) {
   $rootScope.selectedProject = null;
   $rootScope.currentController = 'IceBoxController';
 
@@ -23,10 +23,26 @@ scrumInCeresControllers.controller('IceBoxController', ['$rootScope', '$scope', 
   });
 
   $rootScope.$on('story.filter.type', function(evt, type) {
+    Alert.loading();
     StoryService.filterByType(type).then(function(stories) {
       $scope.stories = stories;
+      Alert.close();
     });
   });
+
+  // $rootScope.$on('story.search', function(event) {
+  //   Alert.loading();
+  //   StoryService.getStories().then(function(stories) {
+  //     console.log($rootScope.search.expression);
+  //     if ($rootScope.search.expression === null || $rootScope.search.expression === '') {
+  //       $scope.stories = stories;
+  //       return;
+  //     }
+  //     var property = $rootScope.search.fieldType.type;
+  //     $filter('filter')($scope.stories, {name: $rootScope.search.expression});
+  //     Alert.close();
+  //   });
+  // });
 
   $rootScope.$on('story.add', function() {
     $scope.addingNewStory = true;
