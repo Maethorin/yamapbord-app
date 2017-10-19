@@ -172,6 +172,8 @@ scrumInCeres.run(['$rootScope', '$timeout', '$q', 'AuthService', 'MeService', 'P
     definition: {definitionOfDone: ''}
   };
 
+  $rootScope.sprintView = {mode: 'list'};
+
   Alert.loading();
   MeService.getInfo().then(
     function(info) {
@@ -219,7 +221,6 @@ scrumInCeres.run(['$rootScope', '$timeout', '$q', 'AuthService', 'MeService', 'P
   $rootScope.searchStories = function() {
     $rootScope.storyFilterObjects[$rootScope.search.fieldType.type][$rootScope.search.fieldType.type] = $rootScope.search.expression;
     $rootScope.filterObject.filter = $rootScope.storyFilterObjects[$rootScope.search.fieldType.type];
-    // $rootScope.$broadcast('story.search');
   };
 
   $rootScope.showMyInfo = function() {

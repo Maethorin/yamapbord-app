@@ -2,11 +2,12 @@
   <div class="sprint-container col-md-4" ng-repeat="sprint in sprints">
     <div class="panel panel-default panel-edit-sprint">
       <div class="panel-heading" ng-click="selectSprintToEdit($event, sprint, $index)">
-        <span class="sprint-name" title="sprint.name" ng-bind="sprint.name|limitWithEllipsis:40"></span>
+        <i class="fa btn-open" ng-class="{'fa-chevron-down': !sprint.opened, 'fa-chevron-up': sprint.opened}" ng-click="toggleOpenSprintPanel($event, sprint)"></i>
+        <span class="sprint-name" title="{{sprint.name}}" ng-bind="sprint.name|limitWithEllipsis:40"></span>
         Project: <span class="sprint-project" ng-bind="sprint.project.name"></span>
         <button class="btn btn-primary btn-sm btn-save-sprint" ng-click="selectSprintToEdit($event, sprint, $index)"><i class="fa fa-edit"></i></button>
       </div>
-      <div class="panel-body">
+      <div class="panel-body as-list" ng-class="{'as-list': !sprint.opened}">
         <h4>Dates</h4>
         <div class="sprint-dates">
           <span class="start-date">Starts: <span class="date" ng-bind="sprint.startDate"></span></span>

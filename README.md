@@ -16,4 +16,4 @@
 * Visualizar Estórias em modo de lista
 * Push Notification - Done
 * Contar estórias iniciadas - Done
-* Pesquisar estórias em popups
+* Pesquisar estórias em popups - DOne

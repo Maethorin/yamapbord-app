@@ -3,6 +3,8 @@
 scrumInCeresControllers.controller('BacklogController', ['$rootScope', '$scope', 'Alert', 'StoryService', 'Notifier', 'Backlog', function($rootScope, $scope, Alert, StoryService, Notifier, Backlog) {
   $rootScope.selectedProject = null;
   $rootScope.currentController = 'BacklogController';
+  $scope.sprints = [];
+
   $scope.scrollOptions = {scrollX: 'none', scrollY: 'right', preventWheelEvents: true};
 
   $scope.completeSprintPopupOpened = false;
@@ -149,6 +151,12 @@ scrumInCeresControllers.controller('BacklogController', ['$rootScope', '$scope',
     Notifier.warning('Sprint deleted');
     var index = _.findIndex($scope.sprints, ['id', data.sprintId]);
     $scope.sprints.splice(index, 1);
+  });
+
+  $rootScope.$watch('sprintView.mode', function(newValue) {
+    _.forEach($scope.sprints, function(sprint) {
+      sprint.opened = newValue !== 'list';
+    });
   });
 
   $scope.setSelectedSprintProject = function(project) {
@@ -304,5 +312,10 @@ scrumInCeresControllers.controller('BacklogController', ['$rootScope', '$scope',
       $scope.selectedSprint.stories.splice($index, 1);
       recalculateSelectedSprintPoints();
     }
+  };
+
+  $scope.toggleOpenSprintPanel = function($event, sprint) {
+    $event.stopPropagation();
+    sprint.opened = !sprint.opened;
   };
 }]);
