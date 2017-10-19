@@ -2,7 +2,11 @@
   <div class="panel panel-default">
     <div class="panel-heading">
       <div class="col-md-12">
-        <h3><span ng-bind="column.label"></span><span class="badge {{column.name | lowercase }}" ng-bind="pointsPerStoryTypeStatus[column.name]"></span></h3>
+        <h3>
+          <span ng-bind="column.label"></span>
+          <span class="badge {{column.name | lowercase }}" title="Total column points" ng-bind="pointsPerStoryTypeStatus[column.name]"></span>
+          <span class="label label-warning stories-length" title="Total column stories" ng-bind="stories[column.name].length"></span>
+        </h3>
       </div>
     </div>
     <div class="panel-body column {{column.name | lowercase}}" ng-scrollable="columnScrollOptions[column.name]">

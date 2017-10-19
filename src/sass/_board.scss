@@ -94,6 +94,12 @@ h4 {
       display: inline-block;
       vertical-align: middle;
       float: left;
+      &.stories-length {
+        float: right;
+        padding: 3px 8px;
+        font-size: 13px;
+        margin-right: 3px;
+      }
       &.badge {
         color: #EEE;
         float: right;

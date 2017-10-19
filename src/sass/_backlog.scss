@@ -326,6 +326,12 @@
       margin: 5% 20%;
       .panel-heading {
         height: 55px;
+        .search-stories {
+          width: 25%;
+          padding: 2px 9px;
+          height: 35px;
+          float: right;
+        }
         label {
           font-weight: normal;
           font-size: 18px;

@@ -17,6 +17,7 @@ scrumInCeresControllers.controller('BacklogController', ['$rootScope', '$scope',
   $scope.storiesPopupOpened = false;
   $scope.stories = [];
   $scope.newStoryVisible = false;
+  $scope.searchStories = '';
 
   $scope.changeScroll = function() {
     $scope.$broadcast('content.changed');
@@ -287,7 +288,7 @@ scrumInCeresControllers.controller('BacklogController', ['$rootScope', '$scope',
     if (story.sprintId) {
       Alert.warning('Watch Out!', 'This story is already associated with this sprint. Are you sure you want to desassociate it?', function() {
         Alert.loading();
-        StoryService.updateInIceLog({id: story.id, sprintId: null}).then(
+        StoryService.updateInIceLog({id: story.id, removeSprint: true}).then(
           function() {
             $scope.selectedSprint.stories.splice($index, 1);
             recalculateSelectedSprintPoints();

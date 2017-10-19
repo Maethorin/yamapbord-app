@@ -132,10 +132,11 @@
     <div class="panel panel-default panel-stories">
       <div class="panel-heading">
         IceLog Stories
+        <input type="text" ng-model="searchStories" class="search-stories form-control" placeholder="Search...">
       </div>
       <div class="panel-body">
         <ul class="list-group sprint-stories" ng-scrollable="scrollOptions">
-          <li class="list-group-item" ng-repeat="story in stories" title="{{story.statement}}" ng-click="toggleCompleteStoryPopup(story)">
+          <li class="list-group-item" ng-repeat="story in stories|filter:searchStories" title="{{story.statement}}" ng-click="toggleCompleteStoryPopup(story)">
             <checkbox ng-class="{'btn-primary': story.selected}" ng-click="$event.stopPropagation()" ng-model="story.selected"></checkbox>
             <span class="story-type-name" ng-class="story.type|lowercase" title="{{story.typeName}}"></span>
             <span class="story-name" ng-bind="story.name|limitWithEllipsis:12" title="{{story.name}}"></span>

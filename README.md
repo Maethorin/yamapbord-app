@@ -4,16 +4,16 @@
     Models - Done
     Domain - Done
     Front
-* Permitir editar Taks a qq momento
+* Permitir editar Taks a qq momento - Done
 * Comentário
     Models - Done
     Domain
     Front
 * Tags
 * Projetos deveriam ser Épicos
-* Projetos deveriam ser projetos mesmo.
+* Criar
 * Adicionar VP e/ou Criticidade
-* Visualisar Estórias em modo de lista
+* Visualizar Estórias em modo de lista
 * Push Notification - Done
-* Contar estórias iniciadas
+* Contar estórias iniciadas - Done
 * Pesquisar estórias em popups
