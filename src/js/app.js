@@ -172,7 +172,7 @@ scrumInCeres.run(['$rootScope', '$timeout', '$q', 'AuthService', 'MeService', 'P
     definition: {definitionOfDone: ''}
   };
 
-  $rootScope.sprintView = {mode: 'list'};
+  $rootScope.itemsView = {mode: 'list'};
 
   Alert.loading();
   MeService.getInfo().then(

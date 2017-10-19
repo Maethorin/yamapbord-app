@@ -78,10 +78,10 @@
             <li ng-if="currentController === 'BacklogController'">
               <button type="button" class="btn btn-default navbar-btn" ng-click="addNewSprint()">New Sprint</button>
             </li>
-            <li ng-if="currentController === 'BacklogController'">
+            <li ng-if="['BacklogController', 'IceBoxController'].indexOf(currentController) !== -1">
               <div class="btn-group navbar-btn btn-story-view-type">
-                <label class="btn btn-default" ng-model="sprintView.mode" title="View stories in list" uib-btn-radio="'list'"><i class="fa fa-th-list"></i></label>
-                <label class="btn btn-default" ng-model="sprintView.mode" title="View stories in box" uib-btn-radio="'box'"><i class="fa fa-th"></i></label>
+                <label class="btn btn-default" ng-model="itemsView.mode" title="View in list" uib-btn-radio="'list'"><i class="fa fa-th-list"></i></label>
+                <label class="btn btn-default" ng-model="itemsView.mode" title="View in box" uib-btn-radio="'box'"><i class="fa fa-th"></i></label>
               </div>
             </li>
           </ul>

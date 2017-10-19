@@ -19,18 +19,32 @@ li {
   .story-container {
     .panel-edit-story {
       .panel-heading {
+        cursor: pointer;
         overflow: hidden;
+        &:hover {
+          background-color: darken($gray, 10%);
+        }
         .story-name {
           font-size: 15px;
           vertical-align: middle;
           display: inline-block;
-          width: 90%;
+          width: 85%;
           padding-left: 5px;
         }
         .btn-save-story {
           float: right;
           font-size: 19px;
           padding: 0 11px;
+        }
+      }
+      .panel-body {
+        overflow: hidden;
+        height: auto;
+        padding: 15px;
+        transition: all 0.1s ease-in;
+        &.as-list {
+          height: 0;
+          padding: 0;
         }
       }
     }

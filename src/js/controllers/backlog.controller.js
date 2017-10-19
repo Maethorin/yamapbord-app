@@ -153,7 +153,7 @@ scrumInCeresControllers.controller('BacklogController', ['$rootScope', '$scope',
     $scope.sprints.splice(index, 1);
   });
 
-  $rootScope.$watch('sprintView.mode', function(newValue) {
+  $rootScope.$watch('itemsView.mode', function(newValue) {
     _.forEach($scope.sprints, function(sprint) {
       sprint.opened = newValue !== 'list';
     });

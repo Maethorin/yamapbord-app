@@ -22,6 +22,12 @@ scrumInCeresControllers.controller('IceBoxController', ['$rootScope', '$scope', 
     Alert.close();
   });
 
+  $rootScope.$watch('itemsView.mode', function(newValue) {
+    _.forEach($scope.stories, function(story) {
+      story.opened = newValue !== 'list';
+    });
+  });
+
   $rootScope.$on('story.filter.type', function(evt, type) {
     Alert.loading();
     StoryService.filterByType(type).then(function(stories) {
@@ -88,7 +94,8 @@ scrumInCeresControllers.controller('IceBoxController', ['$rootScope', '$scope', 
     story.typeName = type.name;
   };
 
-  $scope.selectStoryToEdit = function(story, $index) {
+  $scope.selectStoryToEdit = function($event, story, $index) {
+    $event.stopPropagation();
     $scope.selectedStory = _.cloneDeep(story);
     $scope.addingNewStory = false;
     $scope.selectedStoryIndex = $index;
@@ -216,5 +223,10 @@ scrumInCeresControllers.controller('IceBoxController', ['$rootScope', '$scope', 
 
   $scope.removeStoryDefinition = function(story, $index) {
     story.definitionOfDone.splice($index, 1);
+  };
+
+  $scope.toggleOpenStoryPanel = function($event, story) {
+    $event.stopPropagation();
+    story.opened = !story.opened;
   };
 }]);

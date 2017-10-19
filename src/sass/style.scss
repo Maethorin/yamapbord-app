@@ -234,3 +234,15 @@ $index: 1;
     }
   }
 }
+
+.btn-open {
+  padding: 2px 4px 4px;
+  border-radius: 5px;
+  background-color: $gray-dark;
+  border: 1px solid $gray-dark;
+  cursor: pointer;
+  &:hover {
+    background-color: $gray;
+    border: 1px solid $gray-light;
+  }
+}

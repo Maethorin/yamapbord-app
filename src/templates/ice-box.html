@@ -1,11 +1,12 @@
 <div class="container-fluid ice-box">
   <div class="story-container col-md-4" ng-repeat="story in stories|filter:filterObject.filter">
     <div class="panel panel-default panel-edit-story">
-      <div class="panel-heading" title="{{story.statement}}">
+      <div class="panel-heading" title="{{story.statement}}" ng-click="selectStoryToEdit($event, story, $index)">
+        <i class="fa btn-open" ng-class="{'fa-chevron-down': !story.opened, 'fa-chevron-up': story.opened}" ng-click="toggleOpenStoryPanel($event, story)"></i>
         <span class="story-name" ng-bind="story.name|limitWithEllipsis:65"></span>
-        <button class="btn btn-primary btn-sm btn-save-story" ng-click="selectStoryToEdit(story, $index)"><i class="fa fa-edit"></i></button>
+        <button class="btn btn-primary btn-sm btn-save-story" ng-click="selectStoryToEdit($event, story, $index)"><i class="fa fa-edit"></i></button>
       </div>
-      <div class="panel-body">
+      <div class="panel-body as-list" ng-class="{'as-list': !story.opened}">
         <div class="story-data">
           <span class="story-type" ng-class="story.type | lowercase" ng-bind="story.typeName"></span>
           <span class="story-point points-{{story.points|numberOrText:'null'}}" ng-bind="story.points|numberOrText"></span>
