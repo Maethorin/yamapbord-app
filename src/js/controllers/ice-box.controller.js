@@ -15,6 +15,9 @@ scrumInCeresControllers.controller('IceBoxController', ['$rootScope', '$scope', 
   $scope.newTaskVisible = false;
   $scope.newDefinition = {definition: null};
   $scope.newDefinitionVisible = false;
+  $scope.newComment = {comment: null, creator: null, createdAt: null};
+  $scope.newCommentVisible = false;
+  $scope.scrollCommentOptions = {scrollX: 'none', scrollY: 'right', preventWheelEvents: false, preventKeyEvents: false};
 
   Alert.loading();
   StoryService.getStories().then(function(stories) {
@@ -160,6 +163,10 @@ scrumInCeresControllers.controller('IceBoxController', ['$rootScope', '$scope', 
     }
   }
 
+  $scope.toggleEditStoryComment = function(comment, $event) {
+    toggleEditInStoryList(comment, $event);
+  };
+
   $scope.toggleEditStoryTask = function(task, $event) {
     toggleEditInStoryList(task, $event);
   };
@@ -223,6 +230,40 @@ scrumInCeresControllers.controller('IceBoxController', ['$rootScope', '$scope', 
 
   $scope.removeStoryDefinition = function(story, $index) {
     story.definitionOfDone.splice($index, 1);
+  };
+
+
+  $scope.addingCommentToStory = function() {
+    $scope.newCommentVisible = true;
+  };
+
+  $scope.cancelAddCommentToStory = function($event) {
+    $scope.newCommentVisible = false;
+    $scope.newComment = {comment: null};
+    $event.stopPropagation();
+  };
+
+  $scope.blurInputCommentFiled = function($event, selectedStory) {
+    $timeout(
+      function() {
+        $scope.addCommentToStory($event, selectedStory);
+      },
+      150
+    )
+  };
+
+  $scope.addCommentToStory = function($event, story) {
+    if ($scope.newComment.comment === null) {
+      return false;
+    }
+    story.comments.push({comment: $scope.newComment.comment, creatorId: $rootScope.loggedUser.id, creator: {name: $rootScope.loggedUser.name}, createdAt: moment().format('YYYY-MM-DD HH:mm')});
+    $scope.newCommentVisible = false;
+    $scope.newComment = {comment: null};
+    $event.stopPropagation();
+  };
+
+  $scope.removeStoryComment = function(story, $index) {
+    story.comments.splice($index, 1);
   };
 
   $scope.toggleOpenStoryPanel = function($event, story) {

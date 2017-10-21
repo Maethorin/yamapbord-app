@@ -121,14 +121,8 @@ li {
     .panel-body {
       .story-statement {
         height: auto;
-        textarea {
-          width: 100%;
-          max-width: 100%;
-          background: transparent;
-          border: none;
-        }
       }
-      .story-definitions, .story-tasks {
+      .story-definitions, .story-tasks, .story-comments {
         height: 45vh;
       }
     }

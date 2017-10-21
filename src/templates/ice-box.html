@@ -30,6 +30,23 @@
               </li>
             </ul>
           </uib-tab>
+          <uib-tab index="2" heading="Comments" select="changeScroll()">
+            <ul class="list-group story-comments" ng-scrollable="scrollOptions">
+              <li class="list-group-item" ng-repeat="storyComment in story.comments">
+                <div class="comment-details">
+                  <div class="col-md-7">
+                    Created by: {{storyComment.creator.name }}
+                  </div>
+                  <div class="col-md-5">
+                    Created at: {{storyComment.createdAt }}
+                  </div>
+                </div>
+                <div class="comment-text with-break-lines">
+                  {{ storyComment.comment }}
+                </div>
+              </li>
+            </ul>
+          </uib-tab>
         </uib-tabset>
       </div>
     </div>
@@ -90,6 +107,31 @@
                   <input type="text" ng-model="newDefinition.definition" ng-show="newDefinitionVisible" focus-me="newDefinitionVisible" ng-blur="addDefinitionToStory($event, selectedStory)" />
                   <button type="button" class="btn btn-default btn-xs btn-remove-item" ng-show="newDefinitionVisible" ng-click="cancelAddDefinitionToStory($event)"><i class="fa fa-close"></i></button>
                   <button type="button" class="btn btn-primary btn-xs btn-add-item" ng-show="newDefinitionVisible" ng-click="addDefinitionToStory($event, selectedStory)">Add</button>
+                </li>
+              </ul>
+            </uib-tab>
+            <uib-tab index="2" heading="Comments" select="changeScroll()">
+              <ul class="list-group story-comments" ng-scrollable="scrollCommentOptions">
+                <li class="list-group-item" ng-repeat="storyComment in selectedStory.comments" ng-click="toggleEditStoryComment(storyComment)">
+                  <textarea ng-model="storyComment.comment" ng-show="storyComment.editing" focus-me="storyComment.editing" ng-blur="toggleEditStoryComment(storyComment)"></textarea>
+                  <div>
+                  <div class="comment-details" ng-if="!storyComment.editing">
+                    <div class="col-md-7">
+                      Created by: {{storyComment.creator.name}}
+                    </div>
+                    <div class="col-md-5">
+                      Created at: {{storyComment.createdAt}}
+                    </div>
+                  </div>
+                    <span class="with-break-lines" ng-bind="storyComment.comment"></span>
+                  </div>
+                  <button type="button" class="btn btn-default btn-xs btn-remove-item" ng-if="!storyComment.editing" ng-click="removeStoryComment(selectedStory, $index)"><i class="fa fa-trash"></i></button>
+                </li>
+                <li class="new-item list-group-item" ng-click="addingCommentToStory()">
+                  <span ng-show="!newCommentVisible">Add a comment</span>
+                  <textarea ng-model="newComment.comment" rows="3" ng-show="newCommentVisible" focus-me="newCommentVisible" ng-blur="blurInputCommentFiled($event, selectedStory)"></textarea>
+                  <button type="button" class="btn btn-primary btn-xs btn-add-item" ng-show="newCommentVisible" ng-click="addCommentToStory($event, selectedStory)">Add</button>
+                  <button type="button" class="btn btn-default btn-xs btn-remove-item" ng-show="newCommentVisible" ng-click="cancelAddCommentToStory($event)"><i class="fa fa-close"></i></button>
                 </li>
               </ul>
             </uib-tab>

@@ -175,7 +175,9 @@ h4 {
     .fa {
       cursor: pointer;
       font-size: 15px;
-      margin-right: 5px;
+      &.fa-fw {
+        margin-right: 5px;
+      }
       &:hover {
         color: #000;
       }

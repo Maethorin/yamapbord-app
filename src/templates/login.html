@@ -2,22 +2,17 @@
   <div class="login-page">
     <div class="form">
       <img id="imagemLogo" src="../img/logo_text.png"/>
-      <form ng-if="!formLogin" class="register-form">
-        <input type="text" placeholder="Email"/>
-        <button>Enviar</button>
-        <p class="message"><a ng-click="trocarForm()">Voltar</a></p>
-      </form>
       <form ng-if="formLogin" name="formLogin" class="login-form" ng-submit="logingIn()" novalidate>
-        <input type="text" placeholder="Usuário" ng-model="login.username" required/>
-        <input type="password" placeholder="Senha" ng-model="login.password" required/>
+        <input type="text" placeholder="username" ng-model="login.username" required/>
+        <input type="password" placeholder="password" ng-model="login.password" required/>
         <button class="button" type="submit" ng-disabled="loginLoad">
-          <i class="fa" ng-class="{'fa-spinner fa-spin': loginLoad}"></i> Entrar
+          <i class="fa" ng-class="{'fa-spinner fa-spin': loginLoad}"></i> Login
         </button>
         <div class="alert alert-danger animate-show-hide" ng-if="loginFail">
           <a href="#" class="close" data-dismiss="alert" aria-label="close">×</a>
-          <strong> Senha ou e-mail inválido.</strong>
+          <strong> Invalid login data.</strong>
         </div>
-        <p class="message">Esqueceu sua senha? <a ng-click="trocarForm()">Recuperar a senha</a></p>
+        <!--<p class="message">Esqueceu sua senha? <a ng-click="trocarForm()">Recuperar a senha</a></p>-->
       </form>
     </div>
   </div>
