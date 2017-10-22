@@ -8,8 +8,9 @@
       </div>
       <div class="panel-body as-list" ng-class="{'as-list': !story.opened}">
         <div class="story-data">
-          <span class="story-type" ng-class="story.type | lowercase" ng-bind="story.typeName"></span>
-          <span class="story-point points-{{story.points|numberOrText:'null'}}" ng-bind="story.points|numberOrText"></span>
+          <div class="story-type" ng-class="story.type | lowercase" ng-bind="story.typeName"></div>
+          <div class="story-requester" title="Requester"><label>R</label></i>{{story.requester.name}}</div>
+          <div class="story-point points-{{story.points|numberOrText:'null'}}" ng-bind="story.points|numberOrText"></div>
         </div>
         <div class="story-statement" ng-scrollable>
           <p ng-bind="story.statement"></p>

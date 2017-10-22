@@ -62,6 +62,18 @@ li {
       display: inline-block;
       border-radius: 4px;
     }
+    .story-requester {
+      display: inline-block;
+      cursor: pointer;
+      label {
+        cursor: pointer;
+        padding: 3px 8px;
+        border-radius: 14px;
+        margin: 0 5px 0 10px;
+        background-color: $brand-info;
+        color: $gray-lighter;
+      }
+    }
     .story-point {
       display: inline-block;
       padding: 6px 15px;
