@@ -3,20 +3,20 @@
 * Definir Story Owner
     Models - Done
     Domain - Done
-    Front
+    Front - Done
 * Permitir editar Taks a qq momento - Done
 * Comentário
     Models - Done
-    Domain
-    Front
-* Tags
-* Projetos deveriam ser Épicos
-* Criar
-* Adicionar VP e/ou Criticidade
-* Visualizar Estórias em modo de lista
+    Domain - Done
+    Front - Done
+* Visualizar Estórias em modo de lista - Done
 * Push Notification - Done
 * Contar estórias iniciadas - Done
 * Pesquisar estórias em popups - DOne
+
+* Tags
+* Projetos deveriam ser Épicos
+* Adicionar VP e/ou Criticidade
 
 
 https://scrum.inceres.com.br/css/style.css
