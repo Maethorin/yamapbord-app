@@ -121,6 +121,7 @@ scrumInCeresControllers.controller('BoardController', ['$rootScope', '$scope', '
       {'status': story.status},
       function(response) {
         story.updating = false;
+        story.owner = response.owner;
         Alert.close();
       },
       function(error) {

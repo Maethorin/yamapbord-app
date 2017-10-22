@@ -14,9 +14,9 @@
         ng-repeat="story in stories[column.name]"
         class="panel panel-default story">
         <div class="panel-heading" data-toggle="tooltip" title="{{story.statement}}" tooltip-trigger="mouseenter" tooltip-animation="false" tooltip-placement="top" tooltip-popup-delay="0" tooltip-append-to-body="false">
-          <div class="col-md-12">
+          <div class="col-md-12" ng-click="toggleCompleteStoryPopup(story)">
             <span class="story-type" ng-class="story.type | lowercase " title="{{story.typeName}}"></span>
-            <span class="story-name" ng-click="toggleCompleteStoryPopup(story)" ng-bind="story.name|limitWithEllipsis:28"></span>
+            <span class="story-name" ng-bind="story.name|limitWithEllipsis:28"></span>
             <span class="badge points-{{story.points}}">{{story.points}}</span>
           </div>
         </div>
@@ -33,6 +33,7 @@
             <i class="fa fa-chevron-left"></i>
             <i class="fa fa-chevron-left minus-margin"></i>
           </button>
+          <span class="story-owner" title="Owner"><label>Ow</label>{{story.owner.name}}</span>
           <button type="button" class="btn btn-success btn-xs btn-go-forward-story" ng-click="moveStoryForward(story)" ng-if="story.status !== 'REJE'">
             <i class="fa fa-chevron-right minus-margin"></i>
             <i class="fa fa-chevron-right"></i>
