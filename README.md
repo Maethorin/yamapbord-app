@@ -1,22 +1,21 @@
 # O Que Tá faltando:
 
-* Definir Story Owner
-    Models - Done
-    Domain - Done
-    Front - Done
-* Permitir editar Taks a qq momento - Done
-* Comentário
-    Models - Done
-    Domain - Done
-    Front - Done
-* Visualizar Estórias em modo de lista - Done
-* Push Notification - Done
-* Contar estórias iniciadas - Done
-* Pesquisar estórias em popups - DOne
-
-* Tags
+* Criar Kanban
+* Definir perfil readonly
+* Tags para task (Back|Front|DB|Infra)
+* Tags para estória aberto
 * Projetos deveriam ser Épicos
 * Adicionar VP e/ou Criticidade
+
+# Tipos de contabilização
+
+* Velocidade do time
+* Pontos planejados x pontos executados
+* Numero de vezes estórias foram rejeitadas
+* Pontos médio por dia do time
+* Pontos médio por dia desenvolvedor
+* Número min, médio e máx de estórias por sprint
+* Número min, médio e máx de pontos por sprint
 
 
 https://scrum.inceres.com.br/css/style.css
