@@ -47,6 +47,8 @@ scrumInCeresControllers.controller('IceBoxController', ['$rootScope', '$scope', 
       percentageComplete: 0,
       points: null,
       statement: null,
+      module: null,
+      project: null,
       status: 'PLAN',
       tasks: [],
       type: 'FEA',
@@ -95,6 +97,14 @@ scrumInCeresControllers.controller('IceBoxController', ['$rootScope', '$scope', 
   $scope.setStoryType = function(story, type) {
     story.type = type.code;
     story.typeName = type.name;
+  };
+
+  $scope.setStoryModule = function(story, module) {
+    story.module = module;
+  };
+
+  $scope.setStoryProject = function(story, project) {
+    story.project = project;
   };
 
   $scope.selectStoryToEdit = function($event, story, $index) {

@@ -3,6 +3,7 @@
     <div class="panel panel-default panel-edit-story">
       <div class="panel-heading" title="{{story.statement}}" ng-click="selectStoryToEdit($event, story, $index)">
         <i class="fa btn-open" ng-class="{'fa-chevron-down': !story.opened, 'fa-chevron-up': story.opened}" ng-click="toggleOpenStoryPanel($event, story)"></i>
+        <span class="story-module">[{{story.module.acronym || 'NO-MODULE'}}]</span>
         <span class="story-name" ng-bind="story.name|limitWithEllipsis:65"></span>
         <button class="btn btn-primary btn-sm btn-save-story" ng-click="selectStoryToEdit($event, story, $index)"><i class="fa fa-edit"></i></button>
       </div>
@@ -57,26 +58,56 @@
     <div class="popup-complete-story" ng-class="{'opened': completeStoryPopupOpened}" ng-if="selectedStory !== null">
       <div class="panel panel-default panel-edit-story">
         <div class="panel-heading" title="{{selectedStory.statement}}">
-          <div class="col-md-12">
+          <div class="col-md-2">
+            <label>Module:</label>
+            <div class="btn-group story-module" uib-dropdown keyboard-nav>
+              <button type="button" class="btn btn-primary btn-sm" uib-dropdown-toggle>
+                [{{selectedStory.module === null ? 'Select a module' : selectedStory.module.acronym}}] <span class="caret"></span>
+              </button>
+              <ul class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="simple-btn-keyboard-nav">
+                <li role="menuitem" ng-repeat="module in modules"><a ng-click="setStoryModule(selectedStory, module)">[{{module.acronym}}] - {{module.name}}</a></li>
+              </ul>
+            </div>
+          </div>
+          <div class="col-md-10">
+            <label>Name:</label>
             <input class="story-name" ng-model="selectedStory.name" />
           </div>
         </div>
         <div class="panel-body">
+
           <div class="story-data">
-            <div class="btn-group" uib-dropdown keyboard-nav>
-              <button type="button" class="btn btn-primary btn-sm btn-story-type" ng-class="selectedStory.type | lowercase" uib-dropdown-toggle>
-                {{selectedStory.typeName}} <span class="caret"></span>
-              </button>
-              <ul class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="simple-btn-keyboard-nav">
-                <li role="menuitem" ng-repeat="type in storyTypes"><a ng-click="setStoryType(selectedStory, type)" class="story-type-option" ng-class="type.code | lowercase" ng-bind="type.name"></a></li>
-              </ul>
+            <div class="col-md-3">
+              <label>Story Type:</label>
+              <div class="btn-group" uib-dropdown keyboard-nav>
+                <button type="button" class="btn btn-primary btn-sm btn-story-type" ng-class="selectedStory.type | lowercase" uib-dropdown-toggle>
+                  {{selectedStory.typeName}} <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="simple-btn-keyboard-nav">
+                  <li role="menuitem" ng-repeat="type in storyTypes"><a ng-click="setStoryType(selectedStory, type)" class="story-type-option" ng-class="type.code | lowercase" ng-bind="type.name"></a></li>
+                </ul>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <label>Project:</label>
+              <div class="btn-group" uib-dropdown keyboard-nav>
+                <button type="button" class="btn btn-primary btn-sm" uib-dropdown-toggle>
+                  {{selectedStory.project === null ? 'Select a project' : selectedStory.project.name}} <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="simple-btn-keyboard-nav">
+                  <li role="menuitem" ng-repeat="project in projects"><a ng-click="setStoryProject(selectedStory, project)" class="story-type-option" ng-bind="project.name"></a></li>
+                </ul>
+              </div>
             </div>
             <div class="points btn-group">
               <label class="btn btn-primary btn-sm points-null" ng-model="selectedStory.points" ng-class="{'active': !selectedStory.points && selectedStory.points != 0}" uib-btn-radio="null">N</label>
               <label class="btn btn-primary btn-sm points-{{point}}" ng-model="selectedStory.points" ng-class="{'active': point == selectedStory.points}" uib-btn-radio="point" ng-repeat="point in points" ng-bind="point"></label>
             </div>
           </div>
+
+
           <div class="story-statement">
+            <label>Statement:</label>
             <textarea rows="3" ng-model="selectedStory.statement" required></textarea>
           </div>
 

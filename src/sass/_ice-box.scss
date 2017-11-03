@@ -28,7 +28,7 @@ li {
           font-size: 15px;
           vertical-align: middle;
           display: inline-block;
-          width: 85%;
+          width: 67%;
           padding-left: 5px;
         }
         .btn-save-story {
@@ -52,6 +52,10 @@ li {
 
   .story-data {
     width: 100%;
+    display: inline-block;
+    label {
+      display: block;
+    }
     .story-type {
       @include story-types();
       background-position: 9px 8px;
@@ -99,13 +103,30 @@ li {
 
   .popup-complete-story {
     .panel-edit-story {
-      margin: 5% 20%;
+      margin: 2% 20%;
       .panel-heading {
-        overflow: hidden;
+        display: inline-block;
+        width: 100%;
+        label {
+          display: block;
+        }
+        .story-module {
+          button {
+            font-size: 16px;
+            border: none;
+            background: transparent;
+            padding: 0;
+          }
+          ul {
+            li {
+              cursor: pointer;
+            }
+          }
+        }
         .story-name {
           vertical-align: middle;
           display: block;
-          width: 86%;
+          width: 100%;
           padding: 2px 7px;
           font-size: 16px;
           height: 32px;
