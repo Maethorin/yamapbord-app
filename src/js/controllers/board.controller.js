@@ -1,7 +1,8 @@
 'use strict';
 
-scrumInCeresControllers.controller('BoardController', ['$rootScope', '$scope', '$timeout', 'Alert', 'Notifier', 'Story', function($rootScope, $scope, $timeout, Alert, Notifier, Story) {
+scrumInCeresControllers.controller('BoardController', ['$rootScope', '$scope', '$timeout', 'Alert', 'Notifier', 'Sprint', 'Story', function($rootScope, $scope, $timeout, Alert, Notifier, Sprint, Story) {
   $rootScope.currentController = 'BoardController';
+  $scope.sprints = [];
   $scope.timeline = null;
   $scope.scrollOptions = {scrollX: 'bottom', scrollY: 'none', useBothWheelAxes: true, scrollPosX: 0, preventWheelEvents: true};
   $scope.currentTimelineSprintLeftPosition = null;
@@ -13,10 +14,6 @@ scrumInCeresControllers.controller('BoardController', ['$rootScope', '$scope', '
   $scope.today = moment();
   $scope.newTask = {task: null};
   $scope.newTaskVisible = false;
-
-  if (!$rootScope.selectedProject) {
-    Notifier.info('Select a Project Dude!', 'Hey!');
-  }
 
   $scope.columns = [
     {name: 'PLAN', label: 'Planned'},
@@ -41,6 +38,22 @@ scrumInCeresControllers.controller('BoardController', ['$rootScope', '$scope', '
     'ACCP': 'Accepted',
     'REJE': 'Rejected'
   };
+
+  Alert.loading();
+  Sprint.query(
+    function(response) {
+      $scope.sprints = response;
+      $scope.currentSprint = null;
+      $scope.selectedSprint = null;
+
+      _.forEach($scope.sprints, function(sprint) {
+        if (sprint.statusSlug === 'sprint-current') {
+          $scope.currentSprint = sprint;
+        }
+      });
+      Alert.close();
+    }
+  );
 
   function updateStoryData() {
     $scope.pointsPerStoryTypeStatus = {
@@ -71,8 +84,8 @@ scrumInCeresControllers.controller('BoardController', ['$rootScope', '$scope', '
       story.hasTasks = ['PLAN', 'STAR'].indexOf(story.status) > -1;
     });
 
-    var start = moment($scope.selectedSprint.startDateText);
-    var finish = moment($scope.selectedSprint.endDateText);
+    var start = moment($scope.selectedSprint.startDate);
+    var finish = moment($scope.selectedSprint.endDate);
     var days = parseInt((finish - start) / (1000 * 60 * 60 * 24)) + start.date() - 2;
     $scope.devDays = [];
     for (var dayNumber = start.date(); dayNumber <= days; dayNumber++) {
@@ -117,7 +130,7 @@ scrumInCeresControllers.controller('BoardController', ['$rootScope', '$scope', '
     story.updating = true;
     Alert.loading();
     Story.update(
-      {projectId:  $rootScope.selectedProject.id, sprintId: $scope.selectedSprint.id, id: story.id},
+      {sprintId: $scope.selectedSprint.id, id: story.id},
       {'status': story.status},
       function(response) {
         story.updating = false;
@@ -135,7 +148,7 @@ scrumInCeresControllers.controller('BoardController', ['$rootScope', '$scope', '
     Notifier.warning('Saving tasks...');
     $scope.selectedStory.updating = true;
     Story.update(
-      {projectId:  $rootScope.selectedProject.id, sprintId: $scope.selectedSprint.id, id: $scope.selectedStory.id},
+      {sprintId: $scope.selectedSprint.id, id: $scope.selectedStory.id},
       {'tasks': $scope.selectedStory.tasks},
       function() {
         $scope.selectedStory.updating = false;
@@ -202,25 +215,11 @@ scrumInCeresControllers.controller('BoardController', ['$rootScope', '$scope', '
     $scope.selectSprint($scope.currentSprint);
   });
 
-  $rootScope.$watch('selectedProject', function(project) {
-    if (!project) {
-      return false;
-    }
-    $scope.currentSprint = null;
-    $scope.selectedSprint = null;
-
-    _.forEach($rootScope.selectedProject.sprints, function(sprint) {
-      if (sprint.statusSlug === 'sprint-current') {
-        $scope.currentSprint = sprint;
-      }
-    })
-  });
-
   $scope.selectSprint = function(sprint) {
     $scope.selectedSprint = sprint;
     Alert.loading();
     Story.query(
-      {projectId:  $rootScope.selectedProject.id, sprintId: sprint.id},
+      {sprintId: sprint.id},
       function(response) {
         $scope.selectedSprint.stories = response;
         updateStoryData();
@@ -246,7 +245,7 @@ scrumInCeresControllers.controller('BoardController', ['$rootScope', '$scope', '
     }
     task.changing = true;
     Story.update(
-      {projectId:  $rootScope.selectedProject.id, sprintId: $scope.selectedSprint.id, id: story.id},
+      {sprintId: $scope.selectedSprint.id, id: story.id},
       {'toggleTask': $index},
       function(response) {
         task.changing = false;
@@ -265,7 +264,7 @@ scrumInCeresControllers.controller('BoardController', ['$rootScope', '$scope', '
     }
     definition.changing = true;
     Story.update(
-      {projectId:  $rootScope.selectedProject.id, sprintId: $scope.selectedSprint.id, id: story.id},
+      {sprintId: $scope.selectedSprint.id, id: story.id},
       {'toggleDefinition': $index},
       function(response) {
         definition.changing = false;

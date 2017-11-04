@@ -1,12 +1,12 @@
 <div class="container-fluid">
-  <div class="row timeline" ng-if="selectedProject !== null">
+  <div class="row timeline" ng-if="sprints.length > 0">
     <button type="button" class="btn-scroll-home btn btn-default btn-xs" ng-click="scrollOptions.scrollPosX = 0"><i class="fa fa-chevron-circle-left"></i></button>
     <div class="timeline-events" ng-scrollable="scrollOptions" spy-x="scrollOptions.scrollPosX">
-      <div class="timeline-event" ng-repeat="sprint in selectedProject.sprints" ng-class="{'selected': selectedSprint.id === sprint.id, 'current': sprint.statusSlug == 'sprint-current'}" ng-click="selectSprint(sprint)">
+      <div class="timeline-event" ng-repeat="sprint in sprints" ng-class="{'selected': selectedSprint.id === sprint.id, 'current': sprint.statusSlug == 'sprint-current'}" ng-click="selectSprint(sprint)">
         <div class="start-date">
-          <div class="month" ng-bind="sprint.startDate.month"></div>
-          <div class="day" ng-bind="sprint.startDate.day"></div>
-          <div class="year" ng-bind="sprint.startDate.year"></div>
+          <div class="month" ng-bind="sprint.startDateObj.month"></div>
+          <div class="day" ng-bind="sprint.startDateObj.day"></div>
+          <div class="year" ng-bind="sprint.startDateObj.year"></div>
         </div>
         <div class="sprint-data">
           <div class="sprint-name" title="{{sprint.name}}" ng-bind="sprint.name|limitWithEllipsis:15"></div>
@@ -15,9 +15,9 @@
           <div class="sprint-points"><span ng-bind="sprint.points"></span>Points</div>
         </div>
         <div class="end-date">
-          <div class="month" ng-bind="sprint.endDate.month"></div>
-          <div class="day" ng-bind="sprint.endDate.day"></div>
-          <div class="year" ng-bind="sprint.endDate.year"></div>
+          <div class="month" ng-bind="sprint.endDateObj.month"></div>
+          <div class="day" ng-bind="sprint.endDateObj.day"></div>
+          <div class="year" ng-bind="sprint.endDateObj.year"></div>
         </div>
       </div>
     </div>

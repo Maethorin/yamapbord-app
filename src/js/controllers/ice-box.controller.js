@@ -1,7 +1,6 @@
 'use strict';
 
 scrumInCeresControllers.controller('IceBoxController', ['$rootScope', '$scope', '$timeout', 'Alert', 'Notifier', 'StoryService', 'IceBox', function($rootScope, $scope, $timeout, Alert, Notifier, StoryService, IceBox) {
-  $rootScope.selectedProject = null;
   $rootScope.currentController = 'IceBoxController';
 
   $scope.scrollOptions = {scrollX: 'none', scrollY: 'right', preventWheelEvents: true};
@@ -48,7 +47,7 @@ scrumInCeresControllers.controller('IceBoxController', ['$rootScope', '$scope', 
       points: null,
       statement: null,
       module: null,
-      project: null,
+      epic: null,
       status: 'PLAN',
       tasks: [],
       type: 'FEA',
@@ -103,8 +102,8 @@ scrumInCeresControllers.controller('IceBoxController', ['$rootScope', '$scope', 
     story.module = module;
   };
 
-  $scope.setStoryProject = function(story, project) {
-    story.project = project;
+  $scope.setStoryEpic = function(story, epic) {
+    story.epic = epic;
   };
 
   $scope.selectStoryToEdit = function($event, story, $index) {

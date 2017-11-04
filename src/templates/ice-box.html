@@ -89,13 +89,13 @@
               </div>
             </div>
             <div class="col-md-3">
-              <label>Project:</label>
+              <label>Epic:</label>
               <div class="btn-group" uib-dropdown keyboard-nav>
                 <button type="button" class="btn btn-primary btn-sm" uib-dropdown-toggle>
-                  {{selectedStory.project === null ? 'Select a project' : selectedStory.project.name}} <span class="caret"></span>
+                  {{selectedStory.epic === null ? 'Select an Epic' : selectedStory.epic.name}} <span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="simple-btn-keyboard-nav">
-                  <li role="menuitem" ng-repeat="project in projects"><a ng-click="setStoryProject(selectedStory, project)" class="story-type-option" ng-bind="project.name"></a></li>
+                  <li role="menuitem" ng-repeat="epic in epics"><a ng-click="setStoryEpic(selectedStory, epic)" ng-bind="epic.name"></a></li>
                 </ul>
               </div>
             </div>

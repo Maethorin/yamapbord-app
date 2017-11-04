@@ -137,15 +137,13 @@ scrumInCeres.config(['$httpProvider', '$stateProvider', '$locationProvider', '$u
   $urlRouterProvider.when('', '/board');
 }]);
 
-scrumInCeres.run(['$rootScope', '$timeout', '$q', 'AuthService', 'MeService', 'Project', 'Module', 'Alert', function($rootScope, $timeout, $q, AuthService, MeService, Project, Module, Alert) {
+scrumInCeres.run(['$rootScope', '$timeout', '$q', 'AuthService', 'MeService', 'Alert', function($rootScope, $timeout, $q, AuthService, MeService, Alert) {
   AuthService.update();
   $rootScope.$on('userInfo.updated', function(evt, userInfo) {
     $rootScope.loggedUser = userInfo;
   });
+  MeService.getInfo();
   $rootScope.currentController = null;
-  $rootScope.selectedProject = null;
-  $rootScope.projects = [];
-  $rootScope.modules = [];
   $rootScope.filterObject = {'name': ''};
   $rootScope.search = {
     expression: '',
@@ -174,34 +172,6 @@ scrumInCeres.run(['$rootScope', '$timeout', '$q', 'AuthService', 'MeService', 'P
   };
 
   $rootScope.itemsView = {mode: 'list'};
-
-  Alert.loading();
-  MeService.getInfo().then(
-    function(info) {
-      Project.query(
-        function(response) {
-          $rootScope.projects = response;
-          Alert.close();
-        }
-      );
-      Module.query(
-        function(response) {
-          $rootScope.modules = response;
-        }
-      )
-    },
-    function(error) {
-      if (error.status !== 401) {
-        Alert.randomErrorMessage(error);
-        return;
-      }
-      Alert.close();
-    }
-  );
-
-  $rootScope.viewProject = function(project) {
-    $rootScope.selectedProject = project;
-  };
 
   $rootScope.filterByStoryType = function(type) {
     $rootScope.currentStoryTypeFilter = type;

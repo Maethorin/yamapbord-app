@@ -1,7 +1,6 @@
 'use strict';
 
-scrumInCeresControllers.controller('BacklogController', ['$rootScope', '$scope', 'Alert', 'StoryService', 'Notifier', 'Backlog', function($rootScope, $scope, Alert, StoryService, Notifier, Backlog) {
-  $rootScope.selectedProject = null;
+scrumInCeresControllers.controller('BacklogController', ['$rootScope', '$scope', 'Alert', 'MeService', 'StoryService', 'Notifier', 'Backlog', function($rootScope, $scope, Alert, MeService, StoryService, Notifier, Backlog) {
   $rootScope.currentController = 'BacklogController';
   $scope.sprints = [];
 
@@ -18,6 +17,7 @@ scrumInCeresControllers.controller('BacklogController', ['$rootScope', '$scope',
 
   $scope.storiesPopupOpened = false;
   $scope.stories = [];
+  $scope.teams = [];
   $scope.newStoryVisible = false;
   $scope.searchStories = '';
 
@@ -25,7 +25,13 @@ scrumInCeresControllers.controller('BacklogController', ['$rootScope', '$scope',
     $scope.$broadcast('content.changed');
   };
 
-  function getStories() {
+  MeService.getInfo().then(
+    function(info) {
+      $scope.teams = info.teams;
+    }
+  );
+
+  function getSprints() {
     Alert.loading();
     Backlog.query(
       function(response) {
@@ -41,7 +47,7 @@ scrumInCeresControllers.controller('BacklogController', ['$rootScope', '$scope',
     );
   }
 
-  getStories();
+  getSprints();
 
   function setWorkingDays(sprint) {
     var startDate = moment(sprint.startDate).startOf('day');
@@ -114,7 +120,7 @@ scrumInCeresControllers.controller('BacklogController', ['$rootScope', '$scope',
       endDate: null,
       points: null,
       status: 'PLAN',
-      project: null,
+      team: $rootScope.loggedUser.teams === null ? $rootScope.loggedUser.team : null,
       stories: []
     };
     $scope.completeSprintPopupOpened = true;
@@ -159,8 +165,8 @@ scrumInCeresControllers.controller('BacklogController', ['$rootScope', '$scope',
     });
   });
 
-  $scope.setSelectedSprintProject = function(project) {
-    $scope.selectedSprint.project = project;
+  $scope.setSelectedSprintTeam = function(team) {
+    $scope.selectedSprint.team = team;
   };
 
   $scope.toggleCompleteStoryPopup = function(story) {
@@ -198,8 +204,8 @@ scrumInCeresControllers.controller('BacklogController', ['$rootScope', '$scope',
       return false;
     }
 
-    if ($scope.selectedSprint.project === null) {
-      Alert.randomErrorMessage('Invalid Fields', 'The Project Dude...');
+    if ($scope.selectedSprint.team === null) {
+      Alert.randomErrorMessage('Invalid Fields', 'The Team Dude...');
       return false;
     }
 
@@ -208,7 +214,7 @@ scrumInCeresControllers.controller('BacklogController', ['$rootScope', '$scope',
       Backlog.save(
         $scope.selectedSprint,
         function() {
-          getStories();
+          getSprints();
           $scope.selectedSprint = null;
           $scope.completeSprintPopupOpened = false;
           Alert.randomSuccessMessage();

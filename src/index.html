@@ -32,18 +32,6 @@
             <li ui-sref-active="active"><a ui-sref="boardState"><i class="fa fa-columns"></i> Board</a></li>
             <li ui-sref-active="active"><a ui-sref="backlogState"><i class="fa fa-th-list"></i> Backlog</a></li>
             <li ui-sref-active="active"><a ui-sref="iceBoxState"><i class="fa fa-snowflake-o"></i> Ice Box</a></li>
-            <li class="projects" ng-if="currentController == 'BoardController'">
-              <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Select a Project <span class="caret"></span></a>
-              <ul class="dropdown-menu">
-                <li ng-repeat="project in projects"><a ng-click="viewProject(project)" ng-bind="project.name"></a></li>
-              </ul>
-            </li>
-            <li ng-if="selectedProject !== null">
-              <p class="navbar-text">
-                <strong>Current Project: </strong><span ng-bind="selectedProject.name"></span> /
-                <strong>Team: </strong><span ng-bind="selectedProject.team.name"></span>
-              </p>
-            </li>
             <li ng-if="currentController === 'IceBoxController'">
               <form class="navbar-form navbar-left">
                 <div class="form-group">
@@ -61,7 +49,7 @@
                 </div>
               </form>
             </li>
-            <li ng-if="selectedProject !== null">
+            <li ng-if="currentController === 'BoardController'">
               <button type="button" class="btn btn-default navbar-btn" ng-click="goToCurrentSprintInTimeline()">Go to current Sprint</button>
             </li>
             <li class="dropdown" ng-if="currentController === 'IceBoxController'">
