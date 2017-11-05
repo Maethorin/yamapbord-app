@@ -107,6 +107,20 @@ li {
       .panel-heading {
         display: inline-block;
         width: 100%;
+        position: relative;
+        .heading-close {
+          position: absolute;
+          right: 8px;
+          top: 7px;
+          border-radius: 5px;
+          padding: 0 4px;
+          background-color: #485952;
+          cursor: pointer;
+          border: 1px solid #FFF;
+          &:hover {
+            background-color: $gray-darker;
+          }
+        }
         label {
           display: block;
         }

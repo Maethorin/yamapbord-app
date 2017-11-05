@@ -52,14 +52,6 @@
             <li ng-if="currentController === 'BoardController'">
               <button type="button" class="btn btn-default navbar-btn" ng-click="goToCurrentSprintInTimeline()">Go to current Sprint</button>
             </li>
-            <li class="dropdown" ng-if="currentController === 'IceBoxController'">
-              <a class="dropdown-toggle story-type {{currentStoryTypeFilter !== null ? currentStoryTypeFilter.code.toLowerCase() : ''}}" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{currentStoryTypeFilter === null ? 'Filter by Type' : currentStoryTypeFilter.name}} <span class="caret"></span></a>
-              <ul class="dropdown-menu" role="menu">
-                <li><a ng-click="filterByStoryType(null)">All Stories</a></li>
-                <li role="separator" class="divider"></li>
-                <li ng-repeat="type in storyTypes"><a ng-click="filterByStoryType(type)" class="story-type-option" ng-class="type.code | lowercase" ng-bind="type.name"></a></li>
-              </ul>
-            </li>
             <li ng-if="currentController === 'IceBoxController'">
               <button type="button" class="btn btn-default navbar-btn" ng-click="addNewStory()">New Story</button>
             </li>

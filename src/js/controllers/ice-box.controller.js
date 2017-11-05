@@ -1,6 +1,6 @@
 'use strict';
 
-scrumInCeresControllers.controller('IceBoxController', ['$rootScope', '$scope', '$timeout', 'Alert', 'Notifier', 'StoryService', 'IceBox', function($rootScope, $scope, $timeout, Alert, Notifier, StoryService, IceBox) {
+scrumInCeresControllers.controller('IceBoxController', ['$rootScope', '$scope', '$timeout', 'Alert', 'Notifier', 'StoryService', 'IceBox', 'Requester', 'Epic', function($rootScope, $scope, $timeout, Alert, Notifier, StoryService, IceBox, Requester, Epic) {
   $rootScope.currentController = 'IceBoxController';
 
   $scope.scrollOptions = {scrollX: 'none', scrollY: 'right', preventWheelEvents: true};
@@ -9,7 +9,15 @@ scrumInCeresControllers.controller('IceBoxController', ['$rootScope', '$scope', 
   $scope.selectedStory = null;
   $scope.addingNewStory = false;
   $scope.selectedStoryIndex = null;
-
+  $scope.filterBarExpanded = false;
+  $scope.filter = {
+    type: null,
+    epic: null,
+    point: null,
+    requester: null
+  };
+  $scope.requesters = [];
+  $scope.epics = [];
   $scope.newTask = {task: null};
   $scope.newTaskVisible = false;
   $scope.newDefinition = {definition: null};
@@ -24,17 +32,34 @@ scrumInCeresControllers.controller('IceBoxController', ['$rootScope', '$scope', 
     Alert.close();
   });
 
+  Requester.query(
+    function(response) {
+      $scope.requesters = response;
+    }
+  );
+
+  Epic.query(
+    function(response) {
+      $scope.epics = response;
+    }
+  );
+
+  $scope.toggleFilterBarExpanded = function () {
+    $scope.filterBarExpanded = !$scope.filterBarExpanded;
+  };
+
+  $scope.selectFilter = function(property, value) {
+    $scope.filter[property] = value;
+    Alert.loading();
+    StoryService.filter($scope.filter).then(function(stories) {
+      $scope.stories = stories;
+      Alert.close();
+    });
+  };
+
   $rootScope.$watch('itemsView.mode', function(newValue) {
     _.forEach($scope.stories, function(story) {
       story.opened = newValue !== 'list';
-    });
-  });
-
-  $rootScope.$on('story.filter.type', function(evt, type) {
-    Alert.loading();
-    StoryService.filterByType(type).then(function(stories) {
-      $scope.stories = stories;
-      Alert.close();
     });
   });
 

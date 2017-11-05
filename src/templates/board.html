@@ -51,8 +51,8 @@
           <div class="col-md-12">
             <span class="story-type-name" ng-class="selectedStory.type | lowercase " title="{{selectedStory.typeName}}" ng-bind="selectedStory.typeName"></span>
             <span class="story-name">{{selectedStory.name}}</span>
-            <span class="story-requester" title="Requester"><label>Rq</label>{{selectedStory.requester.name}}</span>
-            <span class="story-owner" title="Owner"><label>Ow</label>{{selectedStory.owner.name}}</span>
+            <span class="story-requester" title="Requester"><label class="rq-ow">Rq</label>{{selectedStory.requester.name}}</span>
+            <span class="story-owner" title="Owner"><label class="rq-ow">Ow</label>{{selectedStory.owner.name}}</span>
             <span class="story-status" ng-class="selectedStory.status | lowercase" ng-bind="selectedStory.statusName"></span>
             <span class="badge points-{{selectedStory.points}}">{{selectedStory.points}}</span>
           </div>

@@ -13,6 +13,21 @@ scrumInCeresServices.service('StoryService', ['$rootScope', '$q', 'IceBox', func
     return this.getStories();
   };
 
+  this.filter = function(_filter) {
+    filter = {};
+    if (_filter.type) {
+      filter.type = _filter.type.code;
+    }
+    if (_filter.epic) {
+      filter.epicId = _filter.epic.id;
+    }
+    filter.points = _filter.point;
+    if (_filter.requester) {
+      filter.requester_id = _filter.requester.id;
+    }
+    return this.getStories();
+  };
+
   this.getReadyUse = function() {
     filter.readyToUse = true;
     return this.getStories();

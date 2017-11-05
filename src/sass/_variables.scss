@@ -70,8 +70,8 @@ $bootstrap-sass-asset-helper: false !default;
 //## Gray and brand colors for use across Bootstrap.
 
 $gray-base: #4f6259 !default;
-$gray-darker:            lighten($gray-base, 13.5%) !default; // #222
 $gray-dark: #485952 !default;   // #333
+$gray-darker: darken($gray-base, 13.5%) !default; // #222
 $gray: #72837d !default;
 $gray-light: #859993 !default;   // #999
 $gray-lighter: #dce9eb !default; // #eee
@@ -88,7 +88,7 @@ $brand-danger:          #E74C3C !default;
 //## Settings for some of the most global styles.
 
 //** Background color for `<body>`.
-$body-bg:               $gray-darker !default;
+$body-bg: $gray-darker !default;
 //** Global text color on `<body>`.
 $text-color:            #fff !default;
 
@@ -294,7 +294,7 @@ $cursor-disabled:                not-allowed !default;
 //## Dropdown menu container and contents.
 
 //** Background for the dropdown menu.
-$dropdown-bg:                    $gray-dark !default;
+$dropdown-bg: $gray-dark !default;
 //** Dropdown menu `border-color`.
 $dropdown-border:                rgba(0,0,0,.15) !default;
 //** Dropdown menu `border-color` **for IE8**.
@@ -482,7 +482,7 @@ $navbar-inverse-toggle-border-color:        darken($navbar-inverse-bg, 10%) !def
 
 //=== Shared nav styles
 $nav-link-padding:                          10px 15px !default;
-$nav-link-hover-bg:                         $gray-dark !default;
+$nav-link-hover-bg: $gray-dark !default;
 
 $nav-disabled-link-color:                   lighten($gray, 10%) !default;
 $nav-disabled-link-hover-color:             lighten($gray, 10%) !default;
@@ -548,7 +548,7 @@ $pager-disabled-color:                 #ddd !default;
 
 $jumbotron-padding:              30px !default;
 $jumbotron-color:                inherit !default;
-$jumbotron-bg:                   $gray-dark !default;
+$jumbotron-bg: $gray-dark !default;
 $jumbotron-heading-color:        inherit !default;
 $jumbotron-font-size:            ceil(($font-size-base * 1.5)) !default;
 $jumbotron-heading-font-size:    ceil(($font-size-base * 4.5)) !default;
@@ -598,7 +598,7 @@ $tooltip-arrow-color:         $tooltip-bg !default;
 //##
 
 //** Popover body background color
-$popover-bg:                          $gray-dark !default;
+$popover-bg: $gray-dark !default;
 //** Popover maximum width
 $popover-max-width:                   276px !default;
 //** Popover border color
@@ -658,7 +658,7 @@ $modal-title-padding:         15px !default;
 $modal-title-line-height:     $line-height-base !default;
 
 //** Background color of modal content area
-$modal-content-bg:                             $gray-dark !default;
+$modal-content-bg: $gray-dark !default;
 //** Modal content border color
 $modal-content-border-color:                   rgba(0,0,0,.2) !default;
 //** Modal content border color **for IE8**
@@ -731,7 +731,7 @@ $progress-bar-info-bg:        $brand-info !default;
 //##
 
 //** Background color on `.list-group-item`
-$list-group-bg:                 $gray-dark !default;
+$list-group-bg: $gray-dark !default;
 //** `.list-group-item` border color
 $list-group-border:             $gray !default;
 //** List group border radius
@@ -764,7 +764,7 @@ $list-group-link-heading-color: darken($link-color, 5%) !default;
 //
 //##
 
-$panel-bg:                    $gray-dark !default;
+$panel-bg: $gray-dark !default;
 $panel-body-padding:          15px !default;
 $panel-heading-padding:       10px 15px !default;
 $panel-footer-padding:        $panel-heading-padding !default;
@@ -776,7 +776,7 @@ $panel-footer-bg:             $gray !default;
 
 $panel-default-text:          $text-color !default;
 $panel-default-border:        $gray !default;
-$panel-default-heading-bg:    $gray-dark !default;
+$panel-default-heading-bg: $gray-dark !default;
 
 $panel-primary-text:          #fff !default;
 $panel-primary-border:        $brand-primary !default;
@@ -822,7 +822,7 @@ $thumbnail-caption-padding:   9px !default;
 //
 //##
 
-$well-bg:                     $gray-dark !default;
+$well-bg: $gray-dark !default;
 $well-border:                 transparent !default;
 
 
@@ -898,7 +898,7 @@ $kbd-color:                   #fff !default;
 $kbd-bg:                      #333 !default;
 
 $pre-bg:                      $gray-lighter !default;
-$pre-color:                   $gray-dark !default;
+$pre-color: $gray-dark !default;
 $pre-border-color:            #ccc !default;
 $pre-scrollable-max-height:   340px !default;
 

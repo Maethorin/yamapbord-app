@@ -173,11 +173,6 @@ scrumInCeres.run(['$rootScope', '$timeout', '$q', 'AuthService', 'MeService', 'A
 
   $rootScope.itemsView = {mode: 'list'};
 
-  $rootScope.filterByStoryType = function(type) {
-    $rootScope.currentStoryTypeFilter = type;
-    $rootScope.$broadcast('story.filter.type', type);
-  };
-
   $rootScope.addNewStory = function() {
     $rootScope.$broadcast('story.add');
   };
