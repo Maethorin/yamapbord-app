@@ -5,10 +5,10 @@ scrumInCeresServices.service('StoryService', ['$rootScope', '$q', 'IceBox', func
   var filter = {};
   this.filterByType = function(type) {
     if (type !== null) {
-      filter.type = type.code
+      this.filter.type = type.code
     }
     else {
-      delete filter.type;
+      delete this.filter.type;
     }
     return this.getStories();
   };
@@ -21,9 +21,14 @@ scrumInCeresServices.service('StoryService', ['$rootScope', '$q', 'IceBox', func
     if (_filter.epic) {
       filter.epicId = _filter.epic.id;
     }
-    filter.points = _filter.point;
+    if (_filter.module) {
+      filter.moduleId = _filter.module.id;
+    }
+    if (_filter.point) {
+      filter.points = _filter.point;
+    }
     if (_filter.requester) {
-      filter.requester_id = _filter.requester.id;
+      filter.requesterId = _filter.requester.id;
     }
     return this.getStories();
   };
@@ -44,7 +49,6 @@ scrumInCeresServices.service('StoryService', ['$rootScope', '$q', 'IceBox', func
         result.reject(error);
       }
     );
-    filter = {};
     return result.promise;
   };
 

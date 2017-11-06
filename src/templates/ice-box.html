@@ -182,7 +182,7 @@
       <div></div><div></div>
     </div>
     <div class="filter-content">
-      <div class="col-md-3">
+      <div class="col-md-2">
         <h4>By Type: {{filter.type.name}}<button type="button" class="btn btn-xs btn-danger btn-clear-filter" ng-click="selectFilter('type', null)">clear</button></h4>
         <div class="filter-bar-list">
           <ul class="list-group">
@@ -190,20 +190,28 @@
           </ul>
         </div>
       </div>
-      <div class="col-md-3">
-        <h4>By Epic: {{filter.epic.name}}<button type="button" class="btn btn-xs btn-danger btn-clear-filter" ng-click="selectFilter('epic', null)">clear</button></h4>
-        <div class="filter-bar-list">
-          <ul class="list-group">
-            <li class="list-group-item" ng-class="{'selected': epic.id === filter.epic.id}" ng-repeat="epic in epics" ng-bind="epic.name" ng-click="selectFilter('epic', epic)"></li>
-          </ul>
-        </div>
-      </div>
-      <div class="col-md-3">
+      <div class="col-md-2">
         <h4>By Points: {{filter.point}}<button type="button" class="btn btn-xs btn-danger btn-clear-filter" ng-click="selectFilter('point', null)">clear</button></h4>
         <div class="filter-bar-list">
           <ul class="list-group">
             <li class="list-group-item" ng-class="{'selected': 'N' === filter.point}" ng-click="selectFilter('point', 'N')">N</li>
             <li class="list-group-item" ng-class="{'selected': point === filter.point}" ng-repeat="point in points" ng-bind="point" ng-click="selectFilter('point', point)"></li>
+          </ul>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <h4>By Module: {{filter.module.name}}<button type="button" class="btn btn-xs btn-danger btn-clear-filter" ng-click="selectFilter('module', null)">clear</button></h4>
+        <div class="filter-bar-list">
+          <ul class="list-group">
+            <li class="list-group-item" ng-class="{'selected': module.id === filter.module.id}" ng-repeat="module in modules" ng-bind="module.name" ng-click="selectFilter('module', module)"></li>
+          </ul>
+        </div>
+      </div>
+      <div class="col-md-2">
+        <h4>By Epic: {{filter.epic.name}}<button type="button" class="btn btn-xs btn-danger btn-clear-filter" ng-click="selectFilter('epic', null)">clear</button></h4>
+        <div class="filter-bar-list">
+          <ul class="list-group">
+            <li class="list-group-item" ng-class="{'selected': epic.id === filter.epic.id}" ng-repeat="epic in epics" ng-bind="epic.name" ng-click="selectFilter('epic', epic)"></li>
           </ul>
         </div>
       </div>
