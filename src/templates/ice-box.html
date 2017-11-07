@@ -311,7 +311,10 @@
         <h4>Epic: <span ng-bind="filter.epic.name|limitWithEllipsis:25"></span><button type="button" class="btn btn-xs btn-danger btn-clear-filter" ng-click="selectFilter('epic', null)">clear</button></h4>
         <div class="filter-bar-list">
           <ul class="list-group">
-            <li class="list-group-item" ng-class="{'selected': epic.id === filter.epic.id}" ng-repeat="epic in epics|orderBy:['modules', 'name']" ng-click="selectFilter('epic', epic)">
+            <li ng-if="filter.module !== null && filter.module.epics.length > 0" class="list-group-item" ng-class="{'selected': epic.id === filter.epic.id}" ng-repeat="epic in filter.module.epics|orderBy:'name'" ng-click="selectFilter('epic', epic)">
+              {{epic.modules ? '[{modules}] {name}'.format(epic) : epic.name}}
+            </li>
+            <li ng-if="filter.module === null || filter.module.epics.length === 0" class="list-group-item" ng-class="{'selected': epic.id === filter.epic.id}" ng-repeat="epic in epics|orderBy:['modules', 'name']" ng-click="selectFilter('epic', epic)">
               {{epic.modules ? '[{modules}] {name}'.format(epic) : epic.name}}
             </li>
           </ul>
