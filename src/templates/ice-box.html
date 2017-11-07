@@ -1,58 +1,133 @@
 <div class="container-fluid ice-box">
-  <div class="story-container col-md-4" ng-repeat="story in stories|filter:filterObject.filter">
-    <div class="panel panel-default panel-edit-story">
-      <div class="panel-heading" title="{{story.statement}}" ng-click="selectStoryToEdit($event, story, $index)">
-        <i class="fa btn-open" ng-class="{'fa-chevron-down': !story.opened, 'fa-chevron-up': story.opened}" ng-click="toggleOpenStoryPanel($event, story)"></i>
-        <span class="story-module">[{{story.module.acronym || 'NO-MODULE'}}]</span>
-        <span class="story-name" ng-bind="story.name|limitWithEllipsis:65"></span>
-        <button class="btn btn-primary btn-sm btn-save-story" ng-click="selectStoryToEdit($event, story, $index)"><i class="fa fa-edit"></i></button>
-      </div>
-      <div class="panel-body as-list" ng-class="{'as-list': !story.opened}">
-        <div class="story-data">
-          <div class="story-type" ng-class="story.type | lowercase" ng-bind="story.typeName"></div>
-          <div class="story-requester" title="Requester"><label class="rq-ow">Rq</label></i>{{story.requester.name}}</div>
-          <div class="story-point points-{{story.points|numberOrText:'null'}}" ng-bind="story.points|numberOrText"></div>
-        </div>
-        <div class="story-statement" ng-scrollable>
-          <p ng-bind="story.statement"></p>
-        </div>
+  <section ng-if="groupedStories">
+    <div class="story-group-container" ng-repeat="(group, stories) in groupedStories">
+      <h2>{{stories[0].module.name}}</h2>
+      <div class="story-container col-md-4" ng-repeat="story in stories|filter:filterObject.filter">
+        <div class="panel panel-default panel-edit-story">
+          <div class="panel-heading" title="{{story.statement}}" ng-click="selectStoryToEdit($event, story, $index)">
+            <i class="fa btn-open" ng-class="{'fa-chevron-down': !story.opened, 'fa-chevron-up': story.opened}" ng-click="toggleOpenStoryPanel($event, story)"></i>
+            <span class="story-module">[{{story.module.acronym || 'NO-MODULE'}}]</span>
+            <span class="story-name" ng-bind="story.name|limitWithEllipsis:65"></span>
+            <button class="btn btn-primary btn-sm btn-save-story" ng-click="selectStoryToEdit($event, story, $index)"><i class="fa fa-edit"></i></button>
+          </div>
+          <div class="panel-body as-list" ng-class="{'as-list': !story.opened}">
+            <div class="story-data">
+              <div class="story-type" ng-class="story.type | lowercase" ng-bind="story.typeName"></div>
+              <div class="story-requester" title="Requester"><label class="rq-ow">Rq</label>{{story.requester.name}}</div>
+              <div class="story-point points-{{story.valuePoints|numberOrText:'null'}}">
+                <label>VP</label>
+                <span ng-bind="story.valuePoints|numberOrText"></span>
+              </div>
+              <div class="story-point points-{{story.points|numberOrText:'null'}}">
+                <label>SP</label>
+                <span ng-bind="story.points|numberOrText"></span>
+              </div>
+            </div>
+            <div class="story-statement" ng-scrollable>
+              <p ng-bind="story.statement"></p>
+            </div>
 
-        <uib-tabset active="activeJustified" justified="true">
-          <uib-tab index="0" heading="Tasks" select="changeScroll()">
-            <ul class="list-group story-tasks" ng-scrollable="scrollOptions">
-              <li class="list-group-item" ng-repeat="task in story.tasks">
-                {{ task.task }}
-              </li>
-            </ul>
-          </uib-tab>
-          <uib-tab index="1" heading="DoD" select="changeScroll()">
-            <ul class="list-group story-definitions" ng-scrollable="scrollOptions">
-              <li class="list-group-item" ng-repeat="definition in story.definitionOfDone">
-                {{ definition.definition }}
-              </li>
-            </ul>
-          </uib-tab>
-          <uib-tab index="2" heading="Comments" select="changeScroll()">
-            <ul class="list-group story-comments" ng-scrollable="scrollOptions">
-              <li class="list-group-item" ng-repeat="storyComment in story.comments">
-                <div class="comment-details">
-                  <div class="col-md-7">
-                    Created by: {{storyComment.creator.name }}
-                  </div>
-                  <div class="col-md-5">
-                    Created at: {{storyComment.createdAt }}
-                  </div>
-                </div>
-                <div class="comment-text with-break-lines">
-                  {{ storyComment.comment }}
-                </div>
-              </li>
-            </ul>
-          </uib-tab>
-        </uib-tabset>
+            <uib-tabset active="activeJustified" justified="true">
+              <uib-tab index="0" heading="Tasks" select="changeScroll()">
+                <ul class="list-group story-tasks" ng-scrollable="scrollOptions">
+                  <li class="list-group-item" ng-repeat="task in story.tasks">
+                    {{ task.task }}
+                  </li>
+                </ul>
+              </uib-tab>
+              <uib-tab index="1" heading="DoD" select="changeScroll()">
+                <ul class="list-group story-definitions" ng-scrollable="scrollOptions">
+                  <li class="list-group-item" ng-repeat="definition in story.definitionOfDone">
+                    {{ definition.definition }}
+                  </li>
+                </ul>
+              </uib-tab>
+              <uib-tab index="2" heading="Comments" select="changeScroll()">
+                <ul class="list-group story-comments" ng-scrollable="scrollOptions">
+                  <li class="list-group-item" ng-repeat="storyComment in story.comments">
+                    <div class="comment-details">
+                      <div class="col-md-7">
+                        Created by: {{storyComment.creator.name }}
+                      </div>
+                      <div class="col-md-5">
+                        Created at: {{storyComment.createdAt }}
+                      </div>
+                    </div>
+                    <div class="comment-text with-break-lines">
+                      {{ storyComment.comment }}
+                    </div>
+                  </li>
+                </ul>
+              </uib-tab>
+            </uib-tabset>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
+  </section>
+  <section ng-if="!groupedStories">
+    <div class="story-container col-md-4" ng-repeat="story in stories|filter:filterObject.filter">
+      <div class="panel panel-default panel-edit-story">
+        <div class="panel-heading" title="{{story.statement}}" ng-click="selectStoryToEdit($event, story, $index)">
+          <i class="fa btn-open" ng-class="{'fa-chevron-down': !story.opened, 'fa-chevron-up': story.opened}" ng-click="toggleOpenStoryPanel($event, story)"></i>
+          <span class="story-module">[{{story.module.acronym || 'NO-MODULE'}}]</span>
+          <span class="story-name" ng-bind="story.name|limitWithEllipsis:65"></span>
+          <button class="btn btn-primary btn-sm btn-save-story" ng-click="selectStoryToEdit($event, story, $index)"><i class="fa fa-edit"></i></button>
+        </div>
+        <div class="panel-body as-list" ng-class="{'as-list': !story.opened}">
+          <div class="story-data">
+            <div class="story-type" ng-class="story.type | lowercase" ng-bind="story.typeName"></div>
+            <div class="story-requester" title="Requester"><label class="rq-ow">Rq</label>{{story.requester.name}}</div>
+            <div class="story-point">
+              <label>SP</label>
+              <span class="points-{{story.points|numberOrText:'null'}}" ng-bind="story.points|numberOrText"></span>
+            </div>
+            <div class="story-point">
+              <label>VP</label>
+              <span class="points-{{story.valuePoints|numberOrText:'null'}}" ng-bind="story.valuePoints|numberOrText"></span>
+            </div>
+          </div>
+          <div class="story-statement" ng-scrollable>
+            <p ng-bind="story.statement"></p>
+          </div>
+
+          <uib-tabset active="activeJustified" justified="true">
+            <uib-tab index="0" heading="Tasks" select="changeScroll()">
+              <ul class="list-group story-tasks" ng-scrollable="scrollOptions">
+                <li class="list-group-item" ng-repeat="task in story.tasks">
+                  {{ task.task }}
+                </li>
+              </ul>
+            </uib-tab>
+            <uib-tab index="1" heading="DoD" select="changeScroll()">
+              <ul class="list-group story-definitions" ng-scrollable="scrollOptions">
+                <li class="list-group-item" ng-repeat="definition in story.definitionOfDone">
+                  {{ definition.definition }}
+                </li>
+              </ul>
+            </uib-tab>
+            <uib-tab index="2" heading="Comments" select="changeScroll()">
+              <ul class="list-group story-comments" ng-scrollable="scrollOptions">
+                <li class="list-group-item" ng-repeat="storyComment in story.comments">
+                  <div class="comment-details">
+                    <div class="col-md-7">
+                      Created by: {{storyComment.creator.name }}
+                    </div>
+                    <div class="col-md-5">
+                      Created at: {{storyComment.createdAt }}
+                    </div>
+                  </div>
+                  <div class="comment-text with-break-lines">
+                    {{ storyComment.comment }}
+                  </div>
+                </li>
+              </ul>
+            </uib-tab>
+          </uib-tabset>
+        </div>
+      </div>
+    </div>
+  </section>
 
   <form name="formStory" novalidate ng-submit="saveSelectedStory(formStory)">
     <div class="popup-complete-story" ng-class="{'opened': completeStoryPopupOpened}" ng-if="selectedStory !== null">
@@ -69,7 +144,24 @@
               </ul>
             </div>
           </div>
-          <div class="col-md-10">
+
+          <div class="col-md-3">
+            <label>Epic:</label>
+            <div class="btn-group" uib-dropdown keyboard-nav>
+              <button type="button" class="btn btn-primary btn-sm" uib-dropdown-toggle>
+                {{selectedStory.epic === null ? 'Select an Epic' : selectedStory.epic.modules ? '[{modules}] {name}'.format(selectedStory.epic) : selectedStory.epic.name}} <span class="caret"></span>
+              </button>
+              <ul class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="simple-btn-keyboard-nav">
+                <li role="menuitem" ng-repeat="epic in epics|orderBy:['modules', 'name']">
+                  <a ng-click="setStoryEpic(selectedStory, epic)">
+                    {{epic.modules ? '[{modules}] {name}'.format(epic) : epic.name}}
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="col-md-7">
             <label>Name:</label>
             <input class="story-name" ng-model="selectedStory.name" />
           </div>
@@ -88,20 +180,19 @@
                 </ul>
               </div>
             </div>
-            <div class="col-md-3">
-              <label>Epic:</label>
-              <div class="btn-group" uib-dropdown keyboard-nav>
-                <button type="button" class="btn btn-primary btn-sm" uib-dropdown-toggle>
-                  {{selectedStory.epic === null ? 'Select an Epic' : selectedStory.epic.name}} <span class="caret"></span>
-                </button>
-                <ul class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="simple-btn-keyboard-nav">
-                  <li role="menuitem" ng-repeat="epic in epics"><a ng-click="setStoryEpic(selectedStory, epic)" ng-bind="epic.name"></a></li>
-                </ul>
+            <div class="col-md-4">
+              <label>Value Points:</label>
+              <div class="points btn-group">
+                <label class="btn btn-primary btn-sm points-null" ng-model="selectedStory.valuePoints" ng-class="{'active': !selectedStory.valuePoints && selectedStory.valuePoints != 0}" uib-btn-radio="null">N</label>
+                <label class="btn btn-primary btn-sm points-{{point}}" ng-model="selectedStory.valuePoints" ng-class="{'active': point == selectedStory.valuePoints}" uib-btn-radio="point" ng-repeat="point in points" ng-bind="point"></label>
               </div>
             </div>
-            <div class="points btn-group">
-              <label class="btn btn-primary btn-sm points-null" ng-model="selectedStory.points" ng-class="{'active': !selectedStory.points && selectedStory.points != 0}" uib-btn-radio="null">N</label>
-              <label class="btn btn-primary btn-sm points-{{point}}" ng-model="selectedStory.points" ng-class="{'active': point == selectedStory.points}" uib-btn-radio="point" ng-repeat="point in points" ng-bind="point"></label>
+            <div class="col-md-4">
+              <label>Story Points:</label>
+              <div class="points btn-group">
+                <label class="btn btn-primary btn-sm points-null" ng-model="selectedStory.points" ng-class="{'active': !selectedStory.points && selectedStory.points != 0}" uib-btn-radio="null">N</label>
+                <label class="btn btn-primary btn-sm points-{{point}}" ng-model="selectedStory.points" ng-class="{'active': point == selectedStory.points}" uib-btn-radio="point" ng-repeat="point in points" ng-bind="point"></label>
+              </div>
             </div>
           </div>
 
@@ -183,15 +274,24 @@
     </div>
     <div class="filter-content">
       <div class="col-md-2">
-        <h4>By Type: {{filter.type.name}}<button type="button" class="btn btn-xs btn-danger btn-clear-filter" ng-click="selectFilter('type', null)">clear</button></h4>
+        <h4>Type: <span ng-bind="filter.type.name"></span><button type="button" class="btn btn-xs btn-danger btn-clear-filter" ng-click="selectFilter('type', null)">clear</button></h4>
         <div class="filter-bar-list">
           <ul class="list-group">
             <li class="list-group-item {{type.code | lowercase}}" ng-class="{'selected': type.code === filter.type.code}" ng-repeat="type in storyTypes" ng-bind="type.name" ng-click="selectFilter('type', type)"></li>
           </ul>
         </div>
       </div>
-      <div class="col-md-2">
-        <h4>By Points: {{filter.point}}<button type="button" class="btn btn-xs btn-danger btn-clear-filter" ng-click="selectFilter('point', null)">clear</button></h4>
+      <div class="col-md-1">
+        <h4>VP: <span ng-bind="filter.valuePoint"></span><button type="button" class="btn btn-xs btn-danger btn-clear-filter" ng-click="selectFilter('valuePoint', null)">clear</button></h4>
+        <div class="filter-bar-list">
+          <ul class="list-group">
+            <li class="list-group-item" ng-class="{'selected': 'N' === filter.valuePoint}" ng-click="selectFilter('valuePoint', 'N')">N</li>
+            <li class="list-group-item" ng-class="{'selected': valuePoint === filter.valuePoint}" ng-repeat="valuePoint in points" ng-bind="valuePoint" ng-click="selectFilter('valuePoint', valuePoint)"></li>
+          </ul>
+        </div>
+      </div>
+      <div class="col-md-1">
+        <h4>SP: <span ng-bind="filter.point"></span><button type="button" class="btn btn-xs btn-danger btn-clear-filter" ng-click="selectFilter('point', null)">clear</button></h4>
         <div class="filter-bar-list">
           <ul class="list-group">
             <li class="list-group-item" ng-class="{'selected': 'N' === filter.point}" ng-click="selectFilter('point', 'N')">N</li>
@@ -200,23 +300,25 @@
         </div>
       </div>
       <div class="col-md-3">
-        <h4>By Module: {{filter.module.name}}<button type="button" class="btn btn-xs btn-danger btn-clear-filter" ng-click="selectFilter('module', null)">clear</button></h4>
+        <h4>Module: <span ng-bind="filter.module.name|limitWithEllipsis:25"></span><button type="button" class="btn btn-xs btn-danger btn-clear-filter" ng-click="selectFilter('module', null)">clear</button></h4>
         <div class="filter-bar-list">
           <ul class="list-group">
             <li class="list-group-item" ng-class="{'selected': module.id === filter.module.id}" ng-repeat="module in modules" ng-bind="module.name" ng-click="selectFilter('module', module)"></li>
           </ul>
         </div>
       </div>
-      <div class="col-md-2">
-        <h4>By Epic: {{filter.epic.name}}<button type="button" class="btn btn-xs btn-danger btn-clear-filter" ng-click="selectFilter('epic', null)">clear</button></h4>
+      <div class="col-md-3">
+        <h4>Epic: <span ng-bind="filter.epic.name|limitWithEllipsis:25"></span><button type="button" class="btn btn-xs btn-danger btn-clear-filter" ng-click="selectFilter('epic', null)">clear</button></h4>
         <div class="filter-bar-list">
           <ul class="list-group">
-            <li class="list-group-item" ng-class="{'selected': epic.id === filter.epic.id}" ng-repeat="epic in epics" ng-bind="epic.name" ng-click="selectFilter('epic', epic)"></li>
+            <li class="list-group-item" ng-class="{'selected': epic.id === filter.epic.id}" ng-repeat="epic in epics|orderBy:['modules', 'name']" ng-click="selectFilter('epic', epic)">
+              {{epic.modules ? '[{modules}] {name}'.format(epic) : epic.name}}
+            </li>
           </ul>
         </div>
       </div>
-      <div class="col-md-3">
-        <h4>By Requester: {{filter.requester.name}}<button type="button" class="btn btn-xs btn-danger btn-clear-filter" ng-click="selectFilter('requester', null)">clear</button></h4>
+      <div class="col-md-2">
+        <h4>Requester: <span ng-bind="filter.requester.name|limitWithEllipsis:17"></span><button type="button" class="btn btn-xs btn-danger btn-clear-filter" ng-click="selectFilter('requester', null)">clear</button></h4>
         <div class="filter-bar-list">
           <ul class="list-group">
             <li class="list-group-item" ng-class="{'selected': requester.id === filter.requester.id}" ng-repeat="requester in requesters" ng-bind="requester.name" ng-click="selectFilter('requester', requester)"></li>

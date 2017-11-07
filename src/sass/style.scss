@@ -313,6 +313,10 @@ textarea {
   }
   .filter-content {
     h4 {
+      font-size: 16px;
+      span {
+        font-weight: bold;
+      }
       .btn-clear-filter {
         float: right;
       }

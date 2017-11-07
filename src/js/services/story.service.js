@@ -27,6 +27,9 @@ scrumInCeresServices.service('StoryService', ['$rootScope', '$q', 'IceBox', func
     if (_filter.point) {
       filter.points = _filter.point;
     }
+    if (_filter.valuePoint) {
+      filter.valuePoints = _filter.valuePoint;
+    }
     if (_filter.requester) {
       filter.requesterId = _filter.requester.id;
     }

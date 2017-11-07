@@ -157,6 +157,8 @@ scrumInCeres.run(['$rootScope', '$timeout', '$q', 'AuthService', 'MeService', 'A
     {code: 'TEC', name: 'Techinical'}
   ];
 
+  $rootScope.storyGroupedBy = 'None';
+
   $rootScope.storyFilterTextTypes = {
     name: {type: 'name', name: 'By Name'},
     statement: {type: 'statement', name: 'By Statement'},
@@ -172,6 +174,11 @@ scrumInCeres.run(['$rootScope', '$timeout', '$q', 'AuthService', 'MeService', 'A
   };
 
   $rootScope.itemsView = {mode: 'list'};
+
+  $rootScope.setStoryGroupBy = function(group) {
+    $rootScope.storyGroupedBy = group;
+    $rootScope.$broadcast('story.grouped');
+  };
 
   $rootScope.addNewStory = function() {
     $rootScope.$broadcast('story.add');

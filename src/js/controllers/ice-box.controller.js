@@ -20,6 +20,7 @@ scrumInCeresControllers.controller('IceBoxController', ['$rootScope', '$scope', 
   $scope.requesters = [];
   $scope.epics = [];
   $scope.modules = [];
+  $scope.groupedStories = false;
   $scope.newTask = {task: null};
   $scope.newTaskVisible = false;
   $scope.newDefinition = {definition: null};
@@ -69,6 +70,17 @@ scrumInCeresControllers.controller('IceBoxController', ['$rootScope', '$scope', 
     _.forEach($scope.stories, function(story) {
       story.opened = newValue !== 'list';
     });
+  });
+
+  $rootScope.$on('story.grouped', function() {
+    $scope.groupedStories = false;
+    if ($rootScope.storyGroupedBy === 'Module') {
+      $scope.groupedStories = _.groupBy($scope.stories, 'module.id');
+    }
+    if ($rootScope.storyGroupedBy === 'Epic') {
+      $scope.groupedStories = _.groupBy($scope.stories, 'epic.id');
+    }
+    console.log($scope.groupedStories)
   });
 
   $rootScope.$on('story.add', function() {

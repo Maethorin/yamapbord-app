@@ -32,6 +32,9 @@
             <li ui-sref-active="active"><a ui-sref="boardState"><i class="fa fa-columns"></i> Board</a></li>
             <li ui-sref-active="active"><a ui-sref="backlogState"><i class="fa fa-th-list"></i> Backlog</a></li>
             <li ui-sref-active="active"><a ui-sref="iceBoxState"><i class="fa fa-snowflake-o"></i> Ice Box</a></li>
+            <li ng-if="currentController === 'BoardController'">
+              <button type="button" class="btn btn-default navbar-btn" ng-click="goToCurrentSprintInTimeline()">Go to current Sprint</button>
+            </li>
             <li ng-if="currentController === 'IceBoxController'">
               <form class="navbar-form navbar-left">
                 <div class="form-group">
@@ -49,20 +52,29 @@
                 </div>
               </form>
             </li>
-            <li ng-if="currentController === 'BoardController'">
-              <button type="button" class="btn btn-default navbar-btn" ng-click="goToCurrentSprintInTimeline()">Go to current Sprint</button>
-            </li>
             <li ng-if="currentController === 'IceBoxController'">
               <button type="button" class="btn btn-default navbar-btn" ng-click="addNewStory()">New Story</button>
-            </li>
-            <li ng-if="currentController === 'BacklogController'">
-              <button type="button" class="btn btn-default navbar-btn" ng-click="addNewSprint()">New Sprint</button>
             </li>
             <li ng-if="['BacklogController', 'IceBoxController'].indexOf(currentController) !== -1">
               <div class="btn-group navbar-btn btn-story-view-type">
                 <label class="btn btn-default" ng-model="itemsView.mode" title="View in list" uib-btn-radio="'list'"><i class="fa fa-th-list"></i></label>
                 <label class="btn btn-default" ng-model="itemsView.mode" title="View in box" uib-btn-radio="'box'"><i class="fa fa-th"></i></label>
               </div>
+            </li>
+            <li ng-if="currentController === 'IceBoxController'">
+              <div class="btn-group btn-group-story" uib-dropdown>
+                <button id="single-button" type="button" class="btn btn-default navbar-btn" uib-dropdown-toggle>
+                  Group By: {{storyGroupedBy}} <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="single-button">
+                  <li role="menuitem"><a ng-click="setStoryGroupBy('None')">None</a></li>
+                  <li role="menuitem"><a ng-click="setStoryGroupBy('Module')">Module</a></li>
+                  <li role="menuitem"><a ng-click="setStoryGroupBy('Epic')">Epic</a></li>
+                </ul>
+              </div>
+            </li>
+            <li ng-if="currentController === 'BacklogController'">
+              <button type="button" class="btn btn-default navbar-btn" ng-click="addNewSprint()">New Sprint</button>
             </li>
           </ul>
 

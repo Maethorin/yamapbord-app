@@ -68,11 +68,18 @@ li {
     }
     .story-point {
       display: inline-block;
-      padding: 6px 15px;
-      font-size: 18px;
-      border-radius: 4px;
-      border: 1px solid #666;
       float: right;
+      margin-left: 5px;
+      label {
+        font-size: 10px;
+        text-align: center;
+      }
+      span {
+        padding: 6px 15px;
+        font-size: 18px;
+        border-radius: 4px;
+        border: 1px solid #666;
+      }
     }
     .btn-story-type {
       background-position: 9px 7px;
@@ -90,7 +97,6 @@ li {
       @include story-types();
     }
     .points {
-      float: right;
       label {
         font-size: 14px;
         &.active {
@@ -165,4 +171,8 @@ li {
       text-align: center;
     }
   }
+}
+
+.btn-group-story {
+  margin-left: 10px;
 }
