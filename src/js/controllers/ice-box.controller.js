@@ -264,7 +264,6 @@ scrumInCeresControllers.controller('IceBoxController', ['$rootScope', '$scope', 
     story.definitionOfDone.splice($index, 1);
   };
 
-
   $scope.addingCommentToStory = function() {
     $scope.newCommentVisible = true;
   };

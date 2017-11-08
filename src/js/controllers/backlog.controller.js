@@ -1,6 +1,6 @@
 'use strict';
 
-scrumInCeresControllers.controller('BacklogController', ['$rootScope', '$scope', 'Alert', 'MeService', 'StoryService', 'Notifier', 'Backlog', function($rootScope, $scope, Alert, MeService, StoryService, Notifier, Backlog) {
+scrumInCeresControllers.controller('BacklogController', ['$rootScope', '$scope', '$timeout', 'Alert', 'MeService', 'StoryService', 'Notifier', 'Backlog', function($rootScope, $scope, $timeout, Alert, MeService, StoryService, Notifier, Backlog) {
   $rootScope.currentController = 'BacklogController';
   $scope.sprints = [];
 
@@ -22,6 +22,14 @@ scrumInCeresControllers.controller('BacklogController', ['$rootScope', '$scope',
   $scope.teams = [];
   $scope.newStoryVisible = false;
   $scope.searchStories = '';
+
+  $scope.newTask = {task: null};
+  $scope.newTaskVisible = false;
+  $scope.newDefinition = {definition: null};
+  $scope.newDefinitionVisible = false;
+  $scope.newComment = {comment: null, creator: null, createdAt: null};
+  $scope.newCommentVisible = false;
+  $scope.scrollCommentOptions = {scrollX: 'none', scrollY: 'right', preventWheelEvents: false, preventKeyEvents: false};
 
   $scope.changeScroll = function() {
     $scope.$broadcast('content.changed');
@@ -327,7 +335,7 @@ scrumInCeresControllers.controller('BacklogController', ['$rootScope', '$scope',
     sprint.opened = !sprint.opened;
   };
 
-  // TODO: isso deve ser movido para um service ou factory, pois é usado em dois controllers
+  // TODO: isso deve ser movido para um service ou factory, pois é usado em dois controllers. Observar que o código aqui só faz update. O código que deve ser usado como base é o do IceBoxController.
   $scope.toggleFormStoryPopupOpened = function(story, index) {
     Alert.loading();
     $scope.selectedStoryIndex = index;
@@ -351,6 +359,122 @@ scrumInCeresControllers.controller('BacklogController', ['$rootScope', '$scope',
     story.epic = epic;
   };
 
+  function toggleEditInStoryList(element, $event) {
+    if ($event) {
+      if ($event.which === 13) {
+        $event.preventDefault();
+      }
+      return
+    }
+    if (!element.editing) {
+      element.editing = true;
+    }
+    else {
+      delete element.editing;
+    }
+  }
+
+  $scope.toggleEditStoryComment = function(comment, $event) {
+    toggleEditInStoryList(comment, $event);
+  };
+
+  $scope.toggleEditStoryTask = function(task, $event) {
+    toggleEditInStoryList(task, $event);
+  };
+
+  $scope.toggleEditStoryDefinition = function(definition, $event) {
+    toggleEditInStoryList(definition, $event);
+  };
+
+  $scope.addingTaskToStory = function() {
+    $scope.newTaskVisible = true;
+  };
+
+  $scope.cancelAddTaskToStory = function($event) {
+    $scope.newTaskVisible = false;
+    $scope.newTask = {task: null};
+    $event.stopPropagation();
+  };
+
+  $scope.blurInputTaskFiled = function($event, selectedStory) {
+    $timeout(
+      function() {
+        $scope.addTaskToStory($event, selectedStory);
+      },
+      150
+    )
+  };
+
+  $scope.addTaskToStory = function($event, story) {
+    if ($scope.newTask.task === null) {
+      return false;
+    }
+    story.tasks.push({task: $scope.newTask.task, complete: false});
+    $scope.newTaskVisible = false;
+    $scope.newTask = {task: null};
+    $event.stopPropagation();
+  };
+
+  $scope.removeStoryTask = function(story, $index) {
+    story.tasks.splice($index, 1);
+  };
+
+  $scope.addingDefinitionToStory = function() {
+    $scope.newDefinitionVisible = true;
+  };
+
+  $scope.cancelAddDefinitionToStory = function($event) {
+    $scope.newDefinitionVisible = false;
+    $scope.newDefinition = {definition: null};
+    $event.stopPropagation();
+  };
+
+  $scope.addDefinitionToStory = function($event, story) {
+    if ($scope.newDefinition.definition === null) {
+      return false;
+    }
+    story.definitionOfDone.push({definition: $scope.newDefinition.definition, done: false});
+    $scope.newDefinitionVisible = false;
+    $scope.newDefinition = {definition: null};
+    $event.stopPropagation();
+  };
+
+  $scope.removeStoryDefinition = function(story, $index) {
+    story.definitionOfDone.splice($index, 1);
+  };
+
+  $scope.addingCommentToStory = function() {
+    $scope.newCommentVisible = true;
+  };
+
+  $scope.cancelAddCommentToStory = function($event) {
+    $scope.newCommentVisible = false;
+    $scope.newComment = {comment: null};
+    $event.stopPropagation();
+  };
+
+  $scope.blurInputCommentFiled = function($event, selectedStory) {
+    $timeout(
+      function() {
+        $scope.addCommentToStory($event, selectedStory);
+      },
+      150
+    )
+  };
+
+  $scope.addCommentToStory = function($event, story) {
+    if ($scope.newComment.comment === null) {
+      return false;
+    }
+    story.comments.push({comment: $scope.newComment.comment, creatorId: $rootScope.loggedUser.id, creator: {name: $rootScope.loggedUser.name}, createdAt: moment().format('YYYY-MM-DD HH:mm')});
+    $scope.newCommentVisible = false;
+    $scope.newComment = {comment: null};
+    $event.stopPropagation();
+  };
+
+  $scope.removeStoryComment = function(story, $index) {
+    story.comments.splice($index, 1);
+  };
 
   $scope.saveSelectedStory = function(form) {
     if (form.$invalid) {
