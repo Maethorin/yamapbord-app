@@ -137,7 +137,7 @@ scrumInCeres.config(['$httpProvider', '$stateProvider', '$locationProvider', '$u
   $urlRouterProvider.when('', '/board');
 }]);
 
-scrumInCeres.run(['$rootScope', '$timeout', '$q', 'AuthService', 'MeService', 'Alert', function($rootScope, $timeout, $q, AuthService, MeService, Alert) {
+scrumInCeres.run(['$rootScope', '$timeout', '$q', 'AuthService', 'MeService', 'Alert', 'Requester', 'Epic', 'Module', function($rootScope, $timeout, $q, AuthService, MeService, Alert, Requester, Epic, Module) {
   AuthService.update();
   $rootScope.$on('userInfo.updated', function(evt, userInfo) {
     $rootScope.loggedUser = userInfo;
@@ -174,6 +174,28 @@ scrumInCeres.run(['$rootScope', '$timeout', '$q', 'AuthService', 'MeService', 'A
   };
 
   $rootScope.itemsView = {mode: 'list'};
+  $rootScope.requesters = [];
+  $rootScope.epics = [];
+  $rootScope.modules = [];
+  $rootScope.points = [0, 1, 2, 3, 5, 8];
+
+  Requester.query(
+    function(response) {
+      $rootScope.requesters = response;
+    }
+  );
+
+  Epic.query(
+    function(response) {
+      $rootScope.epics = response;
+    }
+  );
+
+  Module.query(
+    function(response) {
+      $rootScope.modules = response;
+    }
+  );
 
   $rootScope.setStoryGroupBy = function(group) {
     $rootScope.storyGroupedBy = group;

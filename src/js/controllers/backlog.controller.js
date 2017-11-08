@@ -13,7 +13,9 @@ scrumInCeresControllers.controller('BacklogController', ['$rootScope', '$scope',
   $scope.addingNewSprint = false;
 
   $scope.completeStoryPopupOpened = false;
+  $scope.formStoryPopupOpened = false;
   $scope.selectedStory = null;
+  $scope.selectedStoryIndex = null;
 
   $scope.storiesPopupOpened = false;
   $scope.stories = [];
@@ -324,4 +326,55 @@ scrumInCeresControllers.controller('BacklogController', ['$rootScope', '$scope',
     $event.stopPropagation();
     sprint.opened = !sprint.opened;
   };
+
+  // TODO: isso deve ser movido para um service ou factory, pois é usado em dois controllers
+  $scope.toggleFormStoryPopupOpened = function(story, index) {
+    Alert.loading();
+    $scope.selectedStoryIndex = index;
+    StoryService.getFullStory(story.id).then(
+      function(response) {
+        $scope.selectedStory = response;
+        $scope.formStoryPopupOpened = !$scope.formStoryPopupOpened;
+        Alert.close();
+      },
+      function(error) {
+        Alert.randomErrorMessage(error);
+      }
+    );
+  };
+
+  $scope.setStoryModule = function(story, module) {
+    story.module = module;
+  };
+
+  $scope.setStoryEpic = function(story, epic) {
+    story.epic = epic;
+  };
+
+
+  $scope.saveSelectedStory = function(form) {
+    if (form.$invalid) {
+      Alert.randomErrorMessage('Invalid fields.', 'Invalid fields.');
+      return false;
+    }
+
+    Alert.loading();
+    StoryService.updateInIceLog($scope.selectedStory).then(
+      function() {
+        $scope.selectedSprint.stories[$scope.selectedStoryIndex] = $scope.selectedStory;
+        $scope.cancelSaveSelectedStory();
+        Alert.randomSuccessMessage();
+      },
+      function(error) {
+        Alert.randomErrorMessage(error);
+      }
+    );
+  };
+
+  $scope.cancelSaveSelectedStory = function() {
+    $scope.selectedStoryIndex = null;
+    $scope.selectedStory = null;
+    $scope.formStoryPopupOpened = false;
+  };
+
 }]);

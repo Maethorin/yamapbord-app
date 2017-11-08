@@ -38,11 +38,62 @@ label {
   }
 }
 
-.ice-box {
-  .story-data {
+
+.story-data {
+  width: 100%;
+  display: inline-block;
+  label {
+    display: block;
+    &.rq-ow {
+      display: inline-block;
+    }
+  }
+  .story-type {
+    @include story-types();
+    background-position: 9px 8px;
+    background-color: $gray;
+    padding: 6px 18px 6px 34px;
+    font-size: 16px;
+    border: 1px solid #999;
+    display: inline-block;
+    border-radius: 4px;
+  }
+  .story-point {
+    display: inline-block;
+    float: right;
+    margin-left: 5px;
     label {
-      &.rq-ow {
-        display: inline-block;
+      font-size: 10px;
+      text-align: center;
+    }
+    span {
+      padding: 6px 15px;
+      font-size: 18px;
+      border-radius: 4px;
+      border: 1px solid #666;
+    }
+  }
+  .btn-story-type {
+    background-position: 9px 7px;
+    padding-left: 34px;
+    font-size: 14px;
+    width: 120px;
+    text-align: left;
+    span {
+      &.caret {
+        margin-left: 0;
+        float: right;
+        margin-top: 8px;
+      }
+    }
+    @include story-types();
+  }
+  .points {
+    label {
+      font-size: 14px;
+      &.active {
+        box-shadow: inset 0 0 0 2px #FFF;
+        color: #FFF;
       }
     }
   }
@@ -60,6 +111,7 @@ label {
   &.opened {
     display: block;
   }
+
   .panel-complete-story {
     margin: 8% 20%;
     .panel-heading {
@@ -101,6 +153,69 @@ label {
     .panel-footer {
       text-align: center;
       overflow: hidden;
+    }
+  }
+
+  .panel-edit-story {
+    margin: 2% 20%;
+    .panel-heading {
+      display: inline-block;
+      width: 100%;
+      position: relative;
+      .heading-close {
+        position: absolute;
+        right: 8px;
+        top: 7px;
+        border-radius: 5px;
+        padding: 0 4px;
+        background-color: #485952;
+        cursor: pointer;
+        border: 1px solid #FFF;
+        &:hover {
+          background-color: $gray-darker;
+        }
+      }
+      label {
+        display: block;
+      }
+      .story-module {
+        button {
+          font-size: 16px;
+          border: none;
+          background: transparent;
+          padding: 0;
+        }
+        ul {
+          li {
+            cursor: pointer;
+          }
+        }
+      }
+      .story-name {
+        vertical-align: middle;
+        display: block;
+        width: 100%;
+        padding: 2px 7px;
+        font-size: 16px;
+        height: 32px;
+        color: $gray-lighter;
+        background: $gray-dark none;
+        border: 1px solid $gray-light;
+        border-radius: 4px;
+        box-shadow: inset 0 1px 1px rgba(0,0,0,0.075);
+        float: left;
+      }
+    }
+    .panel-body {
+      .story-statement {
+        height: auto;
+      }
+      .story-definitions, .story-tasks, .story-comments {
+        height: 45vh;
+      }
+    }
+    .panel-footer {
+      text-align: center;
     }
   }
 }
@@ -207,7 +322,7 @@ h4 {
 }
 
 .points-null {
-  background-color: $gray-dark !important;
+  background-color: $gray-darker !important;
   color: #EEE !important;
 }
 

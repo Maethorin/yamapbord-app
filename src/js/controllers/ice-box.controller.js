@@ -1,10 +1,9 @@
 'use strict';
 
-scrumInCeresControllers.controller('IceBoxController', ['$rootScope', '$scope', '$timeout', 'Alert', 'Notifier', 'StoryService', 'IceBox', 'Requester', 'Epic', 'Module', function($rootScope, $scope, $timeout, Alert, Notifier, StoryService, IceBox, Requester, Epic, Module) {
+scrumInCeresControllers.controller('IceBoxController', ['$rootScope', '$scope', '$timeout', 'Alert', 'Notifier', 'StoryService', 'IceBox', function($rootScope, $scope, $timeout, Alert, Notifier, StoryService, IceBox) {
   $rootScope.currentController = 'IceBoxController';
 
   $scope.scrollOptions = {scrollX: 'none', scrollY: 'right', preventWheelEvents: true};
-  $scope.points = [0, 1, 2, 3, 5, 8];
   $scope.completeStoryPopupOpened = false;
   $scope.selectedStory = null;
   $scope.addingNewStory = false;
@@ -17,9 +16,6 @@ scrumInCeresControllers.controller('IceBoxController', ['$rootScope', '$scope', 
     point: null,
     requester: null
   };
-  $scope.requesters = [];
-  $scope.epics = [];
-  $scope.modules = [];
   $scope.groupedStories = false;
   $scope.newTask = {task: null};
   $scope.newTaskVisible = false;
@@ -34,24 +30,6 @@ scrumInCeresControllers.controller('IceBoxController', ['$rootScope', '$scope', 
     $scope.stories = stories;
     Alert.close();
   });
-
-  Requester.query(
-    function(response) {
-      $scope.requesters = response;
-    }
-  );
-
-  Epic.query(
-    function(response) {
-      $scope.epics = response;
-    }
-  );
-
-  Module.query(
-    function(response) {
-      $scope.modules = response;
-    }
-  );
 
   $scope.toggleFilterBarExpanded = function () {
     $scope.filterBarExpanded = !$scope.filterBarExpanded;

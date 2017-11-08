@@ -3,7 +3,7 @@
     <div class="story-group-container" ng-repeat="(group, stories) in groupedStories">
       <h2>{{stories[0].module.name}}</h2>
       <div class="story-container col-md-4" ng-repeat="story in stories|filter:filterObject.filter">
-        <div class="panel panel-default panel-edit-story">
+        <div class="panel panel-default">
           <div class="panel-heading" title="{{story.statement}}" ng-click="selectStoryToEdit($event, story, $index)">
             <i class="fa btn-open" ng-class="{'fa-chevron-down': !story.opened, 'fa-chevron-up': story.opened}" ng-click="toggleOpenStoryPanel($event, story)"></i>
             <span class="story-module">[{{story.module.acronym || 'NO-MODULE'}}]</span>
@@ -14,13 +14,13 @@
             <div class="story-data">
               <div class="story-type" ng-class="story.type | lowercase" ng-bind="story.typeName"></div>
               <div class="story-requester" title="Requester"><label class="rq-ow">Rq</label>{{story.requester.name}}</div>
-              <div class="story-point points-{{story.valuePoints|numberOrText:'null'}}">
-                <label>VP</label>
-                <span ng-bind="story.valuePoints|numberOrText"></span>
-              </div>
-              <div class="story-point points-{{story.points|numberOrText:'null'}}">
+              <div class="story-point">
                 <label>SP</label>
-                <span ng-bind="story.points|numberOrText"></span>
+                <span class="points-{{story.points|numberOrText:'null'}}" ng-bind="story.points|numberOrText"></span>
+              </div>
+              <div class="story-point">
+                <label>VP</label>
+                <span class="points-{{story.valuePoints|numberOrText:'null'}}" ng-bind="story.valuePoints|numberOrText"></span>
               </div>
             </div>
             <div class="story-statement" ng-scrollable>
@@ -67,7 +67,7 @@
   </section>
   <section ng-if="!groupedStories">
     <div class="story-container col-md-4" ng-repeat="story in stories|filter:filterObject.filter">
-      <div class="panel panel-default panel-edit-story">
+      <div class="panel panel-default">
         <div class="panel-heading" title="{{story.statement}}" ng-click="selectStoryToEdit($event, story, $index)">
           <i class="fa btn-open" ng-class="{'fa-chevron-down': !story.opened, 'fa-chevron-up': story.opened}" ng-click="toggleOpenStoryPanel($event, story)"></i>
           <span class="story-module">[{{story.module.acronym || 'NO-MODULE'}}]</span>
