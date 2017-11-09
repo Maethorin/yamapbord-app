@@ -174,7 +174,6 @@ scrumInCeresControllers.controller('IceBoxController', ['$rootScope', '$scope', 
     }
     StoryService.updateInIceLog($scope.selectedStory).then(
       function() {
-        $scope.stories[$scope.selectedStoryIndex] = $scope.selectedStory;
         if ($scope.saveAndClose) {
           $scope.selectedStoryIndex = null;
           $scope.selectedStory = null;
