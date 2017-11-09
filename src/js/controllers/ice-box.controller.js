@@ -24,6 +24,7 @@ scrumInCeresControllers.controller('IceBoxController', ['$rootScope', '$scope', 
   $scope.newComment = {comment: null, creator: null, createdAt: null};
   $scope.newCommentVisible = false;
   $scope.scrollCommentOptions = {scrollX: 'none', scrollY: 'right', preventWheelEvents: false, preventKeyEvents: false};
+  $scope.saveAndClose = false;
 
   Alert.loading();
   StoryService.getStories().then(function(stories) {
@@ -131,10 +132,14 @@ scrumInCeresControllers.controller('IceBoxController', ['$rootScope', '$scope', 
 
   $scope.selectStoryToEdit = function($event, story, $index) {
     $event.stopPropagation();
-    $scope.selectedStory = _.cloneDeep(story);
+    $scope.selectedStory = story;
     $scope.addingNewStory = false;
     $scope.selectedStoryIndex = $index;
     $scope.completeStoryPopupOpened = true;
+  };
+
+  $scope.setSaveAndClose = function(value) {
+    $scope.saveAndClose = value;
   };
 
   $scope.saveSelectedStory = function(form) {
@@ -146,11 +151,19 @@ scrumInCeresControllers.controller('IceBoxController', ['$rootScope', '$scope', 
     Alert.loading();
     if ($scope.addingNewStory) {
       StoryService.addToIceLog($scope.selectedStory).then(
-        function(stories) {
-          $scope.stories = stories;
-          $scope.addingNewStory = false;
-          $scope.selectedStory = null;
-          $scope.completeStoryPopupOpened = false;
+        function(result) {
+          if ($scope.saveAndClose) {
+            $scope.stories = result.stories;
+            $scope.addingNewStory = false;
+            $scope.selectedStory = null;
+            $scope.completeStoryPopupOpened = false;
+          }
+          else {
+            if (result.story !== null) {
+              $scope.selectedStory = result.story;
+              $scope.stories.push(result.story);
+            }
+          }
           Alert.randomSuccessMessage();
         },
         function(error) {
@@ -162,9 +175,11 @@ scrumInCeresControllers.controller('IceBoxController', ['$rootScope', '$scope', 
     StoryService.updateInIceLog($scope.selectedStory).then(
       function() {
         $scope.stories[$scope.selectedStoryIndex] = $scope.selectedStory;
-        $scope.selectedStoryIndex = null;
-        $scope.selectedStory = null;
-        $scope.completeStoryPopupOpened = false;
+        if ($scope.saveAndClose) {
+          $scope.selectedStoryIndex = null;
+          $scope.selectedStory = null;
+          $scope.completeStoryPopupOpened = false;
+        }
         Alert.randomSuccessMessage();
       },
       function(error) {

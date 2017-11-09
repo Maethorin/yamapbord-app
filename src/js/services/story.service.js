@@ -59,14 +59,14 @@ scrumInCeresServices.service('StoryService', ['$rootScope', '$q', 'IceBox', func
     var result = $q.defer();
     IceBox.save(
       newStory,
-      function() {
+      function(response) {
         self.getStories().then(
           function(stories) {
-            result.resolve(stories);
+            result.resolve({stories: stories, story: response});
           },
           function(error) {
             Alert.warning('Saved!', 'Story was created but could not update stories list. Plz refresh page.');
-            result.resolve([]);
+            result.resolve({stories: [], story: response});
           }
         );
       },
