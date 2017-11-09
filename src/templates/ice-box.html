@@ -129,7 +129,7 @@
     </div>
   </section>
 
-  <form name="formStory" novalidate ng-submit="saveSelectedStory(formStory)">
+  <form name="formStory" novalidate>
     <div class="popup-complete-story" ng-class="{'opened': completeStoryPopupOpened}" ng-if="selectedStory !== null">
       <div class="panel panel-default panel-edit-story">
         <div class="panel-heading" title="{{selectedStory.statement}}">
@@ -262,8 +262,8 @@
         </div>
         <div class="panel-footer">
           <button type="button" class="btn btn-danger" ng-click="cancelSaveSelectedStory()"><i class="fa fa-close"></i> Cancel</button>
-          <button type="submit" class="btn btn-success" ng-click="setSaveAndClose(false)"><i class="fa fa-save"></i> Save</button>
-          <button type="submit" class="btn btn-info" ng-click="setSaveAndClose(true)"><i class="fa fa-save"></i> Save and Close</button>
+          <button type="submit" class="btn btn-success" ng-click="saveSelectedStory(formStory, false)"><i class="fa fa-save"></i> Save</button>
+          <button type="submit" class="btn btn-info" ng-click="saveSelectedStory(formStory, true)"><i class="fa fa-save"></i> Save and Close</button>
         </div>
       </div>
     </div>

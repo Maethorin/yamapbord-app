@@ -138,11 +138,9 @@ scrumInCeresControllers.controller('IceBoxController', ['$rootScope', '$scope', 
     $scope.completeStoryPopupOpened = true;
   };
 
-  $scope.setSaveAndClose = function(value) {
-    $scope.saveAndClose = value;
-  };
+  $scope.saveSelectedStory = function(form, saveAndClose) {
+    $scope.saveAndClose = saveAndClose;
 
-  $scope.saveSelectedStory = function(form) {
     if (form.$invalid) {
       Alert.randomErrorMessage('Invalid fields.', 'Invalid fields.');
       return false;
