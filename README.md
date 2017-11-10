@@ -23,5 +23,5 @@ https://scrum.inceres.com.br/templates/ice-box.html
 https://scrum.inceres.com.br/templates/board.html
 https://scrum.inceres.com.br/templates/backlog.html
 https://scrum.inceres.com.br/index.html
-https://scrum.inceres.com.br/js/componentes.js
-https://scrum.inceres.com.br/js/app.js
+https://scrum.inceres.com.br/js/componentes.min.js
+https://scrum.inceres.com.br/js/app.min.js

@@ -1,6 +1,6 @@
 'use strict';
 
-scrumInCeresControllers.controller('BacklogController', ['$rootScope', '$scope', '$timeout', 'Alert', 'MeService', 'StoryService', 'Notifier', 'Backlog', function($rootScope, $scope, $timeout, Alert, MeService, StoryService, Notifier, Backlog) {
+scrumInCeresControllers.controller('BacklogController', ['$rootScope', '$scope', '$timeout', 'Alert', 'MeService', 'StoryService', 'HollydayService', 'Notifier', 'Backlog', function($rootScope, $scope, $timeout, Alert, MeService, StoryService, HollydayService, Notifier, Backlog) {
   $rootScope.currentController = 'BacklogController';
   $scope.sprints = [];
 
@@ -60,14 +60,18 @@ scrumInCeresControllers.controller('BacklogController', ['$rootScope', '$scope',
   getSprints();
 
   function setWorkingDays(sprint) {
-    var startDate = moment(sprint.startDate).startOf('day');
-    var endDate = moment(sprint.endDate).startOf('day');
-    sprint.workingDays = 1;
-    while(startDate.add(1, 'days').diff(endDate) < 0) {
-      if (startDate.weekday() !== 6 && startDate.weekday() !== 7) {
-        sprint.workingDays += 1;
+    HollydayService.getHollydays().then(
+      function() {
+        var startDate = moment(sprint.startDate).startOf('day');
+        var endDate = moment(sprint.endDate).startOf('day');
+        sprint.workingDays = 1;
+        while (startDate.add(1, 'days').diff(endDate) < 0) {
+          if (startDate.weekday() !== 6 && startDate.weekday() !== 7 && !HollydayService.dateIsHollyday(startDate)) {
+            sprint.workingDays += 1;
+          }
+        }
       }
-    }
+    );
   }
 
   function recalculateSelectedSprintPoints() {

@@ -1,8 +1,9 @@
 'use strict';
 
-scrumInCeresControllers.controller('BoardController', ['$rootScope', '$scope', '$timeout', 'Alert', 'Notifier', 'Sprint', 'Story', function($rootScope, $scope, $timeout, Alert, Notifier, Sprint, Story) {
+scrumInCeresControllers.controller('BoardController', ['$rootScope', '$scope', '$timeout', 'Alert', 'Notifier', 'Sprint', 'Story', 'HollydayService', function($rootScope, $scope, $timeout, Alert, Notifier, Sprint, Story, HollydayService) {
   $rootScope.currentController = 'BoardController';
   $scope.sprints = [];
+  $scope.hollydays = [];
   $scope.timeline = null;
   $scope.scrollOptions = {scrollX: 'bottom', scrollY: 'none', useBothWheelAxes: true, scrollPosX: 0, preventWheelEvents: true};
   $scope.currentTimelineSprintLeftPosition = null;
@@ -56,74 +57,78 @@ scrumInCeresControllers.controller('BoardController', ['$rootScope', '$scope', '
   );
 
   function updateStoryData() {
-    $scope.pointsPerStoryTypeStatus = {
-      'PLAN': 0,
-      'STAR': 0,
-      'FINI': 0,
-      'ITST': 0,
-      'RTDP': 0,
-      'DPYD': 0,
-      'ACCP': 0,
-      'REJE': 0
-    };
+    HollydayService.getHollydays().then(
+      function() {
+        $scope.pointsPerStoryTypeStatus = {
+          'PLAN': 0,
+          'STAR': 0,
+          'FINI': 0,
+          'ITST': 0,
+          'RTDP': 0,
+          'DPYD': 0,
+          'ACCP': 0,
+          'REJE': 0
+        };
 
-    $scope.stories = {
-      'PLAN': [],
-      'STAR': [],
-      'FINI': [],
-      'ITST': [],
-      'RTDP': [],
-      'DPYD': [],
-      'ACCP': [],
-      'REJE': []
-    };
+        $scope.stories = {
+          'PLAN': [],
+          'STAR': [],
+          'FINI': [],
+          'ITST': [],
+          'RTDP': [],
+          'DPYD': [],
+          'ACCP': [],
+          'REJE': []
+        };
 
-    _.forEach($scope.selectedSprint.stories, function(story) {
-      $scope.stories[story.status].push(story);
-      $scope.pointsPerStoryTypeStatus[story.status] += story.points;
-      story.hasTasks = ['PLAN', 'STAR'].indexOf(story.status) > -1;
-    });
-
-    var start = moment($scope.selectedSprint.startDate);
-    var finish = moment($scope.selectedSprint.endDate);
-    var days = parseInt((finish - start) / (1000 * 60 * 60 * 24)) + start.date() - 2;
-    $scope.devDays = [];
-    for (var dayNumber = start.date(); dayNumber <= days; dayNumber++) {
-      start.date(start.date() + 1);
-      if (start.day() !== 0 && start.day() !== 6) {
-        var passed = $scope.today.month() > start.month() || ($scope.today.date() > start.date() && $scope.today.month() === start.month());
-        var isToday = $scope.today.month() === start.month() && $scope.today.date() === start.date();
-        $scope.devDays.push({
-          id: dayNumber,
-          day: '{0}/{1}'.format([start.date().paddingLeft(2), (start.month() + 1).paddingLeft(2)]),
-          points: 0,
-          passed: passed,
-          isToday: isToday
+        _.forEach($scope.selectedSprint.stories, function(story) {
+          $scope.stories[story.status].push(story);
+          $scope.pointsPerStoryTypeStatus[story.status] += story.points;
+          story.hasTasks = ['PLAN', 'STAR'].indexOf(story.status) > -1;
         });
+
+        var start = moment($scope.selectedSprint.startDate);
+        var finish = moment($scope.selectedSprint.endDate);
+        var days = parseInt((finish - start) / (1000 * 60 * 60 * 24)) + start.date() - 2;
+        $scope.devDays = [];
+        for (var dayNumber = start.date(); dayNumber <= days; dayNumber++) {
+          start.date(start.date() + 1);
+          if (start.day() !== 0 && start.day() !== 6 && !HollydayService.dateIsHollyday(start)) {
+            var passed = $scope.today.month() > start.month() || ($scope.today.date() > start.date() && $scope.today.month() === start.month());
+            var isToday = $scope.today.month() === start.month() && $scope.today.date() === start.date();
+            $scope.devDays.push({
+              id: dayNumber,
+              day: '{0}/{1}'.format([start.date().paddingLeft(2), (start.month() + 1).paddingLeft(2)]),
+              points: 0,
+              passed: passed,
+              isToday: isToday
+            });
+          }
+        }
+
+        for (var devdayIndex = 0; devdayIndex < $scope.devDays.length; devdayIndex++) {
+          $scope.devDays[devdayIndex].points = $scope.selectedSprint.points / $scope.devDays.length;
+        }
+
+        var accumulatedPoint = 1;
+        $scope.pointsPerColumn = [];
+        function addPointsToColumn(columnName) {
+          _.forEach(_.range(1, $scope.pointsPerStoryTypeStatus[columnName] + 1), function() {
+            $scope.pointsPerColumn.push({column: columnName, point: accumulatedPoint});
+            accumulatedPoint += 1;
+          });
+        }
+
+        addPointsToColumn('PLAN');
+        addPointsToColumn('STAR');
+        addPointsToColumn('FINI');
+        addPointsToColumn('ITST');
+        addPointsToColumn('RTDP');
+        addPointsToColumn('DPYD');
+        addPointsToColumn('ACCP');
+        addPointsToColumn('REJE');
       }
-    }
-
-    for (var devdayIndex = 0; devdayIndex < $scope.devDays.length; devdayIndex++) {
-      $scope.devDays[devdayIndex].points = $scope.selectedSprint.points / $scope.devDays.length;
-    }
-
-    var accumulatedPoint = 1;
-    $scope.pointsPerColumn = [];
-    function addPointsToColumn(columnName) {
-      _.forEach(_.range(1, $scope.pointsPerStoryTypeStatus[columnName] + 1), function() {
-        $scope.pointsPerColumn.push({column: columnName, point: accumulatedPoint});
-        accumulatedPoint += 1;
-      });
-    }
-
-    addPointsToColumn('PLAN');
-    addPointsToColumn('STAR');
-    addPointsToColumn('FINI');
-    addPointsToColumn('ITST');
-    addPointsToColumn('RTDP');
-    addPointsToColumn('DPYD');
-    addPointsToColumn('ACCP');
-    addPointsToColumn('REJE');
+    );
   }
 
   function saveStoryStatus(story) {
