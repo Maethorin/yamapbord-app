@@ -308,7 +308,8 @@ scrumInCeresControllers.controller('BacklogController', ['$rootScope', '$scope',
     $scope.storiesPopupOpened = false;
   };
 
-  $scope.removeSprintStory = function(story, $index) {
+  $scope.removeSprintStory = function(story, $index, event) {
+    event.stopPropagation();
     if (story.sprintId) {
       Alert.warning('Watch Out!', 'This story is already associated with this sprint. Are you sure you want to desassociate it?', function() {
         Alert.loading();

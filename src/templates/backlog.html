@@ -113,7 +113,7 @@
               <span class="story-type-name" ng-class="story.type | lowercase" title="{{story.typeName}}"></span>
               <span class="story-name" ng-bind="story.name|limitWithEllipsis:20" title="{{story.name}}"></span>
               <span class="story-statement" title="{{story.statement}}" ng-bind="story.statement|limitWithEllipsis:120"></span>
-              <button type="button" class="btn btn-default btn-xs btn-remove-item" ng-click="removeSprintStory(story, $index)"><i class="fa fa-trash"></i></button>
+              <button type="button" class="btn btn-default btn-xs btn-remove-item" ng-click="removeSprintStory(story, $index, $event)"><i class="fa fa-trash"></i></button>
               <span class="badge points-{{story.points|numberOrText:'null'}}" ng-bind="story.points|numberOrText"></span>
             </li>
             <li class="new-item list-group-item" ng-click="addingStoryToSelectedSprint()">
