@@ -119,13 +119,14 @@ scrumInCeresControllers.controller('BoardController', ['$rootScope', '$scope', '
           });
         }
 
-        addPointsToColumn('PLAN');
-        addPointsToColumn('STAR');
-        addPointsToColumn('FINI');
-        addPointsToColumn('ITST');
-        addPointsToColumn('RTDP');
-        addPointsToColumn('DPYD');
         addPointsToColumn('ACCP');
+        addPointsToColumn('DPYD');
+        addPointsToColumn('RTDP');
+        addPointsToColumn('ITST');
+        addPointsToColumn('FINI');
+        addPointsToColumn('STAR');
+        addPointsToColumn('PLAN');
+
         addPointsToColumn('REJE');
       }
     );
