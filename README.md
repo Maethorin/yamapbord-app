@@ -1,11 +1,16 @@
 # O Que Tá faltando:
 
 * Criar Kanban
+* Ordenar estórias
 * Definir perfil readonly
 * Tags para task (Back|Front|DB|Infra)
-* Tags para estória aberto
-* Projetos deveriam ser Épicos
-* Adicionar VP e/ou Criticidade
+* Tags para estória: aberto
+* Adicionar Criticidade
+* Adicionar nome do time no Sprint
+* Filtrar estórias no board por coluna.
+* Reordenar Tasks
+* Reordenar DoDs
+*
 
 # Tipos de contabilização
 
