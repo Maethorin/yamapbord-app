@@ -1,11 +1,13 @@
 <div class="container-fluid backlog">
+  <div class="row">
+  <h4>Sprints</h4>
   <div class="sprint-container col-md-4" ng-repeat="sprint in sprints">
-    <div class="panel panel-default panel-edit-sprint">
-      <div class="panel-heading" ng-click="selectSprintToEdit($event, sprint, $index)">
+    <div class="panel panel-default panel-show-sprint">
+      <div class="panel-heading" ng-click="selectSprintToEdit($event, sprint, $index, 'sprint')">
         <i class="fa btn-open" ng-class="{'fa-chevron-down': !sprint.opened, 'fa-chevron-up': sprint.opened}" ng-click="toggleOpenSprintPanel($event, sprint)"></i>
         <span class="sprint-team">[{{sprint.team.name}}]</span>
         <span class="sprint-name" title="{{sprint.name}}" ng-bind="sprint.name|limitWithEllipsis:40"></span>
-        <button class="btn btn-primary btn-sm btn-save-sprint" ng-click="selectSprintToEdit($event, sprint, $index)"><i class="fa fa-edit"></i></button>
+        <button class="btn btn-primary btn-sm btn-save-sprint" ng-click="selectSprintToEdit($event, sprint, $index, 'sprint')"><i class="fa fa-edit"></i></button>
       </div>
       <div class="panel-body as-list" ng-class="{'as-list': !sprint.opened}">
         <h4>Dates</h4>
@@ -35,10 +37,37 @@
       </div>
     </div>
   </div>
+  </div>
 
+  <div class="row">
+  <h4>Kanbans</h4>
+  <div class="sprint-container col-md-4" ng-repeat="kanban in kanbans">
+    <div class="panel panel-default panel-show-sprint">
+      <div class="panel-heading" ng-click="selectSprintToEdit($event, kanban, $index, 'kanban')">
+        <i class="fa btn-open" ng-class="{'fa-chevron-down': !kanban.opened, 'fa-chevron-up': kanban.opened}" ng-click="toggleOpenSprintPanel($event, kanban)"></i>
+        <span class="sprint-team">[{{kanban.team.name}}]</span>
+        <span class="sprint-name" title="{{kanban.name}}" ng-bind="kanban.name|limitWithEllipsis:40"></span>
+        <button class="btn btn-primary btn-sm btn-save-sprint" ng-click="selectSprintToEdit($event, kanban, $index, 'kanban')"><i class="fa fa-edit"></i></button>
+      </div>
+      <div class="panel-body as-list" ng-class="{'as-list': !kanban.opened}">
+        <h4 class="story-header">
+          <span class="title">Stories</span>
+          <span class="sprint-point"><span class="value" ng-bind="kanban.points|numberOrText"></span>points</span>
+        </h4>
+        <ul class="list-group sprint-stories" ng-scrollable="scrollOptions">
+          <li class="list-group-item" ng-repeat="story in kanban.stories" title="{{story.statement}}" ng-click="toggleCompleteStoryPopup(story)">
+            <span class="story-type-name" ng-class="story.type | lowercase" title="{{story.typeName}}"></span>
+            <span class="story-name" ng-bind="story.name|limitWithEllipsis:35"></span>
+            <span class="badge points-{{story.points|numberOrText:'null'}}" ng-bind="story.points|numberOrText"></span>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  </div>
   <form name="formSprint" novalidate ng-submit="saveSelectedSprint(formSprint)">
     <div class="popup-complete-sprint" ng-class="{'opened': completeSprintPopupOpened}" ng-if="selectedSprint !== null">
-      <div class="panel panel-default panel-edit-sprint">
+      <div class="panel panel-default panel-edit-{{selectedSprint.type}}">
         <div class="panel-heading" title="{{selectedSprint.statement}}">
           <div class="col-md-2 sprint-team">
             <label>Team:</label>
@@ -56,54 +85,57 @@
           </div>
         </div>
         <div class="panel-body">
-          <h4>Dates</h4>
-          <div class="dropdown start date">
-            <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-              <datetimepicker ng-model="selectedSprint.startDate"
-                              datetimepicker-config="{dropdownSelector: '#dropdownStartDate', renderOn: 'end-date-changed', minView:'day'}"
-                              on-set-time="startDateOnSetTime()"
-                              data-before-render="startDateBeforeRender($dates)"/>
-            </ul>
-          </div>
-          <div class="dropdown end date">
-            <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-              <datetimepicker ng-model="selectedSprint.endDate"
-                              datetimepicker-config="{dropdownSelector: '#dropdownEndDate', renderOn: 'start-date-changed', minView:'day'}"
-                              data-on-set-time="endDateOnSetTime()"
-                              data-before-render="endDateBeforeRender($view, $dates, $leftDate, $upDate, $rightDate)"/>
-            </ul>
-          </div>
-          <div class="sprint-dates">
-            <div class="start-date">
-              <label for="inputStartDate">Starts:</label>
-              <a class="date dropdown-toggle" id="dropdownStartDate" role="button" data-toggle="dropdown" data-target=".dropdown.start.date">
-                <div class="input-group">
-                  <input type="text" id="inputStartDate" class="form-control" name="startDate" ng-model="selectedSprint.startDate" date-time-input="YYYY-MM-DD" required/>
-                  <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                </div>
-              </a>
+          <section ng-if="selectedSprint.type === 'sprint'">
+            <h4>Dates</h4>
+            <div class="dropdown start date">
+              <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                <datetimepicker ng-model="selectedSprint.startDate"
+                                datetimepicker-config="{dropdownSelector: '#dropdownStartDate', renderOn: 'end-date-changed', minView:'day'}"
+                                on-set-time="startDateOnSetTime()"
+                                data-before-render="startDateBeforeRender($dates)"/>
+              </ul>
+            </div>
+            <div class="dropdown end date">
+              <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                <datetimepicker ng-model="selectedSprint.endDate"
+                                datetimepicker-config="{dropdownSelector: '#dropdownEndDate', renderOn: 'start-date-changed', minView:'day'}"
+                                data-on-set-time="endDateOnSetTime()"
+                                data-before-render="endDateBeforeRender($view, $dates, $leftDate, $upDate, $rightDate)"/>
+              </ul>
             </div>
 
-            <div class="working-days">
-              <span class="label">working days</span>
-              <i class="fa fa-long-arrow-left"></i><span class="number" ng-bind="selectedSprint.workingDays"></span><i class="fa fa-long-arrow-right"></i>
+            <div class="sprint-dates">
+              <div class="start-date">
+                <label for="inputStartDate">Starts:</label>
+                <a class="date dropdown-toggle" id="dropdownStartDate" role="button" data-toggle="dropdown" data-target=".dropdown.start.date">
+                  <div class="input-group">
+                    <input type="text" id="inputStartDate" class="form-control" name="startDate" ng-model="selectedSprint.startDate" date-time-input="YYYY-MM-DD" required/>
+                    <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                  </div>
+                </a>
+              </div>
+
+              <div class="working-days">
+                <span class="label">working days</span>
+                <i class="fa fa-long-arrow-left"></i><span class="number" ng-bind="selectedSprint.workingDays"></span><i class="fa fa-long-arrow-right"></i>
+              </div>
+
+              <div class="end-date">
+                <label for="inputEndDate">Starts:</label>
+                <a class="date dropdown-toggle" id="dropdownEndDate" role="button" data-toggle="dropdown" data-target=".dropdown.end.date">
+                  <div class="input-group">
+                    <input type="text" id="inputEndDate" class="form-control" name="endDate" ng-model="selectedSprint.endDate" date-time-input="YYYY-MM-DD" required/>
+                    <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                  </div>
+                </a>
+              </div>
             </div>
 
-            <div class="end-date">
-              <label for="inputEndDate">Starts:</label>
-              <a class="date dropdown-toggle" id="dropdownEndDate" role="button" data-toggle="dropdown" data-target=".dropdown.end.date">
-                <div class="input-group">
-                  <input type="text" id="inputEndDate" class="form-control" name="endDate" ng-model="selectedSprint.endDate" date-time-input="YYYY-MM-DD" required/>
-                  <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                </div>
-              </a>
+            <h4>Objective</h4>
+            <div class="sprint-objective">
+              <textarea rows="2" ng-model="selectedSprint.objective" required></textarea>
             </div>
-          </div>
-
-          <h4>Objective</h4>
-          <div class="sprint-objective">
-            <textarea rows="2" ng-model="selectedSprint.objective" required></textarea>
-          </div>
+          </section>
           <h4 class="story-header">
             <span class="title">Stories</span>
             <span class="sprint-point"><span class="value" ng-bind="selectedSprint.points|numberOrText"></span>points</span>

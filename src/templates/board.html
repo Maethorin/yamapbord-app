@@ -1,30 +1,31 @@
 <div class="container-fluid">
-  <div class="row timeline" ng-if="sprints.length > 0">
+  <div class="row timeline" ng-if="boards.length > 0">
     <button type="button" class="btn-scroll-home btn btn-default btn-xs" ng-click="scrollOptions.scrollPosX = 0"><i class="fa fa-chevron-circle-left"></i></button>
     <div class="timeline-events" ng-scrollable="scrollOptions" spy-x="scrollOptions.scrollPosX">
-      <div class="timeline-event" ng-repeat="sprint in sprints" ng-class="{'selected': selectedSprint.id === sprint.id, 'current': sprint.statusSlug == 'sprint-current'}" ng-click="selectSprint(sprint)">
-        <div class="start-date">
-          <div class="month" ng-bind="sprint.startDateObj.month"></div>
-          <div class="day" ng-bind="sprint.startDateObj.day"></div>
-          <div class="year" ng-bind="sprint.startDateObj.year"></div>
+      <div class="timeline-event" ng-repeat="board in boards" ng-class="{'selected': selectedSprint.id === board.id, 'current': board.statusSlug == 'sprint-current'}" ng-click="selectSprint(board)">
+        <div class="start-date" ng-if="board.type === 'sprint'">
+          <div class="month" ng-bind="board.startDateObj.month"></div>
+          <div class="day" ng-bind="board.startDateObj.day"></div>
+          <div class="year" ng-bind="board.startDateObj.year"></div>
         </div>
-        <div class="sprint-data">
-          <div class="sprint-name" title="{{sprint.name}}" ng-bind="sprint.name|limitWithEllipsis:15"></div>
-          <div class="stories-quantity"><span ng-bind="sprint.storiesQuantity"></span>Stories</div>
-          <div class="sprint-status"><span ng-class="sprint.statusSlug" ng-bind="sprint.status"></span></div>
-          <div class="sprint-points"><span ng-bind="sprint.points"></span>Points</div>
+        <div class="{{board.type}}-data">
+          <div class="{{board.type}}-name" title="{{board.name}}" ng-bind="board.name|limitWithEllipsis:15"></div>
+          <div class="stories-quantity"><span ng-bind="board.storiesQuantity"></span>Stories</div>
+          <div class="{{board.type}}-status" ng-if="board.type === 'sprint'"><span ng-class="board.statusSlug" ng-bind="board.status"></span></div>
+          <div class="{{board.type}}-status" ng-if="board.type === 'kanban'"><span class="kanban">KANBAN</span></div>
+          <div class="{{board.type}}-points"><span ng-bind="board.points"></span>Points</div>
         </div>
-        <div class="end-date">
-          <div class="month" ng-bind="sprint.endDateObj.month"></div>
-          <div class="day" ng-bind="sprint.endDateObj.day"></div>
-          <div class="year" ng-bind="sprint.endDateObj.year"></div>
+        <div class="end-date" ng-if="board.type === 'sprint'">
+          <div class="month" ng-bind="board.endDateObj.month"></div>
+          <div class="day" ng-bind="board.endDateObj.day"></div>
+          <div class="year" ng-bind="board.endDateObj.year"></div>
         </div>
       </div>
     </div>
     <button type="button" class="btn-scroll-end btn btn-default btn-xs" ng-click="scrollOptions.scrollPosX = 10000"><i class="fa fa-chevron-circle-right"></i></button>
   </div>
 
-  <div class="row burn-up" ng-if="selectedSprint !== null">
+  <div class="row burn-up" ng-if="selectedSprint !== null && selectedSprint.type === 'sprint'">
     <div class="col-md-12">
       <div class="panel panel-default">
         <div class="panel-heading">
@@ -42,7 +43,7 @@
     </div>
   </div>
 
-  <div class="row board" ng-if="selectedSprint !== null">
+  <div class="row board {{selectedSprint.type}}" ng-if="selectedSprint !== null">
     <ng-include ng-repeat="column in columns" src="columnTemplate"></ng-include>
 
     <div class="popup-complete-story" ng-class="{'opened': completeStoryPopupOpened}">

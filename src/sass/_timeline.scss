@@ -59,17 +59,17 @@
           border-top: 2px solid $brand-info;
         }
       }
-      .sprint-data {
+      .sprint-data, .kanban-data {
         float: left;
         color: $brand-primary;
         padding: 0 10px;
         width: 150px;
         text-align: center;
-        .sprint-name {
+        .sprint-name, .kanban-name {
           font-weight: bold;
           text-align: center;
         }
-        .stories-quantity, .sprint-points {
+        .stories-quantity, .sprint-points, .kanban-quantity, .kanban-points {
           float: left;
           text-align: center;
           font-size: 10px;
@@ -78,7 +78,7 @@
             display: block;
           }
         }
-        .sprint-status {
+        .sprint-status, .kanban-status {
           float: left;
           width: 70px;
           text-align: center;
@@ -104,6 +104,17 @@
         }
         .sprint-points {
           float: right;
+        }
+      }
+      .kanban-data {
+        width: 100%;
+        .kanban-status {
+          width: 140px;
+          span {
+            &.kanban {
+              background-color: $brand-info;
+            }
+          }
         }
       }
       .end-date {

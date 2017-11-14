@@ -74,6 +74,7 @@ scrumInCeresControllers.controller('IceBoxController', ['$rootScope', '$scope', 
       epic: null,
       status: 'PLAN',
       tasks: [],
+      comments: [],
       type: 'FEA',
       typeName: 'Feature'
     };
@@ -150,9 +151,9 @@ scrumInCeresControllers.controller('IceBoxController', ['$rootScope', '$scope', 
     if ($scope.addingNewStory) {
       StoryService.addToIceLog($scope.selectedStory).then(
         function(result) {
+          $scope.addingNewStory = false;
           if ($scope.saveAndClose) {
             $scope.stories = result.stories;
-            $scope.addingNewStory = false;
             $scope.selectedStory = null;
             $scope.completeStoryPopupOpened = false;
           }

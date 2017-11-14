@@ -1,7 +1,7 @@
 .backlog {
   margin-top: 80px;
   .sprint-container {
-    .panel-edit-sprint {
+    .panel-show-sprint {
       .panel-heading {
         cursor: pointer;
         overflow: hidden;
@@ -168,7 +168,7 @@
     &.opened {
       display: block;
     }
-    .panel-edit-sprint {
+    .panel-edit-sprint, .panel-edit-kanban {
       margin: 0.4% 10%;
       .panel-heading {
         display: inline-block;
@@ -315,6 +315,15 @@
         overflow: hidden;
       }
     }
+    .panel-edit-kanban {
+      margin: 3% 10%;
+      .panel-body {
+        height: 68vh;
+        .sprint-stories {
+          height: 57vh;
+        }
+      }
+    }
   }
 
   .popup-stories {
@@ -401,4 +410,8 @@
     }
   }
 
+}
+
+.btn-add-sprint, .btn-add-kanban {
+  margin-left: 10px;
 }

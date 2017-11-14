@@ -1,8 +1,9 @@
 'use strict';
 
-scrumInCeresControllers.controller('BacklogController', ['$rootScope', '$scope', '$timeout', 'Alert', 'MeService', 'StoryService', 'HollydayService', 'Notifier', 'Backlog', function($rootScope, $scope, $timeout, Alert, MeService, StoryService, HollydayService, Notifier, Backlog) {
+scrumInCeresControllers.controller('BacklogController', ['$rootScope', '$scope', '$timeout', 'Alert', 'MeService', 'StoryService', 'HollydayService', 'Notifier', 'BacklogSprint', 'BacklogKanban', function($rootScope, $scope, $timeout, Alert, MeService, StoryService, HollydayService, Notifier, BacklogSprint, BacklogKanban) {
   $rootScope.currentController = 'BacklogController';
   $scope.sprints = [];
+  $scope.kanbans = [];
 
   $scope.scrollOptions = {scrollX: 'none', scrollY: 'right', preventWheelEvents: true};
 
@@ -10,7 +11,7 @@ scrumInCeresControllers.controller('BacklogController', ['$rootScope', '$scope',
   $scope.selectedSprint = null;
   $scope.selectedSprintOriginalStories = [];
   $scope.selectedSprintIndex = null;
-  $scope.addingNewSprint = false;
+  $scope.addingNew = false;
 
   $scope.completeStoryPopupOpened = false;
   $scope.formStoryPopupOpened = false;
@@ -43,7 +44,7 @@ scrumInCeresControllers.controller('BacklogController', ['$rootScope', '$scope',
 
   function getSprints() {
     Alert.loading();
-    Backlog.query(
+    BacklogSprint.query(
       function(response) {
         $scope.sprints = response;
         _.forEach($scope.sprints, function(sprint) {
@@ -57,7 +58,21 @@ scrumInCeresControllers.controller('BacklogController', ['$rootScope', '$scope',
     );
   }
 
+  function getKanbans() {
+    Alert.loading();
+    BacklogKanban.query(
+      function(response) {
+        $scope.kanbans = response;
+        Alert.close();
+      },
+      function(error) {
+        Alert.randomErrorMessage(error);
+      }
+    );
+  }
+
   getSprints();
+  getKanbans();
 
   function setWorkingDays(sprint) {
     HollydayService.getHollydays().then(
@@ -126,7 +141,7 @@ scrumInCeresControllers.controller('BacklogController', ['$rootScope', '$scope',
   }
 
   $rootScope.$on('sprint.add', function() {
-    $scope.addingNewSprint = true;
+    $scope.addingNew = true;
     $scope.selectedSprint = {
       name: null,
       objective: null,
@@ -134,6 +149,19 @@ scrumInCeresControllers.controller('BacklogController', ['$rootScope', '$scope',
       endDate: null,
       points: null,
       status: 'PLAN',
+      type: 'sprint',
+      team: $rootScope.loggedUser.teams === null ? $rootScope.loggedUser.team : null,
+      stories: []
+    };
+    $scope.completeSprintPopupOpened = true;
+  });
+
+  $rootScope.$on('kanban.add', function() {
+    $scope.addingNew = true;
+    $scope.selectedSprint = {
+      name: null,
+      points: null,
+      type: 'kanban',
       team: $rootScope.loggedUser.teams === null ? $rootScope.loggedUser.team : null,
       stories: []
     };
@@ -142,7 +170,7 @@ scrumInCeresControllers.controller('BacklogController', ['$rootScope', '$scope',
 
   $rootScope.$on('backlog.sprint.created', function(event, data) {
     Notifier.warning('Sprint created');
-    Backlog.get(
+    BacklogSprint.get(
       {id: data.sprintId},
       function(response) {
         $scope.sprints.push(response);
@@ -155,7 +183,7 @@ scrumInCeresControllers.controller('BacklogController', ['$rootScope', '$scope',
 
   $rootScope.$on('backlog.sprint.updated', function(event, data) {
     Notifier.warning('Sprint updated');
-    Backlog.get(
+    BacklogSprint.get(
       {id: data.sprintId},
       function(response) {
         var index = _.findIndex($scope.sprints, ['id', data.sprintId]);
@@ -173,9 +201,45 @@ scrumInCeresControllers.controller('BacklogController', ['$rootScope', '$scope',
     $scope.sprints.splice(index, 1);
   });
 
+  $rootScope.$on('backlog.kanban.created', function(event, data) {
+    Notifier.warning('Kanban created');
+    BacklogKanban.get(
+      {id: data.kanbanId},
+      function(response) {
+        $scope.kanbans.push(response);
+      },
+      function() {
+        Notifier.danger('Changes has been made and could not be updated', 'Hey!');
+      }
+    );
+  });
+
+  $rootScope.$on('backlog.kanban.updated', function(event, data) {
+    Notifier.warning('Kanban updated');
+    BacklogKanban.get(
+      {id: data.kanbanId},
+      function(response) {
+        var index = _.findIndex($scope.kanbans, ['id', data.kanbanId]);
+        $scope.kanbans[index] = response;
+      },
+      function() {
+        Notifier.danger('Changes has been made and could not be updated', 'Hey!');
+      }
+    );
+  });
+
+  $rootScope.$on('backlog.kanban.deleted', function(event, data) {
+    Notifier.warning('Kanban deleted');
+    var index = _.findIndex($scope.kanbans, ['id', data.kanbanId]);
+    $scope.kanbans.splice(index, 1);
+  });
+
   $rootScope.$watch('itemsView.mode', function(newValue) {
     _.forEach($scope.sprints, function(sprint) {
       sprint.opened = newValue !== 'list';
+    });
+    _.forEach($scope.kanbans, function(kanban) {
+      kanban.opened = newValue !== 'list';
     });
   });
 
@@ -204,33 +268,24 @@ scrumInCeresControllers.controller('BacklogController', ['$rootScope', '$scope',
     );
   };
 
-  $scope.selectSprintToEdit = function($event, sprint, $index) {
+  $scope.selectSprintToEdit = function($event, sprint, $index, type) {
     $scope.selectedSprint = _.cloneDeep(sprint);
+    $scope.selectedSprint.type = type;
     $scope.selectedSprintOriginalStories = sprint.stories;
     $scope.selectedSprintIndex = $index;
     $scope.completeSprintPopupOpened = true;
     $event.stopPropagation();
   };
 
-  $scope.saveSelectedSprint = function(form) {
-    if (form.$invalid) {
-      Alert.randomErrorMessage('Invalid Fields', 'Invalid Fields');
-      return false;
-    }
-
-    if ($scope.selectedSprint.team === null) {
-      Alert.randomErrorMessage('Invalid Fields', 'The Team Dude...');
-      return false;
-    }
-
-    Alert.loading();
-    if ($scope.addingNewSprint) {
-      Backlog.save(
+  function saveSelectedSprint() {
+    if ($scope.addingNew) {
+      BacklogSprint.save(
         $scope.selectedSprint,
         function() {
           getSprints();
           $scope.selectedSprint = null;
           $scope.completeSprintPopupOpened = false;
+          $scope.addingNew = false;
           Alert.randomSuccessMessage();
         },
         function(error) {
@@ -239,7 +294,7 @@ scrumInCeresControllers.controller('BacklogController', ['$rootScope', '$scope',
       );
       return;
     }
-    Backlog.update(
+    BacklogSprint.update(
       {id: $scope.selectedSprint.id},
       $scope.selectedSprint,
       function() {
@@ -255,6 +310,59 @@ scrumInCeresControllers.controller('BacklogController', ['$rootScope', '$scope',
         Alert.randomErrorMessage(error);
       }
     );
+  }
+
+  function saveSelectedKanban() {
+    if ($scope.addingNew) {
+      BacklogKanban.save(
+        $scope.selectedSprint,
+        function() {
+          getKanbans();
+          $scope.selectedSprint = null;
+          $scope.completeSprintPopupOpened = false;
+          $scope.addingNew = false;
+          Alert.randomSuccessMessage();
+        },
+        function(error) {
+          Alert.randomErrorMessage(error);
+        }
+      );
+      return;
+    }
+    BacklogKanban.update(
+      {id: $scope.selectedSprint.id},
+      $scope.selectedSprint,
+      function() {
+        $scope.kanbans[$scope.selectedSprintIndex] = $scope.selectedSprint;
+        $scope.selectedSprintIndex = null;
+        $scope.selectedSprint = null;
+        $scope.completeSprintPopupOpened = false;
+        Alert.randomSuccessMessage();
+      },
+      function(error) {
+        Alert.randomErrorMessage(error);
+      }
+    );
+  }
+
+  $scope.saveSelectedSprint = function(form) {
+    if (form.$invalid) {
+      Alert.randomErrorMessage('Invalid Fields', 'Invalid Fields');
+      return false;
+    }
+
+    if ($scope.selectedSprint.team === null) {
+      Alert.randomErrorMessage('Invalid Fields', 'The Team Dude...');
+      return false;
+    }
+
+    Alert.loading();
+    if ($scope.selectedSprint.type === 'sprint') {
+      saveSelectedSprint();
+    }
+    else {
+      saveSelectedKanban();
+    }
   };
 
   $scope.cancelSaveSelectedSprint = function() {

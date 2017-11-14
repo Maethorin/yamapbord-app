@@ -191,6 +191,13 @@ label {
           }
         }
       }
+      .story-epic {
+        ul {
+          li {
+            cursor: pointer;
+          }
+        }
+      }
       .story-name {
         vertical-align: middle;
         display: block;

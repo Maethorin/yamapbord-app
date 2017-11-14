@@ -210,6 +210,10 @@ scrumInCeres.run(['$rootScope', '$timeout', '$q', 'AuthService', 'MeService', 'A
     $rootScope.$broadcast('sprint.add');
   };
 
+  $rootScope.addNewKanban = function() {
+    $rootScope.$broadcast('kanban.add');
+  };
+
   $rootScope.goToCurrentSprintInTimeline = function() {
     $rootScope.$broadcast('currentSprint.select');
   };

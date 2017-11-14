@@ -11,7 +11,10 @@ h4 {
 }
 
 .burn-up {
-  margin-bottom: 5px;
+  margin: 5px -15px;
+  .col-md-12 {
+    padding: 0 5px;
+  }
   .panel-default {
     margin-bottom: 0;
     .panel-heading {
@@ -78,8 +81,18 @@ h4 {
 }
 
 .board {
-  height: 71vh;
+  height: 73vh;
   overflow: hidden;
+  margin-top: 5px;
+  &.kanban {
+    height: 83vh;
+    .column {
+      height: 78.4vh;
+      &.fini, &.itst, &.rtdp, &.dpyd, &.accp, &.reje {
+        height: 36.5vh;
+      }
+    }
+  }
   .column-container {
     &.col-md-3, &.col-md-2 {
       padding: 0 5px;
@@ -108,10 +121,10 @@ h4 {
     }
   }
   .column {
-    height: 65.4vh;
+    height: 68.4vh;
     padding-right: 0;
     &.fini, &.itst, &.rtdp, &.dpyd, &.accp, &.reje {
-      height: 30vh;
+      height: 31.5vh;
     }
     .story {
       margin-right: 15px;
