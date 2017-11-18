@@ -39,7 +39,7 @@
               <form class="navbar-form navbar-left">
                 <div class="form-group">
                   <div class="input-group">
-                    <input type="text" class="form-control" placeholder="Search Stories" ng-model="search.expression">
+                    <input type="text" class="form-control" placeholder="Search Stories" ng-model="search.expression" ng-keypress="startSearchStories($event)">
                     <div class="input-group-btn">
                       <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{search.fieldType.name}} <span class="caret"></span></button>
                       <ul class="dropdown-menu">
@@ -56,9 +56,15 @@
               <button type="button" class="btn btn-default navbar-btn" ng-click="addNewStory()">New Story</button>
             </li>
             <li ng-if="['BacklogController', 'IceBoxController'].indexOf(currentController) !== -1">
-              <div class="btn-group navbar-btn btn-story-view-type">
-                <label class="btn btn-default" ng-model="itemsView.mode" title="View in list" uib-btn-radio="'list'"><i class="fa fa-th-list"></i></label>
-                <label class="btn btn-default" ng-model="itemsView.mode" title="View in box" uib-btn-radio="'box'"><i class="fa fa-th"></i></label>
+              <div class="btn-group btn-group-story" uib-dropdown>
+                <button id="view-as" type="button" class="btn btn-default navbar-btn" uib-dropdown-toggle>
+                  View as: {{itemsView.mode}} <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="view-as">
+                  <li role="menuitem"><a ng-click="setViewAs('list')">List</a></li>
+                  <li role="menuitem"><a ng-click="setViewAs('card')">Card</a></li>
+                  <li role="menuitem"><a ng-click="setViewAs('table')">Table</a></li>
+                </ul>
               </div>
             </li>
             <li ng-if="currentController === 'IceBoxController'">

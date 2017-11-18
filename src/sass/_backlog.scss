@@ -20,7 +20,6 @@
           border-radius: 17px;
           vertical-align: middle;
           margin-left: 10px;
-          @include sprint-status-backgrounds();
         }
         .btn-save-sprint {
           float: right;
@@ -39,6 +38,10 @@
         }
       }
     }
+  }
+
+  .sprint-status {
+    @include sprint-status-backgrounds();
   }
 
   .sprint-dates {
@@ -225,7 +228,7 @@
       }
       .panel-body {
         padding: 20px;
-        height: 83vh;
+        height: 77vh;
         zoom: 1;
         overflow: auto;
         position: relative;
@@ -304,7 +307,7 @@
           }
         }
         .sprint-stories {
-          height: 49vh;
+          height: 41vh;
           overflow: hidden;
           li {
             .sprint-statement {
@@ -427,4 +430,60 @@
 
 .btn-add-sprint, .btn-add-kanban {
   margin-left: 10px;
+}
+
+
+.table-sprint {
+  th {
+    text-align: center;
+  }
+  tbody {
+    tr {
+      border-bottom: 2px solid #FAFAFA;
+      td {
+        vertical-align: middle;
+        padding: 2px 10px;
+        cursor: pointer;
+      }
+    }
+  }
+  .col-team {
+    width: 4%;
+  }
+  .col-status {
+    width: 5.8%;
+    text-align: center;
+    .sprint-status {
+      padding: 3px 10px;
+      border-radius: 3px;
+    }
+  }
+  .col-name {
+    width: 21.8%;
+  }
+  .col-points {
+    text-align: center;
+    width: 4%;
+    .value {
+      text-align: center;
+      background-color: $gray-light;
+      display: inline-block;
+      padding: 2px 7px;
+      font-size: 15px;
+      border-radius: 4px;
+      border: 1px solid $gray-darker;
+    }
+  }
+  .col-stories {
+    text-align: center;
+    width: 4%;
+  }
+  .col-date {
+    text-align: center;
+    width: 8%;
+  }
+  .col-action {
+    text-align: center;
+    width: 3%;
+  }
 }

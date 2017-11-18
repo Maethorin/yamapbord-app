@@ -2,6 +2,7 @@
 
 scrumInCeresControllers.controller('IceBoxController', ['$rootScope', '$scope', 'Alert', 'Notifier', 'StoryService', 'IceBox', function($rootScope, $scope, Alert, Notifier, StoryService, IceBox) {
   $rootScope.currentController = 'IceBoxController';
+  $rootScope.itemsView.mode = 'table';
   $scope.scrollOptions = {scrollX: 'none', scrollY: 'right', preventWheelEvents: true};
   $scope.filterBarExpanded = false;
   $scope.filter = {
@@ -11,6 +12,7 @@ scrumInCeresControllers.controller('IceBoxController', ['$rootScope', '$scope', 
     point: null,
     requester: null
   };
+  $scope.showAsTable = true;
   $scope.groupedStories = false;
 
   Alert.loading();
@@ -33,9 +35,12 @@ scrumInCeresControllers.controller('IceBoxController', ['$rootScope', '$scope', 
   };
 
   $rootScope.$watch('itemsView.mode', function(newValue) {
-    _.forEach($scope.stories, function(story) {
-      story.opened = newValue !== 'list';
-    });
+    $scope.showAsTable = newValue === 'table';
+    if (!$scope.showAsTable) {
+      _.forEach($scope.stories, function(story) {
+        story.opened = newValue !== 'list';
+      });
+    }
   });
 
   $rootScope.$on('story.grouped', function() {

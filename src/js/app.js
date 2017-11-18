@@ -202,6 +202,10 @@ scrumInCeres.run(['$rootScope', '$timeout', '$q', 'AuthService', 'MeService', 'A
     $rootScope.$broadcast('story.grouped');
   };
 
+  $rootScope.setViewAs = function(mode) {
+    $rootScope.itemsView.mode = mode;
+  };
+
   $rootScope.addNewStory = function() {
     $rootScope.$broadcast('story.add');
   };
@@ -220,6 +224,12 @@ scrumInCeres.run(['$rootScope', '$timeout', '$q', 'AuthService', 'MeService', 'A
 
   $rootScope.setStoryFilterTextType = function(type) {
     $rootScope.search.fieldType = $rootScope.storyFilterTextTypes[type];
+  };
+
+  $rootScope.startSearchStories = function($event) {
+    if ($event.keyCode === 13) {
+      $rootScope.searchStories();
+    }
   };
 
   $rootScope.searchStories = function() {

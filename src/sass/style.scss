@@ -49,8 +49,6 @@ label {
     }
   }
   .story-type {
-    @include story-types();
-    background-position: 9px 8px;
     background-color: $gray;
     padding: 6px 18px 6px 34px;
     font-size: 16px;
@@ -62,16 +60,6 @@ label {
     display: inline-block;
     float: right;
     margin-left: 5px;
-    label {
-      font-size: 10px;
-      text-align: center;
-    }
-    span {
-      padding: 6px 15px;
-      font-size: 18px;
-      border-radius: 4px;
-      border: 1px solid #666;
-    }
   }
   .btn-story-type {
     background-position: 9px 7px;
@@ -97,6 +85,25 @@ label {
         color: #FFF;
       }
     }
+  }
+}
+
+.story-type {
+  @include story-types();
+  background-position: 9px 8px;
+  padding: 6px 18px 6px 34px;
+}
+
+.story-point {
+  label {
+    font-size: 10px;
+    text-align: center;
+  }
+  span {
+    padding: 6px 15px;
+    font-size: 18px;
+    border-radius: 4px;
+    border: 1px solid #666;
   }
 }
 
@@ -313,12 +320,15 @@ li {
 }
 
 h4 {
+  background-color: $gray;
   font-size: 18px;
   margin: 10px 0;
-  padding-bottom: 5px;
-  padding-left: 15px;
+  padding: 8px 15px 5px;
   color: $gray-lighter;
   border-bottom: 1px solid $gray-lighter;
+  &.no-background {
+    background-color: transparent;
+  }
 }
 
 .list-group {

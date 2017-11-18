@@ -1,71 +1,157 @@
 <div class="container-fluid backlog">
-  <div class="row">
-  <h4>Sprints</h4>
-  <div class="sprint-container col-md-4" ng-repeat="sprint in sprints">
-    <div class="panel panel-default panel-show-sprint">
-      <div class="panel-heading" ng-click="selectSprintToEdit($event, sprint, $index, 'sprint')">
-        <i class="fa btn-open" ng-class="{'fa-chevron-down': !sprint.opened, 'fa-chevron-up': sprint.opened}" ng-click="toggleOpenSprintPanel($event, sprint)"></i>
-        <span class="sprint-team">[{{sprint.team.name}}]</span>
-        <span class="sprint-name" title="{{sprint.name}}" ng-bind="sprint.name|limitWithEllipsis:47"></span>
-        <span class="sprint-status" ng-class="sprint.statusSlug" ng-bind="sprint.status[0]"></span>
-        <button class="btn btn-primary btn-sm btn-save-sprint" ng-click="selectSprintToEdit($event, sprint, $index, 'sprint')"><i class="fa" ng-class="{'fa-edit': sprint.isPlanned, 'fa-eye': !sprint.isPlanned}"></i></button>
-      </div>
-      <div class="panel-body as-list" ng-class="{'as-list': !sprint.opened}">
-        <h4>Dates</h4>
-        <div class="sprint-dates">
-          <span class="start-date">Starts: <span class="date" ng-bind="sprint.startDate"></span></span>
-          <div class="working-days">
-            <span class="label">working days</span>
-            <i class="fa fa-long-arrow-left"></i><span class="number" ng-bind="sprint.workingDays"></span><i class="fa fa-long-arrow-right"></i>
-          </div>
-          <span class="end-date">Ends: <span class="date" ng-bind="sprint.endDate"></span></span>
-        </div>
-        <h4>Objective</h4>
-        <div class="sprint-objective" ng-scrollable>
-          <p ng-bind="sprint.objective"></p>
-        </div>
-        <h4 class="story-header">
-          <span class="title">Stories</span>
-          <span class="sprint-point"><span class="value" ng-bind="sprint.points|numberOrText"></span>points</span>
-        </h4>
-        <ul class="list-group sprint-stories" ng-scrollable="scrollOptions">
-          <li class="list-group-item" ng-repeat="story in sprint.stories" title="{{story.statement}}" ng-click="toggleShowStoryPopup(story)">
-            <span class="story-type-name" ng-class="story.type | lowercase" title="{{story.typeName}}"></span>
-            <span class="story-name" ng-bind="story.name|limitWithEllipsis:35"></span>
-            <span class="badge points-{{story.points|numberOrText:'null'}}" ng-bind="story.points|numberOrText"></span>
-          </li>
-        </ul>
-      </div>
+  <section ng-if="showAsTable">
+    <div class="row">
+    <h4>Sprints</h4>
+     <table class="table table-sprint table-hover table-condensed table-bordered">
+        <thead>
+        <tr>
+          <th>Team</th>
+          <th>Status</th>
+          <th>Name</th>
+          <th>Objective</th>
+          <th>Points</th>
+          <th>Stories</th>
+          <th>Starts</th>
+          <th>Ends</th>
+          <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="sprint in sprints" ng-click="selectSprintToEdit($event, sprint, $index, 'sprint')">
+          <td class="col-team">[{{sprint.team.name || 'NO-TEAM'}}]</td>
+          <td class="col-status">
+            <span class="sprint-status {{sprint.statusSlug}}" ng-bind="sprint.status"></span>
+          </td>
+          <td class="col-name" title="{{sprint.name}}" ng-bind="sprint.name|limitWithEllipsis:50"></td>
+          <td class="col-objective" title="{{sprint.objective}}" ng-bind="sprint.objective|limitWithEllipsis:115"></td>
+          <td class="col-points">
+            <span class="value" ng-bind="sprint.points|numberOrText"></span>
+          </td>
+          <td class="col-points">
+            <span class="value" ng-bind="sprint.stories.length|numberOrText"></span>
+          </td>
+          <td class="col-date" ng-bind="sprint.startDate"></td>
+          <td class="col-date" ng-bind="sprint.endDate"></td>
+          <td class="col-action">
+            <button class="btn btn-primary btn-sm btn-save-story" ng-click="selectSprintToEdit($event, sprint, $index, 'sprint')"><i class="fa" ng-class="{'fa-edit': sprint.isPlanned, 'fa-eye': !sprint.isPlanned}"></i></button>
+          </td>
+        </tr>
+        </tbody>
+      </table>
     </div>
-  </div>
-  </div>
 
-  <div class="row">
-  <h4>Kanbans</h4>
-  <div class="sprint-container col-md-4" ng-repeat="kanban in kanbans">
-    <div class="panel panel-default panel-show-sprint">
-      <div class="panel-heading" ng-click="selectSprintToEdit($event, kanban, $index, 'kanban')">
-        <i class="fa btn-open" ng-class="{'fa-chevron-down': !kanban.opened, 'fa-chevron-up': kanban.opened}" ng-click="toggleOpenSprintPanel($event, kanban)"></i>
-        <span class="sprint-team">[{{kanban.team.name}}]</span>
-        <span class="sprint-name" title="{{kanban.name}}" ng-bind="kanban.name|limitWithEllipsis:40"></span>
-        <button class="btn btn-primary btn-sm btn-save-sprint" ng-click="selectSprintToEdit($event, kanban, $index, 'kanban')"><i class="fa fa-edit"></i></button>
-      </div>
-      <div class="panel-body as-list" ng-class="{'as-list': !kanban.opened}">
-        <h4 class="story-header">
-          <span class="title">Stories</span>
-          <span class="sprint-point"><span class="value" ng-bind="kanban.points|numberOrText"></span>points</span>
-        </h4>
-        <ul class="list-group sprint-stories" ng-scrollable="scrollOptions">
-          <li class="list-group-item" ng-repeat="story in kanban.stories" title="{{story.statement}}" ng-click="toggleShowStoryPopup(story)">
-            <span class="story-type-name" ng-class="story.type | lowercase" title="{{story.typeName}}"></span>
-            <span class="story-name" ng-bind="story.name|limitWithEllipsis:35"></span>
-            <span class="badge points-{{story.points|numberOrText:'null'}}" ng-bind="story.points|numberOrText"></span>
-          </li>
-        </ul>
+    <div class="row">
+    <h4>Kanbans</h4>
+    <table class="table table-sprint table-hover table-condensed table-bordered">
+        <thead>
+        <tr>
+          <th>Team</th>
+          <th>Name</th>
+          <th>Stories</th>
+          <th>Planned</th>
+          <th>Started</th>
+          <th>Finished</th>
+          <th>Accepted</th>
+          <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="kanban in kanbans" ng-click="selectSprintToEdit($event, kanban, $index, 'kanban')">
+          <td class="col-team">[{{kanban.team.name || 'NO-TEAM'}}]</td>
+          <td title="{{kanban.name}}" ng-bind="kanban.name"></td>
+          <td class="col-points">
+            <span class="value" ng-bind="kanban.stories.length|numberOrText"></span>
+          </td>
+          <td class="col-points">
+            <span class="value" ng-bind="quantityOf(kanban.stories, 'PLAN')"></span>
+          </td>
+          <td class="col-points">
+            <span class="value" ng-bind="quantityOf(kanban.stories, 'STAR')"></span>
+          </td>
+          <td class="col-points">
+            <span class="value" ng-bind="quantityOf(kanban.stories, 'FINI')"></span>
+          </td>
+          <td class="col-points">
+            <span class="value" ng-bind="quantityOf(kanban.stories, 'ACCP')"></span>
+          </td>
+          <td class="col-action">
+            <button class="btn btn-primary btn-sm btn-save-story" ng-click="selectSprintToEdit($event, kanban, $index, 'kanban')"><i class="fa fa-edit"></i></button>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section ng-if="!showAsTable">
+    <div class="row">
+    <h4>Sprints</h4>
+    <div class="sprint-container col-md-4" ng-repeat="sprint in sprints">
+      <div class="panel panel-default panel-show-sprint">
+        <div class="panel-heading" ng-click="selectSprintToEdit($event, sprint, $index, 'sprint')">
+          <i class="fa btn-open" ng-class="{'fa-chevron-down': !sprint.opened, 'fa-chevron-up': sprint.opened}" ng-click="toggleOpenSprintPanel($event, sprint)"></i>
+          <span class="sprint-team">[{{sprint.team.name}}]</span>
+          <span class="sprint-name" title="{{sprint.name}}" ng-bind="sprint.name|limitWithEllipsis:47"></span>
+          <span class="sprint-status" ng-class="sprint.statusSlug" ng-bind="sprint.status[0]"></span>
+          <button class="btn btn-primary btn-sm btn-save-sprint" ng-click="selectSprintToEdit($event, sprint, $index, 'sprint')"><i class="fa" ng-class="{'fa-edit': sprint.isPlanned, 'fa-eye': !sprint.isPlanned}"></i></button>
+        </div>
+        <div class="panel-body as-list" ng-class="{'as-list': !sprint.opened}">
+          <h4 class="no-background">Dates</h4>
+          <div class="sprint-dates">
+            <span class="start-date">Starts: <span class="date" ng-bind="sprint.startDate"></span></span>
+            <div class="working-days">
+              <span class="label">working days</span>
+              <i class="fa fa-long-arrow-left"></i><span class="number" ng-bind="sprint.workingDays"></span><i class="fa fa-long-arrow-right"></i>
+            </div>
+            <span class="end-date">Ends: <span class="date" ng-bind="sprint.endDate"></span></span>
+          </div>
+          <h4 class="no-background">Objective</h4>
+          <div class="sprint-objective" ng-scrollable>
+            <p ng-bind="sprint.objective"></p>
+          </div>
+          <h4 class="story-header no-background">
+            <span class="title">Stories</span>
+            <span class="sprint-point"><span class="value" ng-bind="sprint.points|numberOrText"></span>points</span>
+          </h4>
+          <ul class="list-group sprint-stories" ng-scrollable="scrollOptions">
+            <li class="list-group-item" ng-repeat="story in sprint.stories" title="{{story.statement}}" ng-click="toggleShowStoryPopup(story)">
+              <span class="story-type-name" ng-class="story.type | lowercase" title="{{story.typeName}}"></span>
+              <span class="story-name" ng-bind="story.name|limitWithEllipsis:35"></span>
+              <span class="badge points-{{story.points|numberOrText:'null'}}" ng-bind="story.points|numberOrText"></span>
+            </li>
+          </ul>
+        </div>
       </div>
     </div>
-  </div>
-  </div>
+    </div>
+
+    <div class="row">
+    <h4>Kanbans</h4>
+    <div class="sprint-container col-md-4" ng-repeat="kanban in kanbans">
+      <div class="panel panel-default panel-show-sprint">
+        <div class="panel-heading" ng-click="selectSprintToEdit($event, kanban, $index, 'kanban')">
+          <i class="fa btn-open" ng-class="{'fa-chevron-down': !kanban.opened, 'fa-chevron-up': kanban.opened}" ng-click="toggleOpenSprintPanel($event, kanban)"></i>
+          <span class="sprint-team">[{{kanban.team.name}}]</span>
+          <span class="sprint-name" title="{{kanban.name}}" ng-bind="kanban.name|limitWithEllipsis:40"></span>
+          <button class="btn btn-primary btn-sm btn-save-sprint" ng-click="selectSprintToEdit($event, kanban, $index, 'kanban')"><i class="fa fa-edit"></i></button>
+        </div>
+        <div class="panel-body as-list" ng-class="{'as-list': !kanban.opened}">
+          <h4 class="story-header no-background">
+            <span class="title">Stories</span>
+            <span class="sprint-point"><span class="value" ng-bind="kanban.points|numberOrText"></span>points</span>
+          </h4>
+          <ul class="list-group sprint-stories" ng-scrollable="scrollOptions">
+            <li class="list-group-item" ng-repeat="story in kanban.stories" title="{{story.statement}}" ng-click="toggleShowStoryPopup(story)">
+              <span class="story-type-name" ng-class="story.type | lowercase" title="{{story.typeName}}"></span>
+              <span class="story-name" ng-bind="story.name|limitWithEllipsis:35"></span>
+              <span class="badge points-{{story.points|numberOrText:'null'}}" ng-bind="story.points|numberOrText"></span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    </div>
+  </section>
 
   <form name="formSprint" novalidate ng-submit="saveSelectedSprint(formSprint)">
     <div class="popup-complete-sprint" ng-class="{'opened': completeSprintPopupOpened}" ng-if="selectedSprint !== null">
@@ -85,7 +171,7 @@
         </div>
         <div class="panel-body">
           <section ng-if="selectedSprint.type === 'sprint'">
-            <h4>Dates</h4>
+            <h4 class="no-background">Dates</h4>
             <div class="dropdown start date">
               <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
                 <datetimepicker ng-model="selectedSprint.startDate"
@@ -132,12 +218,12 @@
               </div>
             </div>
 
-            <h4>Objective</h4>
+            <h4 class="no-background">Objective</h4>
             <div class="sprint-objective">
               <textarea rows="2" ng-model="selectedSprint.objective" required ng-disabled="!selectedSprint.isPlanned"></textarea>
             </div>
           </section>
-          <h4 class="story-header">
+          <h4 class="story-header no-background">
             <span class="title">Stories</span>
             <button type="button" ng-if="selectedSprint.isPlanned && selectedSprint.id" class="btn btn-primary btn-sm btn-create-story" ng-click="addNewStoryToSelectedSprint('kanban')"><i class="fa fa-plus"></i>Create New Story</button>
             <span class="sprint-point"><span class="value" ng-bind="selectedSprint.points|numberOrText"></span>points</span>
@@ -228,7 +314,7 @@
     </div>
     <div class="filter-content">
       <div class="col-md-2">
-        <h4>Type: <span ng-bind="filter.type.name"></span><button type="button" class="btn btn-xs btn-danger btn-clear-filter" ng-click="selectFilter('type', null)">clear</button></h4>
+        <h4 class="no-background">Type: <span ng-bind="filter.type.name"></span><button type="button" class="btn btn-xs btn-danger btn-clear-filter" ng-click="selectFilter('type', null)">clear</button></h4>
         <div class="filter-bar-list">
           <ul class="list-group">
             <li class="list-group-item {{type.code | lowercase}}" ng-class="{'selected': type.code === filter.type.code}" ng-repeat="type in storyTypes" ng-bind="type.name" ng-click="selectFilter('type', type)"></li>
@@ -236,7 +322,7 @@
         </div>
       </div>
       <div class="col-md-1">
-        <h4>VP: <span ng-bind="filter.valuePoint"></span><button type="button" class="btn btn-xs btn-danger btn-clear-filter" ng-click="selectFilter('valuePoint', null)">clear</button></h4>
+        <h4 class="no-background">VP: <span ng-bind="filter.valuePoint"></span><button type="button" class="btn btn-xs btn-danger btn-clear-filter" ng-click="selectFilter('valuePoint', null)">clear</button></h4>
         <div class="filter-bar-list">
           <ul class="list-group">
             <li class="list-group-item" ng-class="{'selected': 'N' === filter.valuePoint}" ng-click="selectFilter('valuePoint', 'N')">N</li>
@@ -245,7 +331,7 @@
         </div>
       </div>
       <div class="col-md-1">
-        <h4>SP: <span ng-bind="filter.point"></span><button type="button" class="btn btn-xs btn-danger btn-clear-filter" ng-click="selectFilter('point', null)">clear</button></h4>
+        <h4 class="no-background">SP: <span ng-bind="filter.point"></span><button type="button" class="btn btn-xs btn-danger btn-clear-filter" ng-click="selectFilter('point', null)">clear</button></h4>
         <div class="filter-bar-list">
           <ul class="list-group">
             <li class="list-group-item" ng-class="{'selected': 'N' === filter.point}" ng-click="selectFilter('point', 'N')">N</li>
@@ -254,7 +340,7 @@
         </div>
       </div>
       <div class="col-md-3">
-        <h4>Module: <span ng-bind="filter.module.name|limitWithEllipsis:25"></span><button type="button" class="btn btn-xs btn-danger btn-clear-filter" ng-click="selectFilter('module', null)">clear</button></h4>
+        <h4 class="no-background">Module: <span ng-bind="filter.module.name|limitWithEllipsis:25"></span><button type="button" class="btn btn-xs btn-danger btn-clear-filter" ng-click="selectFilter('module', null)">clear</button></h4>
         <div class="filter-bar-list">
           <ul class="list-group">
             <li class="list-group-item" ng-class="{'selected': module.id === filter.module.id}" ng-repeat="module in modules" ng-bind="module.name" ng-click="selectFilter('module', module)"></li>
@@ -262,20 +348,20 @@
         </div>
       </div>
       <div class="col-md-3">
-        <h4>Epic: <span ng-bind="filter.epic.name|limitWithEllipsis:25"></span><button type="button" class="btn btn-xs btn-danger btn-clear-filter" ng-click="selectFilter('epic', null)">clear</button></h4>
+        <h4 class="no-background">Epic: <span ng-bind="filter.epic.name|limitWithEllipsis:25"></span><button type="button" class="btn btn-xs btn-danger btn-clear-filter" ng-click="selectFilter('epic', null)">clear</button></h4>
         <div class="filter-bar-list">
           <ul class="list-group">
             <li ng-if="filter.module !== null && filter.module.epics.length > 0" class="list-group-item" ng-class="{'selected': epic.id === filter.epic.id}" ng-repeat="epic in filter.module.epics|orderBy:'name'" ng-click="selectFilter('epic', epic)">
-              {{epic.modules ? '[{modules}] {name}'.format(epic) : epic.name}}
+              <epic-name epic="epic"></epic-name>
             </li>
             <li ng-if="filter.module === null || filter.module.epics.length === 0" class="list-group-item" ng-class="{'selected': epic.id === filter.epic.id}" ng-repeat="epic in epics|orderBy:['modules', 'name']" ng-click="selectFilter('epic', epic)">
-              {{epic.modules ? '[{modules}] {name}'.format(epic) : epic.name}}
+              <epic-name epic="epic"></epic-name>
             </li>
           </ul>
         </div>
       </div>
       <div class="col-md-2">
-        <h4>Requester: <span ng-bind="filter.requester.name|limitWithEllipsis:17"></span><button type="button" class="btn btn-xs btn-danger btn-clear-filter" ng-click="selectFilter('requester', null)">clear</button></h4>
+        <h4 class="no-background">Requester: <span ng-bind="filter.requester.name|limitWithEllipsis:17"></span><button type="button" class="btn btn-xs btn-danger btn-clear-filter" ng-click="selectFilter('requester', null)">clear</button></h4>
         <div class="filter-bar-list">
           <ul class="list-group">
             <li class="list-group-item" ng-class="{'selected': requester.id === filter.requester.id}" ng-repeat="requester in requesters" ng-bind="requester.name" ng-click="selectFilter('requester', requester)"></li>

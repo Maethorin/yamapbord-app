@@ -2,6 +2,7 @@
 
 scrumInCeresControllers.controller('BacklogController', ['$rootScope', '$scope', '$timeout', 'Alert', 'MeService', 'StoryService', 'HollydayService', 'Notifier', 'BacklogSprint', 'BacklogKanban', function($rootScope, $scope, $timeout, Alert, MeService, StoryService, HollydayService, Notifier, BacklogSprint, BacklogKanban) {
   $rootScope.currentController = 'BacklogController';
+  $rootScope.itemsView.mode = 'table';
   $scope.sprints = [];
   $scope.kanbans = [];
 
@@ -226,13 +227,20 @@ scrumInCeresControllers.controller('BacklogController', ['$rootScope', '$scope',
   });
 
   $rootScope.$watch('itemsView.mode', function(newValue) {
-    _.forEach($scope.sprints, function(sprint) {
-      sprint.opened = newValue !== 'list';
-    });
-    _.forEach($scope.kanbans, function(kanban) {
-      kanban.opened = newValue !== 'list';
-    });
+    $scope.showAsTable = newValue === 'table';
+    if (!$scope.showAsTable) {
+      _.forEach($scope.sprints, function(sprint) {
+        sprint.opened = newValue !== 'list';
+      });
+      _.forEach($scope.kanbans, function(kanban) {
+        kanban.opened = newValue !== 'list';
+      });
+    }
   });
+
+  $scope.quantityOf = function(stories, status) {
+    return _.filter(stories, ['status', status]).length;
+  };
 
   $scope.setSelectedSprintTeam = function(team) {
     $scope.selectedSprint.team = team;
