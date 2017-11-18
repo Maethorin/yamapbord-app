@@ -1,6 +1,6 @@
 # O Que Tá faltando:
 
-* Criar Kanban
+* No Backlog, exibir todos os sprints e permitir agrupamentos
 * Ordenar estórias
 * Definir perfil readonly
 * Tags para task (Back|Front|DB|Infra)
@@ -15,6 +15,8 @@
 * Exibir Épico na estória
 * Ordenar e agrupar
 * Na tela de add estória no sprint, filtrar por módulo e épico
+* Permitir ir para o quadro do backlog
+
 
 # Tipos de contabilização
 

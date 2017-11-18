@@ -315,6 +315,7 @@ h4 {
   font-size: 18px;
   margin: 10px 0;
   padding-bottom: 5px;
+  padding-left: 15px;
   color: $gray-lighter;
   border-bottom: 1px solid $gray-lighter;
 }
@@ -463,4 +464,26 @@ textarea {
       }
     }
   }
+}
+
+.form-group {
+  .select-team {
+    background-color: $brand-primary;
+    border: none;
+    color: #FFF;
+    padding: 2px 7px;
+    height: 32px;
+  }
+}
+
+.disable-mask {
+  position: absolute;
+  top: 5px;
+  bottom: 6px;
+  left: 70px;
+  right: 7px;
+  background: transparent;
+  border-radius: 5px;
+  cursor: not-allowed;
+  z-index: 1000;
 }

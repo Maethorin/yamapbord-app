@@ -2,6 +2,7 @@
 
 scrumInCeresServices.service('HollydayService', ['$window', '$q', 'Hollyday', function ($window, $q, Hollyday) {
   var hollydays = [];
+  var loading = false;
 
   this.dateIsHollyday = function(date) {
     var dateIndex = _.findIndex(hollydays, function(hollyday) {
@@ -11,18 +12,21 @@ scrumInCeresServices.service('HollydayService', ['$window', '$q', 'Hollyday', fu
   };
 
 
+  var defer = $q.defer();
   this.getHollydays = function() {
-    var defer = $q.defer();
     if (hollydays.length > 0) {
       defer.resolve(hollydays);
       return defer.promise;
     }
-    Hollyday.query(
-      function(response) {
-        hollydays = response;
-        defer.resolve(hollydays);
-      }
-    );
+    if (!loading) {
+      loading = true;
+      Hollyday.query(
+        function(response) {
+          hollydays = response;
+          defer.resolve(hollydays);
+        }
+      );
+    }
     return defer.promise;
   }
 }]);

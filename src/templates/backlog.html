@@ -6,8 +6,9 @@
       <div class="panel-heading" ng-click="selectSprintToEdit($event, sprint, $index, 'sprint')">
         <i class="fa btn-open" ng-class="{'fa-chevron-down': !sprint.opened, 'fa-chevron-up': sprint.opened}" ng-click="toggleOpenSprintPanel($event, sprint)"></i>
         <span class="sprint-team">[{{sprint.team.name}}]</span>
-        <span class="sprint-name" title="{{sprint.name}}" ng-bind="sprint.name|limitWithEllipsis:40"></span>
-        <button class="btn btn-primary btn-sm btn-save-sprint" ng-click="selectSprintToEdit($event, sprint, $index, 'sprint')"><i class="fa fa-edit"></i></button>
+        <span class="sprint-name" title="{{sprint.name}}" ng-bind="sprint.name|limitWithEllipsis:47"></span>
+        <span class="sprint-status" ng-class="sprint.statusSlug" ng-bind="sprint.status[0]"></span>
+        <button class="btn btn-primary btn-sm btn-save-sprint" ng-click="selectSprintToEdit($event, sprint, $index, 'sprint')"><i class="fa" ng-class="{'fa-edit': sprint.isPlanned, 'fa-eye': !sprint.isPlanned}"></i></button>
       </div>
       <div class="panel-body as-list" ng-class="{'as-list': !sprint.opened}">
         <h4>Dates</h4>
@@ -65,23 +66,21 @@
     </div>
   </div>
   </div>
+
   <form name="formSprint" novalidate ng-submit="saveSelectedSprint(formSprint)">
     <div class="popup-complete-sprint" ng-class="{'opened': completeSprintPopupOpened}" ng-if="selectedSprint !== null">
       <div class="panel panel-default panel-edit-{{selectedSprint.type}}">
         <div class="panel-heading" title="{{selectedSprint.statement}}">
           <div class="col-md-2 sprint-team">
             <label>Team:</label>
-            <div class="btn-group" uib-dropdown keyboard-nav>
-              <button type="button" class="btn btn-primary btn-sm" uib-dropdown-toggle>
-                {{selectedSprint.team === null ? 'Select a team' : selectedSprint.team.name}} <span class="caret"></span>
-              </button>
-              <ul class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="simple-btn-keyboard-nav">
-                <li role="menuitem" ng-repeat="team in teams"><a ng-click="setSelectedSprintTeam(team)" ng-bind="team.name"></a></li>
-              </ul>
+            <div class="form-group">
+              <select id="selectTeam" ng-model="selectedSprint.team" ng-disabled="!selectedSprint.isPlanned" required class="select-team form-control" ng-options="team.name for team in teams track by team.id">
+                <option value="">-- choose team --</option>
+              </select>
             </div>
           </div>
           <div class="col-md-10">
-            <label>Name:</label> <input class="sprint-name" ng-model="selectedSprint.name"/>
+            <label>Name:</label> <input class="sprint-name" ng-model="selectedSprint.name" ng-disabled="!selectedSprint.isPlanned"/>
           </div>
         </div>
         <div class="panel-body">
@@ -109,10 +108,11 @@
                 <label for="inputStartDate">Starts:</label>
                 <a class="date dropdown-toggle" id="dropdownStartDate" role="button" data-toggle="dropdown" data-target=".dropdown.start.date">
                   <div class="input-group">
-                    <input type="text" id="inputStartDate" class="form-control" name="startDate" ng-model="selectedSprint.startDate" date-time-input="YYYY-MM-DD" required/>
+                    <input type="text" id="inputStartDate" class="form-control" name="startDate" ng-model="selectedSprint.startDate" date-time-input="YYYY-MM-DD" ng-disabled="!selectedSprint.isPlanned" required/>
                     <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
                   </div>
                 </a>
+                <div class="disable-mask" ng-if="!selectedSprint.isPlanned"></div>
               </div>
 
               <div class="working-days">
@@ -124,21 +124,22 @@
                 <label for="inputEndDate">Starts:</label>
                 <a class="date dropdown-toggle" id="dropdownEndDate" role="button" data-toggle="dropdown" data-target=".dropdown.end.date">
                   <div class="input-group">
-                    <input type="text" id="inputEndDate" class="form-control" name="endDate" ng-model="selectedSprint.endDate" date-time-input="YYYY-MM-DD" required/>
+                    <input type="text" id="inputEndDate" class="form-control" name="endDate" ng-model="selectedSprint.endDate" date-time-input="YYYY-MM-DD" ng-disabled="!selectedSprint.isPlanned" required/>
                     <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
                   </div>
                 </a>
+                <div class="disable-mask" ng-if="!selectedSprint.isPlanned"></div>
               </div>
             </div>
 
             <h4>Objective</h4>
             <div class="sprint-objective">
-              <textarea rows="2" ng-model="selectedSprint.objective" required></textarea>
+              <textarea rows="2" ng-model="selectedSprint.objective" required ng-disabled="!selectedSprint.isPlanned"></textarea>
             </div>
           </section>
           <h4 class="story-header">
             <span class="title">Stories</span>
-            <button type="button" class="btn btn-primary btn-sm btn-create-story" ng-click="addNewStoryToSelectedSprint('kanban')"><i class="fa fa-plus"></i>Create New Story</button>
+            <button type="button" ng-if="selectedSprint.isPlanned && selectedSprint.id" class="btn btn-primary btn-sm btn-create-story" ng-click="addNewStoryToSelectedSprint('kanban')"><i class="fa fa-plus"></i>Create New Story</button>
             <span class="sprint-point"><span class="value" ng-bind="selectedSprint.points|numberOrText"></span>points</span>
           </h4>
           <ul class="list-group sprint-stories" ng-scrollable="scrollOptions">
@@ -146,17 +147,17 @@
               <span class="story-type-name" ng-class="story.type | lowercase" title="{{story.typeName}}"></span>
               <span class="story-name" ng-bind="story.name|limitWithEllipsis:20" title="{{story.name}}"></span>
               <span class="story-statement" title="{{story.statement}}" ng-bind="story.statement|limitWithEllipsis:120"></span>
-              <button type="button" class="btn btn-default btn-xs btn-remove-item" ng-click="removeSprintStory(story, $index, $event)"><i class="fa fa-trash"></i></button>
+              <button type="button" class="btn btn-default btn-xs btn-remove-item" ng-if="selectedSprint.isPlanned" ng-click="removeSprintStory(story, $index, $event)"><i class="fa fa-trash"></i></button>
               <span class="badge points-{{story.points|numberOrText:'null'}}" ng-bind="story.points|numberOrText"></span>
             </li>
-            <li class="new-item list-group-item" ng-click="addingStoryToSelectedSprint()">
+            <li class="new-item list-group-item" ng-click="addingStoryToSelectedSprint()" ng-if="selectedSprint.isPlanned">
               <span ng-show="!newStoryVisible">Add a story</span>
             </li>
           </ul>
         </div>
         <div class="panel-footer">
-          <button type="button" class="btn btn-danger" ng-click="cancelSaveSelectedSprint()"><i class="fa fa-close"></i> Cancel</button>
-          <button type="submit" class="btn btn-success"><i class="fa fa-save"></i> Save</button>
+          <button type="button" class="btn btn-danger" ng-click="cancelSaveSelectedSprint()"><i class="fa fa-close"></i> {{selectedSprint.isPlanned ? 'Cancel' : 'Close'}}</button>
+          <button type="submit" class="btn btn-success" ng-if="selectedSprint.isPlanned"><i class="fa fa-save"></i> Save</button>
         </div>
       </div>
     </div>

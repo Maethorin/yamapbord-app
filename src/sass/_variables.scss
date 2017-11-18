@@ -1,8 +1,26 @@
+$bootstrap-sass-asset-helper: false !default;
+
+$gray-base: #4f6259 !default;
+$gray-dark: #485952 !default;   // #333
+$gray-darker: darken($gray-base, 13.5%) !default; // #222
+$gray: #72837d !default;
+$gray-light: #859993 !default;   // #999
+$gray-lighter: #dce9eb !default; // #eee
+
+$brand-primary: #3b749c !default;
+$brand-success:         #00bc8c !default;
+$brand-info:            #3498DB !default;
+$brand-warning:         #F39C12 !default;
+$brand-danger:          #E74C3C !default;
+
+
 $graph-part-width: 20px;
 $imageUrl: "/img/";
 $cor-azul: #3fa0e8;
 $story-types: fea bug cho tec;
 $story-statuses: plan star fini itst rtdp dpyd accp reje;
+$sprint-statuses: success failure current planned;
+$sprint-statuses-colors: $brand-success $brand-danger $brand-warning $brand-primary;
 $story-statuses-colors:
   #f89411
   #C16E00
@@ -58,34 +76,15 @@ $story-points-colors:
   }
 }
 
-
-$bootstrap-sass-asset-helper: false !default;
-// Darkly 3.3.7
-// Variables
-// --------------------------------------------------
-
-
-//== Colors
-//
-//## Gray and brand colors for use across Bootstrap.
-
-$gray-base: #4f6259 !default;
-$gray-dark: #485952 !default;   // #333
-$gray-darker: darken($gray-base, 13.5%) !default; // #222
-$gray: #72837d !default;
-$gray-light: #859993 !default;   // #999
-$gray-lighter: #dce9eb !default; // #eee
-
-$brand-primary: #3b749c !default;
-$brand-success:         #00bc8c !default;
-$brand-info:            #3498DB !default;
-$brand-warning:         #F39C12 !default;
-$brand-danger:          #E74C3C !default;
-
-
-//== Scaffolding
-//
-//## Settings for some of the most global styles.
+@mixin sprint-status-backgrounds() {
+  $index: 1;
+  @each $sprint-status in $sprint-statuses {
+    &.sprint-#{$sprint-status} {
+      background-color: nth($sprint-statuses-colors, $index);
+    }
+    $index: $index + 1;
+  }
+}
 
 //** Background color for `<body>`.
 $body-bg: $gray-darker !default;

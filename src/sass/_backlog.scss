@@ -12,8 +12,15 @@
           font-size: 15px;
           vertical-align: middle;
           display: inline-block;
-          width: 60%;
+          width: 67%;
           padding-left: 5px;
+        }
+        .sprint-status {
+          padding: 4px 7px;
+          border-radius: 17px;
+          vertical-align: middle;
+          margin-left: 10px;
+          @include sprint-status-backgrounds();
         }
         .btn-save-sprint {
           float: right;
@@ -59,6 +66,7 @@
       font-size: 18px;
       font-weight: bold;
       margin-top: 5px;
+      position: relative;
       .date {
         display: inline-block;
         font-weight: normal;

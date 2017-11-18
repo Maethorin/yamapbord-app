@@ -138,6 +138,7 @@ scrumInCeresControllers.controller('BacklogController', ['$rootScope', '$scope',
       endDate: null,
       points: null,
       status: 'PLAN',
+      isPlanned: true,
       type: 'sprint',
       team: $rootScope.loggedUser.teams === null ? $rootScope.loggedUser.team : null,
       stories: []
@@ -150,6 +151,7 @@ scrumInCeresControllers.controller('BacklogController', ['$rootScope', '$scope',
     $scope.selectedSprint = {
       name: null,
       points: null,
+      isPlanned: true,
       type: 'kanban',
       team: $rootScope.loggedUser.teams === null ? $rootScope.loggedUser.team : null,
       stories: []
