@@ -231,8 +231,6 @@ scrumInCeres.run(['$rootScope', '$timeout', '$q', 'AuthService', 'MeService', 'A
     Alert.itsOpenSourceDude();
   };
 
-  Pusher.logToConsole = true;
-
   var pusher = new Pusher('cf7366082066d84f2706', {
     cluster: 'us2',
     encrypted: true

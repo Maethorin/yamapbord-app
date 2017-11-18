@@ -10,7 +10,11 @@
 * Filtrar estórias no board por coluna.
 * Reordenar Tasks
 * Reordenar DoDs
-*
+* Purgatório
+* Definir Modulo como contexto
+* Exibir Épico na estória
+* Ordenar e agrupar
+* Na tela de add estória no sprint, filtrar por módulo e épico
 
 # Tipos de contabilização
 

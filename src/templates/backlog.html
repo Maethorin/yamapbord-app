@@ -28,7 +28,7 @@
           <span class="sprint-point"><span class="value" ng-bind="sprint.points|numberOrText"></span>points</span>
         </h4>
         <ul class="list-group sprint-stories" ng-scrollable="scrollOptions">
-          <li class="list-group-item" ng-repeat="story in sprint.stories" title="{{story.statement}}" ng-click="toggleCompleteStoryPopup(story)">
+          <li class="list-group-item" ng-repeat="story in sprint.stories" title="{{story.statement}}" ng-click="toggleShowStoryPopup(story)">
             <span class="story-type-name" ng-class="story.type | lowercase" title="{{story.typeName}}"></span>
             <span class="story-name" ng-bind="story.name|limitWithEllipsis:35"></span>
             <span class="badge points-{{story.points|numberOrText:'null'}}" ng-bind="story.points|numberOrText"></span>
@@ -55,7 +55,7 @@
           <span class="sprint-point"><span class="value" ng-bind="kanban.points|numberOrText"></span>points</span>
         </h4>
         <ul class="list-group sprint-stories" ng-scrollable="scrollOptions">
-          <li class="list-group-item" ng-repeat="story in kanban.stories" title="{{story.statement}}" ng-click="toggleCompleteStoryPopup(story)">
+          <li class="list-group-item" ng-repeat="story in kanban.stories" title="{{story.statement}}" ng-click="toggleShowStoryPopup(story)">
             <span class="story-type-name" ng-class="story.type | lowercase" title="{{story.typeName}}"></span>
             <span class="story-name" ng-bind="story.name|limitWithEllipsis:35"></span>
             <span class="badge points-{{story.points|numberOrText:'null'}}" ng-bind="story.points|numberOrText"></span>
@@ -138,10 +138,11 @@
           </section>
           <h4 class="story-header">
             <span class="title">Stories</span>
+            <button type="button" class="btn btn-primary btn-sm btn-create-story" ng-click="addNewStoryToSelectedSprint('kanban')"><i class="fa fa-plus"></i>Create New Story</button>
             <span class="sprint-point"><span class="value" ng-bind="selectedSprint.points|numberOrText"></span>points</span>
           </h4>
           <ul class="list-group sprint-stories" ng-scrollable="scrollOptions">
-            <li class="list-group-item" ng-repeat="story in selectedSprint.stories" ng-click="toggleFormStoryPopupOpened(story, $index)">
+            <li class="list-group-item" ng-repeat="story in selectedSprint.stories" ng-click="selectStoryToEdit($event, story, $index)">
               <span class="story-type-name" ng-class="story.type | lowercase" title="{{story.typeName}}"></span>
               <span class="story-name" ng-bind="story.name|limitWithEllipsis:20" title="{{story.name}}"></span>
               <span class="story-statement" title="{{story.statement}}" ng-bind="story.statement|limitWithEllipsis:120"></span>
@@ -169,7 +170,7 @@
       </div>
       <div class="panel-body">
         <ul class="list-group sprint-stories" ng-scrollable="scrollOptions">
-          <li class="list-group-item" ng-repeat="story in stories|filter:searchStories" title="{{story.statement}}" ng-click="toggleCompleteStoryPopup(story)">
+          <li class="list-group-item" ng-repeat="story in stories|filter:searchStories" title="{{story.statement}}" ng-click="toggleShowStoryPopup(story)">
             <checkbox ng-class="{'btn-primary': story.selected}" ng-click="$event.stopPropagation()" ng-model="story.selected"></checkbox>
             <span class="story-type-name" ng-class="story.type|lowercase" title="{{story.typeName}}"></span>
             <span class="story-name" ng-bind="story.name|limitWithEllipsis:12" title="{{story.name}}"></span>
@@ -185,27 +186,27 @@
     </div>
   </div>
 
-  <div class="popup-complete-story" ng-class="{'opened': completeStoryPopupOpened}">
+  <div class="popup-complete-story" ng-class="{'opened': showStoryPopupOpened}">
     <div class="panel panel-default panel-complete-story">
-      <div class="panel-heading" title="{{selectedStory.statement}}">
-        <span class="story-type-name" ng-class="selectedStory.type | lowercase " title="{{selectedStory.typeName}}" ng-bind="selectedStory.typeName"></span>
-        <span class="story-name">{{selectedStory.name}}</span>
-        <span class="story-status" ng-class="selectedStory.status | lowercase" ng-bind="selectedStory.statusName"></span>
-        <span class="badge points-{{selectedStory.points|numberOrText:'null'}}" ng-bind="selectedStory.points|numberOrText"></span>
+      <div class="panel-heading" title="{{showinStory.statement}}">
+        <span class="story-type-name" ng-class="showinStory.type | lowercase " title="{{showinStory.typeName}}" ng-bind="showinStory.typeName"></span>
+        <span class="story-name">{{showinStory.name}}</span>
+        <span class="story-status" ng-class="showinStory.status | lowercase" ng-bind="showinStory.statusName"></span>
+        <span class="badge points-{{showinStory.points|numberOrText:'null'}}" ng-bind="showinStory.points|numberOrText"></span>
       </div>
       <div class="panel-body">
-        <div class="story-statement" ng-bind="selectedStory.statement"></div>
+        <div class="story-statement" ng-bind="showinStory.statement"></div>
         <uib-tabset active="activeJustified" justified="true">
           <uib-tab index="0" heading="Tasks" select="changeScroll()">
             <ul class="list-group story-tasks" ng-scrollable>
-              <li class="list-group-item" ng-repeat="task in selectedStory.tasks">
+              <li class="list-group-item" ng-repeat="task in showinStory.tasks">
                 {{ task.task }}
               </li>
             </ul>
           </uib-tab>
           <uib-tab index="1" heading="DoD" select="changeScroll()">
             <ul class="list-group story-definitions" ng-scrollable>
-              <li class="list-group-item" ng-repeat="definition in selectedStory.definitionOfDone">
+              <li class="list-group-item" ng-repeat="definition in showinStory.definitionOfDone">
                 {{ definition.definition }}
               </li>
             </ul>
@@ -213,131 +214,11 @@
         </uib-tabset>
       </div>
       <div class="panel-footer">
-        <button type="button" class="btn btn-primary" ng-click="toggleCompleteStoryPopup(null)">Close</button>
+        <button type="button" class="btn btn-primary" ng-click="toggleShowStoryPopup(null)">Close</button>
       </div>
     </div>
   </div>
 
-  <form name="formStory" novalidate ng-submit="saveSelectedStory(formStory)">
-    <div class="popup-complete-story" ng-class="{'opened': formStoryPopupOpened}" ng-if="selectedStory !== null">
-      <div class="panel panel-default panel-edit-story">
-        <div class="panel-heading" title="{{selectedStory.statement}}">
-          <div class="col-md-2">
-            <label>Module:</label>
-            <div class="btn-group story-module" uib-dropdown keyboard-nav>
-              <button type="button" class="btn btn-primary btn-sm" uib-dropdown-toggle>
-                [{{selectedStory.module === null ? 'Select a module' : selectedStory.module.acronym}}] <span class="caret"></span>
-              </button>
-              <ul class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="simple-btn-keyboard-nav">
-                <li role="menuitem" ng-repeat="module in modules"><a ng-click="setStoryModule(selectedStory, module)">[{{module.acronym}}] - {{module.name}}</a></li>
-              </ul>
-            </div>
-          </div>
-
-          <div class="col-md-3">
-            <label>Epic:</label>
-            <div class="btn-group" uib-dropdown keyboard-nav>
-              <button type="button" class="btn btn-primary btn-sm" uib-dropdown-toggle>
-                {{selectedStory.epic === null ? 'Select an Epic' : selectedStory.epic.modules ? '[{modules}] {name}'.format(selectedStory.epic) : selectedStory.epic.name}} <span class="caret"></span>
-              </button>
-              <ul class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="simple-btn-keyboard-nav">
-                <li role="menuitem" ng-repeat="epic in epics|orderBy:['modules', 'name']">
-                  <a ng-click="setStoryEpic(selectedStory, epic)">
-                    {{epic.modules ? '[{modules}] {name}'.format(epic) : epic.name}}
-                  </a>
-                </li>
-              </ul>
-            </div>
-          </div>
-
-          <div class="col-md-7">
-            <label>Name:</label>
-            <input class="story-name" ng-model="selectedStory.name" />
-          </div>
-          <button type="button" class="heading-close" ng-click="cancelSaveSelectedStory()"><i class="fa fa-close"></i></button>
-        </div>
-        <div class="panel-body">
-          <div class="story-data">
-            <div class="story-type" ng-class="selectedStory.type | lowercase" ng-bind="selectedStory.typeName"></div>
-            <div class="story-requester" title="Requester"><label class="rq-ow">Rq</label>{{selectedStory.requester.name}}</div>
-            <div class="story-point">
-              <label>SP</label>
-              <span class="points-{{selectedStory.points|numberOrText:'null'}}" ng-bind="selectedStory.points|numberOrText"></span>
-            </div>
-            <div class="story-point">
-              <label>VP</label>
-              <span class="points-{{selectedStory.valuePoints|numberOrText:'null'}}" ng-bind="selectedStory.valuePoints|numberOrText"></span>
-            </div>
-          </div>
-
-          <div class="story-statement" ng-scrollable>
-            <p ng-bind="selectedStory.statement"></p>
-          </div>
-
-          <uib-tabset active="activeJustified" justified="true">
-            <uib-tab index="0" heading="Tasks" select="changeScroll()">
-              <ul class="list-group story-tasks" ng-scrollable="scrollOptions">
-                <li class="list-group-item" ng-repeat="task in selectedStory.tasks" ng-click="toggleEditStoryTask(task)">
-                  <input type="text" ng-model="task.task" ng-show="task.editing" focus-me="task.editing" ng-blur="toggleEditStoryTask(task)" ng-keypress="toggleEditStoryTask(task, $event)" />
-                  <span ng-bind="task.task" ng-if="!task.editing"></span>
-                  <button type="button" class="btn btn-default btn-xs btn-remove-item" ng-if="!task.editing" ng-click="removeStoryTask(selectedStory, $index)"><i class="fa fa-trash"></i></button>
-                </li>
-                <li class="new-item list-group-item" ng-click="addingTaskToStory()">
-                  <span ng-show="!newTaskVisible">Add a task</span>
-                  <input type="text" ng-model="newTask.task" ng-show="newTaskVisible" focus-me="newTaskVisible" ng-blur="blurInputTaskFiled($event, selectedStory)" />
-                  <button type="button" class="btn btn-primary btn-xs btn-add-item" ng-show="newTaskVisible" ng-click="addTaskToStory($event, selectedStory)">Add</button>
-                  <button type="button" class="btn btn-default btn-xs btn-remove-item" ng-show="newTaskVisible" ng-click="cancelAddTaskToStory($event)"><i class="fa fa-close"></i></button>
-                </li>
-              </ul>
-            </uib-tab>
-            <uib-tab index="1" heading="DoD" select="changeScroll()">
-              <ul class="list-group story-definitions" ng-scrollable="scrollOptions">
-                <li class="list-group-item" ng-repeat="definition in selectedStory.definitionOfDone" ng-click="toggleEditStoryDefinition(definition)">
-                  <input type="text" ng-model="definition.definition" ng-show="definition.editing" focus-me="definition.editing" ng-blur="toggleEditStoryDefinition(definition)" ng-keypress="toggleEditStoryDefinition(task, $event)" />
-                  <span ng-bind="definition.definition" ng-if="!definition.editing"></span>
-                  <button type="button" class="btn btn-default btn-xs btn-remove-item" ng-if="!definition.editing" ng-click="removeStoryDefinition(selectedStory, $index)"><i class="fa fa-trash"></i></button>
-                </li>
-                <li class="new-item list-group-item" ng-click="addingDefinitionToStory()">
-                  <span ng-show="!newDefinitionVisible">Add a definition</span>
-                  <input type="text" ng-model="newDefinition.definition" ng-show="newDefinitionVisible" focus-me="newDefinitionVisible" ng-blur="addDefinitionToStory($event, selectedStory)" />
-                  <button type="button" class="btn btn-default btn-xs btn-remove-item" ng-show="newDefinitionVisible" ng-click="cancelAddDefinitionToStory($event)"><i class="fa fa-close"></i></button>
-                  <button type="button" class="btn btn-primary btn-xs btn-add-item" ng-show="newDefinitionVisible" ng-click="addDefinitionToStory($event, selectedStory)">Add</button>
-                </li>
-              </ul>
-            </uib-tab>
-            <uib-tab index="2" heading="Comments" select="changeScroll()">
-              <ul class="list-group story-comments" ng-scrollable="scrollCommentOptions">
-                <li class="list-group-item" ng-repeat="storyComment in selectedStory.comments" ng-click="toggleEditStoryComment(storyComment)">
-                  <textarea ng-model="storyComment.comment" ng-show="storyComment.editing" focus-me="storyComment.editing" ng-blur="toggleEditStoryComment(storyComment)"></textarea>
-                  <div>
-                    <div class="comment-details" ng-if="!storyComment.editing">
-                      <div class="col-md-7">
-                        Created by: {{storyComment.creator.name}}
-                      </div>
-                      <div class="col-md-5">
-                        Created at: {{storyComment.createdAt}}
-                      </div>
-                    </div>
-                    <span class="with-break-lines" ng-bind="storyComment.comment"></span>
-                  </div>
-                  <button type="button" class="btn btn-default btn-xs btn-remove-item" ng-if="!storyComment.editing" ng-click="removeStoryComment(selectedStory, $index)"><i class="fa fa-trash"></i></button>
-                </li>
-                <li class="new-item list-group-item" ng-click="addingCommentToStory()">
-                  <span ng-show="!newCommentVisible">Add a comment</span>
-                  <textarea ng-model="newComment.comment" rows="3" ng-show="newCommentVisible" focus-me="newCommentVisible" ng-blur="blurInputCommentFiled($event, selectedStory)"></textarea>
-                  <button type="button" class="btn btn-primary btn-xs btn-add-item" ng-show="newCommentVisible" ng-click="addCommentToStory($event, selectedStory)">Add</button>
-                  <button type="button" class="btn btn-default btn-xs btn-remove-item" ng-show="newCommentVisible" ng-click="cancelAddCommentToStory($event)"><i class="fa fa-close"></i></button>
-                </li>
-              </ul>
-            </uib-tab>
-          </uib-tabset>
-        </div>
-        <div class="panel-footer">
-          <button type="button" class="btn btn-danger" ng-click="cancelSaveSelectedStory()"><i class="fa fa-close"></i> Cancel</button>
-          <button type="submit" class="btn btn-success"><i class="fa fa-save"></i> Save</button>
-        </div>
-      </div>
-    </div>
-  </form>
+  <section id="createStory" ng-include="'templates/include/story-form.html'"></section>
 
 </div>

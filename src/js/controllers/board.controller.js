@@ -340,7 +340,7 @@ scrumInCeresControllers.controller('BoardController', ['$rootScope', '$scope', '
     $event.stopPropagation();
   };
 
-  $scope.blurInputTaskFiled = function($event) {
+  $scope.blurInputTaskField = function($event) {
     $timeout(
       function() {
         $scope.addTaskToStory($event);

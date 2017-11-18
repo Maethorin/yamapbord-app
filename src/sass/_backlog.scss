@@ -140,6 +140,11 @@
       display: inline-block;
       line-height: 36px;
     }
+    .btn-create-story {
+      i {
+        margin-right: 5px;
+      }
+    }
     .sprint-point {
       text-align: center;
       background-color: $gray-light;
