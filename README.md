@@ -1,6 +1,6 @@
 # O Que Tá faltando:
 
-* No Backlog, exibir todos os sprints e permitir agrupamentos
+* No Backlog, permitir agrupamentos
 * Ordenar estórias
 * Definir perfil readonly
 * Tags para task (Back|Front|DB|Infra)

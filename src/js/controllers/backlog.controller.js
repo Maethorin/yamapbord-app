@@ -444,4 +444,8 @@ scrumInCeresControllers.controller('BacklogController', ['$rootScope', '$scope',
   $scope.addNewStoryToSelectedSprint = function(iterationType) {
     $rootScope.$broadcast('story.add', {iterationType: iterationType, iteration: $scope.selectedSprint});
   };
+
+  $scope.toggleFilterBarExpanded = function () {
+    $scope.filterBarExpanded = !$scope.filterBarExpanded;
+  };
 }]);

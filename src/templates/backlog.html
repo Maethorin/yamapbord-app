@@ -75,7 +75,7 @@
             <label>Team:</label>
             <div class="form-group">
               <select id="selectTeam" ng-model="selectedSprint.team" ng-disabled="!selectedSprint.isPlanned" required class="select-team form-control" ng-options="team.name for team in teams track by team.id">
-                <option value="">-- choose team --</option>
+                <option value="">-- choose --</option>
               </select>
             </div>
           </div>
@@ -222,4 +222,66 @@
 
   <section id="createStory" ng-include="'templates/include/story-form.html'"></section>
 
+  <div class="filter-bar" ng-class="{'expanded': filterBarExpanded}">
+    <div class="filter-trigger" ng-click="toggleFilterBarExpanded()">
+      <div></div><div></div>
+    </div>
+    <div class="filter-content">
+      <div class="col-md-2">
+        <h4>Type: <span ng-bind="filter.type.name"></span><button type="button" class="btn btn-xs btn-danger btn-clear-filter" ng-click="selectFilter('type', null)">clear</button></h4>
+        <div class="filter-bar-list">
+          <ul class="list-group">
+            <li class="list-group-item {{type.code | lowercase}}" ng-class="{'selected': type.code === filter.type.code}" ng-repeat="type in storyTypes" ng-bind="type.name" ng-click="selectFilter('type', type)"></li>
+          </ul>
+        </div>
+      </div>
+      <div class="col-md-1">
+        <h4>VP: <span ng-bind="filter.valuePoint"></span><button type="button" class="btn btn-xs btn-danger btn-clear-filter" ng-click="selectFilter('valuePoint', null)">clear</button></h4>
+        <div class="filter-bar-list">
+          <ul class="list-group">
+            <li class="list-group-item" ng-class="{'selected': 'N' === filter.valuePoint}" ng-click="selectFilter('valuePoint', 'N')">N</li>
+            <li class="list-group-item" ng-class="{'selected': valuePoint === filter.valuePoint}" ng-repeat="valuePoint in points" ng-bind="valuePoint" ng-click="selectFilter('valuePoint', valuePoint)"></li>
+          </ul>
+        </div>
+      </div>
+      <div class="col-md-1">
+        <h4>SP: <span ng-bind="filter.point"></span><button type="button" class="btn btn-xs btn-danger btn-clear-filter" ng-click="selectFilter('point', null)">clear</button></h4>
+        <div class="filter-bar-list">
+          <ul class="list-group">
+            <li class="list-group-item" ng-class="{'selected': 'N' === filter.point}" ng-click="selectFilter('point', 'N')">N</li>
+            <li class="list-group-item" ng-class="{'selected': point === filter.point}" ng-repeat="point in points" ng-bind="point" ng-click="selectFilter('point', point)"></li>
+          </ul>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <h4>Module: <span ng-bind="filter.module.name|limitWithEllipsis:25"></span><button type="button" class="btn btn-xs btn-danger btn-clear-filter" ng-click="selectFilter('module', null)">clear</button></h4>
+        <div class="filter-bar-list">
+          <ul class="list-group">
+            <li class="list-group-item" ng-class="{'selected': module.id === filter.module.id}" ng-repeat="module in modules" ng-bind="module.name" ng-click="selectFilter('module', module)"></li>
+          </ul>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <h4>Epic: <span ng-bind="filter.epic.name|limitWithEllipsis:25"></span><button type="button" class="btn btn-xs btn-danger btn-clear-filter" ng-click="selectFilter('epic', null)">clear</button></h4>
+        <div class="filter-bar-list">
+          <ul class="list-group">
+            <li ng-if="filter.module !== null && filter.module.epics.length > 0" class="list-group-item" ng-class="{'selected': epic.id === filter.epic.id}" ng-repeat="epic in filter.module.epics|orderBy:'name'" ng-click="selectFilter('epic', epic)">
+              {{epic.modules ? '[{modules}] {name}'.format(epic) : epic.name}}
+            </li>
+            <li ng-if="filter.module === null || filter.module.epics.length === 0" class="list-group-item" ng-class="{'selected': epic.id === filter.epic.id}" ng-repeat="epic in epics|orderBy:['modules', 'name']" ng-click="selectFilter('epic', epic)">
+              {{epic.modules ? '[{modules}] {name}'.format(epic) : epic.name}}
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="col-md-2">
+        <h4>Requester: <span ng-bind="filter.requester.name|limitWithEllipsis:17"></span><button type="button" class="btn btn-xs btn-danger btn-clear-filter" ng-click="selectFilter('requester', null)">clear</button></h4>
+        <div class="filter-bar-list">
+          <ul class="list-group">
+            <li class="list-group-item" ng-class="{'selected': requester.id === filter.requester.id}" ng-repeat="requester in requesters" ng-bind="requester.name" ng-click="selectFilter('requester', requester)"></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

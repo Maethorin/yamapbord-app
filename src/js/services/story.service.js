@@ -229,7 +229,7 @@ scrumInCeresServices.service('StoryService', ['$rootScope', '$q', '$timeout', 'A
 
     $scope.selectStoryToEdit = function($event, story, $index) {
       $event.stopPropagation();
-      if (!$scope.selectedSprint.isPlanned) {
+      if ($scope.selectedSprint && !$scope.selectedSprint.isPlanned) {
         $scope.toggleShowStoryPopup(story);
         return false;
       }

@@ -91,6 +91,7 @@ label {
   .points {
     label {
       font-size: 14px;
+      padding: 5px 8px;
       &.active {
         box-shadow: inset 0 0 0 2px #FFF;
         color: #FFF;
@@ -157,7 +158,7 @@ label {
   }
 
   .panel-edit-story {
-    margin: 2% 20%;
+    margin: 0.5% 20%;
     .panel-heading {
       display: inline-block;
       width: 100%;
@@ -467,12 +468,18 @@ textarea {
 }
 
 .form-group {
-  .select-team {
+  .select-team, .select-module, .select-epic, .select-story-type {
     background-color: $brand-primary;
     border: none;
     color: #FFF;
     padding: 2px 7px;
     height: 32px;
+  }
+  .select-story-type {
+    background-repeat: no-repeat;
+    background-position: 9px 7px;
+    padding-left: 34px;
+    @include story-types();
   }
 }
 
