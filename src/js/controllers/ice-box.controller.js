@@ -30,6 +30,7 @@ scrumInCeresControllers.controller('IceBoxController', ['$rootScope', '$scope', 
     Alert.loading();
     StoryService.filter($scope.filter).then(function(stories) {
       $scope.stories = stories;
+      $rootScope.$broadcast('story.grouped');
       Alert.close();
     });
   };
@@ -51,7 +52,6 @@ scrumInCeresControllers.controller('IceBoxController', ['$rootScope', '$scope', 
     if ($rootScope.storyGroupedBy === 'Epic') {
       $scope.groupedStories = _.groupBy($scope.stories, 'epic.id');
     }
-    console.log($scope.groupedStories)
   });
 
   $rootScope.$on('icebox.story.created', function(event, data) {

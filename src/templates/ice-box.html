@@ -81,6 +81,7 @@
       </table>
     </section>
   </section>
+
   <section ng-if="!showAsTable">
     <section ng-if="groupedStories">
       <div class="row" ng-repeat="(group, stories) in groupedStories">
@@ -150,6 +151,7 @@
         </div>
       </div>
     </section>
+
     <section ng-if="!groupedStories">
       <div class="story-container col-md-4" ng-repeat="story in stories|filter:filterObject.filter">
         <div class="panel panel-default">
