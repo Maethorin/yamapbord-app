@@ -3,7 +3,6 @@
 # Tipos de contabilização
 
 * Velocidade do time
-* Pontos planejados x pontos executados
 * Numero de vezes estórias foram rejeitadas
 * Pontos médio por dia do time
 * Pontos médio por dia desenvolvedor

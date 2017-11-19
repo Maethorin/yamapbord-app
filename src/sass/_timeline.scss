@@ -65,12 +65,14 @@
         padding: 0 10px;
         width: 150px;
         text-align: center;
+        position: relative;
         .sprint-name, .kanban-name {
           font-weight: bold;
           text-align: center;
         }
         .stories-quantity, .sprint-points, .kanban-quantity, .kanban-points {
-          float: left;
+          position: absolute;
+          top: 20px;
           text-align: center;
           font-size: 10px;
           span {
@@ -78,9 +80,13 @@
             display: block;
           }
         }
+        .stories-quantity, .kanban-quantity {
+          left: 5px;
+        }
+        .sprint-points, .kanban-points {
+          right: 5px;
+        }
         .sprint-status, .kanban-status {
-          float: left;
-          width: 70px;
           text-align: center;
           padding-top: 6px;
           span {
@@ -109,7 +115,7 @@
       .kanban-data {
         width: 100%;
         .kanban-status {
-          width: 140px;
+          //width: 140px;
           span {
             &.kanban {
               background-color: $brand-info;
