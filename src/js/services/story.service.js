@@ -171,6 +171,16 @@ scrumInCeresServices.service('StoryService', ['$rootScope', '$q', '$timeout', 'A
     return result.promise;
   };
 
+  this.turnCompactStoryAsComplete = function(compact, complete) {
+    compact.tasks = complete.tasks;
+    compact.definitionOfDone = complete.definitionOfDone;
+    compact.comments = complete.comments;
+    compact.epic = complete.epic;
+    compact.module = complete.module;
+    compact.requester = complete.requester;
+    compact.owner = complete.owner;
+  };
+
   this.prepareScopeToEditStory = function($scope) {
     $scope.completeStoryPopupOpened = false;
     $scope.selectedStory = null;
@@ -233,10 +243,20 @@ scrumInCeresServices.service('StoryService', ['$rootScope', '$q', '$timeout', 'A
         $scope.toggleShowStoryPopup(story);
         return false;
       }
-      $scope.selectedStory = story;
+      Alert.loading();
       $scope.addingNewStory = false;
       $scope.selectedStoryIndex = $index;
-      $scope.completeStoryPopupOpened = true;
+      self.getFullStory(story.id).then(
+        function(response) {
+          $scope.selectedStory = story;
+          self.turnCompactStoryAsComplete($scope.selectedStory, response);
+          $scope.completeStoryPopupOpened = true;
+          Alert.close();
+        },
+        function(error) {
+          Alert.randomErrorMessage(error);
+        }
+      );
     };
 
     $scope.saveSelectedStory = function(form, saveAndClose) {

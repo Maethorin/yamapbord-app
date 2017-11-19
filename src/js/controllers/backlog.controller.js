@@ -256,8 +256,7 @@ scrumInCeresControllers.controller('BacklogController', ['$rootScope', '$scope',
     StoryService.getFullStory(story.id).then(
       function(response) {
         $scope.showinStory = story;
-        $scope.showinStory.tasks = response.tasks;
-        $scope.showinStory.definitionOfDone = response.definitionOfDone;
+        StoryService.turnCompactStoryAsComplete($scope.showinStory, response);
         $scope.showStoryPopupOpened = !$scope.showStoryPopupOpened;
         Alert.close();
       },
