@@ -61,12 +61,25 @@ scrumInCeresServices.service('StoryService', ['$rootScope', '$q', '$timeout', 'A
     $scope.completeStoryPopupOpened = false;
   }
 
+  function recalculateSelectedIterationPoints($scope, newStory) {
+    if (!$scope.selectedIteration) {
+      return false;
+    }
+    if (newStory) {
+      $scope.selectedIteration.stories.push(newStory);
+    }
+    $scope.selectedIteration.points = 0;
+    _.forEach($scope.selectedIteration.stories, function(story) {
+      $scope.selectedIteration.points += (story.points || 0);
+    });
+  }
+
   function saveStoryAndClosePopup($scope) {
     if ($scope.addingNewStory) {
       createStory($scope, function(result) {
         closingPopup($scope);
-        if ($scope.selectedIteration && result.story) {
-          $scope.selectedIteration.stories.push(result.story);
+        recalculateSelectedIterationPoints($scope, result.story);
+        if ($scope.selectedIteration) {
           return;
         }
         $scope.stories = result.stories;
@@ -74,6 +87,7 @@ scrumInCeresServices.service('StoryService', ['$rootScope', '$q', '$timeout', 'A
     }
     else {
       updateStory($scope, function($scope) {
+        recalculateSelectedIterationPoints($scope);
         closingPopup($scope)
       });
     }
@@ -82,14 +96,20 @@ scrumInCeresServices.service('StoryService', ['$rootScope', '$q', '$timeout', 'A
   function saveStoryAndKeepPopupOpen($scope) {
     if ($scope.addingNewStory) {
       createStory($scope, function(result) {
+        recalculateSelectedIterationPoints($scope, result.story);
         if (result.story !== null) {
           $scope.selectedStory = result.story;
+          if ($scope.selectedIteration) {
+            return;
+          }
           $scope.stories.push(result.story);
         }
       });
     }
     else {
-      updateStory($scope);
+      updateStory($scope, function($scope) {
+        recalculateSelectedIterationPoints($scope);
+      });
     }
   }
 
@@ -246,6 +266,8 @@ scrumInCeresServices.service('StoryService', ['$rootScope', '$q', '$timeout', 'A
       Alert.loading();
       $scope.addingNewStory = false;
       $scope.selectedStoryIndex = $index;
+      // TODO: TARTARUGA. Pra tirar essa aqui, precisa renomear $scope.selectedSprint para $scope.selectedIteration em todos os lugares
+      $scope.selectedIteration = $scope.selectedSprint;
       self.getFullStory(story.id).then(
         function(response) {
           $scope.selectedStory = story;

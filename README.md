@@ -1,22 +1,5 @@
 # O Que Tá faltando:
 
-* Na tela de add estória no sprint, filtrar por módulo e épico
-* Permitir ir para o quadro do backlog
-* Ordenar estórias
-* Definir perfil readonly
-* Tags para task (Back|Front|DB|Infra)
-* Tags para estória: aberto
-* Adicionar Criticidade
-* Adicionar nome do time no Sprint
-* Filtrar estórias no board por coluna.
-* Reordenar Tasks
-* Reordenar DoDs
-* Purgatório
-* Definir Modulo como contexto
-* Exibir Épico na estória
-* Ordenar e agrupar
-
-
 # Tipos de contabilização
 
 * Velocidade do time
@@ -26,6 +9,9 @@
 * Pontos médio por dia desenvolvedor
 * Número min, médio e máx de estórias por sprint
 * Número min, médio e máx de pontos por sprint
+* Quantidade de estórias por tipo
+* Quantidade de estórias por módulo
+* Quantidade de estórias por ponto
 
 
 https://scrum.inceres.com.br/css/style.css
