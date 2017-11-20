@@ -47,6 +47,7 @@
         <tr>
           <th>Team</th>
           <th>Name</th>
+          <th>Points</th>
           <th>Stories</th>
           <th>Planned</th>
           <th>Started</th>
@@ -59,6 +60,9 @@
         <tr ng-repeat="kanban in kanbans" ng-click="selectSprintToEdit($event, kanban, $index, 'kanban')">
           <td class="col-team">[{{kanban.team.name || 'NO-TEAM'}}]</td>
           <td title="{{kanban.name}}" ng-bind="kanban.name"></td>
+          <td class="col-points">
+            <span class="value" ng-bind="kanban.points|numberOrText"></span>
+          </td>
           <td class="col-points">
             <span class="value" ng-bind="kanban.stories.length|numberOrText"></span>
           </td>
