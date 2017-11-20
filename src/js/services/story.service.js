@@ -41,8 +41,11 @@ scrumInCeresServices.service('StoryService', ['$rootScope', '$q', '$timeout', 'A
     return this.getStories();
   };
 
-  this.getStories = function() {
+  this.getStories = function(clearFilter) {
     var result = $q.defer();
+    if (clearFilter) {
+      filter = {};
+    }
     IceBox.query(
       filter,
       function(response) {

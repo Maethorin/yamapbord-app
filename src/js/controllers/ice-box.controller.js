@@ -16,7 +16,8 @@ scrumInCeresControllers.controller('IceBoxController', ['$rootScope', '$scope', 
   $scope.groupedStories = false;
 
   Alert.loading();
-  StoryService.getStories().then(function(stories) {
+  var clearFilter = true;
+  StoryService.getStories(clearFilter).then(function(stories) {
     $scope.stories = stories;
     Alert.close();
   });
