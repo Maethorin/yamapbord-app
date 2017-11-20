@@ -2,10 +2,6 @@
 
 # Tipos de contabilização
 
-* Velocidade do time
-* Numero de vezes estórias foram rejeitadas
-* Pontos médio por dia do time
-* Pontos médio por dia desenvolvedor
 * Número min, médio e máx de estórias por sprint
 * Número min, médio e máx de pontos por sprint
 * Quantidade de estórias por tipo

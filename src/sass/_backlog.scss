@@ -308,7 +308,7 @@
         }
         .sprint-stories {
           height: 41vh;
-          overflow: hidden;
+          overflow-y: auto;
           li {
             .sprint-statement {
               margin: 0;
@@ -336,7 +336,7 @@
       .panel-body {
         height: 68vh;
         .sprint-stories {
-          height: 57vh;
+          height: 56vh;
         }
       }
     }

@@ -225,16 +225,18 @@
           </section>
           <h4 class="story-header no-background">
             <span class="title">Stories</span>
-            <button type="button" ng-if="selectedSprint.isPlanned && selectedSprint.id" class="btn btn-primary btn-sm btn-create-story" ng-click="addNewStoryToSelectedSprint('kanban')"><i class="fa fa-plus"></i>Create New Story</button>
+            <button type="button" ng-if="selectedSprint.isPlanned && selectedSprint.id" class="btn btn-primary btn-sm btn-create-story" ng-click="addNewStoryToSelectedSprint(selectedSprint.type)"><i class="fa fa-plus"></i>Create New Story</button>
             <span class="sprint-point"><span class="value" ng-bind="selectedSprint.points|numberOrText"></span>points</span>
           </h4>
-          <ul class="list-group sprint-stories" ng-scrollable="scrollOptions">
-            <li class="list-group-item" ng-repeat="story in selectedSprint.stories" ng-click="selectStoryToEdit($event, story, $index)">
-              <span class="story-type-name" ng-class="story.type | lowercase" title="{{story.typeName}}"></span>
-              <span class="story-name" ng-bind="story.name|limitWithEllipsis:20" title="{{story.name}}"></span>
-              <span class="story-statement" title="{{story.statement}}" ng-bind="story.statement|limitWithEllipsis:120"></span>
-              <button type="button" class="btn btn-default btn-xs btn-remove-item" ng-if="selectedSprint.isPlanned" ng-click="removeSprintStory(story, $index, $event)"><i class="fa fa-trash"></i></button>
-              <span class="badge points-{{story.points|numberOrText:'null'}}" ng-bind="story.points|numberOrText"></span>
+          <ul class="list-group sprint-stories" as-sortable ng-model="selectedSprint.stories">
+            <li class="list-group-item" ng-repeat="story in selectedSprint.stories" ng-click="selectStoryToEdit($event, story, $index)" as-sortable-item>
+              <div as-sortable-item-handle>
+                <span class="story-type-name" ng-class="story.type | lowercase" title="{{story.typeName}}"></span>
+                <span class="story-name" ng-bind="story.name|limitWithEllipsis:20" title="{{story.name}}"></span>
+                <span class="story-statement" title="{{story.statement}}" ng-bind="story.statement|limitWithEllipsis:120"></span>
+                <button type="button" class="btn btn-default btn-xs btn-remove-item" ng-if="selectedSprint.isPlanned" ng-click="removeSprintStory(story, $index, $event)"><i class="fa fa-trash"></i></button>
+                <span class="badge points-{{story.points|numberOrText:'null'}}" ng-bind="story.points|numberOrText"></span>
+              </div>
             </li>
             <li class="new-item list-group-item" ng-click="addingStoryToSelectedSprint()" ng-if="selectedSprint.isPlanned">
               <span ng-show="!newStoryVisible">Add a story</span>

@@ -72,6 +72,7 @@ var scrumInCeres = angular.module(
     'ui.bootstrap.datetimepicker',
     'ui.dateTimeInput',
     'ui.checkbox',
+    'as.sortable',
     '19degrees.ngSweetAlert2',
     'scrumInCeres.services',
     'scrumInCeres.factories',
