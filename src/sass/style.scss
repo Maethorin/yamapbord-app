@@ -250,27 +250,38 @@ label {
   }
 }
 
-li {
-  &.list-group-item-success {
-    background-color: darken($brand-success, 10%);
-  }
-  &.list-group-item-warning {
-    background-color: darken($brand-warning, 10%);
-  }
-}
-
 .story-definitions, .story-tasks, .story-comments {
   height: 250px;
   padding: 10px;
   background-color: $gray;
   overflow: auto;
+}
+
+h4 {
+  background-color: $gray;
+  font-size: 18px;
+  margin: 10px 0;
+  padding: 8px 15px 5px;
+  color: $gray-lighter;
+  border-bottom: 1px solid $gray-lighter;
+  &.no-background {
+    background-color: transparent;
+  }
+}
+
+.as-sortable-dragging {
+  padding: 0;
+}
+
+.list-group {
+  margin-bottom: 0;
   li {
+    font-size: 16px;
     background-color: $gray;
-    color: #e2e2e2;
+    color: #EEE;
     border-color: #222;
-    width: 97%;
-    overflow: hidden;
     cursor: pointer;
+    overflow: hidden;
     &.list-group-item-success {
       background-color: darken($brand-success, 10%);
     }
@@ -294,9 +305,55 @@ li {
       border-radius: 4px;
       box-shadow: inset 0 1px 1px rgba(0,0,0,0.075);
     }
+    .btn-remove-item {
+      margin-top: -5px;
+      float: right;
+      padding: 5px 10px;
+      font-size: 15px;
+    }
+    div {
+      padding: 0 5px;
+      &.col-md-1 {
+        width: 4.333%;
+      }
+      &.col-md-2 {
+        width: 18.6667%;
+      }
+      &.col-md-3 {
+        width: 20%;
+      }
+      &.col-md-4 {
+        width: 48.3333%;
+      }
+    }
+    .sprint-statement {
+      margin: 0;
+      font-size: 16px;
+      height: auto;
+      float: right;
+      width: 67%;
+      margin-right: 28px;
+      margin-top: -6px;
+      padding: 7px 12px;
+    }
+    .btn-remove-item {
+      margin-left: 5px;
+    }
+    &:hover {
+      background-color: $gray-darker;
+    }
+    .story-type-name {
+      display: inline-block;
+      padding: 0;
+      width: 27px;
+      height: 27px;
+      background-position: 6px 5px;
+      background-color: $gray-dark;
+    }
     &.new-item {
       background-color: #5e7162;
       color: #9bb299;
+      cursor: pointer;
       overflow: hidden;
       &:hover {
         background-color: darken(#5e7162, 15%);
@@ -310,34 +367,15 @@ li {
       }
     }
     .fa {
-      margin: 0;
-    }
-    .btn-remove-item {
-      margin-top: -5px;
-      float: right;
-      padding: 5px 10px;
-      font-size: 15px;
-    }
-  }
-}
-
-h4 {
-  background-color: $gray;
-  font-size: 18px;
-  margin: 10px 0;
-  padding: 8px 15px 5px;
-  color: $gray-lighter;
-  border-bottom: 1px solid $gray-lighter;
-  &.no-background {
-    background-color: transparent;
-  }
-}
-
-.list-group {
-  .list-group-item {
-    font-size: 16px;
-    .fa {
       font-size: 18px;
+      cursor: pointer;
+      margin: 0;
+      &.fa-fw {
+        margin-right: 5px;
+      }
+      &:hover {
+        color: #000;
+      }
     }
   }
 }

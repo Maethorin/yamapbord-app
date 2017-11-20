@@ -183,23 +183,6 @@ h4 {
   }
 }
 
-.list-group {
-  margin-bottom: 0;
-  .list-group-item {
-    font-size: 11px;
-    .fa {
-      cursor: pointer;
-      font-size: 15px;
-      &.fa-fw {
-        margin-right: 5px;
-      }
-      &:hover {
-        color: #000;
-      }
-    }
-  }
-}
-
 .btn-go-back-story {
   float: left;
   .minus-margin {

@@ -99,49 +99,6 @@
     padding: 10px;
     background-color: $gray;
     border-radius: 5px;
-    li {
-      background-color: $gray-light;
-      color: #222;
-      border-color: #222;
-      width: 97%;
-      cursor: pointer;
-      &:hover {
-        background-color: $gray-darker;
-      }
-      .story-type-name {
-        display: inline-block;
-        padding: 0;
-        width: 27px;
-        height: 27px;
-        background-position: 6px 5px;
-        background-color: $gray-dark;
-      }
-      &.new-item {
-        background-color: #5e7162;
-        color: #9bb299;
-        cursor: pointer;
-        overflow: hidden;
-        &:hover {
-          background-color: darken(#5e7162, 15%);
-        }
-        .btn-add-item, .btn-remove-item {
-          float: right;
-          padding: 5px 10px;
-          font-size: 15px;
-          margin-top: 0;
-          margin-left: 5px;
-        }
-      }
-      .fa {
-        margin: 0;
-      }
-      .btn-remove-item {
-        margin-top: -5px;
-        float: right;
-        padding: 5px 10px;
-        font-size: 15px;
-      }
-    }
   }
 
   .story-header {
@@ -309,21 +266,6 @@
         .sprint-stories {
           height: 41vh;
           overflow-y: auto;
-          li {
-            .sprint-statement {
-              margin: 0;
-              font-size: 16px;
-              height: auto;
-              float: right;
-              width: 67%;
-              margin-right: 28px;
-              margin-top: -6px;
-              padding: 7px 12px;
-            }
-            .btn-remove-item {
-              margin-left: 5px;
-            }
-          }
         }
       }
       .panel-footer {
@@ -355,7 +297,7 @@
       display: block;
     }
     .panel-stories {
-      margin: 5% 20%;
+      margin: 3% 10%;
       .panel-heading {
         display: inline-block;
         width: 100%;
@@ -392,7 +334,7 @@
       }
       .panel-body {
         padding: 20px;
-        height: 50vh;
+        height: 75vh;
         zoom: 1;
         overflow: auto;
         position: relative;
