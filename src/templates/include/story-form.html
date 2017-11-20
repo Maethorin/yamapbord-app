@@ -61,11 +61,13 @@
 
         <uib-tabset active="activeJustified" justified="true">
           <uib-tab index="0" heading="Tasks" select="changeScroll()">
-            <ul class="list-group story-tasks" ng-scrollable="scrollOptions">
-              <li class="list-group-item" ng-repeat="task in selectedStory.tasks" ng-click="toggleEditStoryTask(task)">
-                <input type="text" ng-model="task.task" ng-show="task.editing" focus-me="task.editing" ng-blur="toggleEditStoryTask(task)" ng-keypress="toggleEditStoryTask(task, $event)" />
-                <span ng-bind="task.task" ng-if="!task.editing"></span>
-                <button type="button" class="btn btn-default btn-xs btn-remove-item" ng-if="!task.editing" ng-click="removeStoryTask(selectedStory, $index)"><i class="fa fa-trash"></i></button>
+            <ul class="list-group story-tasks" as-sortable ng-model="selectedStory.tasks">
+              <li class="list-group-item" ng-repeat="task in selectedStory.tasks" ng-click="toggleEditStoryTask(task)" as-sortable-item>
+                <div as-sortable-item-handle>
+                  <input type="text" ng-model="task.task" ng-show="task.editing" focus-me="task.editing" ng-blur="toggleEditStoryTask(task)" ng-keypress="toggleEditStoryTask(task, $event)" />
+                  <span ng-bind="task.task" ng-if="!task.editing"></span>
+                  <button type="button" class="btn btn-default btn-xs btn-remove-item" ng-if="!task.editing" ng-click="removeStoryTask(selectedStory, $index)"><i class="fa fa-trash"></i></button>
+                </div>
               </li>
               <li class="new-item list-group-item" ng-click="addingTaskToStory()">
                 <span ng-show="!newTaskVisible">Add a task</span>

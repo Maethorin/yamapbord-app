@@ -62,31 +62,62 @@
           <div class="story-statement" ng-bind="selectedStory.statement"></div>
 
           <uib-tabset active="activeJustified" justified="true">
-            <uib-tab index="0" select="changeScroll()">
+            <uib-tab index="0" select="changeScroll(0)">
               <uib-tab-heading>
                 Tasks
-                <button type="button" class="btn btn-success btn-sm btn-save-task" ng-click="saveSelectedStoryTasks()"><i class="fa fa-save"></i></button>
+                <button ng-if="selectedStoryCurrentTab === 0" type="button" class="btn btn-success btn-sm btn-save-task" ng-click="saveSelectedStoryTasks()"><i class="fa fa-save"></i></button>
               </uib-tab-heading>
-              <ul class="list-group story-tasks" ng-scrollable>
-                <li class="list-group-item" ng-class="{'list-group-item-success': task.complete, 'list-group-item-warning': !task.complete }" ng-repeat="task in selectedStory.tasks" ng-click="toggleEditStoryTask(task)">
-                  <i class="fa fa-fw" ng-click="changeTaskStatus($event, task, $index, selectedStory)" ng-class="{'fa-square-o': !task.changing && !task.complete, 'fa-spinner fa-spin': task.changing, 'fa-check-square-o': !task.changing && task.complete}"></i>
-                  <input type="text" ng-model="task.task" ng-show="task.editing" focus-me="task.editing" ng-blur="toggleEditStoryTask(task)" ng-keypress="toggleEditStoryTask(task, $event)" />
-                  <span ng-bind="task.task" ng-if="!task.editing"></span>
-                  <button type="button" class="btn btn-default btn-xs btn-remove-item" ng-if="!task.editing" ng-click="removeStoryTask($index)"><i class="fa fa-trash"></i></button>
+              <ul class="list-group story-tasks" as-sortable ng-model="selectedStory.tasks">
+                <li class="list-group-item" ng-class="{'list-group-item-success': task.complete, 'list-group-item-warning': !task.complete }" ng-repeat="task in selectedStory.tasks" ng-click="toggleEditStoryTask(task)" as-sortable-item>
+                  <div as-sortable-item-handle>
+                    <i class="fa fa-fw" ng-click="changeTaskStatus($event, task, $index, selectedStory)" ng-class="{'fa-square-o': !task.changing && !task.complete, 'fa-spinner fa-spin': task.changing, 'fa-check-square-o': !task.changing && task.complete}"></i>
+                    <input type="text" ng-model="task.task" ng-show="task.editing" focus-me="task.editing" ng-blur="toggleEditStoryTask(task)" ng-keypress="toggleEditStoryTask(task, $event)" />
+                    <span ng-bind="task.task" ng-if="!task.editing"></span>
+                    <button type="button" class="btn btn-default btn-xs btn-remove-item" ng-if="!task.editing" ng-click="removeStoryTask($index)"><i class="fa fa-trash"></i></button>
+                  </div>
                 </li>
                 <li class="new-item list-group-item" ng-click="addingTaskToStory()">
                   <span ng-show="!newTaskVisible">Add a task</span>
-                  <input type="text" ng-model="newTask.task" ng-show="newTaskVisible" focus-me="newTaskVisible" ng-blur="blurInputTaskField($event)" />
+                  <input type="text" ng-model="newTask.task" ng-show="newTaskVisible" focus-me="newTaskVisible" ng-blur="blurInputTaskField($event, selectedStory)" />
+                  <button type="button" class="btn btn-primary btn-xs btn-add-item" ng-show="newTaskVisible" ng-click="addTaskToStory($event, selectedStory)">Add</button>
                   <button type="button" class="btn btn-default btn-xs btn-remove-item" ng-show="newTaskVisible" ng-click="cancelAddTaskToStory($event)"><i class="fa fa-close"></i></button>
-                  <button type="button" class="btn btn-primary btn-xs btn-add-item" ng-show="newTaskVisible" ng-click="addTaskToStory($event)">Add</button>
                 </li>
               </ul>
             </uib-tab>
-            <uib-tab index="1" heading="DoD" select="changeScroll()">
+            <uib-tab index="1" heading="DoD" select="changeScroll(1)">
               <ul class="list-group story-definitions" ng-scrollable>
                 <li class="list-group-item" ng-class="{'list-group-item-success': definition.done, 'list-group-item-warning': !definition.done }" ng-repeat="definition in selectedStory.definitionOfDone">
                   <i class="fa fa-fw" ng-click="changeDefinitionStatus(definition, $index, selectedStory)" ng-class="{'fa-square-o': !definition.changing && !definition.done, 'fa-spinner fa-spin': definition.changing, 'fa-check-square-o': !definition.changing && definition.done}"></i>
                   {{ definition.definition }}
+                </li>
+              </ul>
+            </uib-tab>
+            <uib-tab index="2" select="changeScroll(2)">
+              <uib-tab-heading>
+                Comments
+                <button ng-if="selectedStoryCurrentTab === 2" type="button" class="btn btn-success btn-sm btn-save-task" ng-click="saveSelectedStoryComments()"><i class="fa fa-save"></i></button>
+              </uib-tab-heading>
+              <ul class="list-group story-comments" ng-scrollable="scrollCommentOptions">
+                <li class="list-group-item" ng-repeat="storyComment in selectedStory.comments" ng-click="toggleEditStoryComment(storyComment)">
+                  <textarea ng-model="storyComment.comment" ng-show="storyComment.editing" focus-me="storyComment.editing" ng-blur="toggleEditStoryComment(storyComment)"></textarea>
+                  <div>
+                    <div class="comment-details" ng-if="!storyComment.editing">
+                      <div class="col-md-7">
+                        Created by: {{storyComment.creator.name}}
+                      </div>
+                      <div class="col-md-5">
+                        Created at: {{storyComment.createdAt}}
+                      </div>
+                    </div>
+                    <span class="with-break-lines" ng-bind="storyComment.comment"></span>
+                  </div>
+                  <button type="button" class="btn btn-default btn-xs btn-remove-item" ng-if="!storyComment.editing" ng-click="removeStoryComment(selectedStory, $index)"><i class="fa fa-trash"></i></button>
+                </li>
+                <li class="new-item list-group-item" ng-click="addingCommentToStory()">
+                  <span ng-show="!newCommentVisible">Add a comment</span>
+                  <textarea ng-model="newComment.comment" rows="3" ng-show="newCommentVisible" focus-me="newCommentVisible" ng-blur="blurInputCommentFiled($event, selectedStory)"></textarea>
+                  <button type="button" class="btn btn-primary btn-xs btn-add-item" ng-show="newCommentVisible" ng-click="addCommentToStory($event, selectedStory)">Add</button>
+                  <button type="button" class="btn btn-default btn-xs btn-remove-item" ng-show="newCommentVisible" ng-click="cancelAddCommentToStory($event)"><i class="fa fa-close"></i></button>
                 </li>
               </ul>
             </uib-tab>

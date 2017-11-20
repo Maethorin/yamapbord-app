@@ -1,6 +1,6 @@
 'use strict';
 
-scrumInCeresControllers.controller('BoardController', ['$rootScope', '$scope', '$timeout', 'Alert', 'Notifier', 'Board', 'BoardStory', 'HollydayService', function($rootScope, $scope, $timeout, Alert, Notifier, Board, BoardStory, HollydayService) {
+scrumInCeresControllers.controller('BoardController', ['$rootScope', '$scope', '$timeout', 'StoryService', 'Alert', 'Notifier', 'Board', 'BoardStory', 'HollydayService', function($rootScope, $scope, $timeout, StoryService, Alert, Notifier, Board, BoardStory, HollydayService) {
   $rootScope.currentController = 'BoardController';
   $scope.boards = [];
   $scope.hollydays = [];
@@ -11,6 +11,7 @@ scrumInCeresControllers.controller('BoardController', ['$rootScope', '$scope', '
   $scope.columnTemplate = '/templates/include/board-column.html';
   $scope.selectedSprint = null;
   $scope.selectedStory = null;
+  $scope.selectedStoryCurrentTab = 0;
   $scope.completeStoryPopupOpened = false;
   $scope.today = moment();
   $scope.newTask = {task: null};
@@ -150,6 +151,23 @@ scrumInCeresControllers.controller('BoardController', ['$rootScope', '$scope', '
     );
   }
 
+  function updatingStoryCommentsList() {
+    Notifier.warning('Saving comments...');
+    $scope.selectedStory.updating = true;
+    BoardStory.update(
+      {boardId: $scope.selectedSprint.id, id: $scope.selectedStory.id},
+      {'comments': $scope.selectedStory.comments},
+      function() {
+        $scope.selectedStory.updating = false;
+        Notifier.success('Done!')
+      },
+      function(error) {
+        Alert.randomErrorMessage(error);
+        $scope.selectedStory.updating = false;
+      }
+    );
+  }
+  // TODO: Sim, está repetido e eu estou sem saco para arrumar... é Open Source!
   function updatingStoryTaskList() {
     Notifier.warning('Saving tasks...');
     $scope.selectedStory.updating = true;
@@ -310,64 +328,18 @@ scrumInCeresControllers.controller('BoardController', ['$rootScope', '$scope', '
     saveStoryStatus(story);
   };
 
-  $scope.changeScroll = function() {
+  $scope.changeScroll = function(tabIndex) {
+    $scope.selectedStoryCurrentTab = tabIndex;
     $scope.$broadcast('content.changed');
   };
 
-  $scope.toggleEditStoryTask = function(task, $event) {
-    if ($event) {
-      if ($event.which === 13) {
-        $event.preventDefault();
-      }
-      return
-    }
-    if (!task.editing) {
-      task.editing = true;
-    }
-    else {
-
-      delete task.editing;
-    }
-  };
-
-  $scope.addingTaskToStory = function() {
-    $scope.newTaskVisible = true;
-  };
-
-  $scope.cancelAddTaskToStory = function($event) {
-    $scope.newTaskVisible = false;
-    $scope.newTask = {task: null};
-    $event.stopPropagation();
-  };
-
-  $scope.blurInputTaskField = function($event) {
-    $timeout(
-      function() {
-        $scope.addTaskToStory($event);
-      },
-      150
-    )
-  };
-
-  $scope.addTaskToStory = function($event) {
-    if ($scope.newTask.task === null) {
-      return false;
-    }
-    $scope.newTask.task = $scope.newTask.task.trim();
-    if ($scope.newTask.task === '') {
-      return false;
-    }
-    $scope.selectedStory.tasks.push({task: $scope.newTask.task, complete: false});
-    $scope.newTaskVisible = false;
-    $scope.newTask = {task: null};
-    $event.stopPropagation();
-  };
-
-  $scope.removeStoryTask = function($index) {
-    $scope.selectedStory.tasks.splice($index, 1);
+  $scope.saveSelectedStoryComments = function() {
+    updatingStoryCommentsList();
   };
 
   $scope.saveSelectedStoryTasks = function() {
     updatingStoryTaskList();
-  }
+  };
+
+  StoryService.prepareScopeToEditStory($scope);
 }]);

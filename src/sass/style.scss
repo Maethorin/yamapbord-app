@@ -155,7 +155,7 @@ label {
       }
       .story-tasks, .story-definitions, .story-comments {
         height: 30vh;
-        overflow: hidden;
+        overflow: auto;
       }
     }
     .panel-footer {
@@ -227,6 +227,7 @@ label {
       }
       .story-definitions, .story-tasks, .story-comments {
         height: 45vh;
+        overflow: auto;
       }
     }
     .panel-footer {
@@ -262,6 +263,7 @@ li {
   height: 250px;
   padding: 10px;
   background-color: $gray;
+  overflow: auto;
   li {
     background-color: $gray;
     color: #e2e2e2;
