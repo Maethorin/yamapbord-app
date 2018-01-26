@@ -29,7 +29,7 @@ scrumInCeresControllers.controller('BacklogController', ['$rootScope', '$scope',
   MeService.getInfo().then(
     function(info) {
       $scope.teams = info.teams;
-      if ($scope.teams.length === 0) {
+      if ($scope.teams == null || $scope.teams.length === 0) {
         $scope.teams = [info.team];
       }
     }
