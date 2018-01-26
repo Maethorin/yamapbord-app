@@ -20,7 +20,7 @@
         <tr ng-repeat="sprint in sprints" ng-click="selectSprintToEdit($event, sprint, $index, 'sprint')">
           <td class="col-team">[{{sprint.team.name || 'NO-TEAM'}}]</td>
           <td class="col-status">
-            <span class="sprint-status {{sprint.statusSlug}}" ng-bind="sprint.status"></span>
+            <span class="sprint-status" ng-class="sprint.statusSlug" ng-bind="sprint.status"></span>
           </td>
           <td class="col-name" title="{{sprint.name}}" ng-bind="sprint.name|limitWithEllipsis:50"></td>
           <td class="col-objective" title="{{sprint.objective}}" ng-bind="sprint.objective|limitWithEllipsis:115"></td>
@@ -169,8 +169,24 @@
               </select>
             </div>
           </div>
-          <div class="col-md-10">
+
+          <div class="col-md-8">
             <label>Name:</label> <input class="sprint-name" ng-model="selectedSprint.name" ng-disabled="!selectedSprint.isPlanned"/>
+          </div>
+
+          <div class="col-md-2 sprint-status" ng-if="selectedSprint.type === 'sprint'">
+            <label>Status:</label>
+            <div class="col-md-10 form-group">
+              <select id="selectStatus" ng-model="selectedSprint.status" required class="select-status form-control">
+                <option value="PLAN" ng-disabled="!selectedSprint.isPlanned">PLANNED</option>
+                <option value="CURR">CURRENT</option>
+                <option value="FAIL">FAIL</option>
+                <option value="SUCC">SUCCESS</option>
+              </select>
+            </div>
+            <div class="col-md-2">
+              <button ng-if="!selectedSprint.isPlanned" ng-click="saveSprintStatus()" class="btn btn-sm btn-success"><i class="fa fa-save"></i></button>
+            </div>
           </div>
         </div>
         <div class="panel-body">

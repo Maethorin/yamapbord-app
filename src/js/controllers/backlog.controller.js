@@ -29,6 +29,9 @@ scrumInCeresControllers.controller('BacklogController', ['$rootScope', '$scope',
   MeService.getInfo().then(
     function(info) {
       $scope.teams = info.teams;
+      if ($scope.teams.length === 0) {
+        $scope.teams = [info.team];
+      }
     }
   );
 
@@ -295,10 +298,10 @@ scrumInCeresControllers.controller('BacklogController', ['$rootScope', '$scope',
     BacklogSprint.update(
       {id: $scope.selectedSprint.id},
       $scope.selectedSprint,
-      function() {
+      function(response) {
         $scope.selectedSprint.startDate = moment($scope.selectedSprint.startDate).format('YYYY-MM-DD');
         $scope.selectedSprint.endDate = moment($scope.selectedSprint.endDate).format('YYYY-MM-DD');
-        $scope.sprints[$scope.selectedSprintIndex] = $scope.selectedSprint;
+        $scope.sprints[$scope.selectedSprintIndex] = response;
         $scope.selectedSprintIndex = null;
         $scope.selectedSprint = null;
         $scope.completeSprintPopupOpened = false;
@@ -361,6 +364,10 @@ scrumInCeresControllers.controller('BacklogController', ['$rootScope', '$scope',
     else {
       saveSelectedKanban();
     }
+  };
+
+  $scope.saveSprintStatus = function() {
+    saveSelectedSprint();
   };
 
   $scope.cancelSaveSelectedSprint = function() {
