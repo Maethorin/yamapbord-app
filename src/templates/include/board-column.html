@@ -1,6 +1,6 @@
-<div class="{{column.name | lowercase}} column-container" ng-class="addColumnSize(column.name)">
+<div class="{{column.name | lowercase}} column-container" ng-class="{'expanded': column.expanded, 'col-md-3': !column.expanded && (column.name === 'PLAN' || column.name === 'STAR'), 'col-md-2': !column.expanded && column.name !== 'PLAN' && column.name !== 'STAR'}">
   <div class="panel panel-default">
-    <div class="panel-heading">
+    <div class="panel-heading" ng-click="toggleExpandColumn(column)">
       <div class="col-md-12">
         <h3>
           <span ng-bind="column.label"></span>

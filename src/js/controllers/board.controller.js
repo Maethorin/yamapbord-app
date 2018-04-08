@@ -18,6 +18,7 @@ scrumInCeresControllers.controller('BoardController', ['$rootScope', '$scope', '
   $scope.newTask = {task: null};
   $scope.newTaskVisible = false;
   $scope.boardControlPanelOpen = false;
+  $scope.columnExpanded = false;
 
   $scope.columns = [
     {name: 'PLAN', label: 'Planned'},
@@ -292,6 +293,11 @@ scrumInCeresControllers.controller('BoardController', ['$rootScope', '$scope', '
     }
     $scope.scrollOptions.scrollPosX = $scope.currentTimelineSprintLeftPosition - 55;
     $scope.selectSprint($scope.currentSprint);
+  };
+
+  $scope.toggleExpandColumn = function(column) {
+    column.expanded = !column.expanded;
+    $scope.columnExpanded = column.expanded;
   };
 
   $scope.selectSprint = function(sprint) {

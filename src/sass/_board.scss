@@ -80,6 +80,19 @@ h4 {
   }
 }
 
+.background-modal {
+  position: absolute;
+  display: none;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background-color: rgba(100, 100, 100, 0.8);
+  &.opened {
+   display: block;
+  }
+}
+
 .board {
   height: 73vh;
   overflow: hidden;
@@ -97,12 +110,30 @@ h4 {
     &.col-md-3, &.col-md-2 {
       padding: 0 5px;
     }
+    &.expanded {
+      position: fixed;
+      z-index: 9998;
+      top: 10%;
+      right: 20%;
+      bottom: 10%;
+      left: 20%;
+      .column {
+        height: 79vh;
+        &.fini, &.itst, &.rtdp, &.dpyd, &.accp, &.reje {
+          height: 79vh;
+        }
+      }
+    }
     .panel-default {
       margin-bottom: 10px;
     }
   }
   .panel-heading {
     overflow: hidden;
+    cursor: pointer;
+    &:hover {
+      background-color: lighten($gray-dark, 10%);
+    }
     span {
       display: inline-block;
       vertical-align: middle;
