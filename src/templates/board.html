@@ -1,4 +1,5 @@
 <div class="container-fluid">
+
   <div class="row timeline" ng-if="boards.length > 0">
     <button type="button" class="btn-scroll-home btn btn-default btn-xs" ng-click="scrollOptions.scrollPosX = 0"><i class="fa fa-chevron-circle-left"></i></button>
     <div class="timeline-events" ng-scrollable="scrollOptions" spy-x="scrollOptions.scrollPosX">
@@ -71,14 +72,14 @@
                 <li class="list-group-item" ng-class="{'list-group-item-success': task.complete, 'list-group-item-warning': !task.complete }" ng-repeat="task in selectedStory.tasks" ng-click="toggleEditStoryTask(task)" as-sortable-item>
                   <div as-sortable-item-handle>
                     <i class="fa fa-fw" ng-click="changeTaskStatus($event, task, $index, selectedStory)" ng-class="{'fa-square-o': !task.changing && !task.complete, 'fa-spinner fa-spin': task.changing, 'fa-check-square-o': !task.changing && task.complete}"></i>
-                    <input type="text" ng-model="task.task" ng-show="task.editing" focus-me="task.editing" ng-blur="toggleEditStoryTask(task)" ng-keypress="toggleEditStoryTask(task, $event)" />
+                    <input type="text" ng-model="task.task" ng-show="task.editing" focus-me="task.editing" ng-blur="toggleEditStoryTask(task)" ng-keypress="toggleEditStoryTask(task, $event)"/>
                     <span ng-bind="task.task" ng-if="!task.editing"></span>
                     <button type="button" class="btn btn-default btn-xs btn-remove-item" ng-if="!task.editing" ng-click="removeStoryTask($index)"><i class="fa fa-trash"></i></button>
                   </div>
                 </li>
                 <li class="new-item list-group-item" ng-click="addingTaskToStory()">
                   <span ng-show="!newTaskVisible">Add a task</span>
-                  <input type="text" ng-model="newTask.task" ng-show="newTaskVisible" focus-me="newTaskVisible" ng-blur="blurInputTaskField($event, selectedStory)" />
+                  <input type="text" ng-model="newTask.task" ng-show="newTaskVisible" focus-me="newTaskVisible" ng-blur="blurInputTaskField($event, selectedStory)"/>
                   <button type="button" class="btn btn-primary btn-xs btn-add-item" ng-show="newTaskVisible" ng-click="addTaskToStory($event, selectedStory)">Add</button>
                   <button type="button" class="btn btn-default btn-xs btn-remove-item" ng-show="newTaskVisible" ng-click="cancelAddTaskToStory($event)"><i class="fa fa-close"></i></button>
                 </li>
@@ -136,6 +137,85 @@
             <i class="fa fa-chevron-right"></i>
           </button>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="board-control-panel" ng-class="{'opened': boardControlPanelOpen}">
+    <div class="control-panel-content">zas</div>
+  </div>
+</div>
+
+<div class="lateral-menu col-md-2" ng-class="{'opened': lateralMenuOpen}">
+  <div class="list-group">
+    <button type="button" class="list-group-item" ng-click="goToCurrentSprintInTimeline()">Current sprint</button>
+    <button type="button" class="list-group-item" data-toggle="collapse" data-target="#filterTimeline" aria-expanded="false" aria-controls="filterTimeline">
+      Filter Timeline
+    </button>
+    <div id="filterTimeline" class="collapse">
+      <div class="well">
+
+        <div class="form-group">
+          <label for="team">Type</label>
+          <select name="type" id="type" class="form-control" ng-model="timelineFilter.type">
+            <option value="">All</option>
+            <option value="kanban">Kanban</option>
+            <option value="sprint">Sprint</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="inputStartDate">Start Date from</label>
+          <div class="dropdown start date">
+            <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+              <datetimepicker ng-model="timelineFilter.startDate"
+                              datetimepicker-config="{dropdownSelector: '#dropdownStartDate', minView:'day'}"/>
+            </ul>
+          </div>
+          <a class="date dropdown-toggle" id="dropdownStartDate" role="button" data-toggle="dropdown" data-target=".dropdown.start.date">
+            <div class="input-group">
+              <input type="text" id="inputStartDate" class="form-control" name="startDate" ng-model="timelineFilter.startDate" date-time-input="YYYY-MM-DD"/>
+              <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+            </div>
+          </a>
+        </div>
+
+        <div class="form-group">
+          <label for="inputEndDate">Start date to</label>
+          <div class="dropdown end date">
+            <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+              <datetimepicker ng-model="timelineFilter.endDate"
+                              datetimepicker-config="{dropdownSelector: '#dropdownEndDate', minView:'day'}"/>
+            </ul>
+          </div>
+          <a class="date dropdown-toggle" id="dropdownEndDate" role="button" data-toggle="dropdown" data-target=".dropdown.end.date">
+            <div class="input-group">
+              <input type="text" id="inputEndDate" class="form-control" name="startDate" ng-model="timelineFilter.endDate" date-time-input="YYYY-MM-DD"/>
+              <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+            </div>
+          </a>
+        </div>
+
+        <div class="form-group">
+          <label for="team">Team</label>
+          <select name="team" id="team" class="form-control" ng-model="timelineFilter.team" ng-options="team.name for team in teams track by team.id">
+            <option value="">All</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="team">Status</label>
+          <select name="status" id="status" class="form-control" ng-model="timelineFilter.status">
+            <option value="">All</option>
+            <option value="PLAN">PLANNED</option>
+            <option value="CURR">CURRENT</option>
+            <option value="FAIL">FAIL</option>
+            <option value="SUCC">SUCCESS</option>
+          </select>
+        </div>
+
+        <button class="btn btn-primary" type="button" ng-click="filterTimeline()">Filter</button>
+        <button class="btn btn-secondary" type="button" ng-click="clearFilterTimeline()">Clear</button>
       </div>
     </div>
   </div>

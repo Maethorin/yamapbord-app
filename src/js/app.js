@@ -95,6 +95,17 @@ scrumInCeres.config(['$httpProvider', '$stateProvider', '$locationProvider', '$u
 
   $stateProvider
     .state({
+      name: 'homeState',
+      url: '/',
+      templateUrl: 'templates/home.html',
+      controller: 'HomeController',
+      cache: false,
+      headers: {
+        'Cache-Control' : 'no-cache'
+      }
+    })
+
+    .state({
       name: 'boardState',
       url: '/board',
       templateUrl: 'templates/board.html',
@@ -135,11 +146,17 @@ scrumInCeres.config(['$httpProvider', '$stateProvider', '$locationProvider', '$u
       controller: 'LogoutController'
     });
 
-  $urlRouterProvider.when('', '/board');
+  $urlRouterProvider.when('', '/');
 }]);
 
 scrumInCeres.run(['$rootScope', '$timeout', '$q', 'AuthService', 'MeService', 'Alert', 'Requester', 'Epic', 'Module', function($rootScope, $timeout, $q, AuthService, MeService, Alert, Requester, Epic, Module) {
   AuthService.update();
+  $rootScope.lateralMenuOpen = false;
+
+  $rootScope.toggleLateralMenu = function() {
+    $rootScope.lateralMenuOpen = !$rootScope.lateralMenuOpen;
+  };
+
   $rootScope.$on('userInfo.updated', function(evt, userInfo) {
     $rootScope.loggedUser = userInfo;
   });
@@ -198,6 +215,11 @@ scrumInCeres.run(['$rootScope', '$timeout', '$q', 'AuthService', 'MeService', 'A
     }
   );
 
+  $rootScope.toggleFilterTimeline = function() {
+    $rootScope.boardControlPanelButtonActive = !$rootScope.boardControlPanelButtonActive;
+    $rootScope.$broadcast('board.openControlPanel');
+  };
+
   $rootScope.setStoryGroupBy = function(group) {
     $rootScope.storyGroupedBy = group;
     $rootScope.$broadcast('story.grouped');
@@ -217,10 +239,6 @@ scrumInCeres.run(['$rootScope', '$timeout', '$q', 'AuthService', 'MeService', 'A
 
   $rootScope.addNewKanban = function() {
     $rootScope.$broadcast('kanban.add');
-  };
-
-  $rootScope.goToCurrentSprintInTimeline = function() {
-    $rootScope.$broadcast('currentSprint.select');
   };
 
   $rootScope.setStoryFilterTextType = function(type) {

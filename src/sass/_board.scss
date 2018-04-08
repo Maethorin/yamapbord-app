@@ -217,3 +217,10 @@ h4 {
     margin-right: -7px;
   }
 }
+
+.board-control-panel {
+  display: none;
+  &.opened {
+    display: block;
+  }
+}

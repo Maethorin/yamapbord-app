@@ -1,12 +1,39 @@
 @import "fontawesome/scss/font-awesome";
 @import "variables";
 @import "bootstrap-sass/assets/stylesheets/bootstrap";
+@import "home";
 @import "notifier";
 @import "login";
 @import "timeline";
 @import "board";
 @import "ice-box";
 @import "backlog";
+
+.navbar-toggle {
+  &.hamburguer-menu {
+    display: block;
+    float: left;
+    &.active {
+      background-color: #0b3e6f;
+      color: #0b93d5;
+    }
+  }
+}
+
+.lateral-menu {
+  position: absolute;
+  z-index: 9999;
+  top: 62px;
+  left: -18%;
+  background-color: #f4f2f7;
+  height: 92%;
+  transition: left 0.5s;
+  box-shadow: 5px 5px 8px #888;
+  padding: 0;
+  &.opened {
+    left: 0;
+  }
+}
 
 .btn-story-view-type {
   margin-left: 20px;

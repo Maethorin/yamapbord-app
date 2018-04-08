@@ -1,8 +1,9 @@
 'use strict';
 
-scrumInCeresControllers.controller('BoardController', ['$rootScope', '$scope', '$timeout', 'StoryService', 'Alert', 'Notifier', 'Board', 'BoardStory', 'HollydayService', function($rootScope, $scope, $timeout, StoryService, Alert, Notifier, Board, BoardStory, HollydayService) {
+scrumInCeresControllers.controller('BoardController', ['$rootScope', '$scope', '$timeout', '$filter', 'MeService', 'StoryService', 'Alert', 'Notifier', 'Board', 'BoardStory', 'HollydayService', function($rootScope, $scope, $timeout, $filter, MeService, StoryService, Alert, Notifier, Board, BoardStory, HollydayService) {
   $rootScope.currentController = 'BoardController';
   $scope.boards = [];
+  $scope.fullBoards = [];
   $scope.hollydays = [];
   $scope.timeline = null;
   $scope.scrollOptions = {scrollX: 'bottom', scrollY: 'none', useBothWheelAxes: true, scrollPosX: 0, preventWheelEvents: true};
@@ -16,6 +17,7 @@ scrumInCeresControllers.controller('BoardController', ['$rootScope', '$scope', '
   $scope.today = moment();
   $scope.newTask = {task: null};
   $scope.newTaskVisible = false;
+  $scope.boardControlPanelOpen = false;
 
   $scope.columns = [
     {name: 'PLAN', label: 'Planned'},
@@ -41,10 +43,31 @@ scrumInCeresControllers.controller('BoardController', ['$rootScope', '$scope', '
     'REJE': 'Rejected'
   };
 
+  $scope.teams = [];
+
+  $scope.timelineFilter = {
+    type: null,
+    startDate: moment().add(-14, 'days'),
+    endDate: moment().add(4, 'months'),
+    team: null,
+    status: null
+  };
+
   Alert.loading();
+
+  MeService.getInfo().then(
+    function(info) {
+      $scope.teams = info.teams;
+      if ($scope.teams == null || $scope.teams.length === 0) {
+        $scope.teams = [info.team];
+      }
+    }
+  );
+
   Board.query(
     function(response) {
       $scope.boards = response;
+      $scope.fullBoards = response;
       $scope.currentSprint = null;
       $scope.selectedSprint = null;
 
@@ -217,6 +240,10 @@ scrumInCeresControllers.controller('BoardController', ['$rootScope', '$scope', '
     story.tasks = data.tasks;
   });
 
+  $rootScope.$on('board.openControlPanel', function(event) {
+    $scope.boardControlPanelOpen = !$scope.boardControlPanelOpen;
+  });
+
   $rootScope.$on('board.story.definitionToggled', function(event, storyId) {
     if ($scope.selectedSprint  === null || $scope.selectedSprint.id !== data.sprintId) {
       return false;
@@ -230,14 +257,42 @@ scrumInCeresControllers.controller('BoardController', ['$rootScope', '$scope', '
     })
   });
 
-  $rootScope.$on('currentSprint.select', function() {
+  $scope.filterTimeline = function() {
+    var filter = {};
+    if ($scope.timelineFilter.status !== null) {
+      filter.status = $scope.timelineFilter.status;
+    }
+    if ($scope.timelineFilter.type !== null) {
+      filter.type = $scope.timelineFilter.type;
+    }
+    if ($scope.timelineFilter.team !== null) {
+      filter.team = $scope.timelineFilter.team;
+    }
+    $scope.boards = $scope.fullBoards.filter(function(board) {
+      return moment(board.startDate).isBetween($scope.timelineFilter.startDate, $scope.timelineFilter.endDate);
+    });
+    $scope.boards = $filter('filter')($scope.boards, filter);
+  };
+
+  $scope.clearFilterTimeline = function() {
+    $scope.boards = $scope.fullBoards;
+    $scope.timelineFilter = {
+      type: null,
+      startDate: moment().add(-14, 'days'),
+      endDate: moment().add(4, 'months'),
+      team: null,
+      status: null
+    };
+  };
+
+  $scope.goToCurrentSprintInTimeline = function() {
     if ($scope.currentTimelineSprintLeftPosition === null) {
       var currentSprintElementPosition = angular.element('.timeline-event.current')[0].getBoundingClientRect();
       $scope.currentTimelineSprintLeftPosition = currentSprintElementPosition.left;
     }
     $scope.scrollOptions.scrollPosX = $scope.currentTimelineSprintLeftPosition - 55;
     $scope.selectSprint($scope.currentSprint);
-  });
+  };
 
   $scope.selectSprint = function(sprint) {
     $scope.selectedSprint = sprint;
@@ -342,4 +397,9 @@ scrumInCeresControllers.controller('BoardController', ['$rootScope', '$scope', '
   };
 
   StoryService.prepareScopeToEditStory($scope);
+
+  $scope.toggleControlPanelOpen = function () {
+    $scope.boardControlPanelOpen = !$scope.boardControlPanelOpen;
+  };
+
 }]);

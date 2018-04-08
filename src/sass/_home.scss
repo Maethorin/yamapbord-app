@@ -1,0 +1,23 @@
+.container-fluid {
+  &.home {
+    margin-top: 80px;
+    .home-navigation {
+      padding: 20px 0;
+      border-radius: 3px;
+      border: 1px solid;
+      display: block;
+      font-size: 18px;
+      text-align: center;
+      &:hover {
+        text-decoration: none;
+        color: #00b3ee;
+        background-color: #0a0a0a;
+      }
+      i {
+        display: block;
+        font-size: 40px;
+        margin-bottom: 10px;
+      }
+    }
+  }
+}

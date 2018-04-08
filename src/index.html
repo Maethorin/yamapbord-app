@@ -24,7 +24,12 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">Scrum InCeres</a>
+          <button type="button" class="navbar-toggle hamburguer-menu" ng-class="{'active': lateralMenuOpen}" ng-click="toggleLateralMenu()">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="/">Scrum InCeres</a>
         </div>
 
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
@@ -32,9 +37,6 @@
             <li ui-sref-active="active"><a ui-sref="boardState"><i class="fa fa-columns"></i> Board</a></li>
             <li ui-sref-active="active"><a ui-sref="backlogState"><i class="fa fa-th-list"></i> Backlog</a></li>
             <li ui-sref-active="active"><a ui-sref="iceBoxState"><i class="fa fa-snowflake-o"></i> Ice Box</a></li>
-            <li ng-if="currentController === 'BoardController'">
-              <button type="button" class="btn btn-default navbar-btn" ng-click="goToCurrentSprintInTimeline()">Go to current Sprint</button>
-            </li>
             <li ng-if="currentController === 'IceBoxController'">
               <form class="navbar-form navbar-left">
                 <div class="form-group">
