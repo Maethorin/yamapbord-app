@@ -56,7 +56,7 @@
     <div ng-if="storyGroupedBy === 'both'" class="row grouped-both" ng-repeat="(group, modules) in groupedStories">
       <h4 class="module-name" ng-bind="modules.module.name"></h4>
       <div ng-repeat="(group2, stories) in modules.stories">
-        <h3 class="epic-name" ng-bind="stories[0].epic.name"></h3>
+        <h3 class="epic-name">{{modules.module.name}} >> {{stories[0].epic.name}}</h3>
         <table class="table table-story table-hover table-condensed table-bordered">
           <thead>
           <tr>
