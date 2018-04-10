@@ -12,13 +12,37 @@ scrumInCeresControllers.controller('IceBoxController', ['$rootScope', '$scope', 
     point: null,
     requester: null
   };
-  $scope.showAsTable = true;
   $scope.groupedStories = false;
+  $scope.storyGroupedBy = 'both';
+
+  function groupStories() {
+    $scope.groupedStories = false;
+    if ($scope.storyGroupedBy === 'module') {
+      $scope.groupedStories = _.groupBy($scope.stories, 'module.id');
+    }
+    if ($scope.storyGroupedBy === 'epic') {
+      $scope.groupedStories = _.groupBy($scope.stories, 'epic.id');
+    }
+    if ($scope.storyGroupedBy === 'both') {
+      $scope.groupedStories = [];
+      var tempGroupStories = _.groupBy($scope.stories, 'module.id');
+      _.forEach(tempGroupStories, function(group) {
+        $scope.groupedStories.push(
+          {
+            module: group[0].module,
+            stories: _.groupBy(group, 'epic.id')
+          }
+        );
+      });
+      console.log($scope.groupedStories);
+    }
+  }
 
   Alert.loading();
   var clearFilter = true;
   StoryService.getStories(clearFilter).then(function(stories) {
     $scope.stories = stories;
+    groupStories();
     Alert.close();
   });
 
@@ -36,24 +60,7 @@ scrumInCeresControllers.controller('IceBoxController', ['$rootScope', '$scope', 
     });
   };
 
-  $rootScope.$watch('itemsView.mode', function(newValue) {
-    $scope.showAsTable = newValue === 'table';
-    if (!$scope.showAsTable) {
-      _.forEach($scope.stories, function(story) {
-        story.opened = newValue !== 'list';
-      });
-    }
-  });
-
-  $rootScope.$on('story.grouped', function() {
-    $scope.groupedStories = false;
-    if ($rootScope.storyGroupedBy === 'Module') {
-      $scope.groupedStories = _.groupBy($scope.stories, 'module.id');
-    }
-    if ($rootScope.storyGroupedBy === 'Epic') {
-      $scope.groupedStories = _.groupBy($scope.stories, 'epic.id');
-    }
-  });
+  $scope.$watch('storyGroupedBy', groupStories);
 
   $rootScope.$on('icebox.story.created', function(event, data) {
     IceBox.get(

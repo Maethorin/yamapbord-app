@@ -219,7 +219,7 @@ scrumInCeresServices.service('StoryService', ['$rootScope', '$q', '$timeout', 'A
     $scope.scrollCommentOptions = {scrollX: 'none', scrollY: 'right', preventWheelEvents: false, preventKeyEvents: false};
     $scope.saveAndClose = false;
 
-    $rootScope.$on('story.add', function($event, data) {
+    $scope.addNewStory = function($event, data) {
       $scope.addingNewStory = true;
       $scope.selectedStory = {
         definitionOfDone: [],
@@ -245,7 +245,9 @@ scrumInCeresServices.service('StoryService', ['$rootScope', '$q', '$timeout', 'A
         }
       }
       $scope.completeStoryPopupOpened = true;
-    });
+    };
+
+    $rootScope.$on('story.add', $scope.addNewStory);
 
     $scope.setStoryType = function(story, type) {
       story.type = type.code;

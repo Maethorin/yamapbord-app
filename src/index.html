@@ -54,10 +54,7 @@
                 </div>
               </form>
             </li>
-            <li ng-if="currentController === 'IceBoxController'">
-              <button type="button" class="btn btn-default navbar-btn" ng-click="addNewStory()">New Story</button>
-            </li>
-            <li ng-if="['BacklogController', 'IceBoxController'].indexOf(currentController) !== -1">
+            <li ng-if="currentController === 'BacklogController'">
               <div class="btn-group btn-group-story" uib-dropdown>
                 <button id="view-as" type="button" class="btn btn-default navbar-btn" uib-dropdown-toggle>
                   View as: {{itemsView.mode}} <span class="caret"></span>
@@ -66,18 +63,6 @@
                   <li role="menuitem"><a ng-click="setViewAs('list')">List</a></li>
                   <li role="menuitem"><a ng-click="setViewAs('card')">Card</a></li>
                   <li role="menuitem"><a ng-click="setViewAs('table')">Table</a></li>
-                </ul>
-              </div>
-            </li>
-            <li ng-if="currentController === 'IceBoxController'">
-              <div class="btn-group btn-group-story" uib-dropdown>
-                <button id="single-button" type="button" class="btn btn-default navbar-btn" uib-dropdown-toggle>
-                  Group By: {{storyGroupedBy}} <span class="caret"></span>
-                </button>
-                <ul class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="single-button">
-                  <li role="menuitem"><a ng-click="setStoryGroupBy('None')">None</a></li>
-                  <li role="menuitem"><a ng-click="setStoryGroupBy('Module')">Module</a></li>
-                  <li role="menuitem"><a ng-click="setStoryGroupBy('Epic')">Epic</a></li>
                 </ul>
               </div>
             </li>

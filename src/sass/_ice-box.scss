@@ -16,6 +16,54 @@ li {
 
 .ice-box {
   margin-top: 80px;
+  .modules {
+    display: flex;
+    flex-direction:row;
+    .module {
+      margin-left: 10px;
+    }
+    .module-icon {
+      border-radius: 3px;
+      border: 1px solid;
+      display: block;
+      text-align: center;
+      width: 120px;
+      padding: 10px;
+      height: 150px;
+      &:hover {
+        text-decoration: none;
+        color: $gray-dark;
+        border-color: $gray-dark;
+        background-color: $link-color;
+      }
+      i {
+        font-size: 85px;
+        display: block;
+      }
+    }
+  }
+
+  .grouped-not-both {
+    .table {
+      width: 97%;
+      margin-left: 20px;
+    }
+  }
+
+  .grouped-both {
+    .table {
+      width: 96%;
+      margin-left: 40px;
+    }
+  }
+
+  .epic-name {
+    text-align: left;
+    padding: 8px 0 7px 20px;
+    background-color: $gray-light;
+    margin-bottom: 10px;
+  }
+
   .story-container {
     .panel-heading {
       cursor: pointer;
