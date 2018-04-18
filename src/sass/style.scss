@@ -437,6 +437,12 @@ $index: 1;
   $index: $index + 1;
 }
 
+$index: 1;
+@each $point in $story-value-points {
+  @include story-value-points-background($point, $index);
+  $index: $index + 1;
+}
+
 .story-type-name {
   background: $gray no-repeat 5px 3px;
   display: inline-block;

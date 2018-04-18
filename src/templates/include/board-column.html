@@ -16,6 +16,7 @@
             <span class="story-type" ng-class="story.type | lowercase " title="{{story.typeName}}"></span>
             <span class="story-name" ng-bind="story.name|limitWithEllipsis:22"></span>
             <span class="badge points-{{story.points}}">{{story.points}}</span>
+            <span class="badge value-points-{{story.valuePoints}}">{{story.valuePoints}}</span>
           </div>
         </div>
         <div class="panel-body" ng-if="story.hasTasks">
