@@ -307,8 +307,9 @@
             <div class="col-md-1">Type</div>
             <div class="col-md-2">Module - Epic</div>
             <div class="col-md-3">Name</div>
-            <div class="col-md-4">Statement</div>
+            <div class="col-md-3">Statement</div>
             <div class="col-md-1">SP</div>
+            <div class="col-md-1">VP</div>
           </li>
 
           <li class="list-group-item" ng-repeat="story in stories|filter:searchStories" title="{{story.statement}}" ng-click="toggleShowStoryPopup(story)">
@@ -324,11 +325,14 @@
             <div class="col-md-3">
               <span class="story-name" ng-bind="story.name|limitWithEllipsis:24" title="{{story.name}}"></span>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-3">
               <span title="{{story.statement}}" ng-bind="story.statement|limitWithEllipsis:83"></span>
             </div>
             <div class="col-md-1">
               <span class="badge points-{{story.points|numberOrText:'null'}}" ng-bind="story.points|numberOrText"></span>
+            </div>
+            <div class="col-md-1">
+              <span class="badge points-{{story.valuePoints|numberOrText:'null'}}" ng-bind="story.valuePoints|numberOrText"></span>
             </div>
           </li>
         </ul>
