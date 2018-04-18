@@ -40,6 +40,15 @@ $story-points-colors:
   #008486
   #007072;
 
+$story-value-points: 0 1 2 3 5 8;
+$story-value-points-colors:
+        #ce0000
+        #ae0000
+        #ae000c
+        #9e0000
+        #7e0000
+        #750000;
+
 @mixin image-background($imageFile) {
   background-image: url($imageUrl + $imageFile);
 }
@@ -52,6 +61,14 @@ $story-points-colors:
   .points-#{$point} {
     color: #EEE !important;
     background-color: nth($story-points-colors, $index) !important;
+  }
+}
+
+@mixin story-value-points-background($point, $index) {
+  .value-points-#{$point} {
+    color: #EEE !important;
+    background-color: nth($story-value-points-colors, $index) !important;
+    margin-right: 3px;
   }
 }
 
