@@ -21,7 +21,7 @@
 }
 
 .lateral-menu {
-  position: absolute;
+  position: fixed;
   z-index: $zindex-navbar;
   top: 62px;
   left: -18%;
