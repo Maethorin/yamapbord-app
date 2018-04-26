@@ -520,7 +520,7 @@ textarea {
   overflow: hidden;
   transition: height 0.2s ease;
   &.expanded {
-    height: 288px;
+    height: 350px;
   }
   .filter-trigger {
     cursor: pointer;
@@ -538,13 +538,16 @@ textarea {
     }
   }
   .filter-content {
-    h4 {
+    .filter-title {
+      padding: 8px 11px 11px;
       font-size: 16px;
       span {
         font-weight: bold;
+        font-size: 16px;
       }
       .btn-clear-filter {
         float: right;
+        background-color: darken($btn-danger-bg, 15%);
       }
     }
     .filter-bar-list {

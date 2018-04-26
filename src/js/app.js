@@ -162,11 +162,6 @@ scrumInCeres.run(['$rootScope', '$timeout', '$q', 'AuthService', 'MeService', 'A
   });
   MeService.getInfo();
   $rootScope.currentController = null;
-  $rootScope.filterObject = {'name': ''};
-  $rootScope.search = {
-    expression: '',
-    fieldType: {type: 'name', name: 'By Name'}
-  };
   $rootScope.currentStoryTypeFilter = null;
   $rootScope.storyTypes = [
     {code: 'FEA', name: 'Feature'},
@@ -175,27 +170,12 @@ scrumInCeres.run(['$rootScope', '$timeout', '$q', 'AuthService', 'MeService', 'A
     {code: 'TEC', name: 'Techinical'}
   ];
 
-  // $rootScope.storyGroupedBy = 'None';
-
-  $rootScope.storyFilterTextTypes = {
-    name: {type: 'name', name: 'By Name'},
-    statement: {type: 'statement', name: 'By Statement'},
-    tasks: {type: 'tasks', name: 'By Task'},
-    definition: {type: 'definitionOfDone', name: 'By Definition'}
-  };
-
-  $rootScope.storyFilterObjects = {
-    name: {name: ''},
-    statement: {statement: ''},
-    tasks: {tasks: ''},
-    definition: {definitionOfDone: ''}
-  };
-
   $rootScope.itemsView = {mode: 'list'};
   $rootScope.requesters = [];
   $rootScope.epics = [];
   $rootScope.modules = [];
   $rootScope.points = [0, 1, 2, 3, 5, 8];
+  $rootScope.pointsFilter = ['0', '1', '2', '3', '5', '8'];
 
   Requester.query(
     function(response) {
@@ -220,11 +200,6 @@ scrumInCeres.run(['$rootScope', '$timeout', '$q', 'AuthService', 'MeService', 'A
     $rootScope.$broadcast('board.openControlPanel');
   };
 
-  $rootScope.setStoryGroupBy = function(group) {
-    // $rootScope.storyGroupedBy = group;
-    $rootScope.$broadcast('story.grouped');
-  };
-
   $rootScope.setViewAs = function(mode) {
     $rootScope.itemsView.mode = mode;
   };
@@ -237,19 +212,10 @@ scrumInCeres.run(['$rootScope', '$timeout', '$q', 'AuthService', 'MeService', 'A
     $rootScope.$broadcast('kanban.add');
   };
 
-  $rootScope.setStoryFilterTextType = function(type) {
-    $rootScope.search.fieldType = $rootScope.storyFilterTextTypes[type];
-  };
-
   $rootScope.startSearchStories = function($event) {
     if ($event.keyCode === 13) {
       $rootScope.searchStories();
     }
-  };
-
-  $rootScope.searchStories = function() {
-    $rootScope.storyFilterObjects[$rootScope.search.fieldType.type][$rootScope.search.fieldType.type] = $rootScope.search.expression;
-    $rootScope.filterObject.filter = $rootScope.storyFilterObjects[$rootScope.search.fieldType.type];
   };
 
   $rootScope.showMyInfo = function() {

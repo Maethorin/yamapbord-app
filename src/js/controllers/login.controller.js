@@ -5,7 +5,7 @@ function($rootScope, $scope, $window, $location, $state, $timeout, AuthService, 
   $rootScope.currentController = 'LoginController';
 
   if (AuthService.userIsLogged()) {
-    $state.go('boardState', {}, {reload: 'boardState'});
+    $state.go('homeState', {}, {reload: 'homeState'});
   }
 
   $scope.login = new Login({

@@ -37,23 +37,6 @@
             <li ui-sref-active="active"><a ui-sref="boardState"><i class="fa fa-columns"></i> Board</a></li>
             <li ui-sref-active="active"><a ui-sref="backlogState"><i class="fa fa-th-list"></i> Backlog</a></li>
             <li ui-sref-active="active"><a ui-sref="iceBoxState"><i class="fa fa-snowflake-o"></i> Ice Box</a></li>
-            <li ng-if="currentController === 'IceBoxController'">
-              <form class="navbar-form navbar-left">
-                <div class="form-group">
-                  <div class="input-group">
-                    <input type="text" class="form-control" placeholder="Search Stories" ng-model="search.expression" ng-keypress="startSearchStories($event)">
-                    <div class="input-group-btn">
-                      <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{search.fieldType.name}} <span class="caret"></span></button>
-                      <ul class="dropdown-menu">
-                        <li><a ng-click="setStoryFilterTextType('name')">By Name</a></li>
-                        <li><a ng-click="setStoryFilterTextType('statement')">By Statement</a></li>
-                      </ul>
-                      <button type="button" ng-click="searchStories()" class="btn btn-default">Go!</button>
-                    </div>
-                  </div>
-                </div>
-              </form>
-            </li>
             <li ng-if="currentController === 'BacklogController'">
               <div class="btn-group btn-group-story" uib-dropdown>
                 <button id="view-as" type="button" class="btn btn-default navbar-btn" uib-dropdown-toggle>

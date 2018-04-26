@@ -1,10 +1,32 @@
 'use strict';
 
-scrumInCeresControllers.controller('IceBoxController', ['$rootScope', '$scope', 'Alert', 'Notifier', 'StoryService', 'IceBox', function($rootScope, $scope, Alert, Notifier, StoryService, IceBox) {
+scrumInCeresControllers.controller('IceBoxController', ['$rootScope', '$scope', '$filter', 'Alert', 'Notifier', 'StoryService', 'IceBox', function($rootScope, $scope, $filter, Alert, Notifier, StoryService, IceBox) {
   $rootScope.currentController = 'IceBoxController';
   $rootScope.itemsView.mode = 'table';
+  $scope.storyFilterTextTypes = {
+    name: {type: 'name', name: 'By Name'},
+    statement: {type: 'statement', name: 'By Statement'},
+    tasks: {type: 'tasks', name: 'By Task'},
+    definition: {type: 'definitionOfDone', name: 'By Definition'}
+  };
+
+  $scope.storyFilterObjects = {
+    name: {name: ''},
+    statement: {statement: ''},
+    tasks: {tasks: ''},
+    definition: {definitionOfDone: ''}
+  };
+
+  $scope.filterObject = {'name': ''};
+  $scope.search = {
+    expression: '',
+    fieldType: {type: 'name', name: 'By Name'}
+  };
+
   $scope.scrollOptions = {scrollX: 'none', scrollY: 'right', preventWheelEvents: true};
   $scope.filterBarExpanded = false;
+  $scope.stories = [];
+  $scope.fullStories = [];
   $scope.filter = {
     type: null,
     epic: null,
@@ -14,6 +36,15 @@ scrumInCeresControllers.controller('IceBoxController', ['$rootScope', '$scope', 
   };
   $scope.groupedStories = false;
   $scope.storyGroupedBy = 'both';
+  $scope.storiesOrder = [];
+  $scope.storiesOrderControl = {
+    type: null,
+    name: null,
+    statement: null,
+    vp: null,
+    sp: null,
+    requester: null
+  };
 
   function groupStories() {
     $scope.groupedStories = false;
@@ -41,9 +72,31 @@ scrumInCeresControllers.controller('IceBoxController', ['$rootScope', '$scope', 
   var clearFilter = true;
   StoryService.getStories(clearFilter).then(function(stories) {
     $scope.stories = stories;
+    $scope.fullStories = stories;
     groupStories();
     Alert.close();
   });
+
+  $scope.setStoryFilterTextType = function(type) {
+    $scope.search.fieldType = $scope.storyFilterTextTypes[type];
+  };
+
+  $scope.searchStories = function(clear) {
+    if (clear) {
+      $scope.setStoryFilterTextType('name');
+      $scope.storyFilterObjects = {
+        name: {name: ''},
+        statement: {statement: ''},
+        tasks: {tasks: ''},
+        definition: {definitionOfDone: ''}
+      };
+      $scope.search.expression = '';
+    }
+    $scope.storyFilterObjects[$scope.search.fieldType.type][$scope.search.fieldType.type] = $scope.search.expression;
+    $scope.filterObject.filter = $scope.storyFilterObjects[$scope.search.fieldType.type];
+    $scope.stories = $filter('filter')($scope.fullStories, $scope.filterObject.filter);
+    groupStories();
+  };
 
   $scope.toggleFilterBarExpanded = function () {
     $scope.filterBarExpanded = !$scope.filterBarExpanded;
@@ -53,10 +106,42 @@ scrumInCeresControllers.controller('IceBoxController', ['$rootScope', '$scope', 
     $scope.filter[property] = value;
     Alert.loading();
     StoryService.filter($scope.filter).then(function(stories) {
-      $scope.stories = stories;
-      groupStories();
+      $scope.fullStories = stories;
+      $scope.searchStories();
       Alert.close();
     });
+  };
+
+  $scope.setStoryOrder = function(property) {
+    if ($scope.storiesOrderControl[property] === null) {
+      $scope.storiesOrderControl[property] = '+';
+    }
+    else if ($scope.storiesOrderControl[property] === '+') {
+      $scope.storiesOrderControl[property] = '-';
+    }
+    else if ($scope.storiesOrderControl[property] === '-') {
+      $scope.storiesOrderControl[property] = null;
+    }
+    var newOrder = $scope.storiesOrderControl[property] === null ? null : '{0}{1}'.format([$scope.storiesOrderControl[property], property]);
+    var indexPropertyOrder = null;
+    _.forEach($scope.storiesOrder, function(order, index) {
+      if (order.indexOf(property) > -1) {
+        indexPropertyOrder = index;
+        return false;
+      }
+    });
+
+    if (indexPropertyOrder === null) {
+      $scope.storiesOrder.push(newOrder);
+    }
+    else {
+      if (newOrder == null) {
+        $scope.storiesOrder.splice(indexPropertyOrder, 1)
+      }
+      else {
+        $scope.storiesOrder[indexPropertyOrder] = newOrder;
+      }
+    }
   };
 
   $scope.$watch('storyGroupedBy', groupStories);
