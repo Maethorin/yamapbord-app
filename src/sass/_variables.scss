@@ -31,23 +31,25 @@ $story-statuses-colors:
   #719c99
   #388b39
   #ca0200;
-$story-points: 0 1 2 3 5 8;
+$story-points: 0 1 2 3 5 8 13;
 $story-points-colors:
   #00d4d6
   #00c0c2
   #00acae
   #00989a
   #008486
-  #007072;
+  #007072
+  #004648;
 
-$story-value-points: 0 1 2 3 5 8;
+$story-value-points: 0 1 2 3 5 8 13;
 $story-value-points-colors:
         #ce0000
         #ae0000
         #ae000c
         #9e0000
         #7e0000
-        #750000;
+        #750000
+        #4B0000;
 
 @mixin image-background($imageFile) {
   background-image: url($imageUrl + $imageFile);

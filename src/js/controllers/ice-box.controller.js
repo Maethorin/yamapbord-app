@@ -73,7 +73,7 @@ scrumInCeresControllers.controller('IceBoxController', ['$rootScope', '$scope', 
   StoryService.getStories(clearFilter).then(function(stories) {
     $scope.stories = stories;
     $scope.fullStories = stories;
-    groupStories();
+    $scope.searchStories();
     Alert.close();
   });
 
@@ -151,8 +151,8 @@ scrumInCeresControllers.controller('IceBoxController', ['$rootScope', '$scope', 
       {id: data.storyId},
       function(response) {
         Notifier.warning('Story created');
-        $scope.stories.push(response);
-        groupStories();
+        $scope.fullStories.push(response);
+        $scope.searchStories();
       },
       function() {
         Notifier.danger('Changes has been made and could not be updated', 'Hey!');
@@ -166,8 +166,8 @@ scrumInCeresControllers.controller('IceBoxController', ['$rootScope', '$scope', 
       function(response) {
         Notifier.warning('Story updated');
         var index = _.findIndex($scope.stories, ['id', data.storyId]);
-        $scope.stories[index] = response;
-        groupStories();
+        $scope.fullStories[index] = response;
+        $scope.searchStories();
       },
       function() {
         Notifier.danger('Changes has been made and could not be updated', 'Hey!');
@@ -178,8 +178,8 @@ scrumInCeresControllers.controller('IceBoxController', ['$rootScope', '$scope', 
   $rootScope.$on('icebox.story.deleted', function(event, data) {
     Notifier.warning('Story deleted');
     var index = _.findIndex($scope.stories, ['id', data.storyId]);
-    $scope.stories.splice(index, 1);
-    groupStories();
+    $scope.fullStories.splice(index, 1);
+    $scope.searchStories();
   });
 
   $scope.changeScroll = function() {

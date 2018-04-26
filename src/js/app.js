@@ -174,8 +174,8 @@ scrumInCeres.run(['$rootScope', '$timeout', '$q', 'AuthService', 'MeService', 'A
   $rootScope.requesters = [];
   $rootScope.epics = [];
   $rootScope.modules = [];
-  $rootScope.points = [0, 1, 2, 3, 5, 8];
-  $rootScope.pointsFilter = ['0', '1', '2', '3', '5', '8'];
+  $rootScope.points = [0, 1, 2, 3, 5, 8, 13];
+  $rootScope.pointsFilter = ['0', '1', '2', '3', '5', '8', '13'];
 
   Requester.query(
     function(response) {

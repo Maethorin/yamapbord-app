@@ -86,6 +86,8 @@ scrumInCeresServices.service('StoryService', ['$rootScope', '$q', '$timeout', 'A
           return;
         }
         $scope.stories = result.stories;
+        $scope.fullStories = result.stories;
+        $scope.searchStories();
       });
     }
     else {
@@ -106,6 +108,8 @@ scrumInCeresServices.service('StoryService', ['$rootScope', '$q', '$timeout', 'A
             return;
           }
           $scope.stories.push(result.story);
+          $scope.fullStories.push(result.story);
+          $scope.searchStories();
         }
       });
     }
