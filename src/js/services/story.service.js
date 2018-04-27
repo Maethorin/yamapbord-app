@@ -223,7 +223,7 @@ scrumInCeresServices.service('StoryService', ['$rootScope', '$q', '$timeout', 'A
     $scope.scrollCommentOptions = {scrollX: 'none', scrollY: 'right', preventWheelEvents: false, preventKeyEvents: false};
     $scope.saveAndClose = false;
 
-    $scope.addNewStory = function($event, data) {
+    $scope.addNewStory = function(data) {
       $scope.addingNewStory = true;
       $scope.selectedStory = {
         definitionOfDone: [],
@@ -246,6 +246,15 @@ scrumInCeresServices.service('StoryService', ['$rootScope', '$q', '$timeout', 'A
         }
         if (data.iterationType === 'sprint') {
           $scope.selectedStory.sprintId = data.iteration.id;
+        }
+        if (data.module) {
+          $scope.selectedStory.module = data.module;
+        }
+        if (data.epic) {
+          $scope.selectedStory.epic = data.epic;
+        }
+        if (data.type) {
+          $scope.selectedStory.type = data.type;
         }
       }
       $scope.completeStoryPopupOpened = true;

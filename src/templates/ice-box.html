@@ -1,4 +1,40 @@
 <div class="container-fluid ice-box">
+  <div class="fab-general-container" ng-cloak>
+  <md-fab-speed-dial md-open="mainFabOpen" md-direction="up" class="md-scale">
+    <md-fab-trigger>
+      <md-button aria-label="menu" class="md-fab md-green">
+        <md-icon md-font-icon="fa fa-plus"></md-icon>
+      </md-button>
+    </md-fab-trigger>
+
+    <md-fab-actions>
+      <md-button aria-label="Feature" class="md-fab md-raised md-mini" ng-click="addStoryToEpic(null, null, 'FEA', null)">
+        <md-tooltip md-direction="left" md-visible="false" md-autohide="false">Feature</md-tooltip>
+        <md-icon md-font-icon="fa fa-star"></md-icon>
+      </md-button>
+      <md-button aria-label="Technical" class="md-fab md-raised md-mini" ng-click="addStoryToEpic(null, null, 'TEC', null)">
+        <md-tooltip md-direction="left" md-visible="false" md-autohide="false">Technical</md-tooltip>
+        <md-icon md-font-icon="fa fa-cog"></md-icon>
+      </md-button>
+      <md-button aria-label="Bug" class="md-fab md-raised md-mini" ng-click="addStoryToEpic(null, null, 'BUG', null)">
+        <md-tooltip md-direction="left" md-visible="false" md-autohide="false">Bug</md-tooltip>
+        <md-icon md-font-icon="fa fa-bug"></md-icon>
+      </md-button>
+      <md-button aria-label="Chore" class="md-fab md-raised md-mini" ng-click="addStoryToEpic(null, null, 'CHO', null)">
+        <md-tooltip md-direction="left" md-visible="false" md-autohide="false">Chore</md-tooltip>
+        <md-icon md-font-icon="fa fa-flag"></md-icon>
+      </md-button>
+      <md-button aria-label="Epic" class="md-fab md-raised md-mini" ng-click="addEpic()">
+        <md-tooltip md-direction="left" md-visible="false" md-autohide="false">Epic</md-tooltip>
+        <md-icon md-font-icon="fa fa-inbox"></md-icon>
+      </md-button>
+      <md-button aria-label="Epic" class="md-fab md-raised md-mini" ng-click="addModule()">
+        <md-tooltip md-direction="left" md-visible="false" md-autohide="false">Module</md-tooltip>
+        <md-icon md-font-icon="fa fa-folder"></md-icon>
+      </md-button>
+    </md-fab-actions>
+  </md-fab-speed-dial>
+  </div>
   <section class="modules" ng-if="false">
     <div class="module" ng-repeat="module in modules">
       <div class="well well-sm">
@@ -15,6 +51,35 @@
     <div ng-if="storyGroupedBy !== 'both'" class="row grouped-not-both" ng-repeat="(group, stories) in groupedStories">
       <h4 ng-if="storyGroupedBy === 'module'" ng-bind="stories[0].module.name"></h4>
       <h4 ng-if="storyGroupedBy === 'epic'" ng-bind="stories[0].epic.name"></h4>
+
+      <div class="fab-story-container">
+        <md-fab-toolbar md-open="false" md-direction="right">
+          <md-fab-trigger class="align-with-text">
+            <md-button aria-label="menu" class="md-fab md-primary">
+              <md-icon md-font-icon="fa fa-plus"></md-icon>
+            </md-button>
+          </md-fab-trigger>
+
+          <md-toolbar>
+            <md-fab-actions class="md-toolbar-tools">
+              <md-button aria-label="Feature" class="md-icon-button" ng-click="addStoryToEpic(stories[0].module, stories[0].epic, 'FEA', storyGroupedBy)">
+                <md-tooltip md-direction="left" md-visible="false" md-autohide="false">Feature</md-tooltip>
+                <md-icon md-font-icon="fa fa-star"></md-icon>
+              </md-button>
+              <md-button aria-label="Technical" class="md-icon-button" ng-click="addStoryToEpic(stories[0].module, stories[0].epic, 'TEC', storyGroupedBy)">
+                <md-icon md-font-icon="fa fa-cog"></md-icon>
+              </md-button>
+              <md-button aria-label="Bug" class="md-icon-button" ng-click="addStoryToEpic(stories[0].module, stories[0].epic, 'BUG', storyGroupedBy)">
+                <md-icon md-font-icon="fa fa-bug"></md-icon>
+              </md-button>
+              <md-button aria-label="Chore" class="md-icon-button" ng-click="addStoryToEpic(stories[0].module, stories[0].epic, 'CHO', storyGroupedBy)">
+                <md-icon md-font-icon="fa fa-flag"></md-icon>
+              </md-button>
+            </md-fab-actions>
+          </md-toolbar>
+        </md-fab-toolbar>
+      </div>
+
       <table class="table table-story table-hover table-condensed table-bordered">
         <thead>
         <tr>
@@ -56,7 +121,38 @@
     <div ng-if="storyGroupedBy === 'both'" class="row grouped-both" ng-repeat="(group, modules) in groupedStories">
       <h4 class="module-name" ng-bind="modules.module.name"></h4>
       <div ng-repeat="(group2, stories) in modules.stories">
-        <h3 class="epic-name">{{modules.module.name}} >> {{stories[0].epic.name}}</h3>
+
+        <h3 class="epic-name">
+          {{modules.module.name}} >> {{stories[0].epic.name}}
+        </h3>
+
+        <div class="fab-story-container">
+          <md-fab-toolbar md-open="false" md-direction="right">
+            <md-fab-trigger class="align-with-text">
+              <md-button aria-label="menu" class="md-fab md-primary">
+                <md-icon md-font-icon="fa fa-plus"></md-icon>
+              </md-button>
+            </md-fab-trigger>
+
+            <md-toolbar>
+              <md-fab-actions class="md-toolbar-tools">
+                <md-button aria-label="comment" class="md-icon-button" ng-click="addStoryToEpic(modules.module, stories[0].epic, 'FEA', storyGroupedBy)">
+                  <md-icon md-font-icon="fa fa-star"></md-icon>
+                </md-button>
+                <md-button aria-label="label" class="md-icon-button" ng-click="addStoryToEpic(modules.module, stories[0].epic, 'TEC', storyGroupedBy)">
+                  <md-icon md-font-icon="fa fa-cog"></md-icon>
+                </md-button>
+                <md-button aria-label="photo" class="md-icon-button" ng-click="addStoryToEpic(modules.module, stories[0].epic, 'BUG', storyGroupedBy)">
+                  <md-icon md-font-icon="fa fa-bug"></md-icon>
+                </md-button>
+                <md-button aria-label="photo" class="md-icon-button" ng-click="addStoryToEpic(modules.module, stories[0].epic, 'CHO', storyGroupedBy)">
+                  <md-icon md-font-icon="fa fa-flag"></md-icon>
+                </md-button>
+              </md-fab-actions>
+            </md-toolbar>
+          </md-fab-toolbar>
+        </div>
+
         <table class="table table-story table-hover table-condensed table-bordered">
           <thead>
           <tr>
@@ -118,7 +214,7 @@
             </div>
           </div>
         </div>
-        <div class="col-md-4 col-md-offset-1">
+        <div class="col-md-5 col-md-offset-1">
           Order by:
           <div class="btn-group" role="group">
             <button type="button" class="btn btn-primary" ng-click="setStoryOrder('type')">

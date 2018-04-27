@@ -74,6 +74,7 @@ var scrumInCeres = angular.module(
     'ui.checkbox',
     'as.sortable',
     '19degrees.ngSweetAlert2',
+    'ngMaterial',
     'scrumInCeres.services',
     'scrumInCeres.factories',
     'scrumInCeres.resources',
@@ -167,7 +168,7 @@ scrumInCeres.run(['$rootScope', '$timeout', '$q', 'AuthService', 'MeService', 'A
     {code: 'FEA', name: 'Feature'},
     {code: 'BUG', name: 'Bug'},
     {code: 'CHO', name: 'Chore'},
-    {code: 'TEC', name: 'Techinical'}
+    {code: 'TEC', name: 'Technical'}
   ];
 
   $rootScope.itemsView = {mode: 'list'};

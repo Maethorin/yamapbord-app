@@ -46,6 +46,8 @@ scrumInCeresControllers.controller('IceBoxController', ['$rootScope', '$scope', 
     requester: null
   };
 
+  $scope.mainFabOpen = false;
+
   function groupStories() {
     $scope.groupedStories = false;
     if ($scope.storyGroupedBy === 'module') {
@@ -142,6 +144,25 @@ scrumInCeresControllers.controller('IceBoxController', ['$rootScope', '$scope', 
         $scope.storiesOrder[indexPropertyOrder] = newOrder;
       }
     }
+  };
+
+  $scope.addStoryToEpic = function(module, epic, type, storyGroupedBy) {
+    var data = {type: type};
+    if (['both', 'module'].indexOf(storyGroupedBy) > -1) {
+      data.module = module;
+    }
+    if (['both', 'epic'].indexOf(storyGroupedBy) > -1) {
+      data.epic = epic;
+    }
+    $scope.addNewStory(data);
+  };
+
+  $scope.addEpic = function() {
+    Alert.itsOpenSourceDude();
+  };
+
+  $scope.addModule = function() {
+    Alert.itsOpenSourceDude();
   };
 
   $scope.$watch('storyGroupedBy', groupStories);

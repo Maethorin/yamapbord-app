@@ -1,6 +1,7 @@
 @import "fontawesome/scss/font-awesome";
 @import "variables";
 @import "bootstrap-sass/assets/stylesheets/bootstrap";
+@import "angular-material/angular-material";
 @import "home";
 @import "notifier";
 @import "login";
@@ -8,6 +9,21 @@
 @import "board";
 @import "ice-box";
 @import "backlog";
+
+body {
+  height: auto;
+}
+
+.md-button {
+  &.md-fab {
+    &.md-green {
+      background-color: lighten(#00b8a8, 10%);
+      &:hover {
+        background-color: #00695C;
+      }
+    }
+  }
+}
 
 .navbar-toggle {
   &.hamburguer-menu {

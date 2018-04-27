@@ -51,11 +51,11 @@ module.exports = function (grunt) {
       css: {
         files: [
           {expand: true, cwd: '{0}/angular-inform/dist'.format([libFolder]), src: ['angular-inform.css'], flatten: true, dest: wwwExtraCssFolder},
-          {expand: true, cwd: '{0}/angular-bootstrap-toggle/dist'.format([libFolder]), src: ['angular-bootstrap-toggle.css'], flatten: true, dest: wwwExtraCssFolder},
+          // {expand: true, cwd: '{0}/angular-bootstrap-toggle/dist'.format([libFolder]), src: ['angular-bootstrap-toggle.css'], flatten: true, dest: wwwExtraCssFolder},
           {expand: true, cwd: '{0}/ng-scrollable/assets'.format([libFolder]), src: ['ng-scrollable.css'], flatten: true, dest: wwwExtraCssFolder},
           {expand: true, cwd: '{0}/ng-sortable/dist'.format([libFolder]), src: ['ng-sortable.css'], flatten: true, dest: wwwExtraCssFolder},
           {expand: true, cwd: '{0}/sweetalert2/dist'.format([libFolder]), src: ['sweetalert2.css'], flatten: true, dest: wwwExtraCssFolder},
-          {expand: true, cwd: '{0}/angular-bootstrap-datetimepicker/src/css'.format([nodeModulesFolder]), src: ['datetimepicker.css'], flatten: true, dest: wwwExtraCssFolder}
+          // {expand: true, cwd: '{0}/angular-bootstrap-datetimepicker/src/css'.format([nodeModulesFolder]), src: ['datetimepicker.css'], flatten: true, dest: wwwExtraCssFolder}
         ]
       },
       img: {
@@ -96,6 +96,9 @@ module.exports = function (grunt) {
           "src/lib/ng-scrollable/src/ng-scrollable.js",
           "src/lib/angular-bootstrap-checkbox/angular-bootstrap-checkbox.js",
           "src/lib/ng-sortable/dist/ng-sortable.js",
+          "src/lib/angular-aria/angular-aria.js",
+          "src/lib/angular-messages/angular-messages.js",
+          "src/lib/angular-material/angular-material.js",
 
           "node_modules/angular-bootstrap-datetimepicker/src/js/datetimepicker.js",
           "node_modules/angular-bootstrap-datetimepicker/src/js/datetimepicker.templates.js",

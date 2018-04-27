@@ -15,7 +15,7 @@ li {
 }
 
 .ice-box {
-  margin-top: 80px;
+  margin-top: 60px;
   .modules {
     display: flex;
     flex-direction:row;
@@ -55,6 +55,19 @@ li {
       width: 96%;
       margin-left: 40px;
     }
+  }
+
+  .fab-story-container {
+    margin-top: -42px;
+    margin-bottom: -14px;
+    margin-left: 450px;
+    width: 250px;
+  }
+
+  .fab-general-container {
+    position: fixed;
+    bottom: 35px;
+    right: 20px;
   }
 
   .epic-name {
