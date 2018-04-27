@@ -41,8 +41,8 @@ scrumInCeresControllers.controller('IceBoxController', ['$rootScope', '$scope', 
     type: null,
     name: null,
     statement: null,
-    vp: null,
-    sp: null,
+    valuePoints: null,
+    points: null,
     requester: null
   };
 
