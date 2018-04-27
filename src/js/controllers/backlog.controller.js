@@ -249,25 +249,25 @@ scrumInCeresControllers.controller('BacklogController', ['$rootScope', '$scope',
     $scope.selectedSprint.team = team;
   };
 
-  $scope.toggleShowStoryPopup = function(story) {
-    if (story === null) {
-      $scope.showinStory = story;
-      $scope.showStoryPopupOpened = !$scope.showStoryPopupOpened;
-      return false;
-    }
-    Alert.loading();
-    StoryService.getFullStory(story.id).then(
-      function(response) {
-        $scope.showinStory = story;
-        StoryService.turnCompactStoryAsComplete($scope.showinStory, response);
-        $scope.showStoryPopupOpened = !$scope.showStoryPopupOpened;
-        Alert.close();
-      },
-      function(error) {
-        Alert.randomErrorMessage(error);
-      }
-    );
-  };
+  // $scope.toggleShowStoryPopup = function(story) {
+  //   if (story === null) {
+  //     $scope.showinStory = story;
+  //     $scope.showStoryPopupOpened = !$scope.showStoryPopupOpened;
+  //     return false;
+  //   }
+  //   Alert.loading();
+  //   StoryService.getFullStory(story.id).then(
+  //     function(response) {
+  //       $scope.showinStory = story;
+  //       StoryService.turnCompactStoryAsComplete($scope.showinStory, response);
+  //       $scope.showStoryPopupOpened = !$scope.showStoryPopupOpened;
+  //       Alert.close();
+  //     },
+  //     function(error) {
+  //       Alert.randomErrorMessage(error);
+  //     }
+  //   );
+  // };
 
   $scope.selectSprintToEdit = function($event, sprint, $index, type) {
     $scope.selectedSprint = _.cloneDeep(sprint);
@@ -455,8 +455,8 @@ scrumInCeresControllers.controller('BacklogController', ['$rootScope', '$scope',
 
   StoryService.prepareScopeToEditStory($scope);
 
-  $scope.addNewStoryToSelectedSprint = function(iterationType) {
-    $rootScope.$broadcast('story.add', {iterationType: iterationType, iteration: $scope.selectedSprint});
+  $scope.addNewStoryToSelectedSprint = function(iterationType, type) {
+    $rootScope.$broadcast('story.add', {iterationType: iterationType, iteration: $scope.selectedSprint, type: type});
   };
 
   $scope.toggleFilterBarExpanded = function () {

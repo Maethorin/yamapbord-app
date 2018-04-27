@@ -223,7 +223,8 @@ scrumInCeresServices.service('StoryService', ['$rootScope', '$q', '$timeout', 'A
     $scope.scrollCommentOptions = {scrollX: 'none', scrollY: 'right', preventWheelEvents: false, preventKeyEvents: false};
     $scope.saveAndClose = false;
 
-    $scope.addNewStory = function(data) {
+    $scope.addNewStory = function(data, dota) {
+      console.log(dota)
       $scope.addingNewStory = true;
       $scope.selectedStory = {
         definitionOfDone: [],
@@ -260,7 +261,9 @@ scrumInCeresServices.service('StoryService', ['$rootScope', '$q', '$timeout', 'A
       $scope.completeStoryPopupOpened = true;
     };
 
-    $rootScope.$on('story.add', $scope.addNewStory);
+    $rootScope.$on('story.add', function(event, data) {
+      $scope.addNewStory(data);
+    });
 
     $scope.setStoryType = function(story, type) {
       story.type = type.code;
@@ -277,10 +280,6 @@ scrumInCeresServices.service('StoryService', ['$rootScope', '$q', '$timeout', 'A
 
     $scope.selectStoryToEdit = function($event, story, $index) {
       $event.stopPropagation();
-      if ($scope.selectedSprint && !$scope.selectedSprint.isPlanned) {
-        $scope.toggleShowStoryPopup(story);
-        return false;
-      }
       Alert.loading();
       $scope.addingNewStory = false;
       $scope.selectedStoryIndex = $index;

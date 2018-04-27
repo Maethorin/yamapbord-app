@@ -1,5 +1,16 @@
 .backlog {
-  margin-top: 80px;
+  margin-top: 60px;
+
+  .fab-story-container {
+    margin-top: 0;
+    margin-bottom: -63px;
+    margin-left: 54px;
+    position: relative;
+    width: 300px;
+    top: -60px;
+    left: 30px;
+  }
+
   .sprint-container {
     .panel-show-sprint {
       .panel-heading {

@@ -245,9 +245,37 @@
           </section>
           <h4 class="story-header no-background">
             <span class="title">Stories</span>
-            <button type="button" ng-if="selectedSprint.isPlanned && selectedSprint.id" class="btn btn-primary btn-sm btn-create-story" ng-click="addNewStoryToSelectedSprint(selectedSprint.type)"><i class="fa fa-plus"></i>Create New Story</button>
             <span class="sprint-point"><span class="value" ng-bind="selectedSprint.points|numberOrText"></span>points</span>
           </h4>
+          <div ng-if="selectedSprint.isPlanned && selectedSprint.id" class="fab-story-container">
+            <md-fab-toolbar md-open="false" md-direction="right">
+              <md-fab-trigger class="align-with-text">
+                <md-button aria-label="menu" class="md-fab md-primary">
+                  <md-icon md-font-icon="fa fa-plus"></md-icon>
+                </md-button>
+              </md-fab-trigger>
+
+              <md-toolbar>
+                <md-fab-actions class="md-toolbar-tools">
+                  <md-button aria-label="from icebox" class="md-icon-button" ng-click="addingStoryToSelectedSprint()">
+                    <md-icon md-font-icon="fa  fa-snowflake-o"></md-icon>
+                  </md-button>
+                  <md-button aria-label="comment" class="md-icon-button" ng-click="addNewStoryToSelectedSprint(selectedSprint.type, 'FEA')">
+                    <md-icon md-font-icon="fa fa-star"></md-icon>
+                  </md-button>
+                  <md-button aria-label="label" class="md-icon-button" ng-click="addNewStoryToSelectedSprint(selectedSprint.type, 'TEC')">
+                    <md-icon md-font-icon="fa fa-cog"></md-icon>
+                  </md-button>
+                  <md-button aria-label="photo" class="md-icon-button" ng-click="addNewStoryToSelectedSprint(selectedSprint.type, 'BUG')">
+                    <md-icon md-font-icon="fa fa-bug"></md-icon>
+                  </md-button>
+                  <md-button aria-label="photo" class="md-icon-button" ng-click="addNewStoryToSelectedSprint(selectedSprint.type, 'CHO')">
+                    <md-icon md-font-icon="fa fa-flag"></md-icon>
+                  </md-button>
+                </md-fab-actions>
+              </md-toolbar>
+            </md-fab-toolbar>
+          </div>
           <ul class="list-group sprint-stories" as-sortable ng-model="selectedSprint.stories">
             <li class="list-group-item">
               <div class="col-md-1">Type</div>
@@ -280,14 +308,11 @@
                   <span class="badge value-points-{{story.valuePoints|numberOrText:'null'}}" ng-bind="story.valuePoints|numberOrText"></span>
                 </div>
                 <div class="col-md-1">
-                  <button type="button" class="btn btn-default btn-xs btn-remove-item" ng-if="selectedSprint.isPlanned" ng-click="removeSprintStory(story, $index, $event)"><i class="fa fa-trash"></i></button>
+                  <button type="button" class="btn btn-default btn-xs btn-remove-item" title="remove from iteration" ng-if="selectedSprint.isPlanned" ng-click="removeSprintStory(story, $index, $event)"><i class="fa fa-trash"></i></button>
                 </div>
               </div>
             </li>
 
-            <li class="new-item list-group-item" ng-click="addingStoryToSelectedSprint()" ng-if="selectedSprint.isPlanned">
-              <span ng-show="!newStoryVisible">Add a story</span>
-            </li>
           </ul>
         </div>
         <div class="panel-footer">
@@ -316,7 +341,7 @@
             <div class="col-md-1">VP</div>
           </li>
 
-          <li class="list-group-item" ng-repeat="story in stories|filter:searchStories" title="{{story.statement}}" ng-click="toggleShowStoryPopup(story)">
+          <li class="list-group-item" ng-repeat="story in stories|filter:searchStories" title="{{story.statement}}" ng-click="selectStoryToEdit($event, story, $index)">
             <div class="col-md-1">
               <checkbox ng-class="{'btn-primary': story.selected}" ng-click="$event.stopPropagation()" ng-model="story.selected"></checkbox>
             </div>
@@ -348,101 +373,38 @@
     </div>
   </div>
 
-  <div class="popup-complete-story" ng-class="{'opened': showStoryPopupOpened}">
-    <div class="panel panel-default panel-complete-story">
-      <div class="panel-heading" title="{{showinStory.statement}}">
-        <span class="story-type-name" ng-class="showinStory.type | lowercase " title="{{showinStory.typeName}}" ng-bind="showinStory.typeName"></span>
-        <span class="story-name">{{showinStory.name}}</span>
-        <span class="story-status" ng-class="showinStory.status | lowercase" ng-bind="showinStory.statusName"></span>
-        <span class="badge points-{{showinStory.points|numberOrText:'null'}}" ng-bind="showinStory.points|numberOrText"></span>
-      </div>
-      <div class="panel-body">
-        <div class="story-statement" ng-bind="showinStory.statement"></div>
-        <uib-tabset active="activeJustified" justified="true">
-          <uib-tab index="0" heading="Tasks" select="changeScroll()">
-            <ul class="list-group story-tasks" ng-scrollable>
-              <li class="list-group-item" ng-repeat="task in showinStory.tasks">
-                {{ task.task }}
-              </li>
-            </ul>
-          </uib-tab>
-          <uib-tab index="1" heading="DoD" select="changeScroll()">
-            <ul class="list-group story-definitions" ng-scrollable>
-              <li class="list-group-item" ng-repeat="definition in showinStory.definitionOfDone">
-                {{ definition.definition }}
-              </li>
-            </ul>
-          </uib-tab>
-        </uib-tabset>
-      </div>
-      <div class="panel-footer">
-        <button type="button" class="btn btn-primary" ng-click="toggleShowStoryPopup(null)">Close</button>
-      </div>
-    </div>
-  </div>
+  <!--<div class="popup-complete-story" ng-class="{'opened': showStoryPopupOpened}">-->
+    <!--<div class="panel panel-default panel-complete-story">-->
+      <!--<div class="panel-heading" title="{{showinStory.statement}}">-->
+        <!--<span class="story-type-name" ng-class="showinStory.type | lowercase " title="{{showinStory.typeName}}" ng-bind="showinStory.typeName"></span>-->
+        <!--<span class="story-name">{{showinStory.name}}</span>-->
+        <!--<span class="story-status" ng-class="showinStory.status | lowercase" ng-bind="showinStory.statusName"></span>-->
+        <!--<span class="badge points-{{showinStory.points|numberOrText:'null'}}" ng-bind="showinStory.points|numberOrText"></span>-->
+      <!--</div>-->
+      <!--<div class="panel-body">-->
+        <!--<div class="story-statement" ng-bind="showinStory.statement"></div>-->
+        <!--<uib-tabset active="activeJustified" justified="true">-->
+          <!--<uib-tab index="0" heading="Tasks" select="changeScroll()">-->
+            <!--<ul class="list-group story-tasks" ng-scrollable>-->
+              <!--<li class="list-group-item" ng-repeat="task in showinStory.tasks">-->
+                <!--{{ task.task }}-->
+              <!--</li>-->
+            <!--</ul>-->
+          <!--</uib-tab>-->
+          <!--<uib-tab index="1" heading="DoD" select="changeScroll()">-->
+            <!--<ul class="list-group story-definitions" ng-scrollable>-->
+              <!--<li class="list-group-item" ng-repeat="definition in showinStory.definitionOfDone">-->
+                <!--{{ definition.definition }}-->
+              <!--</li>-->
+            <!--</ul>-->
+          <!--</uib-tab>-->
+        <!--</uib-tabset>-->
+      <!--</div>-->
+      <!--<div class="panel-footer">-->
+        <!--<button type="button" class="btn btn-primary" ng-click="toggleShowStoryPopup(null)">Close</button>-->
+      <!--</div>-->
+    <!--</div>-->
+  <!--</div>-->
 
   <section id="createStory" ng-include="'templates/include/story-form.html'"></section>
-
-  <div class="filter-bar" ng-class="{'expanded': filterBarExpanded}">
-    <div class="filter-trigger" ng-click="toggleFilterBarExpanded()">
-      <div></div><div></div>
-    </div>
-    <div class="filter-content">
-      <div class="col-md-2">
-        <h4 class="no-background">Type: <span ng-bind="filter.type.name"></span><button type="button" class="btn btn-xs btn-danger btn-clear-filter" ng-click="selectFilter('type', null)">clear</button></h4>
-        <div class="filter-bar-list">
-          <ul class="list-group">
-            <li class="list-group-item {{type.code | lowercase}}" ng-class="{'selected': type.code === filter.type.code}" ng-repeat="type in storyTypes" ng-bind="type.name" ng-click="selectFilter('type', type)"></li>
-          </ul>
-        </div>
-      </div>
-      <div class="col-md-1">
-        <h4 class="no-background">VP: <span ng-bind="filter.valuePoint"></span><button type="button" class="btn btn-xs btn-danger btn-clear-filter" ng-click="selectFilter('valuePoint', null)">clear</button></h4>
-        <div class="filter-bar-list">
-          <ul class="list-group">
-            <li class="list-group-item" ng-class="{'selected': 'N' === filter.valuePoint}" ng-click="selectFilter('valuePoint', 'N')">N</li>
-            <li class="list-group-item" ng-class="{'selected': valuePoint === filter.valuePoint}" ng-repeat="valuePoint in points" ng-bind="valuePoint" ng-click="selectFilter('valuePoint', valuePoint)"></li>
-          </ul>
-        </div>
-      </div>
-      <div class="col-md-1">
-        <h4 class="no-background">SP: <span ng-bind="filter.point"></span><button type="button" class="btn btn-xs btn-danger btn-clear-filter" ng-click="selectFilter('point', null)">clear</button></h4>
-        <div class="filter-bar-list">
-          <ul class="list-group">
-            <li class="list-group-item" ng-class="{'selected': 'N' === filter.point}" ng-click="selectFilter('point', 'N')">N</li>
-            <li class="list-group-item" ng-class="{'selected': point === filter.point}" ng-repeat="point in points" ng-bind="point" ng-click="selectFilter('point', point)"></li>
-          </ul>
-        </div>
-      </div>
-      <div class="col-md-3">
-        <h4 class="no-background">Module: <span ng-bind="filter.module.name|limitWithEllipsis:25"></span><button type="button" class="btn btn-xs btn-danger btn-clear-filter" ng-click="selectFilter('module', null)">clear</button></h4>
-        <div class="filter-bar-list">
-          <ul class="list-group">
-            <li class="list-group-item" ng-class="{'selected': module.id === filter.module.id}" ng-repeat="module in modules" ng-bind="module.name" ng-click="selectFilter('module', module)"></li>
-          </ul>
-        </div>
-      </div>
-      <div class="col-md-3">
-        <h4 class="no-background">Epic: <span ng-bind="filter.epic.name|limitWithEllipsis:25"></span><button type="button" class="btn btn-xs btn-danger btn-clear-filter" ng-click="selectFilter('epic', null)">clear</button></h4>
-        <div class="filter-bar-list">
-          <ul class="list-group">
-            <li ng-if="filter.module !== null && filter.module.epics.length > 0" class="list-group-item" ng-class="{'selected': epic.id === filter.epic.id}" ng-repeat="epic in filter.module.epics|orderBy:'name'" ng-click="selectFilter('epic', epic)">
-              <epic-name epic="epic"></epic-name>
-            </li>
-            <li ng-if="filter.module === null || filter.module.epics.length === 0" class="list-group-item" ng-class="{'selected': epic.id === filter.epic.id}" ng-repeat="epic in epics|orderBy:['modules', 'name']" ng-click="selectFilter('epic', epic)">
-              <epic-name epic="epic"></epic-name>
-            </li>
-          </ul>
-        </div>
-      </div>
-      <div class="col-md-2">
-        <h4 class="no-background">Requester: <span ng-bind="filter.requester.name|limitWithEllipsis:17"></span><button type="button" class="btn btn-xs btn-danger btn-clear-filter" ng-click="selectFilter('requester', null)">clear</button></h4>
-        <div class="filter-bar-list">
-          <ul class="list-group">
-            <li class="list-group-item" ng-class="{'selected': requester.id === filter.requester.id}" ng-repeat="requester in requesters" ng-bind="requester.name" ng-click="selectFilter('requester', requester)"></li>
-          </ul>
-        </div>
-      </div>
-    </div>
-  </div>
 </div>
