@@ -595,6 +595,9 @@ textarea {
     color: #FFF;
     padding: 2px 7px;
     height: 32px;
+    &::placeholder {
+      color: #DDD;
+    }
   }
   .select-story-type {
     background-repeat: no-repeat;

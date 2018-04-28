@@ -162,20 +162,18 @@
       <div class="panel panel-default panel-edit-{{selectedSprint.type}}">
         <div class="panel-heading" title="{{selectedSprint.statement}}">
           <div class="col-md-2 sprint-team">
-            <label>Team:</label>
             <div class="form-group">
               <select id="selectTeam" ng-model="selectedSprint.team" ng-disabled="!selectedSprint.isPlanned" required class="select-team form-control" ng-options="team.name for team in teams track by team.id">
-                <option value="">-- choose --</option>
+                <option value="">-- Team --</option>
               </select>
             </div>
           </div>
 
           <div class="col-md-8">
-            <label>Name:</label> <input class="sprint-name" ng-model="selectedSprint.name" ng-disabled="!selectedSprint.isPlanned"/>
+            <input class="sprint-name" placeholder="Name" ng-model="selectedSprint.name" ng-disabled="!selectedSprint.isPlanned"/>
           </div>
 
           <div class="col-md-2 sprint-status" ng-if="selectedSprint.type === 'sprint'">
-            <label>Status:</label>
             <div class="col-md-10 form-group">
               <select id="selectStatus" ng-model="selectedSprint.status" required class="select-status form-control">
                 <option value="PLAN" ng-disabled="!selectedSprint.isPlanned">PLANNED</option>
@@ -189,9 +187,8 @@
             </div>
           </div>
         </div>
-        <div class="panel-body">
-          <section ng-if="selectedSprint.type === 'sprint'">
-            <h4 class="no-background">Dates</h4>
+        <div class="panel-body" ng-class="{'expanded': storiesExpanded}">
+          <section class="sprint-information" ng-if="selectedSprint.type === 'sprint'">
             <div class="dropdown start date">
               <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
                 <datetimepicker ng-model="selectedSprint.startDate"
@@ -238,13 +235,15 @@
               </div>
             </div>
 
-            <h4 class="no-background">Objective</h4>
             <div class="sprint-objective">
-              <textarea rows="2" ng-model="selectedSprint.objective" required ng-disabled="!selectedSprint.isPlanned"></textarea>
+              <textarea rows="2" ng-model="selectedSprint.objective" placeholder="Objective" required ng-disabled="!selectedSprint.isPlanned"></textarea>
             </div>
           </section>
           <h4 class="story-header no-background">
             <span class="title">Stories</span>
+            <button type="button" class="btn btn-default btn-sm btn-expand" ng-click="storiesExpanded = !storiesExpanded">
+              <i class="fa" ng-class="{'fa-chevron-up': !storiesExpanded, 'fa-chevron-down': storiesExpanded}"></i>
+            </button>
             <span class="sprint-point"><span class="value" ng-bind="selectedSprint.points|numberOrText"></span>points</span>
           </h4>
           <div ng-if="selectedSprint.isPlanned && selectedSprint.id" class="fab-story-container">
@@ -416,39 +415,6 @@
       </div>
     </div>
   </div>
-
-  <!--<div class="popup-complete-story" ng-class="{'opened': showStoryPopupOpened}">-->
-    <!--<div class="panel panel-default panel-complete-story">-->
-      <!--<div class="panel-heading" title="{{showinStory.statement}}">-->
-        <!--<span class="story-type-name" ng-class="showinStory.type | lowercase " title="{{showinStory.typeName}}" ng-bind="showinStory.typeName"></span>-->
-        <!--<span class="story-name">{{showinStory.name}}</span>-->
-        <!--<span class="story-status" ng-class="showinStory.status | lowercase" ng-bind="showinStory.statusName"></span>-->
-        <!--<span class="badge points-{{showinStory.points|numberOrText:'null'}}" ng-bind="showinStory.points|numberOrText"></span>-->
-      <!--</div>-->
-      <!--<div class="panel-body">-->
-        <!--<div class="story-statement" ng-bind="showinStory.statement"></div>-->
-        <!--<uib-tabset active="activeJustified" justified="true">-->
-          <!--<uib-tab index="0" heading="Tasks" select="changeScroll()">-->
-            <!--<ul class="list-group story-tasks" ng-scrollable>-->
-              <!--<li class="list-group-item" ng-repeat="task in showinStory.tasks">-->
-                <!--{{ task.task }}-->
-              <!--</li>-->
-            <!--</ul>-->
-          <!--</uib-tab>-->
-          <!--<uib-tab index="1" heading="DoD" select="changeScroll()">-->
-            <!--<ul class="list-group story-definitions" ng-scrollable>-->
-              <!--<li class="list-group-item" ng-repeat="definition in showinStory.definitionOfDone">-->
-                <!--{{ definition.definition }}-->
-              <!--</li>-->
-            <!--</ul>-->
-          <!--</uib-tab>-->
-        <!--</uib-tabset>-->
-      <!--</div>-->
-      <!--<div class="panel-footer">-->
-        <!--<button type="button" class="btn btn-primary" ng-click="toggleShowStoryPopup(null)">Close</button>-->
-      <!--</div>-->
-    <!--</div>-->
-  <!--</div>-->
 
   <section id="createStory" ng-include="'templates/include/story-form.html'"></section>
 </div>

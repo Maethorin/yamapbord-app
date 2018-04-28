@@ -17,6 +17,7 @@ scrumInCeresControllers.controller('BacklogController', ['$rootScope', '$scope',
   $scope.stories = [];
   $scope.teams = [];
   $scope.showStoryPopupOpened = false;
+  $scope.storiesExpanded = false;
 
   $scope.showinStory = null;
   $scope.selectedStoryIndex = null;
