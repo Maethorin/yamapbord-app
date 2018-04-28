@@ -1,6 +1,6 @@
 'use strict';
 
-scrumInCeresControllers.controller('BacklogController', ['$rootScope', '$scope', '$timeout', 'Alert', 'MeService', 'StoryService', 'HollydayService', 'Notifier', 'BacklogSprint', 'BacklogKanban', function($rootScope, $scope, $timeout, Alert, MeService, StoryService, HollydayService, Notifier, BacklogSprint, BacklogKanban) {
+scrumInCeresControllers.controller('BacklogController', ['$rootScope', '$scope', '$timeout', '$filter', 'Alert', 'MeService', 'StoryService', 'HollydayService', 'Notifier', 'BacklogSprint', 'BacklogKanban', function($rootScope, $scope, $timeout, $filter, Alert, MeService, StoryService, HollydayService, Notifier, BacklogSprint, BacklogKanban) {
   $rootScope.currentController = 'BacklogController';
   $rootScope.itemsView.mode = 'table';
   $scope.sprints = [];
@@ -16,7 +16,6 @@ scrumInCeresControllers.controller('BacklogController', ['$rootScope', '$scope',
   $scope.storiesPopupOpened = false;
   $scope.stories = [];
   $scope.teams = [];
-  $scope.searchStories = '';
   $scope.showStoryPopupOpened = false;
 
   $scope.showinStory = null;
@@ -24,6 +23,51 @@ scrumInCeresControllers.controller('BacklogController', ['$rootScope', '$scope',
 
   $scope.changeScroll = function() {
     $scope.$broadcast('content.changed');
+  };
+
+  $scope.clearStoryFilter = function() {
+    $scope.searchStories = {
+      type: '',
+      epicId: '',
+      moduleId: '',
+      name: '',
+      statement: ''
+    };
+  };
+  $scope.clearStoryFilter();
+
+  $scope.storyFilterComparator = function(actual, expected) {
+    if (!expected) {
+      return true;
+    }
+    var key = null;
+    if (typeof expected === "string" && expected.indexOf("|") > -1) {
+      expected = expected.split("|");
+      key = expected[0];
+      expected = parseInt(expected[1]);
+    }
+    if (key === "epicId" && $scope.searchStories.epicId && $scope.searchStories.epicId !== '') {
+      return actual === expected;
+    }
+    if (key === "moduleId" && $scope.searchStories.moduleId && $scope.searchStories.moduleId !== '') {
+      return actual === expected;
+    }
+    if (key === "points" && $scope.searchStories.points !== undefined && $scope.searchStories.points !== '') {
+      if (expected === -1) {
+        return actual === null;
+      }
+      return actual === expected;
+    }
+    if (key === "valuePoints" && $scope.searchStories.valuePoints !== undefined && $scope.searchStories.valuePoints !== '') {
+      if (expected === -1) {
+        return actual === null;
+      }
+      return actual === expected;
+    }
+    if (typeof expected === "string" && typeof actual === "string") {
+      return actual.toLowerCase().indexOf(expected.toLowerCase()) >-1
+    }
+    return angular.equals(actual, expected);
   };
 
   MeService.getInfo().then(
@@ -249,26 +293,6 @@ scrumInCeresControllers.controller('BacklogController', ['$rootScope', '$scope',
     $scope.selectedSprint.team = team;
   };
 
-  // $scope.toggleShowStoryPopup = function(story) {
-  //   if (story === null) {
-  //     $scope.showinStory = story;
-  //     $scope.showStoryPopupOpened = !$scope.showStoryPopupOpened;
-  //     return false;
-  //   }
-  //   Alert.loading();
-  //   StoryService.getFullStory(story.id).then(
-  //     function(response) {
-  //       $scope.showinStory = story;
-  //       StoryService.turnCompactStoryAsComplete($scope.showinStory, response);
-  //       $scope.showStoryPopupOpened = !$scope.showStoryPopupOpened;
-  //       Alert.close();
-  //     },
-  //     function(error) {
-  //       Alert.randomErrorMessage(error);
-  //     }
-  //   );
-  // };
-
   $scope.selectSprintToEdit = function($event, sprint, $index, type) {
     $scope.selectedSprint = _.cloneDeep(sprint);
     $scope.selectedSprint.type = type;
@@ -287,6 +311,7 @@ scrumInCeresControllers.controller('BacklogController', ['$rootScope', '$scope',
           $scope.selectedSprint = null;
           $scope.completeSprintPopupOpened = false;
           $scope.addingNew = false;
+          $scope.clearStoryFilter();
           Alert.randomSuccessMessage();
         },
         function(error) {
@@ -305,6 +330,7 @@ scrumInCeresControllers.controller('BacklogController', ['$rootScope', '$scope',
         $scope.selectedSprintIndex = null;
         $scope.selectedSprint = null;
         $scope.completeSprintPopupOpened = false;
+        $scope.clearStoryFilter();
         Alert.randomSuccessMessage();
       },
       function(error) {
@@ -322,6 +348,7 @@ scrumInCeresControllers.controller('BacklogController', ['$rootScope', '$scope',
           $scope.selectedSprint = null;
           $scope.completeSprintPopupOpened = false;
           $scope.addingNew = false;
+          $scope.clearStoryFilter();
           Alert.randomSuccessMessage();
         },
         function(error) {
@@ -338,6 +365,7 @@ scrumInCeresControllers.controller('BacklogController', ['$rootScope', '$scope',
         $scope.selectedSprintIndex = null;
         $scope.selectedSprint = null;
         $scope.completeSprintPopupOpened = false;
+        $scope.clearStoryFilter();
         Alert.randomSuccessMessage();
       },
       function(error) {
@@ -374,6 +402,7 @@ scrumInCeresControllers.controller('BacklogController', ['$rootScope', '$scope',
     $scope.selectedSprint = null;
     $scope.selectedSprintIndex = null;
     $scope.completeSprintPopupOpened = false;
+    $scope.clearStoryFilter();
   };
 
   $scope.endDateBeforeRender = endDateBeforeRender;

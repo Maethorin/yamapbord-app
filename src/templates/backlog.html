@@ -227,7 +227,7 @@
               </div>
 
               <div class="end-date">
-                <label for="inputEndDate">Starts:</label>
+                <label for="inputEndDate">Ends:</label>
                 <a class="date dropdown-toggle" id="dropdownEndDate" role="button" data-toggle="dropdown" data-target=".dropdown.end.date">
                   <div class="input-group">
                     <input type="text" id="inputEndDate" class="form-control" name="endDate" ng-model="selectedSprint.endDate" date-time-input="YYYY-MM-DD" ng-disabled="!selectedSprint.isPlanned" required/>
@@ -278,36 +278,40 @@
           </div>
           <ul class="list-group sprint-stories" as-sortable ng-model="selectedSprint.stories">
             <li class="list-group-item">
-              <div class="col-md-1">Type</div>
-              <div class="col-md-2">Module - Epic</div>
-              <div class="col-md-3">Name</div>
-              <div class="col-md-3">Statement</div>
-              <div class="col-md-1">SP</div>
-              <div class="col-md-1">VP</div>
-              <div class="col-md-1"></div>
+              <div class="col col-order">#</div>
+              <div class="col col-type">Type</div>
+              <div class="col col-mod-epic">Module - Epic</div>
+              <div class="col col-name">Name</div>
+              <div class="col col-statement">Statement</div>
+              <div class="col col-sp">SP</div>
+              <div class="col col-vp">VP</div>
+              <div class="col col-buttons"></div>
             </li>
 
             <li class="list-group-item" ng-repeat="story in selectedSprint.stories" ng-click="selectStoryToEdit($event, story, $index)" as-sortable-item>
               <div as-sortable-item-handle>
-                <div class="col-md-1">
+                <div class="col col-order">
+                  <span class="story-order" ng-bind="story.executionOrder"></span>
+                </div>
+                <div class="col col-type">
                   <span class="story-type-name" ng-class="story.type | lowercase" title="{{story.typeName}}"></span>
                 </div>
-                <div class="col-md-2">
+                <div class="col col-mod-epic">
                   <module-epic module-id="story.moduleId" epic-id="story.epicId"></module-epic>
                 </div>
-                <div class="col-md-3">
-                  <span class="story-name" ng-bind="story.name|limitWithEllipsis:24" title="{{story.name}}"></span>
+                <div class="col col-name">
+                  <span class="story-name" ng-bind="story.name|limitWithEllipsis:37" title="{{story.name}}"></span>
                 </div>
-                <div class="col-md-3">
-                  <span title="{{story.statement}}" ng-bind="story.statement|limitWithEllipsis:83"></span>
+                <div class="col col-statement">
+                  <span title="{{story.statement}}" ng-bind="story.statement|limitWithEllipsis:60"></span>
                 </div>
-                <div class="col-md-1">
+                <div class="col col-sp">
                   <span class="badge points-{{story.points|numberOrText:'null'}}" ng-bind="story.points|numberOrText"></span>
                 </div>
-                <div class="col-md-1">
+                <div class="col col-vp">
                   <span class="badge value-points-{{story.valuePoints|numberOrText:'null'}}" ng-bind="story.valuePoints|numberOrText"></span>
                 </div>
-                <div class="col-md-1">
+                <div class="col col-buttons">
                   <button type="button" class="btn btn-default btn-xs btn-remove-item" title="remove from iteration" ng-if="selectedSprint.isPlanned" ng-click="removeSprintStory(story, $index, $event)"><i class="fa fa-trash"></i></button>
                 </div>
               </div>
@@ -326,41 +330,81 @@
   <div class="popup-stories" ng-class="{'opened': storiesPopupOpened}">
     <div class="panel panel-default panel-stories">
       <div class="panel-heading">
-        IceLog Stories
-        <input type="text" ng-model="searchStories" class="search-stories form-control" placeholder="Search...">
+        <div class="col-md-1 icelog-title"><span>IceLog Stories</span></div>
+        <div class="form-group col-md-1">
+          <select id="selectStoryType" ng-model="searchStories.type" required class="select-story-type form-control">
+            <option value="">-- types: all --</option>
+            <option ng-value="type.code" ng-repeat="type in storyTypes" ng-bind="type.code"></option>
+          </select>
+        </div>
+        <div class="form-group col-md-2">
+          <select id="selectModule" ng-model="searchStories.moduleId" required class="select-module form-control">
+            <option value="">-- modules: all --</option>
+            <option ng-value="'moduleId|'+module.id" ng-repeat="module in modules" ng-bind="module.acronym"></option>
+          </select>
+        </div>
+        <div class="form-group col-md-2">
+          <select id="selectEpic" ng-model="searchStories.epicId" required class="select-epic form-control">
+            <option value="">-- epics: all --</option>
+            <option ng-value="'epicId|'+epic.id" ng-repeat="epic in epics|orderBy:['modules', 'name']" ng-bind="epic.modules ? '[{modules}] {name}'.format(epic) : epic.name"></option>
+          </select>
+        </div>
+        <div class="form-group col-md-1">
+          <input type="text" ng-model="searchStories.name" class="filter-name form-control" placeholder="Name..." />
+        </div>
+        <div class="form-group col-md-1">
+          <input type="text" ng-model="searchStories.statement" class="filter-statement form-control" placeholder="Statement..." />
+        </div>
+        <div class="form-group col-md-1">
+          <select id="selectSp" ng-model="searchStories.points" required class="select-story-type form-control">
+            <option value="">-- SP: all --</option>
+            <option value="points|-1">N</option>
+            <option ng-value="'points|'+point" ng-repeat="point in points" ng-bind="point"></option>
+          </select>
+        </div>
+        <div class="form-group col-md-1">
+          <select id="selectVp" ng-model="searchStories.valuePoints" required class="select-story-type form-control">
+            <option value="">-- VP: all --</option>
+            <option value="valuePoints|-1">N</option>
+            <option ng-value="'valuePoints|'+point" ng-repeat="point in points" ng-bind="point"></option>
+          </select>
+        </div>
+        <div class="form-group col-md-1">
+          <button type="button" class="btn btn-default btn-sm" ng-click="clearStoryFilter()">Clear</button>
+        </div>
       </div>
       <div class="panel-body">
         <ul class="list-group sprint-stories" ng-scrollable="scrollOptions">
           <li class="list-group-item">
-            <div class="col-md-1"></div>
-            <div class="col-md-1">Type</div>
-            <div class="col-md-2">Module - Epic</div>
-            <div class="col-md-3">Name</div>
-            <div class="col-md-3">Statement</div>
-            <div class="col-md-1">SP</div>
-            <div class="col-md-1">VP</div>
+            <div class="col col-order">-</div>
+            <div class="col col-type">Type</div>
+            <div class="col col-mod-epic">Module - Epic</div>
+            <div class="col col-name">Name</div>
+            <div class="col col-statement">Statement</div>
+            <div class="col col-sp">SP</div>
+            <div class="col col-vp">VP</div>
           </li>
 
-          <li class="list-group-item" ng-repeat="story in stories|filter:searchStories" title="{{story.statement}}" ng-click="selectStoryToEdit($event, story, $index)">
-            <div class="col-md-1">
+          <li class="list-group-item" ng-repeat="story in stories|filter:searchStories:storyFilterComparator" title="{{story.statement}}" ng-click="selectStoryToEdit($event, story, $index)">
+            <div class="col col-order">
               <checkbox ng-class="{'btn-primary': story.selected}" ng-click="$event.stopPropagation()" ng-model="story.selected"></checkbox>
             </div>
-            <div class="col-md-1">
+            <div class="col col-type">
               <span class="story-type-name" ng-class="story.type|lowercase" title="{{story.typeName}}"></span>
             </div>
-            <div class="col-md-2">
+            <div class="col col-mod-epic">
               <module-epic module-id="story.moduleId" epic-id="story.epicId"></module-epic>
             </div>
-            <div class="col-md-3">
+            <div class="col col-name">
               <span class="story-name" ng-bind="story.name|limitWithEllipsis:24" title="{{story.name}}"></span>
             </div>
-            <div class="col-md-3">
+            <div class="col col-statement">
               <span title="{{story.statement}}" ng-bind="story.statement|limitWithEllipsis:83"></span>
             </div>
-            <div class="col-md-1">
+            <div class="col col-sp">
               <span class="badge points-{{story.points|numberOrText:'null'}}" ng-bind="story.points|numberOrText"></span>
             </div>
-            <div class="col-md-1">
+            <div class="col col-vp">
               <span class="badge value-points-{{story.valuePoints|numberOrText:'null'}}" ng-bind="story.valuePoints|numberOrText"></span>
             </div>
           </li>
