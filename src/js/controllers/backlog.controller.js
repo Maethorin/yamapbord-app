@@ -26,6 +26,14 @@ scrumInCeresControllers.controller('BacklogController', ['$rootScope', '$scope',
     $scope.$broadcast('content.changed');
   };
 
+  $scope.storiesSortableListeners = {
+    orderChanged: function(event) {
+      _.forEach($scope.selectedSprint.stories, function(story, index) {
+        story.executionOrder = index + 1;
+      })
+    }
+  };
+
   $scope.clearStoryFilter = function() {
     $scope.searchStories = {
       type: '',

@@ -239,6 +239,7 @@
               <textarea rows="2" ng-model="selectedSprint.objective" placeholder="Objective" required ng-disabled="!selectedSprint.isPlanned"></textarea>
             </div>
           </section>
+
           <h4 class="story-header no-background">
             <span class="title">Stories</span>
             <button type="button" class="btn btn-default btn-sm btn-expand" ng-click="storiesExpanded = !storiesExpanded">
@@ -275,7 +276,8 @@
               </md-toolbar>
             </md-fab-toolbar>
           </div>
-          <ul class="list-group sprint-stories" as-sortable ng-model="selectedSprint.stories">
+
+          <ul class="list-group sprint-stories" as-sortable="storiesSortableListeners" ng-model="selectedSprint.stories">
             <li class="list-group-item">
               <div class="col col-order">#</div>
               <div class="col col-type">Type</div>
@@ -287,7 +289,7 @@
               <div class="col col-buttons"></div>
             </li>
 
-            <li class="list-group-item" ng-repeat="story in selectedSprint.stories" ng-click="selectStoryToEdit($event, story, $index)" as-sortable-item>
+            <li class="list-group-item" ng-repeat="story in selectedSprint.stories|orderBy:'executionOrder'" ng-click="selectStoryToEdit($event, story, $index)" as-sortable-item>
               <div as-sortable-item-handle>
                 <div class="col col-order">
                   <span class="story-order" ng-bind="story.executionOrder"></span>
