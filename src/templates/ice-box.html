@@ -35,17 +35,6 @@
     </md-fab-actions>
   </md-fab-speed-dial>
   </div>
-  <section class="modules" ng-if="false">
-    <div class="module" ng-repeat="module in modules">
-      <div class="well well-sm">
-        <a href="#{{module.id}}" class="module-icon">
-          <i class="fa fa-folder"></i>
-          {{module.name}}
-        </a>
-        {{module.storyCount}} stories
-      </div>
-    </div>
-  </section>
 
   <section ng-if="groupedStories">
     <div ng-if="storyGroupedBy !== 'both'" class="row grouped-not-both" ng-repeat="(group, stories) in groupedStories">
