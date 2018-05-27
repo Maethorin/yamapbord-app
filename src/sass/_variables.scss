@@ -3,6 +3,7 @@ $bootstrap-sass-asset-helper: false !default;
 $gray-base: #4f6259 !default;
 $gray-dark: #485952 !default;   // #333
 $gray-darker: darken($gray-base, 13.5%) !default; // #222
+$gray-heading: #384641 !default;
 $gray: #72837d !default;
 $gray-light: #859993 !default;   // #999
 $gray-light-color: #b7cbc5 !default;   // #999
@@ -797,7 +798,7 @@ $panel-footer-bg:             $gray !default;
 
 $panel-default-text:          $text-color !default;
 $panel-default-border:        $gray !default;
-$panel-default-heading-bg: $gray-dark !default;
+$panel-default-heading-bg: $gray-heading !default;
 
 $panel-primary-text:          #fff !default;
 $panel-primary-border:        $brand-primary !default;

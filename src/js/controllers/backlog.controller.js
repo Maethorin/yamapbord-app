@@ -6,6 +6,13 @@ scrumInCeresControllers.controller('BacklogController', ['$rootScope', '$scope',
   $scope.sprints = [];
   $scope.kanbans = [];
 
+  $scope.iterationStatuses = [
+    {code: 'PLAN', name: 'Planned'},
+    {code: 'SUCC', name: 'Success'},
+    {code: 'FAIL', name: 'Fail'},
+    {code: 'CURR', name: 'Current'}
+  ];
+
   $scope.scrollOptions = {scrollX: 'none', scrollY: 'right', preventWheelEvents: true};
 
   $scope.completeSprintPopupOpened = false;
@@ -22,6 +29,10 @@ scrumInCeresControllers.controller('BacklogController', ['$rootScope', '$scope',
   $scope.showinStory = null;
   $scope.selectedStoryIndex = null;
 
+  $scope.porraAngular = function() {
+    $scope.storiesExpanded = !$scope.storiesExpanded;
+  };
+
   $scope.changeScroll = function() {
     $scope.$broadcast('content.changed');
   };
@@ -30,7 +41,7 @@ scrumInCeresControllers.controller('BacklogController', ['$rootScope', '$scope',
     orderChanged: function(event) {
       _.forEach($scope.selectedSprint.stories, function(story, index) {
         story.executionOrder = index + 1;
-      })
+      });
     }
   };
 
@@ -500,4 +511,26 @@ scrumInCeresControllers.controller('BacklogController', ['$rootScope', '$scope',
   $scope.toggleFilterBarExpanded = function () {
     $scope.filterBarExpanded = !$scope.filterBarExpanded;
   };
+
+  $scope.filterIteration = {
+    team: {id: ''},
+    status: 'PLAN'
+  };
+
+  $scope.filterSprint = {
+    team: {id: ''},
+    status: 'PLAN'
+  };
+
+  $scope.filterKanban = {
+    team: {id: ''}
+  };
+
+  $scope.selectIterationFilter = function(property, value) {
+    $scope.filterIteration[property] = value;
+    $scope.filterSprint[property] = value;
+    if (property === 'team') {
+      $scope.filterKanban[property] = value;
+    }
+  }
 }]);

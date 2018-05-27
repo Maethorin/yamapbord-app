@@ -1,24 +1,33 @@
 .col {
   float: left;
-  padding: 0 8px;
+  padding: 0;
   text-align: center;
   &.col-order {
-    width: 3%;
+    width: 1.5%;
   }
   &.col-type {
-    width: 3%;
+    width: 2%;
     .story-type-name {
       margin-right: 0;
       margin-top: -2px;
     }
   }
+  &.col-status {
+    width: 4%;
+    .story-status {
+      padding: 5px 4px 2px;
+      border-radius: 4px;
+      font-size: 13px;
+      font-weight: bold;
+    }
+  }
   &.col-mod-epic {
-    width: 24%;
+    width: 20%;
     text-align: left;
     padding: 0 15px;
   }
   &.col-name {
-    width: 23%;
+    width: 24%;
     text-align: left;
     padding: 0 15px;
   }
@@ -146,7 +155,7 @@
   }
 
   .sprint-stories {
-    height: 250px;
+    //height: 250px;
     padding: 10px;
     background-color: $gray;
     border-radius: 5px;
@@ -194,7 +203,12 @@
       display: block;
     }
     .panel-edit-sprint, .panel-edit-kanban {
-      margin: 0.4% 10%;
+      position: absolute;
+      top: 60px;
+      left: 10px;
+      bottom: -5px;
+      right: 10px;
+
       .panel-heading {
         display: inline-block;
         width: 100%;
@@ -253,12 +267,14 @@
           margin-top: 4px;
         }
       }
+
       .panel-body {
         padding: 10px;
-        height: 81vh;
-        zoom: 1;
-        overflow: auto;
-        position: relative;
+        position: absolute;
+        top: 55px;
+        left: 0;
+        right: 0;
+        bottom: 64px;
 
         .dropdown {
           position: absolute;
@@ -344,8 +360,22 @@
         }
 
         .sprint-stories {
-          height: 72%;
           overflow-y: auto;
+          position: absolute;
+          top: 80px;
+          left: 10px;
+          bottom: 10px;
+          right: 10px;
+
+          &.list-group {
+            li {
+              div {
+                &.col {
+                  padding: 0;
+                }
+              }
+            }
+          }
         }
 
         .btn-expand {
@@ -362,13 +392,26 @@
             height: 0;
           }
           .sprint-stories {
-            height: 93%;
+            top: 40px;
           }
         }
       }
+
       .panel-footer {
         text-align: center;
         overflow: hidden;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+      }
+    }
+
+    .panel-edit-sprint {
+      .panel-body {
+        .sprint-stories {
+          top: 215px;
+        }
       }
     }
   }

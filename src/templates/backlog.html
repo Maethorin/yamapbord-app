@@ -17,7 +17,7 @@
         </tr>
         </thead>
         <tbody>
-        <tr ng-repeat="sprint in sprints" ng-click="selectSprintToEdit($event, sprint, $index, 'sprint')">
+        <tr ng-repeat="sprint in sprints | filter:filterSprint" ng-click="selectSprintToEdit($event, sprint, $index, 'sprint')">
           <td class="col-team">[{{sprint.team.name || 'NO-TEAM'}}]</td>
           <td class="col-status">
             <span class="sprint-status" ng-class="sprint.statusSlug" ng-bind="sprint.status"></span>
@@ -57,7 +57,7 @@
         </tr>
         </thead>
         <tbody>
-        <tr ng-repeat="kanban in kanbans" ng-click="selectSprintToEdit($event, kanban, $index, 'kanban')">
+        <tr ng-repeat="kanban in kanbans | filter:filterKanban" ng-click="selectSprintToEdit($event, kanban, $index, 'kanban')">
           <td class="col-team">[{{kanban.team.name || 'NO-TEAM'}}]</td>
           <td title="{{kanban.name}}" ng-bind="kanban.name"></td>
           <td class="col-points">
@@ -90,7 +90,7 @@
   <section ng-if="!showAsTable">
     <div class="row">
     <h4>Sprints</h4>
-    <div class="sprint-container col-md-4" ng-repeat="sprint in sprints">
+    <div class="sprint-container col-md-4" ng-repeat="sprint in sprints | filter:filterSprint">
       <div class="panel panel-default panel-show-sprint">
         <div class="panel-heading" ng-click="selectSprintToEdit($event, sprint, $index, 'sprint')">
           <i class="fa btn-open" ng-class="{'fa-chevron-down': !sprint.opened, 'fa-chevron-up': sprint.opened}" ng-click="toggleOpenSprintPanel($event, sprint)"></i>
@@ -131,7 +131,7 @@
 
     <div class="row">
     <h4>Kanbans</h4>
-    <div class="sprint-container col-md-4" ng-repeat="kanban in kanbans">
+    <div class="sprint-container col-md-4" ng-repeat="kanban in kanbans | filter:filterKanban">
       <div class="panel panel-default panel-show-sprint">
         <div class="panel-heading" ng-click="selectSprintToEdit($event, kanban, $index, 'kanban')">
           <i class="fa btn-open" ng-class="{'fa-chevron-down': !kanban.opened, 'fa-chevron-up': kanban.opened}" ng-click="toggleOpenSprintPanel($event, kanban)"></i>
@@ -186,8 +186,10 @@
               <button ng-if="!selectedSprint.isPlanned" ng-click="saveSprintStatus()" class="btn btn-sm btn-success"><i class="fa fa-save"></i></button>
             </div>
           </div>
+
+          <button type="button" class="heading-close" ng-click="cancelSaveSelectedSprint()"><i class="fa fa-close"></i></button>
         </div>
-        <div class="panel-body" ng-class="{'expanded': storiesExpanded}">
+        <div class="panel-body" ng-class="{'expanded': storiesExpanded || selectedSprint.type === 'kanban'}">
           <section class="sprint-information" ng-if="selectedSprint.type === 'sprint'">
             <div class="dropdown start date">
               <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
@@ -242,7 +244,7 @@
 
           <h4 class="story-header no-background">
             <span class="title">Stories</span>
-            <button type="button" class="btn btn-default btn-sm btn-expand" ng-click="storiesExpanded = !storiesExpanded">
+            <button type="button" class="btn btn-default btn-sm btn-expand" ng-click="porraAngular()" ng-if="selectedSprint.type === 'sprint'">
               <i class="fa" ng-class="{'fa-chevron-up': !storiesExpanded, 'fa-chevron-down': storiesExpanded}"></i>
             </button>
             <span class="sprint-point"><span class="value" ng-bind="selectedSprint.points|numberOrText"></span>points</span>
@@ -276,11 +278,11 @@
               </md-toolbar>
             </md-fab-toolbar>
           </div>
-
           <ul class="list-group sprint-stories" as-sortable="storiesSortableListeners" ng-model="selectedSprint.stories">
             <li class="list-group-item">
-              <div class="col col-order">#</div>
-              <div class="col col-type">Type</div>
+              <div class="col col-order">&nbsp;</div>
+              <div class="col col-type">&nbsp;</div>
+              <div class="col col-status" ng-if="selectedSprint.type === 'kanban'">Status</div>
               <div class="col col-mod-epic">Module - Epic</div>
               <div class="col col-name">Name</div>
               <div class="col col-statement">Statement</div>
@@ -289,13 +291,16 @@
               <div class="col col-buttons"></div>
             </li>
 
-            <li class="list-group-item" ng-repeat="story in selectedSprint.stories|orderBy:'executionOrder'" ng-click="selectStoryToEdit($event, story, $index)" as-sortable-item>
+            <li class="list-group-item" ng-repeat="story in selectedSprint.stories | filter: {} | orderBy:'executionOrder'" ng-click="selectStoryToEdit($event, story, $index)" as-sortable-item>
               <div as-sortable-item-handle>
                 <div class="col col-order">
                   <span class="story-order" ng-bind="story.executionOrder"></span>
                 </div>
                 <div class="col col-type">
                   <span class="story-type-name" ng-class="story.type | lowercase" title="{{story.typeName}}"></span>
+                </div>
+                <div class="col col-status" ng-if="selectedSprint.type === 'kanban'">
+                  <span class="story-status" ng-class="story.status | lowercase" ng-bind="story.status"></span>
                 </div>
                 <div class="col col-mod-epic">
                   <module-epic module-id="story.moduleId" epic-id="story.epicId"></module-epic>
@@ -419,4 +424,83 @@
   </div>
 
   <section id="createStory" ng-include="'templates/include/story-form.html'"></section>
+
+  <div class="filter-bar" ng-class="{'expanded': filterBarExpanded}">
+    <div class="filter-trigger" ng-click="toggleFilterBarExpanded()">
+      <div></div>
+      <div></div>
+    </div>
+    <div class="filter-content">
+      <div class="row">
+        <div class="col-md-3 col-md-offset-2">
+          <div class="form-group">
+            <!--<div class="input-group">-->
+              <!--<input type="text" class="form-control" placeholder="Search Iterations" ng-model="search.expression" ng-keypress="startSearchStories($event)">-->
+              <!--<div class="input-group-btn">-->
+                <!--<button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{search.fieldType.name}} <span class="caret"></span></button>-->
+                <!--<ul class="dropdown-menu">-->
+                  <!--<li><a ng-click="setIterationFilterTextType('name')">By Name</a></li>-->
+                  <!--<li><a ng-click="setIterationFilterTextType('statement')">By Objective</a></li>-->
+                <!--</ul>-->
+                <!--<button type="button" ng-click="searchStories()" class="btn btn-primary">Go!</button>-->
+                <!--<button type="button" ng-click="searchStories(true)" class="btn btn-primary">Clear</button>-->
+              <!--</div>-->
+            <!--</div>-->
+          </div>
+        </div>
+        <div class="col-md-5 col-md-offset-1">
+          Order by:
+          <div class="btn-group" role="group">
+            <button type="button" class="btn btn-primary" ng-click="setIterationOrder('team')">
+              Team
+              <i class="fa" ng-class="{'fa-times': iterationOrderControl.team === null, 'fa-chevron-circle-up': iterationOrderControl.team === '+', 'fa-chevron-circle-down': iterationOrderControl.team === '-'}"></i>
+            </button>
+            <button type="button" class="btn btn-primary" ng-click="setIterationOrder('status')">
+              Status
+              <i class="fa" ng-class="{'fa-times': iterationOrderControl.status === null, 'fa-chevron-circle-up': iterationOrderControl.status === '+', 'fa-chevron-circle-down': iterationOrderControl.status === '-'}"></i>
+            </button>
+            <button type="button" class="btn btn-primary" ng-click="setIterationOrder('name')">
+              Name
+              <i class="fa" ng-class="{'fa-times': iterationOrderControl.name === null, 'fa-chevron-circle-up': iterationOrderControl.name === '+', 'fa-chevron-circle-down': iterationOrderControl.name === '-'}"></i>
+            </button>
+            <button type="button" class="btn btn-primary" ng-click="setIterationOrder('objective')">
+              Objective
+              <i class="fa" ng-class="{'fa-times': iterationOrderControl.objective === null, 'fa-chevron-circle-up': iterationOrderControl.objective === '+', 'fa-chevron-circle-down': iterationOrderControl.objective === '-'}"></i>
+            </button>
+            <button type="button" class="btn btn-primary" ng-click="setIterationOrder('points')">
+              Points
+              <i class="fa" ng-class="{'fa-times': iterationOrderControl.points === null, 'fa-chevron-circle-up': iterationOrderControl.points === '+', 'fa-chevron-circle-down': iterationOrderControl.points === '-'}"></i>
+            </button>
+            <button type="button" class="btn btn-primary" ng-click="setIterationOrder('starts')">
+              Starts
+              <i class="fa" ng-class="{'fa-times': iterationOrderControl.starts === null, 'fa-chevron-circle-up': iterationOrderControl.starts === '+', 'fa-chevron-circle-down': iterationOrderControl.starts === '-'}"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-3">
+          <h4 class="filter-title">Team: <span class="label label-success" ng-bind="filterIteration.team.name|limitWithEllipsis:25"></span>
+            <button type="button" class="btn btn-xs btn-clear-filter" ng-click="selectIterationFilter('team', null)"><i class="fa fa-eraser"></i></button>
+          </h4>
+          <div class="filter-bar-list">
+            <ul class="list-group">
+              <li class="list-group-item" ng-class="{'selected': team.id === filterIteration.team.id}" ng-repeat="team in teams" ng-bind="team.name" ng-click="selectIterationFilter('team', team)"></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="col-md-2">
+          <h4 class="filter-title">Status: <span class="label label-success" ng-bind="filterIteration.status"></span>
+            <button type="button" class="btn btn-xs btn-clear-filter" ng-click="selectIterationFilter('status', null)"><i class="fa fa-eraser"></i></button>
+          </h4>
+          <div class="filter-bar-list">
+            <ul class="list-group">
+              <li class="list-group-item {{status.code | lowercase}}" ng-class="{'selected': status.code === filterIteration.status}" ng-repeat="status in iterationStatuses" ng-bind="status.name" ng-click="selectIterationFilter('status', status.code)"></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

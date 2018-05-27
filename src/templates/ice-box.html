@@ -159,7 +159,10 @@
             <td class="col-type">
               <div class="story-type" ng-class="story.type | lowercase" ng-bind="story.typeName"></div>
             </td>
-            <td class="col-name" title="{{story.name}}" ng-bind="story.name|limitWithEllipsis:40"></td>
+            <td class="col-name" title="{{story.name}}">
+              <span class="story-draft" ng-if="story.status === 'DRFT'">DRAFT</span>
+              <span ng-bind="story.name|limitWithEllipsis:40"></span>
+            </td>
             <td class="col-statement" title="{{story.statement}}" ng-bind="story.statement|limitWithEllipsis:85"></td>
             <td class="col-points story-point">
               <span class="points-{{story.valuePoints|numberOrText:'null'}}" ng-bind="story.valuePoints|numberOrText"></span>
@@ -187,7 +190,12 @@
     </div>
     <div class="filter-content">
       <div class="row">
-        <div class="col-md-3 col-md-offset-2">
+        <div class="col-md-1 col-md-offset-1">
+          <button type="button" class="btn btn-primary" ng-class="{'activate': filter.status === 'DRFT'}" ng-click="filter.status === 'DRFT' ? selectFilter('status', null) : selectFilter('status', 'DRFT')" data-toggle="button" aria-pressed="false" autocomplete="off">
+            Drafts
+          </button>
+        </div>
+        <div class="col-md-3">
           <div class="form-group">
             <div class="input-group">
               <input type="text" class="form-control" placeholder="Search Stories" ng-model="search.expression" ng-keypress="startSearchStories($event)">

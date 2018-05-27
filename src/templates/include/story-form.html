@@ -3,33 +3,30 @@
     <div class="panel panel-default panel-edit-story">
       <div class="panel-heading" title="{{selectedStory.statement}}">
         <div class="col-md-2">
-          <label>Module:</label>
           <div class="form-group">
             <select id="selectModule" ng-model="selectedStory.module" required class="select-module form-control" ng-options="module.acronym for module in modules track by module.id">
-              <option value="">-- choose --</option>
+              <option value="">-- Module --</option>
             </select>
           </div>
         </div>
 
         <div class="col-md-3">
-          <label>Epic:</label>
           <div class="form-group">
             <select id="selectEpic" ng-model="selectedStory.epic" required class="select-epic form-control" ng-options="epic.modules ? '[{modules}] {name}'.format(epic) : epic.name for epic in epics|orderBy:['modules', 'name'] track by epic.id">
-              <option value="">-- choose --</option>
+              <option value="">-- Epic --</option>
             </select>
           </div>
         </div>
 
-        <div class="col-md-7">
-          <label>Name:</label>
-          <input class="story-name" ng-model="selectedStory.name" />
+        <div class="col-md-6">
+          <input class="story-name" placeholder="Name" ng-model="selectedStory.name" />
         </div>
         <button type="button" class="heading-close" ng-click="cancelSaveSelectedStory()"><i class="fa fa-close"></i></button>
       </div>
+
       <div class="panel-body">
         <div class="story-data">
           <div class="col-md-3">
-            <label>Story Type:</label>
             <div class="form-group">
               <select id="selectStoryType" ng-model="selectedStory.type" required class="select-story-type {{selectedStory.type | lowercase}} form-control">
                 <option value="">-- choose --</option>
@@ -38,15 +35,15 @@
             </div>
           </div>
           <div class="col-md-4">
-            <label>Value Points:</label>
             <div class="points btn-group">
+              <label class="really-label">VP:</label>
               <label class="btn btn-primary btn-sm points-null" ng-model="selectedStory.valuePoints" ng-class="{'active': !selectedStory.valuePoints && selectedStory.valuePoints != 0}" uib-btn-radio="null">N</label>
               <label class="btn btn-primary btn-sm points-{{point}}" ng-model="selectedStory.valuePoints" ng-class="{'active': point == selectedStory.valuePoints}" uib-btn-radio="point" ng-repeat="point in points" ng-bind="point"></label>
             </div>
           </div>
           <div class="col-md-4">
-            <label>Story Points:</label>
             <div class="points btn-group">
+              <label class="really-label">SP:</label>
               <label class="btn btn-primary btn-sm points-null" ng-model="selectedStory.points" ng-class="{'active': !selectedStory.points && selectedStory.points != 0}" uib-btn-radio="null">N</label>
               <label class="btn btn-primary btn-sm points-{{point}}" ng-model="selectedStory.points" ng-class="{'active': point == selectedStory.points}" uib-btn-radio="point" ng-repeat="point in points" ng-bind="point"></label>
             </div>
@@ -54,8 +51,7 @@
         </div>
 
         <div class="story-statement">
-          <label>Statement:</label>
-          <textarea rows="3" ng-model="selectedStory.statement" required></textarea>
+          <textarea rows="3" ng-model="selectedStory.statement" placeholder="Statement" required></textarea>
         </div>
 
         <uib-tabset active="activeJustified" justified="true">
@@ -118,6 +114,7 @@
           </uib-tab>
         </uib-tabset>
       </div>
+
       <div class="panel-footer">
         <button type="button" class="btn btn-danger" ng-click="cancelSaveSelectedStory()"><i class="fa fa-close"></i> Cancel</button>
         <button type="button" class="btn btn-success" ng-click="saveSelectedStory(formStory, false)"><i class="fa fa-save"></i> Save</button>

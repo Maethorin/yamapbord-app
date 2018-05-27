@@ -48,7 +48,7 @@
     <ng-include ng-repeat="column in columns" src="columnTemplate"></ng-include>
 
     <div class="popup-complete-story" ng-class="{'opened': completeStoryPopupOpened}">
-      <div class="panel panel-default panel-complete-story">
+      <div class="panel panel-default board-panel-story">
         <div class="panel-heading" title="{{selectedStory.statement}}">
           <div class="col-md-12">
             <span class="story-type-name" ng-class="selectedStory.type | lowercase " title="{{selectedStory.typeName}}" ng-bind="selectedStory.typeName"></span>

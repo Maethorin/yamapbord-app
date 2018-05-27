@@ -33,6 +33,9 @@ scrumInCeresServices.service('StoryService', ['$rootScope', '$q', '$timeout', 'A
     if (_filter.requester) {
       filter.requesterId = _filter.requester.id;
     }
+    if (_filter.status) {
+      filter.status = _filter.status;
+    }
     return this.getStories();
   };
 
@@ -223,8 +226,7 @@ scrumInCeresServices.service('StoryService', ['$rootScope', '$q', '$timeout', 'A
     $scope.scrollCommentOptions = {scrollX: 'none', scrollY: 'right', preventWheelEvents: false, preventKeyEvents: false};
     $scope.saveAndClose = false;
 
-    $scope.addNewStory = function(data, dota) {
-      console.log(dota)
+    $scope.addNewStory = function(data) {
       $scope.addingNewStory = true;
       $scope.selectedStory = {
         definitionOfDone: [],
@@ -259,6 +261,7 @@ scrumInCeresServices.service('StoryService', ['$rootScope', '$q', '$timeout', 'A
         }
       }
       $scope.completeStoryPopupOpened = true;
+      $rootScope.lateralMenuOpen = false;
     };
 
     $rootScope.$on('story.add', function(event, data) {
