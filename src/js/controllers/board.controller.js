@@ -48,10 +48,10 @@ scrumInCeresControllers.controller('BoardController', ['$rootScope', '$scope', '
 
   $scope.timelineFilter = {
     type: null,
-    startDate: moment().add(-14, 'days'),
+    startDate: moment().add(-12, 'months'),
     endDate: moment().add(4, 'months'),
     team: null,
-    status: null
+    status: 'CURR'
   };
 
   Alert.loading();
@@ -77,6 +77,8 @@ scrumInCeresControllers.controller('BoardController', ['$rootScope', '$scope', '
           $scope.currentSprint = sprint;
         }
       });
+
+      $scope.filterTimeline();
       Alert.close();
     }
   );
@@ -260,18 +262,25 @@ scrumInCeresControllers.controller('BoardController', ['$rootScope', '$scope', '
 
   $scope.filterTimeline = function() {
     var filter = {};
-    if ($scope.timelineFilter.status !== null) {
-      filter.status = $scope.timelineFilter.status;
-    }
     if ($scope.timelineFilter.type !== null) {
       filter.type = $scope.timelineFilter.type;
     }
     if ($scope.timelineFilter.team !== null) {
       filter.team = $scope.timelineFilter.team;
     }
-    $scope.boards = $scope.fullBoards.filter(function(board) {
-      return moment(board.startDate).isBetween($scope.timelineFilter.startDate, $scope.timelineFilter.endDate);
-    });
+    if ($scope.timelineFilter.status) {
+      $scope.boards = $scope.fullBoards.filter(function(board) {
+        return board.status === $scope.timelineFilter.status || board.type === 'kanban';
+      });
+      $scope.boards = $scope.boards.filter(function(board) {
+        return moment(board.startDate).isBetween($scope.timelineFilter.startDate, $scope.timelineFilter.endDate);
+      });
+    }
+    else {
+      $scope.boards = $scope.fullBoards.filter(function(board) {
+        return moment(board.startDate).isBetween($scope.timelineFilter.startDate, $scope.timelineFilter.endDate);
+      });
+    }
     $scope.boards = $filter('filter')($scope.boards, filter);
   };
 

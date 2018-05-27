@@ -201,7 +201,12 @@ label {
   }
 
   .board-panel-story {
-    margin: 8% 20%;
+    position: absolute;
+    top: 60px;
+    left: 10px;
+    bottom: -5px;
+    right: 10px;
+
     .panel-heading {
       overflow: hidden;
       .story-name {
@@ -218,12 +223,15 @@ label {
         margin-top: 4px;
       }
     }
+
     .panel-body {
-      padding: 20px;
-      height: 50vh;
-      zoom: 1;
-      overflow: auto;
-      position: relative;
+      padding: 10px;
+      position: absolute;
+      top: 55px;
+      left: 0;
+      right: 0;
+      bottom: 64px;
+
       .btn-save-task {
         float: right;
         display: inline-block;
@@ -232,13 +240,22 @@ label {
       }
 
       .story-tasks, .story-definitions, .story-comments {
-        height: 30vh;
-        overflow: auto;
+        overflow-y: auto;
+        position: absolute;
+        top: 160px;
+        left: 10px;
+        bottom: 10px;
+        right: 10px;
       }
     }
+
     .panel-footer {
       text-align: center;
       overflow: hidden;
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
     }
   }
 
