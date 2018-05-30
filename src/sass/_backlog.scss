@@ -49,6 +49,42 @@
 
 .backlog {
   margin-top: 60px;
+  height: 92vh;
+  overflow-y: auto;
+  padding: 20px 40px;
+  .table{
+    .btn{
+      background-color: transparent;
+      border: none;
+    }
+    .btn-danger:hover{
+      background-color: $btn-danger-bg;
+    }
+    .btn-primary:hover{
+      background-color: $btn-primary-bg;
+    }
+    > tbody > tr:nth-of-type(odd) {
+      background-color: #3e4d45;
+      border-radius: 10px;
+    }
+    > tbody > tr:hover{
+      background-color: rgba(0, 0, 0, 0.25);
+    }
+  }
+  .table>thead>tr>th{
+    border: none;
+  }
+  .table>tbody>tr>td{
+    border: none;
+  }
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    border-radius: 5px;
+    background-color: #3e7298;
+  }
 
   .fab-story-container {
     margin-top: 0;
@@ -543,7 +579,6 @@
   }
   tbody {
     tr {
-      border-bottom: 2px solid #FAFAFA;
       td {
         vertical-align: middle;
         padding: 2px 10px;

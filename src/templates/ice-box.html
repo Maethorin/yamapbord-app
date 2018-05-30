@@ -128,9 +128,7 @@
 
       <div ng-repeat="(group2, stories) in modules.stories">
         <div class="epic-name">
-          <span class="name">
-            <epic-title epic-name-to-fix="{{stories[0].epic.name}}" module-name-to-fix="{{modules.module.name}}"></epic-title>
-          </span>
+          <epic-title epic-name-to-fix="{{stories[0].epic.name}}" module-name-to-fix="{{modules.module.name}}"></epic-title>
           <div class="fab-story-container">
             <md-fab-toolbar md-open="false" md-direction="left">
               <md-fab-trigger class="align-with-text">

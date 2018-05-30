@@ -17,6 +17,32 @@ li {
 .ice-box {
   h4{
     font-size: 25px;
+    text-align: center;
+  }
+  .table{
+    .btn{
+      background-color: transparent;
+      border: none;
+    }
+    .btn-danger:hover{
+      background-color: $btn-danger-bg;
+    }
+    .btn-primary:hover{
+      background-color: $btn-primary-bg;
+    }
+    > tbody > tr:nth-of-type(odd) {
+      background-color: #3e4d45;
+      border-radius: 10px;
+    }
+    > tbody > tr:hover{
+      background-color: rgba(0, 0, 0, 0.25);
+    }
+  }
+  .table>thead>tr>th{
+    border: none;
+  }
+  .table>tbody>tr>td{
+    border: none;
   }
   .navbreno{
     top: 61px;
@@ -86,6 +112,9 @@ li {
     position: relative;
     right: 45px;
     float: right;
+    .md-fab{
+      background-color: #3b739c;
+    }
   }
 
   .fab-general-container {
