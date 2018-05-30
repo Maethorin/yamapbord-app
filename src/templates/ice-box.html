@@ -1,8 +1,8 @@
 <div class="container-fluid ice-box main">
 
   <nav class="navbar navbar-default navbar-fixed-top navbreno">
-    <h4 class="module-name"> {{fixedModuleName || groupedStories[0].module.name}} </h4>
-    <span class="name-epic"> {{fixedEpicName || groupedStories[0].stories[firstEpicKey][0].epic.name}} </span>
+    <h4 class="module-name" ng-if="storyGroupedBy !== 'epic'"> {{fixedModuleName || groupedStories[0].module.name}} </h4>
+    <span class="name-epic" ng-if="storyGroupedBy !== 'module'"> {{fixedEpicName || groupedStories[0].stories[firstEpicKey][0].epic.name}} </span>
     <div class="fab-general-container" ng-cloak>
       <md-fab-speed-dial md-open="mainFabOpen" md-direction="left" class="md-scale">
         <md-fab-trigger>
@@ -120,6 +120,7 @@
         </tr>
         </tbody>
       </table>
+
     </div>
 
     <div ng-if="storyGroupedBy === 'both'" class="row grouped-both" ng-repeat="(group, modules) in groupedStories">

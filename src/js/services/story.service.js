@@ -379,7 +379,6 @@ scrumInCeresServices.service('StoryService', ['$rootScope', '$q', '$timeout', 'A
 
     $scope.fixEpicName = function(nameToFix) {
       $scope.fixedEpicName = nameToFix;
-      console.log($scope.groupedStories[0].stories[Object.keys($scope.groupedStories[0].stories)[0]][0].epic.name)
     };
 
     $scope.deleteUnselectedStory = function(event, story) {
