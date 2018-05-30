@@ -101,6 +101,14 @@ scrumInCeresServices.service('StoryService', ['$rootScope', '$q', '$timeout', 'A
     }
   }
 
+  function deleteStoryAndClosePopup($scope) {
+    deleteStory($scope, function($scope) {
+      recalculateSelectedIterationPoints($scope);
+      closingPopup($scope)
+    });
+  }
+
+
   function saveStoryAndKeepPopupOpen($scope) {
     if ($scope.addingNewStory) {
       createStory($scope, function(result) {
@@ -128,6 +136,34 @@ scrumInCeresServices.service('StoryService', ['$rootScope', '$q', '$timeout', 'A
       function() {
         if (success) {
           success($scope);
+        }
+        Alert.randomSuccessMessage();
+      },
+      function(error) {
+        Alert.randomErrorMessage(error);
+      }
+    );
+  }
+
+  function deleteStory($scope, success) {
+    self.deleteInIceLog($scope.selectedStory).then(
+      function() {
+        if (success) {
+          success($scope);
+        }
+        Alert.randomSuccessMessage();
+      },
+      function(error) {
+        Alert.randomErrorMessage(error);
+      }
+    );
+  }
+
+  function deleteStoryInList(story, success) {
+    self.deleteInIceLog(story).then(
+      function() {
+        if (success) {
+          success(story);
         }
         Alert.randomSuccessMessage();
       },
@@ -175,6 +211,21 @@ scrumInCeresServices.service('StoryService', ['$rootScope', '$q', '$timeout', 'A
   this.updateInIceLog = function(story) {
     var result = $q.defer();
     IceBox.update(
+      {id: story.id},
+      story,
+      function() {
+        result.resolve();
+      },
+      function(error) {
+        result.reject(error);
+      }
+    );
+    return result.promise;
+  };
+
+  this.deleteInIceLog = function(story) {
+    var result = $q.defer();
+    IceBox.delete(
       {id: story.id},
       story,
       function() {
@@ -315,6 +366,25 @@ scrumInCeresServices.service('StoryService', ['$rootScope', '$q', '$timeout', 'A
       else {
         saveStoryAndKeepPopupOpen($scope);
       }
+    };
+
+    $scope.deleteSelectedStory = function() {
+      Alert.loading();
+      deleteStoryAndClosePopup($scope);
+    };
+
+    $scope.fixModuleName = function(nameToFix) {
+      $scope.fixedModuleName = nameToFix;
+    };
+
+    $scope.fixEpicName = function(nameToFix) {
+      $scope.fixedEpicName = nameToFix;
+    };
+
+    $scope.deleteUnselectedStory = function(event, story) {
+      event.stopPropagation();
+      Alert.loading();
+      deleteStoryInList(story);
     };
 
     $scope.cancelSaveSelectedStory = function() {

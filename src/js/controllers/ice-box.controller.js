@@ -68,6 +68,7 @@ scrumInCeresControllers.controller('IceBoxController', ['$rootScope', '$scope', 
         );
       });
     }
+    $scope.firstEpicKey = Object.keys($scope.groupedStories[0].stories)[0];
   }
 
   Alert.loading();
