@@ -21,7 +21,8 @@
     "angular-touch": "^1.6.6",
     "ng-scrollable": "^0.2.6",
     "ng-sortable": "^1.3.8",
-    "angular-material": "^1.1.8"
+    "angular-material": "^1.1.8",
+    "angular-sanitize": "latest"
   },
   "resolutions": {
     "angular": "1.6.4"
