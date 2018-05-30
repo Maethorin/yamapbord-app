@@ -50,6 +50,7 @@ li {
     border-bottom: 1px solid white;
     display: inline-flex;
     height: 70px;
+    z-index: 300 !important;
     .name-epic{
       top: 23px;
       position: relative;
