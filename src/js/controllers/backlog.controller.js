@@ -514,17 +514,15 @@ scrumInCeresControllers.controller('BacklogController', ['$rootScope', '$scope',
 
   $scope.filterIteration = {
     team: {id: ''},
-    status: 'PLAN'
+    status: ''
   };
 
   $scope.filterSprint = {
     team: {id: ''},
-    status: 'PLAN'
+    status: ''
   };
 
-  $scope.filterKanban = {
-    team: {id: ''}
-  };
+  $scope.filterKanban = {};
 
   $scope.selectIterationFilter = function(property, value) {
     $scope.filterIteration[property] = value;

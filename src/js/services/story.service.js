@@ -108,7 +108,6 @@ scrumInCeresServices.service('StoryService', ['$rootScope', '$q', '$timeout', 'A
     });
   }
 
-
   function saveStoryAndKeepPopupOpen($scope) {
     if ($scope.addingNewStory) {
       createStory($scope, function(result) {
