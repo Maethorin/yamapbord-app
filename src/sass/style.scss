@@ -651,7 +651,24 @@ textarea {
     &::placeholder {
       color: #DDD;
     }
+    &.just-name {
+      padding: 6px 0 0 12px;
+      border-radius: 4px;
+    }
   }
+
+  .selected-sprint-teams {
+    span {
+      display: inline-block;
+      margin: 2px;
+    }
+    li {
+      &.selected {
+        background-color: rgba(155, 155, 155, 0.3);
+      }
+    }
+  }
+
   .select-story-type {
     background-repeat: no-repeat;
     background-position: 9px 7px;

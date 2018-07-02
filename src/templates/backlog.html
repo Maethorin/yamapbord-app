@@ -135,7 +135,7 @@
       <div class="panel panel-default panel-show-sprint">
         <div class="panel-heading" ng-click="selectSprintToEdit($event, kanban, $index, 'kanban')">
           <i class="fa btn-open" ng-class="{'fa-chevron-down': !kanban.opened, 'fa-chevron-up': kanban.opened}" ng-click="toggleOpenSprintPanel($event, kanban)"></i>
-          <span class="sprint-team">[{{kanban.team.name}}]</span>
+          <span class="sprint-team"><div ng-repeat="team in kanban.teams" ng-bind="team.name"></div></span>
           <span class="sprint-name" title="{{kanban.name}}" ng-bind="kanban.name|limitWithEllipsis:40"></span>
           <button class="btn btn-primary btn-sm btn-save-sprint" ng-click="selectSprintToEdit($event, kanban, $index, 'kanban')"><i class="fa fa-edit"></i></button>
         </div>
@@ -163,19 +163,37 @@
         <div class="panel-heading" title="{{selectedSprint.statement}}">
           <div class="col-md-2 sprint-team">
             <div class="form-group">
-              <select id="selectTeam" ng-model="selectedSprint.team" ng-disabled="!selectedSprint.isPlanned" required class="select-team form-control" ng-options="team.name for team in teams track by team.id">
-                <option value="">-- Team --</option>
-              </select>
+              <div class="select-team just-name" ng-bind="loggedUser.team.name" ng-if="!loggedUser.isManager"></div>
+
+              <section ng-if="loggedUser.isManager">
+                <div class="dropdown selected-sprint-teams" ng-if="selectedSprint.type === 'kanban'">
+                  <button class="btn btn-default dropdown-toggle" type="button" id="selectedSprintTeams" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                    <span class="label label-info" ng-repeat="team in selectedSprint.teams" ng-bind="team.name"></span>
+                    <span class="caret"></span>
+                  </button>
+                  <ul class="dropdown-menu" aria-labelledby="selectedSprintTeams">
+                    <li ng-repeat="team in teams" ng-class="{'selected': teamIsInSelectedSprint(team)}">
+                      <a ng-click="toggleSelectedSprintTeamSelected(team)">
+                        <i class="fa" ng-class="{'fa-check-square-o': teamIsInSelectedSprint(team), 'fa-square-o': !teamIsInSelectedSprint(team)}"></i>
+                        <span ng-bind="team.name"></span>
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+                <select id="selectTeam" ng-model="selectedSprint.team" name="team" required class="select-team form-control" ng-options="team.name for team in teams track by team.id" ng-if="selectedSprint.type === 'sprint'">
+                  <option value="">-- Team --</option>
+                </select>
+              </section>
             </div>
           </div>
 
           <div class="col-md-8">
-            <input class="sprint-name" placeholder="Name" ng-model="selectedSprint.name" ng-disabled="!selectedSprint.isPlanned"/>
+            <input class="sprint-name" placeholder="Name" name="name" required ng-model="selectedSprint.name" ng-disabled="!selectedSprint.isPlanned"/>
           </div>
 
           <div class="col-md-2 sprint-status" ng-if="selectedSprint.type === 'sprint'">
             <div class="col-md-10 form-group">
-              <select id="selectStatus" ng-model="selectedSprint.status" required class="select-status form-control">
+              <select id="selectStatus" ng-model="selectedSprint.status" name="status" required class="select-status form-control">
                 <option value="PLAN" ng-disabled="!selectedSprint.isPlanned">PLANNED</option>
                 <option value="CURR">CURRENT</option>
                 <option value="FAIL">FAIL</option>
@@ -238,7 +256,7 @@
             </div>
 
             <div class="sprint-objective">
-              <textarea rows="2" ng-model="selectedSprint.objective" placeholder="Objective" required ng-disabled="!selectedSprint.isPlanned"></textarea>
+              <textarea rows="2" ng-model="selectedSprint.objective" name="objective" placeholder="Objective" required ng-disabled="!selectedSprint.isPlanned"></textarea>
             </div>
           </section>
 

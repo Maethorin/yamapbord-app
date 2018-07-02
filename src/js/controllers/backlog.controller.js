@@ -208,7 +208,7 @@ scrumInCeresControllers.controller('BacklogController', ['$rootScope', '$scope',
       status: 'PLAN',
       isPlanned: true,
       type: 'sprint',
-      team: $rootScope.loggedUser.teams === null ? $rootScope.loggedUser.team : null,
+      team: $rootScope.loggedUser.team,
       stories: []
     };
     $scope.completeSprintPopupOpened = true;
@@ -221,7 +221,7 @@ scrumInCeresControllers.controller('BacklogController', ['$rootScope', '$scope',
       points: null,
       isPlanned: true,
       type: 'kanban',
-      team: $rootScope.loggedUser.teams === null ? $rootScope.loggedUser.team : null,
+      teams: [$rootScope.loggedUser.team],
       stories: []
     };
     $scope.completeSprintPopupOpened = true;
@@ -322,6 +322,21 @@ scrumInCeresControllers.controller('BacklogController', ['$rootScope', '$scope',
     $event.stopPropagation();
   };
 
+  $scope.teamIsInSelectedSprint = function(team) {
+    return _.findIndex($scope.selectedSprint.teams, ['id', team.id]) > -1;
+  };
+
+  $scope.toggleSelectedSprintTeamSelected = function(team) {
+    var sprintTeamIndex = _.findIndex($scope.selectedSprint.teams, ['id', team.id]);
+    if (sprintTeamIndex > -1) {
+      $scope.selectedSprint.teams.splice(sprintTeamIndex, 1);
+    }
+    else {
+      $scope.selectedSprint.teams.push(team);
+    }
+    console.log($scope.selectedSprint.teams)
+  };
+
   function saveSelectedSprint() {
     if ($scope.addingNew) {
       BacklogSprint.save(
@@ -395,13 +410,28 @@ scrumInCeresControllers.controller('BacklogController', ['$rootScope', '$scope',
   }
 
   $scope.saveSelectedSprint = function(form) {
-    if (form.$invalid) {
-      Alert.randomErrorMessage('Invalid Fields', 'Invalid Fields');
+    if (form.team && form.team.$invalid) {
+      Alert.randomErrorMessage('Field team is required', 'The Team, Duuude...');
       return false;
     }
 
-    if ($scope.selectedSprint.team === null) {
-      Alert.randomErrorMessage('Invalid Fields', 'The Team Dude...');
+    if (form.name && form.name.$invalid) {
+      Alert.randomErrorMessage('Field name is required', 'The Name, Duuude...');
+      return false;
+    }
+
+    if (form.objective && form.objective.$invalid) {
+      Alert.randomErrorMessage('Field objective is required', 'The Objective, Duuude...');
+      return false;
+    }
+
+    if (form.startDate && form.startDate.$invalid) {
+      Alert.randomErrorMessage('Field start date is required', 'The Start Date, Duuude...');
+      return false;
+    }
+
+    if (form.endDate && form.endDate.$invalid) {
+      Alert.randomErrorMessage('Field end date is required', 'The End Date, Duuude...');
       return false;
     }
 
