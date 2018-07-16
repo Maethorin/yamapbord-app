@@ -560,5 +560,34 @@ scrumInCeresControllers.controller('BacklogController', ['$rootScope', '$scope',
     if (property === 'team') {
       $scope.filterKanban[property] = value;
     }
-  }
+  };
+
+  $scope.storyStatus = ["plan", "star", "fini", "itst", "rtdp", "dpyd", "accp", "reje"];
+
+  $scope.filterKanbanStories = {
+    status: _.clone($scope.storyStatus)
+  };
+
+  $scope.toggleFilterStoryStatus = function(status) {
+    if (status === 'all') {
+      if ($scope.filterKanbanStories.status.length === $scope.storyStatus.length) {
+        $scope.filterKanbanStories.status = [];
+      }
+      else {
+        $scope.filterKanbanStories.status = _.clone($scope.storyStatus);
+      }
+      return;
+    }
+    var statusIndex = $scope.filterKanbanStories.status.indexOf(status);
+    if (statusIndex > -1) {
+      $scope.filterKanbanStories.status.splice(statusIndex, 1);
+    }
+    else {
+      $scope.filterKanbanStories.status.push(status);
+    }
+  };
+
+  $scope.filterKanbanStory = function(story) {
+    return $scope.filterKanbanStories.status.indexOf(story.status.toLowerCase()) > -1;
+  };
 }]);

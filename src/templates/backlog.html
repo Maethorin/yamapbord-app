@@ -187,8 +187,15 @@
             </div>
           </div>
 
-          <div class="col-md-8">
+          <div class="col-md-6">
             <input class="sprint-name" placeholder="Name" name="name" required ng-model="selectedSprint.name" ng-disabled="!selectedSprint.isPlanned"/>
+          </div>
+
+          <div class="col-md-4" ng-if="selectedSprint.type === 'kanban'">
+            <div class="btn-group" role="group" aria-label="...">
+              <button ng-repeat="status in storyStatus" type="button" class="btn btn-xs btn-{{status}}" ng-class="{'active': filterKanbanStories.status.indexOf(status) > -1}" ng-click="toggleFilterStoryStatus(status)">{{status.toUpperCase()}}</button>
+              <button type="button" class="btn btn-xs btn-all btn-primary" ng-class="{'active': filterKanbanStories.status.length === storyStatus.length}" ng-click="toggleFilterStoryStatus('all')">ALL</button>
+            </div>
           </div>
 
           <div class="col-md-2 sprint-status" ng-if="selectedSprint.type === 'sprint'">
@@ -309,7 +316,7 @@
               <div class="col col-buttons"></div>
             </li>
 
-            <li class="list-group-item" ng-repeat="story in selectedSprint.stories | filter: {} | orderBy:'executionOrder'" ng-click="selectStoryToEdit($event, story, $index)" as-sortable-item>
+            <li class="list-group-item" ng-repeat="story in selectedSprint.stories | filter:filterKanbanStory | orderBy:'executionOrder'" ng-click="selectStoryToEdit($event, story, $index)" as-sortable-item>
               <div as-sortable-item-handle>
                 <div class="col col-order">
                   <span class="story-order" ng-bind="story.executionOrder"></span>

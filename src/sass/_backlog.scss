@@ -47,6 +47,22 @@
   }
 }
 
+@mixin story-status-btn() {
+  $index: 1;
+  @each $story-status in $story-statuses {
+    .btn-#{$story-status} {
+      background-color: darken(nth($story-statuses-colors, $index), 20%);
+      @if $story-status == fini or $story-status == itst {
+        color: #333;
+      }
+      &.active {
+        background-color: nth($story-statuses-colors, $index);
+      }
+    }
+    $index: $index + 1;
+  }
+}
+
 .backlog {
   margin-top: 60px;
   height: 92vh;
@@ -450,6 +466,9 @@
         }
       }
     }
+
+    @include story-status-btn();
+
   }
 
   .popup-stories {
