@@ -24,14 +24,14 @@ scrumInCeresControllers.controller('BoardController', ['$rootScope', '$scope', '
     {name: 'PLAN', label: 'Planned'},
     {name: 'STAR', label: 'Started'},
     {name: 'FINI', label: 'Finished'},
-    {name: 'ITST', label: 'In Test'},
     {name: 'RTDP', label: 'Ready to Deploy'},
+    {name: 'ITST', label: 'In Test'},
     {name: 'DPYD', label: 'Deployed'},
     {name: 'ACCP', label: 'Accepted'},
     {name: 'REJE', label: 'Rejected'}
   ];
 
-  $scope.storyTypeSequence = ['PLAN', 'STAR', 'FINI', 'ITST', 'RTDP', 'DPYD', 'ACCP', 'REJE'];
+  $scope.storyTypeSequence = ['PLAN', 'STAR', 'FINI', 'RTDP', 'ITST', 'DPYD', 'ACCP', 'REJE'];
 
   $scope.storyTypeNames = {
     'PLAN': 'Planned',
