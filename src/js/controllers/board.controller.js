@@ -213,7 +213,7 @@ scrumInCeresControllers.controller('BoardController', ['$rootScope', '$scope', '
   }
 
   function updatingStoryMergeRequestsList() {
-    Notifier.warning('Saving merge requestss...');
+    Notifier.warning('Saving merge requests...');
     $scope.selectedStory.updating = true;
     BoardStory.update(
       {boardId: $scope.selectedSprint.id, id: $scope.selectedStory.id},

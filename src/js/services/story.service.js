@@ -542,6 +542,9 @@ scrumInCeresServices.service('StoryService', ['$rootScope', '$q', '$timeout', 'A
       if ($scope.newMergeRequest.url === null) {
         return false;
       }
+      if (story.mergeRequests === null) {
+        story.mergeRequests = [];
+      }
       story.mergeRequests.push({url: $scope.newMergeRequest.url, creatorId: $rootScope.loggedUser.id, creator: {name: $rootScope.loggedUser.name}, createdAt: moment().format('YYYY-MM-DD HH:mm')});
       $scope.newMergeRequestVisible = false;
       $scope.newMergeRequest = {url: null};
