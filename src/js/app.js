@@ -187,12 +187,20 @@ scrumInCeres.run(['$rootScope', '$timeout', '$q', 'AuthService', 'MeService', 'A
   Epic.query(
     function(response) {
       $rootScope.epics = response;
+      $rootScope.epicsNames = {};
+      _.forEach($rootScope.epics, function(epic) {
+        $rootScope.epicsNames[epic.id] = epic.name;
+      });
     }
   );
 
   Module.query(
     function(response) {
       $rootScope.modules = response;
+      $rootScope.modulesNames = {};
+      _.forEach($rootScope.modules, function(module) {
+        $rootScope.modulesNames[module.id] = module.name;
+      });
     }
   );
 

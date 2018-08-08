@@ -212,13 +212,15 @@ label {
 
     .panel-heading {
       overflow: hidden;
-      .story-name {
+      .story-module, .story-epic, .story-name {
         font-size: 15px;
         vertical-align: middle;
         display: inline-block;
-        width: 53%;
         padding-left: 5px;
-        line-height: 25px;
+        line-height: 30px;
+      }
+      .story-name {
+        width: 44%;
       }
       .badge {
         float: right;

@@ -52,6 +52,8 @@
         <div class="panel-heading" title="{{selectedStory.statement}}">
           <div class="col-md-12">
             <span class="story-type-name" ng-class="selectedStory.type | lowercase " title="{{selectedStory.typeName}}" ng-bind="selectedStory.typeName"></span>
+            <span class="story-module">{{modulesNames[selectedStory.moduleId]}} /</span>
+            <span class="story-epic">{{epicsNames[selectedStory.epicId]}} /</span>
             <span class="story-name">{{selectedStory.name}}</span>
             <span class="story-requester" title="Requester"><label class="rq-ow">Rq</label>{{selectedStory.requester.name}}</span>
             <span class="story-owner" title="Owner"><label class="rq-ow">Ow</label>{{selectedStory.owner.name}}</span>
