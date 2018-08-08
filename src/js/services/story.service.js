@@ -255,6 +255,7 @@ scrumInCeresServices.service('StoryService', ['$rootScope', '$q', '$timeout', 'A
     compact.tasks = complete.tasks;
     compact.definitionOfDone = complete.definitionOfDone;
     compact.comments = complete.comments;
+    compact.mergeRequests = complete.mergeRequests;
     compact.epic = complete.epic;
     compact.module = complete.module;
     compact.requester = complete.requester;
@@ -274,6 +275,9 @@ scrumInCeresServices.service('StoryService', ['$rootScope', '$q', '$timeout', 'A
     $scope.newComment = {comment: null, creator: null, createdAt: null};
     $scope.newCommentVisible = false;
     $scope.scrollCommentOptions = {scrollX: 'none', scrollY: 'right', preventWheelEvents: false, preventKeyEvents: false};
+    $scope.newMergeRequest = {url: null, creator: null, createdAt: null};
+    $scope.newMergeRequestVisible = false;
+    $scope.scrollMergeRequestOptions = {scrollX: 'none', scrollY: 'right', preventWheelEvents: false, preventKeyEvents: false};
     $scope.saveAndClose = false;
 
     $scope.addNewStory = function(data) {
@@ -289,6 +293,7 @@ scrumInCeresServices.service('StoryService', ['$rootScope', '$q', '$timeout', 'A
         status: 'PLAN',
         tasks: [],
         comments: [],
+        mergeRequests: [],
         type: 'FEA',
         typeName: 'Feature'
       };
@@ -408,6 +413,10 @@ scrumInCeresServices.service('StoryService', ['$rootScope', '$q', '$timeout', 'A
       }
     };
 
+    $scope.toggleEditStoryMergeRequest = function(mergeRequest, $event) {
+      $scope.toggleEditInStoryList(mergeRequest, $event);
+    };
+
     $scope.toggleEditStoryComment = function(comment, $event) {
       $scope.toggleEditInStoryList(comment, $event);
     };
@@ -508,6 +517,39 @@ scrumInCeresServices.service('StoryService', ['$rootScope', '$q', '$timeout', 'A
 
     $scope.removeStoryComment = function(story, $index) {
       story.comments.splice($index, 1);
+    };
+
+    $scope.addingMergeRequestToStory = function() {
+      $scope.newMergeRequestVisible = true;
+    };
+
+    $scope.cancelAddMergeRequestToStory = function($event) {
+      $scope.newMergeRequestVisible = false;
+      $scope.newMergeRequest = {url: null};
+      $event.stopPropagation();
+    };
+
+    $scope.blurInputMergeRequestFiled = function($event, selectedStory) {
+      $timeout(
+        function() {
+          $scope.addMergeRequestToStory($event, selectedStory);
+        },
+        150
+      );
+    };
+
+    $scope.addMergeRequestToStory = function($event, story) {
+      if ($scope.newMergeRequest.url === null) {
+        return false;
+      }
+      story.mergeRequests.push({url: $scope.newMergeRequest.url, creatorId: $rootScope.loggedUser.id, creator: {name: $rootScope.loggedUser.name}, createdAt: moment().format('YYYY-MM-DD HH:mm')});
+      $scope.newMergeRequestVisible = false;
+      $scope.newMergeRequest = {url: null};
+      $event.stopPropagation();
+    };
+
+    $scope.removeStoryMergeRequest = function(story, $index) {
+      story.mergeRequests.splice($index, 1);
     };
 
     $scope.toggleOpenStoryPanel = function($event, story) {

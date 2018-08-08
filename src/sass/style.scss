@@ -244,7 +244,7 @@ label {
         padding: 5px 11px;
       }
 
-      .story-tasks, .story-definitions, .story-comments {
+      .story-tasks, .story-definitions, .story-comments, .story-merge-requests {
         overflow-y: auto;
         position: absolute;
         top: 160px;
@@ -326,7 +326,7 @@ label {
       right: 0;
       bottom: 64px;
 
-      .story-definitions, .story-tasks, .story-comments {
+      .story-definitions, .story-tasks, .story-comments, .story-merge-requests {
         overflow-y: auto;
         position: absolute;
         top: 210px;
@@ -359,7 +359,7 @@ label {
   }
 }
 
-.story-definitions, .story-tasks, .story-comments {
+.story-definitions, .story-tasks, .story-comments, .story-merge-requests {
   padding: 10px;
   background-color: $gray;
   overflow: auto;
@@ -432,7 +432,8 @@ h4 {
     }
 
     .btn-remove-item {
-      margin-top: -5px;
+      margin-left: 5px;
+      margin-top: -25px;
       float: right;
       padding: 5px 10px;
       font-size: 15px;
@@ -447,10 +448,6 @@ h4 {
       margin-right: 28px;
       margin-top: -6px;
       padding: 7px 12px;
-    }
-
-    .btn-remove-item {
-      margin-left: 5px;
     }
 
     .story-type-name {
@@ -572,7 +569,7 @@ textarea {
   white-space: pre-wrap;
 }
 
-.comment-details {
+.comment-details, .merge-request-details {
   border-bottom: 1px solid #AAA;
   overflow: hidden;
   padding-bottom: 6px;

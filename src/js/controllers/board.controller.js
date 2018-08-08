@@ -193,6 +193,7 @@ scrumInCeresControllers.controller('BoardController', ['$rootScope', '$scope', '
       }
     );
   }
+
   // TODO: Sim, está repetido e eu estou sem saco para arrumar... é Open Source!
   function updatingStoryTaskList() {
     Notifier.warning('Saving tasks...');
@@ -200,6 +201,23 @@ scrumInCeresControllers.controller('BoardController', ['$rootScope', '$scope', '
     BoardStory.update(
       {boardId: $scope.selectedSprint.id, id: $scope.selectedStory.id},
       {'tasks': $scope.selectedStory.tasks},
+      function() {
+        $scope.selectedStory.updating = false;
+        Notifier.success('Done!')
+      },
+      function(error) {
+        Alert.randomErrorMessage(error);
+        $scope.selectedStory.updating = false;
+      }
+    );
+  }
+
+  function updatingStoryMergeRequestsList() {
+    Notifier.warning('Saving merge requestss...');
+    $scope.selectedStory.updating = true;
+    BoardStory.update(
+      {boardId: $scope.selectedSprint.id, id: $scope.selectedStory.id},
+      {mergeRequests: $scope.selectedStory.mergeRequests},
       function() {
         $scope.selectedStory.updating = false;
         Notifier.success('Done!')
@@ -405,6 +423,10 @@ scrumInCeresControllers.controller('BoardController', ['$rootScope', '$scope', '
 
   $scope.saveSelectedStoryComments = function() {
     updatingStoryCommentsList();
+  };
+
+  $scope.saveSelectedStoryMergeRequests = function() {
+    updatingStoryMergeRequestsList();
   };
 
   $scope.saveSelectedStoryTasks = function() {

@@ -88,6 +88,7 @@
                 </li>
               </ul>
             </uib-tab>
+
             <uib-tab index="1" heading="DoD" select="changeScroll(1)">
               <ul class="list-group story-definitions" ng-scrollable>
                 <li class="list-group-item" ng-class="{'list-group-item-success': definition.done, 'list-group-item-warning': !definition.done }" ng-repeat="definition in selectedStory.definitionOfDone">
@@ -96,6 +97,7 @@
                 </li>
               </ul>
             </uib-tab>
+
             <uib-tab index="2" select="changeScroll(2)">
               <uib-tab-heading>
                 Comments
@@ -104,8 +106,8 @@
               <ul class="list-group story-comments" ng-scrollable="scrollCommentOptions">
                 <li class="list-group-item" ng-repeat="storyComment in selectedStory.comments" ng-click="toggleEditStoryComment(storyComment)">
                   <textarea ng-model="storyComment.comment" ng-show="storyComment.editing" focus-me="storyComment.editing" ng-blur="toggleEditStoryComment(storyComment)"></textarea>
-                  <div>
-                    <div class="comment-details" ng-if="!storyComment.editing">
+                  <div ng-if="!storyComment.editing">
+                    <div class="comment-details">
                       <div class="col-md-7">
                         Created by: {{storyComment.creator.name}}
                       </div>
@@ -122,6 +124,36 @@
                   <textarea ng-model="newComment.comment" rows="3" ng-show="newCommentVisible" focus-me="newCommentVisible" ng-blur="blurInputCommentFiled($event, selectedStory)"></textarea>
                   <button type="button" class="btn btn-primary btn-xs btn-add-item" ng-show="newCommentVisible" ng-click="addCommentToStory($event, selectedStory)">Add</button>
                   <button type="button" class="btn btn-default btn-xs btn-remove-item" ng-show="newCommentVisible" ng-click="cancelAddCommentToStory($event)"><i class="fa fa-close"></i></button>
+                </li>
+              </ul>
+            </uib-tab>
+
+            <uib-tab index="3" select="changeScroll(3)">
+              <uib-tab-heading>
+                Merge Requests
+                <button ng-if="selectedStoryCurrentTab === 3" type="button" class="btn btn-success btn-sm btn-save-task" ng-click="saveSelectedStoryMergeRequests()"><i class="fa fa-save"></i></button>
+              </uib-tab-heading>
+              <ul class="list-group story-merge-requests" ng-scrollable="scrollMergeRequestOptions">
+                <li class="list-group-item" ng-repeat="mergeRequest in selectedStory.mergeRequests" ng-click="toggleEditStoryMergeRequest(mergeRequest)">
+                  <input ng-model="mergeRequest.url" ng-show="mergeRequest.editing" focus-me="mergeRequest.editing" ng-blur="toggleEditStoryMergeRequest(mergeRequest)" />
+                  <div ng-if="!mergeRequest.editing">
+                    <div class="merge-request-details">
+                      <div class="col-md-7">
+                        Created by: {{mergeRequest.creator.name}}
+                      </div>
+                      <div class="col-md-5">
+                        Created at: {{mergeRequest.createdAt}}
+                      </div>
+                    </div>
+                    <span class="with-break-lines"><a ng-href="{{mergeRequest.url}}" ng-bind="mergeRequest.url" target="_blank"></a> </span>
+                  </div>
+                  <button type="button" class="btn btn-default btn-xs btn-remove-item" ng-if="!mergeRequest.editing" ng-click="removeStoryMergeRequest(selectedStory, $index)"><i class="fa fa-trash"></i></button>
+                </li>
+                <li class="new-item list-group-item" ng-click="addingMergeRequestToStory()">
+                  <span ng-show="!newMergeRequestVisible">Add a merge request</span>
+                  <input ng-model="newMergeRequest.url" ng-show="newMergeRequestVisible" focus-me="newMergeRequestVisible" ng-blur="blurInputMergeRequestFiled($event, selectedStory)" />
+                  <button type="button" class="btn btn-primary btn-xs btn-add-item" ng-show="newMergeRequestVisible" ng-click="addMergeRequestToStory($event, selectedStory)">Add</button>
+                  <button type="button" class="btn btn-default btn-xs btn-remove-item" ng-show="newMergeRequestVisible" ng-click="cancelAddMergeRequestToStory($event)"><i class="fa fa-close"></i></button>
                 </li>
               </ul>
             </uib-tab>
