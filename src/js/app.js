@@ -64,7 +64,6 @@ var scrumInCeres = angular.module(
     'ngResource',
     'ngAnimate',
     'ngCookies',
-    'ngSanitize',
     'ngScrollable',
     'ui.router',
     'ui.bootstrap',
