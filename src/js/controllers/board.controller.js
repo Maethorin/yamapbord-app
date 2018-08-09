@@ -416,6 +416,25 @@ scrumInCeresControllers.controller('BoardController', ['$rootScope', '$scope', '
     saveStoryStatus(story);
   };
 
+  $scope.archiveStory = function(story, closePopup) {
+    Notifier.warning('Archiving story...');
+    BoardStory.update(
+      {boardId: $scope.selectedSprint.id, id: story.id},
+      {'archived': true},
+      function(response) {
+        story.archived = true;
+        Notifier.success('Story archived...');
+        if (closePopup) {
+          $scope.toggleCompleteStoryPopup(null);
+        }
+      },
+      function(error) {
+        story.archived = false;
+        Notifier.error('Could not archive story! Sandriiim!!!');
+      }
+    );
+  };
+
   $scope.changeScroll = function(tabIndex) {
     $scope.selectedStoryCurrentTab = tabIndex;
     $scope.$broadcast('content.changed');
