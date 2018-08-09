@@ -278,6 +278,28 @@ scrumInCeresControllers.controller('BoardController', ['$rootScope', '$scope', '
     })
   });
 
+
+  $rootScope.$on('board.story.updated', function(event, data) {
+    if ($scope.selectedSprint  === null || $scope.selectedSprint.id !== data.sprintId) {
+      return false;
+    }
+    Notifier.warning('Story data changed. Updating...');
+    var story = _.find($scope.selectedSprint.stories, ['id', data.storyId]);
+    BoardStory.get(
+      {boardId: $scope.selectedSprint.id, id: story.id},
+      function(response) {
+        story.comments = response.comments;
+        story.mergeRequests = response.mergeRequests;
+        story.archived = response.archived;
+        Notifier.success('Done!')
+      },
+      function(error) {
+        Alert.randomErrorMessage('OHMYGOOODDD!!!!! A Story was updated and I could not get the updated data. Can you please, be sooo nice to refresh your browser before more minions die in despair!');
+      }
+    );
+
+  });
+
   $scope.filterTimeline = function() {
     var filter = {};
     if ($scope.timelineFilter.type !== null) {
