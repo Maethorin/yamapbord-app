@@ -1,6 +1,6 @@
 'use strict';
 
-scrumInCeresServices.service('StoryService', ['$rootScope', '$q', '$timeout', 'Alert', 'IceBox', function($rootScope, $q, $timeout, Alert, IceBox) {
+scrumInCeresServices.service('StoryService', ['$rootScope', '$q', '$timeout', 'Alert', 'Notifier', 'IceBox', function($rootScope, $q, $timeout, Alert, Notifier, IceBox) {
   var self = this;
   var filter = {};
   this.filterByType = function(type) {
@@ -272,8 +272,10 @@ scrumInCeresServices.service('StoryService', ['$rootScope', '$q', '$timeout', 'A
     $scope.newTaskVisible = false;
     $scope.newDefinition = {definition: null};
     $scope.newDefinitionVisible = false;
-    $scope.newComment = {comment: null, creator: null, createdAt: null};
+    $scope.newComment = {comment: null, file: null, link: null, creator: null, createdAt: null};
     $scope.newCommentVisible = false;
+    $scope.newCommentType = null;
+    $scope.theButtonWasCliked = false;
     $scope.scrollCommentOptions = {scrollX: 'none', scrollY: 'right', preventWheelEvents: false, preventKeyEvents: false};
     $scope.newMergeRequest = {url: null, creator: null, createdAt: null};
     $scope.newMergeRequestVisible = false;
@@ -486,32 +488,52 @@ scrumInCeresServices.service('StoryService', ['$rootScope', '$q', '$timeout', 'A
       story.definitionOfDone.splice($index, 1);
     };
 
-    $scope.addingCommentToStory = function() {
+    $scope.addingCommentToStory = function(type) {
       $scope.newCommentVisible = true;
+      $scope.newCommentType = type;
+      $scope.theButtonWasCliked = false;
     };
 
     $scope.cancelAddCommentToStory = function($event) {
+      $scope.theButtonWasCliked = true;
       $scope.newCommentVisible = false;
-      $scope.newComment = {comment: null};
+      $scope.newCommentType = null;
+      $scope.newComment = {comment: null, file: null, link: null, creator: null, createdAt: null};
       $event.stopPropagation();
     };
 
     $scope.blurInputCommentFiled = function($event, selectedStory) {
       $timeout(
         function() {
-          $scope.addCommentToStory($event, selectedStory);
+          if (!$scope.theButtonWasCliked) {
+            $scope.addCommentToStory($event, selectedStory);
+          }
         },
-        150
+        200
       )
     };
 
     $scope.addCommentToStory = function($event, story) {
-      if ($scope.newComment.comment === null) {
+      if ($scope.newComment[$scope.newCommentType] === null) {
+        Notifier.warning('You want to {0}, you need to {0} something!'.format([$scope.newCommentType]))
         return false;
       }
-      story.comments.push({comment: $scope.newComment.comment, creatorId: $rootScope.loggedUser.id, creator: {name: $rootScope.loggedUser.name}, createdAt: moment().format('YYYY-MM-DD HH:mm')});
+      if ($scope.newCommentType === 'link' && !$scope.newComment[$scope.newCommentType].startsWith('http')) {
+        Notifier.warning('Links should start with http or https. Didnt you know that?!?');
+        return false;
+      }
+      $scope.theButtonWasCliked = true;
+      story.comments.push({
+        comment: $scope.newComment.comment,
+        file: $scope.newComment.file,
+        link: $scope.newComment.link,
+        creatorId: $rootScope.loggedUser.id,
+        creator: {name: $rootScope.loggedUser.name},
+        createdAt: moment().format('YYYY-MM-DD HH:mm')
+      });
       $scope.newCommentVisible = false;
-      $scope.newComment = {comment: null};
+      $scope.newCommentType = null;
+      $scope.newComment = {comment: null, file: null, link: null, creator: null, createdAt: null};
       $event.stopPropagation();
     };
 
@@ -540,8 +562,14 @@ scrumInCeresServices.service('StoryService', ['$rootScope', '$q', '$timeout', 'A
 
     $scope.addMergeRequestToStory = function($event, story) {
       if ($scope.newMergeRequest.url === null) {
+        Notifier.warning('I think is something missing, like THE merge request URL...');
         return false;
       }
+      if (!$scope.newMergeRequest.url.startsWith('http')) {
+        Notifier.warning('URLs should start with http or https. Didnt you know that?!?');
+        return false;
+      }
+
       if (story.mergeRequests === null) {
         story.mergeRequests = [];
       }

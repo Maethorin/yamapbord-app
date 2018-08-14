@@ -103,8 +103,28 @@
                 Comments
                 <button ng-if="selectedStoryCurrentTab === 2" type="button" class="btn btn-success btn-sm btn-save-task" ng-click="saveSelectedStoryComments()"><i class="fa fa-save"></i></button>
               </uib-tab-heading>
+              <div class="fab-story-comments">
+                <md-fab-toolbar md-open="false" md-direction="right">
+                  <md-fab-trigger class="align-with-text">
+                    <md-button aria-label="menu" class="md-fab md-primary">
+                      <md-icon md-font-icon="fa fa-plus"></md-icon>
+                    </md-button>
+                  </md-fab-trigger>
+                  <md-toolbar>
+                    <md-fab-actions class="md-toolbar-tools">
+                      <md-button class="md-icon-button" ng-click="addingCommentToStory('comment')">
+                        <md-icon md-font-icon="fa fa-pencil-square-o"></md-icon>
+                      </md-button>
+                      <md-button aria-label="comment" class="md-icon-button" ng-click="addingCommentToStory('link')">
+                        <md-icon md-font-icon="fa fa-link"></md-icon>
+                      </md-button>
+                    </md-fab-actions>
+                  </md-toolbar>
+                </md-fab-toolbar>
+              </div>
+
               <ul class="list-group story-comments" ng-scrollable="scrollCommentOptions">
-                <li class="list-group-item" ng-repeat="storyComment in selectedStory.comments" ng-click="toggleEditStoryComment(storyComment)">
+                <li class="list-group-item" ng-repeat="storyComment in selectedStory.comments">
                   <textarea ng-model="storyComment.comment" ng-show="storyComment.editing" focus-me="storyComment.editing" ng-blur="toggleEditStoryComment(storyComment)"></textarea>
                   <div ng-if="!storyComment.editing">
                     <div class="comment-details">
@@ -115,15 +135,16 @@
                         Created at: {{storyComment.createdAt}}
                       </div>
                     </div>
-                    <span class="with-break-lines" ng-bind="storyComment.comment"></span>
+                    <span class="with-break-lines" ng-if="storyComment.comment" ng-bind="storyComment.comment"></span>
+                    <span class="with-break-lines" ng-if="storyComment.link"><a ng-href="{{storyComment.link}}" ng-bind="storyComment.link" target="_blank"></a> </span>
                   </div>
                   <button type="button" class="btn btn-default btn-xs btn-remove-item" ng-if="!storyComment.editing" ng-click="removeStoryComment(selectedStory, $index)"><i class="fa fa-trash"></i></button>
                 </li>
-                <li class="new-item list-group-item" ng-click="addingCommentToStory()">
-                  <span ng-show="!newCommentVisible">Add a comment</span>
-                  <textarea ng-model="newComment.comment" rows="3" ng-show="newCommentVisible" focus-me="newCommentVisible" ng-blur="blurInputCommentFiled($event, selectedStory)"></textarea>
-                  <button type="button" class="btn btn-primary btn-xs btn-add-item" ng-show="newCommentVisible" ng-click="addCommentToStory($event, selectedStory)">Add</button>
-                  <button type="button" class="btn btn-default btn-xs btn-remove-item" ng-show="newCommentVisible" ng-click="cancelAddCommentToStory($event)"><i class="fa fa-close"></i></button>
+                <li class="new-item list-group-item" ng-show="newCommentVisible">
+                  <textarea ng-model="newComment.comment" rows="3" ng-show="newCommentType === 'comment'" focus-me="newCommentType === 'comment'" ng-blur="blurInputCommentFiled($event, selectedStory)"></textarea>
+                  <input ng-model="newComment.link" ng-show="newCommentType === 'link'" focus-me="newCommentType === 'link'" ng-blur="blurInputCommentFiled($event, selectedStory)" />
+                  <button type="button" class="btn btn-primary btn-xs btn-add-item" ng-click="addCommentToStory($event, selectedStory)">Add</button>
+                  <button type="button" class="btn btn-default btn-xs btn-remove-item" ng-click="cancelAddCommentToStory($event)"><i class="fa fa-close"></i></button>
                 </li>
               </ul>
             </uib-tab>
@@ -135,7 +156,7 @@
               </uib-tab-heading>
               <ul class="list-group story-merge-requests" ng-scrollable="scrollMergeRequestOptions">
                 <li class="list-group-item" ng-repeat="mergeRequest in selectedStory.mergeRequests" ng-click="toggleEditStoryMergeRequest(mergeRequest)">
-                  <input ng-model="mergeRequest.url" ng-show="mergeRequest.editing" focus-me="mergeRequest.editing" ng-blur="toggleEditStoryMergeRequest(mergeRequest)" />
+                  <input ng-model="mergeRequest.url" ng-show="mergeRequest.editing" focus-me="mergeRequest.editing" ng-blur="toggleEditStoryMergeRequest(mergeRequest)"/>
                   <div ng-if="!mergeRequest.editing">
                     <div class="merge-request-details">
                       <div class="col-md-7">
@@ -151,7 +172,7 @@
                 </li>
                 <li class="new-item list-group-item" ng-click="addingMergeRequestToStory()">
                   <span ng-show="!newMergeRequestVisible">Add a merge request</span>
-                  <input ng-model="newMergeRequest.url" ng-show="newMergeRequestVisible" focus-me="newMergeRequestVisible" ng-blur="blurInputMergeRequestFiled($event, selectedStory)" />
+                  <input ng-model="newMergeRequest.url" ng-show="newMergeRequestVisible" focus-me="newMergeRequestVisible" ng-blur="blurInputMergeRequestFiled($event, selectedStory)"/>
                   <button type="button" class="btn btn-primary btn-xs btn-add-item" ng-show="newMergeRequestVisible" ng-click="addMergeRequestToStory($event, selectedStory)">Add</button>
                   <button type="button" class="btn btn-default btn-xs btn-remove-item" ng-show="newMergeRequestVisible" ng-click="cancelAddMergeRequestToStory($event)"><i class="fa fa-close"></i></button>
                 </li>
