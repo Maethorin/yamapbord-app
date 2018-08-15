@@ -1,6 +1,6 @@
 'use strict';
 
-scrumInCeresControllers.controller('BoardController', ['$rootScope', '$scope', '$timeout', '$filter', 'MeService', 'StoryService', 'Alert', 'Notifier', 'Board', 'BoardStory', 'HollydayService', function($rootScope, $scope, $timeout, $filter, MeService, StoryService, Alert, Notifier, Board, BoardStory, HollydayService) {
+scrumInCeresControllers.controller('BoardController', ['$rootScope', '$scope', '$timeout', '$filter', '$stateParams', 'MeService', 'StoryService', 'Alert', 'Notifier', 'Board', 'BoardStory', 'HollydayService', function($rootScope, $scope, $timeout, $filter, $stateParams, MeService, StoryService, Alert, Notifier, Board, BoardStory, HollydayService) {
   $rootScope.currentController = 'BoardController';
   $scope.boards = [];
   $scope.fullBoards = [];
@@ -56,30 +56,36 @@ scrumInCeresControllers.controller('BoardController', ['$rootScope', '$scope', '
 
   Alert.loading();
 
+  function getBoardsList() {
+    Board.query(
+      function(response) {
+        $scope.boards = response;
+        $scope.fullBoards = response;
+        $scope.currentSprint = null;
+        $scope.selectedSprint = null;
+
+        _.forEach($scope.boards, function(sprint) {
+          if (sprint.statusSlug === 'sprint-current') {
+            $scope.currentSprint = sprint;
+          }
+        });
+
+        $scope.filterTimeline();
+        if ($stateParams.boardId) {
+          $scope.selectSprint(_.find($scope.boards, {id: parseInt($stateParams.boardId)}));
+        }
+        Alert.close();
+      }
+    );
+  }
+
   MeService.getInfo().then(
     function(info) {
       $scope.teams = info.teams;
       if ($scope.teams == null || $scope.teams.length === 0) {
         $scope.teams = [info.team];
       }
-    }
-  );
-
-  Board.query(
-    function(response) {
-      $scope.boards = response;
-      $scope.fullBoards = response;
-      $scope.currentSprint = null;
-      $scope.selectedSprint = null;
-
-      _.forEach($scope.boards, function(sprint) {
-        if (sprint.statusSlug === 'sprint-current') {
-          $scope.currentSprint = sprint;
-        }
-      });
-
-      $scope.filterTimeline();
-      Alert.close();
+      getBoardsList();
     }
   );
 
