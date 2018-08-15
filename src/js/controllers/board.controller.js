@@ -1,6 +1,6 @@
 'use strict';
 
-scrumInCeresControllers.controller('BoardController', ['$rootScope', '$scope', '$timeout', '$filter', '$stateParams', 'MeService', 'StoryService', 'Alert', 'Notifier', 'Board', 'BoardStory', 'HollydayService', function($rootScope, $scope, $timeout, $filter, $stateParams, MeService, StoryService, Alert, Notifier, Board, BoardStory, HollydayService) {
+scrumInCeresControllers.controller('BoardController', ['$rootScope', '$scope', '$timeout', '$filter', '$stateParams', 'MeService', 'StoryService', 'Alert', 'Notifier', 'BoardService', 'BoardStory', 'HollydayService', function($rootScope, $scope, $timeout, $filter, $stateParams, MeService, StoryService, Alert, Notifier, BoardService, BoardStory, HollydayService) {
   $rootScope.currentController = 'BoardController';
   $scope.boards = [];
   $scope.fullBoards = [];
@@ -57,7 +57,7 @@ scrumInCeresControllers.controller('BoardController', ['$rootScope', '$scope', '
   Alert.loading();
 
   function getBoardsList() {
-    Board.query(
+    BoardService.listBoards($stateParams.boardId).then(
       function(response) {
         $scope.boards = response;
         $scope.fullBoards = response;
@@ -357,18 +357,21 @@ scrumInCeresControllers.controller('BoardController', ['$rootScope', '$scope', '
 
   $scope.selectSprint = function(sprint) {
     $scope.selectedSprint = sprint;
+    BoardService.selectBoard(sprint);
     Alert.loading();
-    BoardStory.query(
-      {boardId: sprint.id, boardType: sprint.type},
-      function(response) {
+    BoardService.loadBoardStories().then(
+     function(response) {
         $scope.selectedSprint.stories = response;
         updateStoryData();
+        if ($stateParams.storyId) {
+          $scope.toggleCompleteStoryPopup(_.find($scope.selectedSprint.stories, ['id', parseInt($stateParams.storyId)]));
+        }
         Alert.close();
       },
       function(error) {
         Alert.randomErrorMessage(error);
       }
-    )
+    );
   };
 
   $scope.addColumnSize = function(columnName) {
@@ -418,6 +421,9 @@ scrumInCeresControllers.controller('BoardController', ['$rootScope', '$scope', '
   };
 
   $scope.toggleCompleteStoryPopup = function(story) {
+    if (story !== null && story.id !== parseInt($stateParams.storyId)) {
+      return false;
+    }
     $scope.selectedStory = story;
     $scope.completeStoryPopupOpened = !$scope.completeStoryPopupOpened;
   };

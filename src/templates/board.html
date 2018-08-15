@@ -186,7 +186,7 @@
             <i class="fa fa-chevron-left minus-margin"></i>
             Go Story Back
           </button>
-          <button type="button" class="btn btn-primary" ng-click="toggleCompleteStoryPopup(null)">Close</button>
+          <button type="button" class="btn btn-primary" ui-sref="boardState({boardId: selectedSprint.id})">Close</button>
           <button type="button" class="btn btn-warning" ng-if="selectedStory.status === 'ACCP'" ng-click="archiveStory(selectedStory, true)">Archive</button>
           <button type="button" class="btn btn-success btn-go-forward-story" ng-click="moveStoryForward(selectedStory)" ng-if="selectedStory.status !== 'REJE'">
             Go Story Forward

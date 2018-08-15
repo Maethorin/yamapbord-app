@@ -12,7 +12,7 @@
     <div class="panel-body column {{column.name | lowercase}}" ng-scrollable="columnScrollOptions[column.name]">
       <div ng-repeat="story in stories[column.name] | filter:{archived: false}" class="panel panel-default story">
         <div class="panel-heading" title="{{story.statement}}">
-          <div class="col-md-12" ng-click="toggleCompleteStoryPopup(story)">
+          <div class="col-md-12" ui-sref="storyBoardState({boardId: selectedSprint.id, storyId: story.id})" ng-click="toggleCompleteStoryPopup(story)">
             <span class="story-type" ng-class="story.type | lowercase " title="{{story.typeName}}"></span>
             <span class="story-name" ng-bind="story.name|limitWithEllipsis:22"></span>
             <span class="badge points-{{story.points}}">{{story.points}}</span>
