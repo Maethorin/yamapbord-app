@@ -281,7 +281,7 @@ scrumInCeresControllers.controller('BoardController', ['$rootScope', '$scope', '
       if ($index === data.index) {
         story.definitionOfDone[$index].done = data.state;
       }
-    })
+    });
   });
 
 
