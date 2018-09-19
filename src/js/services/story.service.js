@@ -587,5 +587,9 @@ scrumInCeresServices.service('StoryService', ['$rootScope', '$q', '$timeout', 'A
       $event.stopPropagation();
       story.opened = !story.opened;
     };
+
+    $scope.stopPropagation = function(event) {
+      event.stopPropagation();
+    }
   }
 }]);

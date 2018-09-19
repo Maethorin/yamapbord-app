@@ -77,7 +77,7 @@
                     <i class="fa fa-fw" ng-click="changeTaskStatus($event, task, $index, selectedStory)" ng-class="{'fa-square-o': !task.changing && !task.complete, 'fa-spinner fa-spin': task.changing, 'fa-check-square-o': !task.changing && task.complete}"></i>
                     <input type="text" ng-model="task.task" ng-show="task.editing" focus-me="task.editing" ng-blur="toggleEditStoryTask(task)" ng-keypress="toggleEditStoryTask(task, $event)"/>
                     <span ng-bind="task.task" ng-if="!task.editing"></span>
-                    <button type="button" class="btn btn-default btn-xs btn-remove-item" ng-if="!task.editing" ng-click="removeStoryTask($index)"><i class="fa fa-trash"></i></button>
+                    <button type="button" class="btn btn-default btn-xs btn-remove-item" ng-if="!task.editing" ng-click="removeStoryTask(selectedStory, $index)"><i class="fa fa-trash"></i></button>
                   </div>
                 </li>
                 <li class="new-item list-group-item" ng-click="addingTaskToStory()">
@@ -166,7 +166,7 @@
                         Created at: {{mergeRequest.createdAt}}
                       </div>
                     </div>
-                    <span class="with-break-lines"><a ng-href="{{mergeRequest.url}}" ng-bind="mergeRequest.url" target="_blank"></a> </span>
+                    <span class="with-break-lines"><a ng-href="{{mergeRequest.url}}" ng-bind="mergeRequest.url" target="_blank" ng-click="stopPropagation($event)"></a> </span>
                   </div>
                   <button type="button" class="btn btn-default btn-xs btn-remove-item" ng-if="!mergeRequest.editing" ng-click="removeStoryMergeRequest(selectedStory, $index)"><i class="fa fa-trash"></i></button>
                 </li>
