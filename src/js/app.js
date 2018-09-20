@@ -65,6 +65,7 @@ var scrumInCeres = angular.module(
     'ngAnimate',
     'ngCookies',
     'ngScrollable',
+    'ngFileUpload',
     'ui.router',
     'ui.bootstrap',
     'ui.utils.masks',

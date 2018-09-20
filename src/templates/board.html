@@ -118,12 +118,15 @@
                       <md-button aria-label="comment" class="md-icon-button" ng-click="addingCommentToStory('link')">
                         <md-icon md-font-icon="fa fa-link"></md-icon>
                       </md-button>
+                      <md-button aria-label="comment" class="md-icon-button" ng-click="addingCommentToStory('file')">
+                        <md-icon md-font-icon="fa fa-image"></md-icon>
+                      </md-button>
                     </md-fab-actions>
                   </md-toolbar>
                 </md-fab-toolbar>
               </div>
 
-              <ul class="list-group story-comments" ng-scrollable="scrollCommentOptions">
+              <ul class="list-group story-comments">
                 <li class="list-group-item" ng-repeat="storyComment in selectedStory.comments">
                   <textarea ng-model="storyComment.comment" ng-show="storyComment.editing" focus-me="storyComment.editing" ng-blur="toggleEditStoryComment(storyComment)"></textarea>
                   <div ng-if="!storyComment.editing">
@@ -135,14 +138,41 @@
                         Created at: {{storyComment.createdAt}}
                       </div>
                     </div>
-                    <span class="with-break-lines" ng-if="storyComment.comment" ng-bind="storyComment.comment"></span>
+                    <span class="with-break-lines" ng-if="!storyComment.file && storyComment.comment" ng-bind="storyComment.comment"></span>
                     <span class="with-break-lines" ng-if="storyComment.link"><a ng-href="{{storyComment.link}}" ng-bind="storyComment.link" target="_blank"></a> </span>
+                    <div class="comment-file" ng-if="storyComment.file">
+                      <div class="col-md-3" ng-if="storyComment.file.name">
+                        <label>Name:</label> {{storyComment.file.name}}
+                      </div>
+                      <div class="col-md-2" ng-if="storyComment.file.size">
+                        <label>Size:</label> {{storyComment.file.size}}
+                      </div>
+                      <div class="col-md-2" ng-if="storyComment.file.type">
+                        <label>Type:</label> {{storyComment.file.type}}
+                      </div>
+                      <div class="col-md-3">
+                        <a ng-href="{{storyComment.file}}" target="_blank">
+                          <img ngf-thumbnail="storyComment.file" />
+                        </a>
+                      </div>
+                      <div class="col-md-5" ng-if="storyComment.comment">
+                        <span class="with-break-lines" ng-bind="storyComment.comment"></span>
+                      </div>
+                    </div>
                   </div>
                   <button type="button" class="btn btn-default btn-xs btn-remove-item" ng-if="!storyComment.editing" ng-click="removeStoryComment(selectedStory, $index)"><i class="fa fa-trash"></i></button>
                 </li>
                 <li class="new-item list-group-item" ng-show="newCommentVisible">
                   <textarea ng-model="newComment.comment" rows="3" ng-show="newCommentType === 'comment'" focus-me="newCommentType === 'comment'" ng-blur="blurInputCommentFiled($event, selectedStory)"></textarea>
                   <input ng-model="newComment.link" ng-show="newCommentType === 'link'" focus-me="newCommentType === 'link'" ng-blur="blurInputCommentFiled($event, selectedStory)" />
+                  <div class="new-attachment" ng-show="newCommentType === 'file'">
+                    <div class="col-md-2">
+                      <input type="file" ngf-select focus-me="newCommentType === 'file'" ng-model="newComment.file" name="commentFile" accept="image/*" ngf-max-size="3MB">
+                    </div>
+                    <div class="col-md-4">
+                      <textarea ng-model="newComment.comment" rows="3" placeholder="Attachment Description"></textarea>
+                    </div>
+                  </div>
                   <button type="button" class="btn btn-primary btn-xs btn-add-item" ng-click="addCommentToStory($event, selectedStory)">Add</button>
                   <button type="button" class="btn btn-default btn-xs btn-remove-item" ng-click="cancelAddCommentToStory($event)"><i class="fa fa-close"></i></button>
                 </li>

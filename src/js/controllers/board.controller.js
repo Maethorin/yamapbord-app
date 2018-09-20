@@ -1,6 +1,6 @@
 'use strict';
 
-scrumInCeresControllers.controller('BoardController', ['$rootScope', '$scope', '$timeout', '$filter', '$stateParams', 'MeService', 'StoryService', 'Alert', 'Notifier', 'BoardService', 'BoardStory', 'HollydayService', function($rootScope, $scope, $timeout, $filter, $stateParams, MeService, StoryService, Alert, Notifier, BoardService, BoardStory, HollydayService) {
+scrumInCeresControllers.controller('BoardController', ['$rootScope', '$scope', '$timeout', '$filter', '$stateParams', 'Upload', 'appConfig', 'MeService', 'StoryService', 'Alert', 'Notifier', 'BoardService', 'BoardStory', 'HollydayService', function($rootScope, $scope, $timeout, $filter, $stateParams, Upload, appConfig, MeService, StoryService, Alert, Notifier, BoardService, BoardStory, HollydayService) {
   $rootScope.currentController = 'BoardController';
   $scope.boards = [];
   $scope.fullBoards = [];
@@ -186,10 +186,39 @@ scrumInCeresControllers.controller('BoardController', ['$rootScope', '$scope', '
   function updatingStoryCommentsList() {
     Notifier.warning('Saving comments...');
     $scope.selectedStory.updating = true;
+    var commentsWithFiles = _.filter($scope.selectedStory.comments, function(comment) {
+      return comment.file !== null && comment.file.name !== undefined
+    });
+    var commentsWithoutFiles = _.filter($scope.selectedStory.comments, function(comment) {
+      return comment.file === null || comment.file.name === undefined
+    });
     BoardStory.update(
       {boardId: $scope.selectedSprint.id, id: $scope.selectedStory.id},
-      {'comments': $scope.selectedStory.comments},
+      {'comments': commentsWithoutFiles},
       function() {
+        if (commentsWithFiles.length > 0) {
+          Notifier.warning('Comments done! Uploading attachments...');
+          Upload.upload({
+            url: '{0}/users/me/boards/{1}/stories/{2}'.format([appConfig.backendURL, $scope.selectedSprint.id, $scope.selectedStory.id]),
+            method: 'PUT',
+            data: {comments: commentsWithFiles}
+          }).then(
+            function(response) {
+              $scope.selectedStory.comments = response.data.comments;
+              $timeout(function () {
+                Notifier.success('Attachments done!');
+              });
+            },
+            function(response) {
+              if (response.status > 0) {
+                Notifier.danger(response.data);
+              }
+            },
+            function(evt) {
+              console.log(Math.min(100, parseInt(100.0 * evt.loaded / evt.total)));
+            }
+          );
+        }
         $scope.selectedStory.updating = false;
         Notifier.success('Done!')
       },

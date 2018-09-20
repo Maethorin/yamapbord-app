@@ -21,7 +21,8 @@
     "angular-bootstrap": "2.5.0",
     "ng-scrollable": "0.2.6",
     "ng-sortable": "1.3.8",
-    "angular-material": "1.1.8"
+    "angular-material": "1.1.8",
+    "ng-file-upload": "^12.2.13"
   },
   "resolutions": {
     "angular": "1.6.4"
