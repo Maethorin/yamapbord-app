@@ -6,6 +6,15 @@ scrumInCeresServices.service('BoardService', ['$rootScope', '$q', 'Board', 'Boar
   var _self = this;
   var shouldQueryBoardStories = true;
 
+  this.timelineFilter = {
+    type: null,
+    startDate: moment().add(-12, 'months'),
+    endDate: moment().add(4, 'months'),
+    team: null,
+    status: 'CURR'
+  };
+
+
   this.listBoards = function(currentBoardId) {
     var boardsDefer = $q.defer();
     if (currentBoardId === undefined || this.boards.length === 0) {

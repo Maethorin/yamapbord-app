@@ -46,13 +46,7 @@ scrumInCeresControllers.controller('BoardController', ['$rootScope', '$scope', '
 
   $scope.teams = [];
 
-  $scope.timelineFilter = {
-    type: null,
-    startDate: moment().add(-12, 'months'),
-    endDate: moment().add(4, 'months'),
-    team: null,
-    status: 'CURR'
-  };
+  $scope.timelineFilter = BoardService.timelineFilter;
 
   Alert.loading();
 
@@ -72,7 +66,7 @@ scrumInCeresControllers.controller('BoardController', ['$rootScope', '$scope', '
 
         $scope.filterTimeline();
         if ($stateParams.boardId) {
-          $scope.selectSprint(_.find($scope.boards, {id: parseInt($stateParams.boardId)}));
+          $scope.selectSprint(_.find($scope.fullBoards, {id: parseInt($stateParams.boardId)}));
         }
         Alert.close();
       }
