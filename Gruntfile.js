@@ -41,6 +41,23 @@ module.exports = function (grunt) {
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
 
+    clean: {
+      static: {
+        src: ['{0}/**/*.*'.format([wwwFolder])]
+      },
+      concated: {
+        src: [componentsFile, appFile]
+      }
+    },
+
+    compass: {
+      app: {
+        options: {
+          config: 'config.rb'
+        }
+      }
+    },
+
     copy: {
       fonts: {
         files: [
@@ -50,7 +67,7 @@ module.exports = function (grunt) {
       },
       css: {
         files: [
-          {expand: true, cwd: '{0}/angular-inform/dist'.format([libFolder]), src: ['angular-inform.css'], flatten: true, dest: wwwExtraCssFolder},
+          // {expand: true, cwd: '{0}/angular-inform/dist'.format([libFolder]), src: ['angular-inform.css'], flatten: true, dest: wwwExtraCssFolder},
           // {expand: true, cwd: '{0}/angular-bootstrap-toggle/dist'.format([libFolder]), src: ['angular-bootstrap-toggle.css'], flatten: true, dest: wwwExtraCssFolder},
           {expand: true, cwd: '{0}/ng-scrollable/assets'.format([libFolder]), src: ['ng-scrollable.css'], flatten: true, dest: wwwExtraCssFolder},
           {expand: true, cwd: '{0}/ng-sortable/dist'.format([libFolder]), src: ['ng-sortable.css'], flatten: true, dest: wwwExtraCssFolder},
@@ -112,20 +129,6 @@ module.exports = function (grunt) {
           "{0}/**/*.js".format([srcJsFolder])
         ],
         dest: appFile
-      }
-    },
-
-    uglify: {
-      options: {},
-      componentes: {
-        files: {
-          'www/js/componentes.min.js': [componentsFile]
-        }
-      },
-      app: {
-        files: {
-          'www/js/app.min.js': [appFile]
-        }
       }
     },
 
@@ -230,19 +233,16 @@ module.exports = function (grunt) {
       }
     },
 
-    clean: {
-      static: {
-        src: ['{0}/**/*.*'.format([wwwFolder])]
+    uglify: {
+      options: {},
+      componentes: {
+        files: {
+          'www/js/componentes.min.js': [componentsFile]
+        }
       },
-      concated: {
-        src: [componentsFile, appFile]
-      }
-    },
-
-    compass: {
       app: {
-        options: {
-          config: 'config.rb'
+        files: {
+          'www/js/app.min.js': [appFile]
         }
       }
     },
