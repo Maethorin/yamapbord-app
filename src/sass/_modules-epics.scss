@@ -3,5 +3,30 @@
   .list-group {
     height: 75vh;
     overflow-y: auto;
+    .list-group-item {
+      &.selected {
+        background-color: $gray-light;
+      }
+      .btn-danger {
+        float: right;
+      }
+        &.ng-enter {
+          transition: 0.5s linear all;
+          opacity: 0;
+        }
+
+        &.ng-enter.ng-enter-active {
+          opacity: 1;
+        }
+
+        &.ng-leave {
+          transition: 0.2s linear all;
+          opacity: 1;
+        }
+
+        &.ng-leave.ng-leave-active {
+          opacity: 0;
+        }
+    }
   }
 }

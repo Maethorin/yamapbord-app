@@ -14,7 +14,8 @@ scrumInCeresControllers.controller('ModulesEpicsController', ['$rootScope', '$sc
     moduleEpic: ''
   };
 
-  $scope.selectedModule = {};
+  $scope.selectedModule = null;
+  $scope.selectedEpic = null;
   $scope.modules = [];
   $scope.epics = [];
 
@@ -90,6 +91,34 @@ scrumInCeresControllers.controller('ModulesEpicsController', ['$rootScope', '$sc
     $scope.selectedModule = module;
   };
 
+  $scope.selectEpic = function(epic) {
+    $scope.selectedEpic = epic;
+  };
+
+  $scope.addSelectedEpicToSelectedModule = function() {
+    if (!_.find($scope.selectedModule.epics, {name: $scope.selectedEpic.name})) {
+      $scope.selectedModule.epics.push($scope.selectedEpic);
+      $scope.selectedModule.epics = _.sortBy($scope.selectedModule.epics, 'name');
+    }
+  };
+
+  $scope.saveEpicsModule = function() {
+    Module.update(
+      {id: $scope.selectedModule.id},
+      $scope.selectedModule,
+      function(result) {
+        Alert.randomSuccessMessage();
+      },
+      function(error) {
+        Alert.randomErrorMessage(error);
+      }
+    )
+  };
+
+  $scope.removeEpicFromSelectedModule = function(epic) {
+    var index = _.findIndex($scope.selectedModule.epics, ['id', epic.id]);
+    $scope.selectedModule.epics.splice(index, 1);
+  };
 }]);
 
 scrumInCeresControllers.controller('AddModuleController', ['$scope', '$uibModalInstance', 'Alert', 'Module', function($scope, $uibModalInstance, Alert, Module) {

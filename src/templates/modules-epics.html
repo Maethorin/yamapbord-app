@@ -1,77 +1,82 @@
 <div class="container-fluid modules-epics">
-<div class="row">
-  <div class="col-md-4">
-    <div class="panel panel-default">
-      <div class="panel-heading">
-        <h3>Module</h3>
-      </div>
-      <div class="panel-body">
-        <div class="col-md-8">
-          <div class="input-group">
-            <input type="text" class="form-control" placeholder="Search" ng-model="search.module" aria-describedby="searchModule">
-            <span class="input-group-addon" id="searchModule"><i class="fa fa-search"></i></span>
+  <div class="row">
+    <div class="col-md-4">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3>Module</h3>
+        </div>
+        <div class="panel-body">
+          <div class="col-md-8">
+            <div class="input-group">
+              <input type="text" class="form-control" placeholder="Search" ng-model="search.module" aria-describedby="searchModule">
+              <span class="input-group-addon" id="searchModule"><i class="fa fa-search"></i></span>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <button class="btn btn-primary" type="button" ng-click="adding('module')">Add</button>
           </div>
         </div>
-        <div class="col-md-4">
-          <button class="btn btn-primary" type="button" ng-click="adding('module')">Add</button>
-        </div>
+        <ul class="list-group">
+          <li class="list-group-item" ng-repeat="module in modules | filter:{name: search.module}" ng-class="{'selected': module.id === selectedModule.id}" data-module-id="{{module.id}}" ng-click="selectModule(module)">
+            [<span class="module-acronym" ng-bind="module.acronym"></span>]
+            <span class="module-name" ng-bind="module.name"></span>
+          </li>
+        </ul>
       </div>
-      <ul class="list-group">
-        <li class="list-group-item" ng-repeat="module in modules | filter:{name: search.module}" data-module-id="{{module.id}}" ng-click="selectModule(module)">
-          [<span class="module-acronym" ng-bind="module.acronym"></span>]
-          <span class="module-name" ng-bind="module.name"></span>
-        </li>
-      </ul>
     </div>
-  </div>
 
-  <div class="col-md-4">
-    <div class="panel panel-default">
-      <div class="panel-heading">
-        <h3>Module Epics</h3>
-      </div>
-      <div class="panel-body">
-        <div class="col-md-12">
-          <div class="input-group">
-            <input type="text" class="form-control" placeholder="Search" ng-model="search.moduleEpic" aria-describedby="searchModuleEpic">
-            <span class="input-group-addon" id="searchModuleEpic"><i class="fa fa-search"></i></span>
+    <div class="col-md-4">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3>{{selectedModule.name}} Epics</h3>
+        </div>
+        <div class="panel-body">
+          <div class="col-md-8">
+            <div class="input-group">
+              <input type="text" class="form-control" placeholder="Search" ng-model="search.moduleEpic" aria-describedby="searchModuleEpic">
+              <span class="input-group-addon" id="searchModuleEpic"><i class="fa fa-search"></i></span>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <button class="btn btn-default" ng-show="selectedModule !== null && selectedEpic !== null" type="button" ng-click="addSelectedEpicToSelectedModule()"><i class="fa fa-chevron-left"></i><i class="fa fa-chevron-left"></i></button>
+            <button class="btn btn-primary" ng-show="selectedModule !== null" type="button" ng-click="saveEpicsModule()"><i class="fa fa-save"></i></button>
           </div>
         </div>
-      </div>
 
-      <ul class="list-group">
-        <li class="list-group-item" ng-show="selectedModule.epics.length == 0">
-          <div class="alert alert-info">Module has no epic associated with it</div>
-        </li>
-        <li class="list-group-item" ng-repeat="epic in selectedModule.epics | filter:{name: search.moduleEpic}" data-epic-id="{{epic.id}}">
-          <span class="module-name" ng-bind="epic.name"></span>
-        </li>
-      </ul>
+        <ul class="list-group">
+          <li class="list-group-item" ng-show="selectedModule.epics.length == 0">
+            <div class="alert alert-info">Module has no epic associated with it</div>
+          </li>
+          <li class="list-group-item" ng-repeat="epic in selectedModule.epics | filter:{name: search.moduleEpic}" data-epic-id="{{epic.id}}">
+            <span class="epic-name" ng-bind="epic.name"></span>
+            <button class="btn btn-xs btn-danger" ng-click="removeEpicFromSelectedModule(epic)"><i class="fa fa-close"></i></button>
+          </li>
+        </ul>
+      </div>
     </div>
-  </div>
 
-  <div class="col-md-4">
-    <div class="panel panel-default">
-      <div class="panel-heading">
-        <h3>Epics</h3>
-      </div>
-      <div class="panel-body">
-        <div class="col-md-8">
-          <div class="input-group">
-            <input type="text" class="form-control" placeholder="Search" ng-model="search.epic" aria-describedby="searchEpic">
-            <span class="input-group-addon" id="searchEpic"><i class="fa fa-search"></i></span>
+    <div class="col-md-4">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3>Epics</h3>
+        </div>
+        <div class="panel-body">
+          <div class="col-md-8">
+            <div class="input-group">
+              <input type="text" class="form-control" placeholder="Search" ng-model="search.epic" aria-describedby="searchEpic">
+              <span class="input-group-addon" id="searchEpic"><i class="fa fa-search"></i></span>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <button class="btn btn-primary" type="button" ng-click="adding('epic')">Add</button>
           </div>
         </div>
-        <div class="col-md-4">
-          <button class="btn btn-primary" type="button" ng-click="adding('epic')">Add</button>
-        </div>
+        <ul class="list-group">
+          <li class="list-group-item" ng-repeat="epic in epics | filter:{name: search.epic}" ng-class="{'selected': epic.id === selectedEpic.id}" data-epic-id="{{epic.id}}" ng-click="selectEpic(epic)">
+            <span class="module-name" ng-bind="epic.name"></span>
+          </li>
+        </ul>
       </div>
-      <ul class="list-group">
-        <li class="list-group-item" ng-repeat="epic in epics | filter:{name: search.epic}" data-module-id="{{epic.id}}">
-          <span class="module-name" ng-bind="epic.name"></span>
-        </li>
-      </ul>
     </div>
   </div>
-</div>
 </div>
