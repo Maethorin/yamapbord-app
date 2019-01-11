@@ -13,11 +13,12 @@
           </div>
         </div>
         <div class="col-md-4">
-          <button class="btn btn-primary" type="button" ng-click="addModule()">Add</button>
+          <button class="btn btn-primary" type="button" ng-click="addingModule()">Add</button>
         </div>
       </div>
       <ul class="list-group">
         <li class="list-group-item" ng-repeat="module in modules | filter:{name: search.module}" data-module-id="{{module.id}}" ng-click="selectModule(module)">
+          [<span class="module-acronym" ng-bind="module.acronym"></span>]
           <span class="module-name" ng-bind="module.name"></span>
         </li>
       </ul>
