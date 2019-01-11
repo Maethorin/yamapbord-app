@@ -7,7 +7,7 @@ scrumInCeresDirectives.directive('ownerName', [function() {
     scope: {
       story: '='
     },
-    link: function(scope, element, attrs) {
+    link: function(scope, element, attrs, ctrl) {
       scope.ownerName = scope.story.owner ? scope.story.owner.name : '';
       if (['DPYD', 'ACCP', 'REJE'].indexOf(scope.story.status) > -1) {
         scope.ownerName = '';

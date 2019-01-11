@@ -14,7 +14,6 @@ scrumInCeresServices.service('BoardService', ['$rootScope', '$q', 'Board', 'Boar
     status: 'CURR'
   };
 
-
   this.listBoards = function(currentBoardId) {
     var boardsDefer = $q.defer();
     if (currentBoardId === undefined || this.boards.length === 0) {

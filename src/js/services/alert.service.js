@@ -27,7 +27,7 @@ scrumInCeresServices.service('Alert', ['sweetAlert', function(SweetAlert) {
     'What a Hell!!!', 'What a Heck!!!', 'Really?!?', 'Oh God why?!?', 'You got be kidding me, right?', 'Not again...', 'Came back later, maybe never!', 'I`m tyred of this, lets try other thing...'
   ];
 
-    this.randomErrorMessage = function(error, message) {
+  this.randomErrorMessage = function(error, message) {
     var index = Math.floor(Math.random() * randomErrorMessages.length);
     if (index ===  randomErrorMessages.length) {
       index -= 1;

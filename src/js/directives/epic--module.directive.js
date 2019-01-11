@@ -7,7 +7,7 @@ scrumInCeresDirectives.directive('moduleEpic', ['$rootScope', function($rootScop
       moduleId: '=',
       epicId: '='
     },
-    link: function(scope, element, attrs) {
+    link: function(scope, element, attrs, controller) {
       var module = _.find($rootScope.modules, ['id', scope.moduleId]);
       var epic = _.find($rootScope.epics, ['id', scope.epicId]);
       scope.moduleEpic = '[{0}] {1}'.format([module.acronym, epic.name]);

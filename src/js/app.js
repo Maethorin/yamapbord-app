@@ -52,6 +52,7 @@ Number.prototype.paddingLeft = function(size, char) {
   return result.join('') + this.toString();
 };
 
+
 var scrumInCeresServices  = angular.module('scrumInCeres.services', []);
 var scrumInCeresFactories  = angular.module('scrumInCeres.factories', []);
 var scrumInCeresResources  = angular.module('scrumInCeres.resources', []);
