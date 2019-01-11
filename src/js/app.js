@@ -149,6 +149,14 @@ scrumInCeres.config(['$httpProvider', '$stateProvider', '$locationProvider', '$u
     })
 
     .state({
+      name: 'modulesEpicsState',
+      url: '/modules-epics',
+      cache: false,
+      templateUrl: 'templates/modules-epics.html',
+      controller: 'ModulesEpicsController'
+    })
+
+    .state({
       name: 'iceBoxState',
       url: '/ice-box',
       cache: false,
