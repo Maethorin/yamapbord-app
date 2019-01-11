@@ -58,20 +58,27 @@ scrumInCeresControllers.controller('ModulesEpicsController', ['$rootScope', '$sc
 
   loading();
 
-  $scope.addingModule = function() {
-    var modalAddModule = $uibModal.open({
+  $scope.adding = function(what) {
+    var addModal = $uibModal.open({
       animation: true,
       ariaLabelledBy: 'modalTitle',
       ariaDescribedBy: 'modalBody',
       templateUrl: 'templates/include/modal-add-module.html',
-      controller: 'AddModuleController',
+      controller: what === 'module' ? 'AddModuleController' : 'AddEpicController',
       size: 'sm'
     });
 
-    modalAddModule.result.then(
-      function(module) {
-        $scope.modules.push(module);
-        $scope.modules = _.sortBy($scope.modules, 'name');
+    addModal.result.then(
+      function(result) {
+        if (what === 'module') {
+          $scope.modules.push(result);
+          $scope.modules = _.sortBy($scope.modules, 'name');
+        }
+        else {
+          $scope.epics.push(result);
+          $scope.epics = _.sortBy($scope.epics, 'name');
+        }
+        Alert.randomSuccessMessage();
       },
       function() {
         console.log('dismiss');
@@ -86,7 +93,8 @@ scrumInCeresControllers.controller('ModulesEpicsController', ['$rootScope', '$sc
 }]);
 
 scrumInCeresControllers.controller('AddModuleController', ['$scope', '$uibModalInstance', 'Alert', 'Module', function($scope, $uibModalInstance, Alert, Module) {
-  $scope.module = {
+  $scope.isModule = true;
+  $scope.model = {
     name: null,
     acronym: null
   };
@@ -95,20 +103,48 @@ scrumInCeresControllers.controller('AddModuleController', ['$scope', '$uibModalI
     $uibModalInstance.dismiss('cancel');
   };
 
-  $scope.saveModule = function(formAddModule) {
-    if (formAddModule.$invalid) {
+  $scope.save = function(formAdd) {
+    if (formAdd.$invalid) {
       Alert.error('Again?!?', 'We need a name for this module. HTH are we going to call it when need it?');
       return false;
     }
 
     Module.save(
-      $scope.module,
+      $scope.model,
       function(result) {
         $uibModalInstance.close(result);
       },
       function(error) {
         Alert.randomErrorMessage(error);
       }
-    )
-  }
+    );
+  };
+}]);
+
+scrumInCeresControllers.controller('AddEpicController', ['$scope', '$uibModalInstance', 'Alert', 'Epic', function($scope, $uibModalInstance, Alert, Epic) {
+  $scope.isModule = false;
+  $scope.model = {
+    name: null
+  };
+
+  $scope.cancel = function () {
+    $uibModalInstance.dismiss('cancel');
+  };
+
+  $scope.save = function(formAdd) {
+    if (formAdd.$invalid) {
+      Alert.error('Again?!?', 'We need a name for this epic. HTH are we going to call it when need it?');
+      return false;
+    }
+
+    Epic.save(
+      $scope.model,
+      function(result) {
+        $uibModalInstance.close(result);
+      },
+      function(error) {
+        Alert.randomErrorMessage(error);
+      }
+    );
+  };
 }]);

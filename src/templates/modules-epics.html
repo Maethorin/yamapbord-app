@@ -13,7 +13,7 @@
           </div>
         </div>
         <div class="col-md-4">
-          <button class="btn btn-primary" type="button" ng-click="addingModule()">Add</button>
+          <button class="btn btn-primary" type="button" ng-click="adding('module')">Add</button>
         </div>
       </div>
       <ul class="list-group">
@@ -56,11 +56,14 @@
         <h3>Epics</h3>
       </div>
       <div class="panel-body">
-        <div class="col-md-12">
+        <div class="col-md-8">
           <div class="input-group">
             <input type="text" class="form-control" placeholder="Search" ng-model="search.epic" aria-describedby="searchEpic">
             <span class="input-group-addon" id="searchEpic"><i class="fa fa-search"></i></span>
           </div>
+        </div>
+        <div class="col-md-4">
+          <button class="btn btn-primary" type="button" ng-click="adding('epic')">Add</button>
         </div>
       </div>
       <ul class="list-group">
