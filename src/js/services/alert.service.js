@@ -118,6 +118,7 @@ scrumInCeresServices.service('Alert', ['sweetAlert', function(SweetAlert) {
         title: title,
         text: text,
         type: 'warning',
+        imageUrl: '/img/hmpf.jpg',
         showCancelButton: showCancelButton,
         confirmButtonColor: "#DD6B55",
         confirmButtonText: confirmText,

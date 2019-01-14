@@ -3,6 +3,9 @@
   .list-group {
     height: 75vh;
     overflow-y: auto;
+    &.list-module-epics, &.list-selection-stories {
+      height: 35vh;
+    }
     .list-group-item {
       &.selected {
         background-color: $gray-light;

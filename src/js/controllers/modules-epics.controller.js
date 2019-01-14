@@ -18,6 +18,7 @@ scrumInCeresControllers.controller('ModulesEpicsController', ['$rootScope', '$sc
   $scope.selectedEpic = null;
   $scope.modules = [];
   $scope.epics = [];
+  $scope.selectionStories = [];
 
   function unLoading() {
     if (modulesLoaded && epicsLoaded) {
@@ -89,10 +90,24 @@ scrumInCeresControllers.controller('ModulesEpicsController', ['$rootScope', '$sc
 
   $scope.selectModule = function(module) {
     $scope.selectedModule = module;
+    $scope.selectionStories = [];
+    Module.get(
+      {id: module.id},
+      function(result) {
+        $scope.selectionStories = result.stories;
+      }
+    )
   };
 
   $scope.selectEpic = function(epic) {
     $scope.selectedEpic = epic;
+    $scope.selectionStories = [];
+    Epic.get(
+      {id: epic.id},
+      function(result) {
+        $scope.selectionStories = result.stories;
+      }
+    )
   };
 
   $scope.addSelectedEpicToSelectedModule = function() {
@@ -118,6 +133,42 @@ scrumInCeresControllers.controller('ModulesEpicsController', ['$rootScope', '$sc
   $scope.removeEpicFromSelectedModule = function(epic) {
     var index = _.findIndex($scope.selectedModule.epics, ['id', epic.id]);
     $scope.selectedModule.epics.splice(index, 1);
+  };
+
+  $scope.removeModule = function(module) {
+    Alert.warning(
+      'WAAAAT?!?!',
+      'Are you f#!%$ sure???',
+      function(response) {
+        if (response.value) {
+          Module.delete(
+            {id: module.id},
+            function() {
+              var index = _.findIndex($scope.modules, ['id', module.id]);
+              $scope.modules.splice(index, 1);
+            }
+          );
+        }
+      }
+    );
+  };
+
+  $scope.removeEpic = function(epic) {
+    Alert.warning(
+      'WAAAAT?!?!',
+      'Are you f#!%$ sure???',
+      function(response) {
+        if (response.value) {
+          Epic.delete(
+            {id: epic.id},
+            function() {
+              var index = _.findIndex($scope.epics, ['id', epic.id]);
+              $scope.epics.splice(index, 1);
+            }
+          );
+        }
+      }
+    );
   };
 }]);
 

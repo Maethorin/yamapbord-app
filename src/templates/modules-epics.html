@@ -20,6 +20,7 @@
           <li class="list-group-item" ng-repeat="module in modules | filter:{name: search.module}" ng-class="{'selected': module.id === selectedModule.id}" data-module-id="{{module.id}}" ng-click="selectModule(module)">
             [<span class="module-acronym" ng-bind="module.acronym"></span>]
             <span class="module-name" ng-bind="module.name"></span>
+            <button class="btn btn-xs btn-danger" ng-click="removeModule(module)"><i class="fa fa-close"></i></button>
           </li>
         </ul>
       </div>
@@ -43,13 +44,29 @@
           </div>
         </div>
 
-        <ul class="list-group">
+        <ul class="list-group list-module-epics">
           <li class="list-group-item" ng-show="selectedModule.epics.length == 0">
             <div class="alert alert-info">Module has no epic associated with it</div>
           </li>
           <li class="list-group-item" ng-repeat="epic in selectedModule.epics | filter:{name: search.moduleEpic}" data-epic-id="{{epic.id}}">
             <span class="epic-name" ng-bind="epic.name"></span>
             <button class="btn btn-xs btn-danger" ng-click="removeEpicFromSelectedModule(epic)"><i class="fa fa-close"></i></button>
+          </li>
+        </ul>
+      </div>
+
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3>Stories</h3>
+        </div>
+
+        <ul class="list-group list-selection-stories">
+          <li class="list-group-item" ng-show="selectionStories.length == 0">
+            <div class="alert alert-info">No stories associated with selection</div>
+          </li>
+          <li class="list-group-item" ng-repeat="story in selectionStories" data-story-id="{{story.id}}">
+            <span class="epic-name" ng-bind="story.name"></span>
+            <!--<button class="btn btn-xs btn-danger" ng-click="removeEpicFromSelectedModule(epic)"><i class="fa fa-close"></i></button>-->
           </li>
         </ul>
       </div>
@@ -74,6 +91,7 @@
         <ul class="list-group">
           <li class="list-group-item" ng-repeat="epic in epics | filter:{name: search.epic}" ng-class="{'selected': epic.id === selectedEpic.id}" data-epic-id="{{epic.id}}" ng-click="selectEpic(epic)">
             <span class="module-name" ng-bind="epic.name"></span>
+            <button class="btn btn-xs btn-danger" ng-click="removeEpic(module)"><i class="fa fa-close"></i></button>
           </li>
         </ul>
       </div>
