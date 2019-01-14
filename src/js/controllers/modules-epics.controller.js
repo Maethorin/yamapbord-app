@@ -141,13 +141,14 @@ scrumInCeresControllers.controller('ModulesEpicsController', ['$rootScope', '$sc
       'Are you f#!%$ sure???',
       function(response) {
         if (response.value) {
-          Module.delete(
-            {id: module.id},
-            function() {
-              var index = _.findIndex($scope.modules, ['id', module.id]);
-              $scope.modules.splice(index, 1);
-            }
-          );
+          Alert.itsOpenSourceDude();
+          // Module.delete(
+          //   {id: module.id},
+          //   function() {
+          //     var index = _.findIndex($scope.modules, ['id', module.id]);
+          //     $scope.modules.splice(index, 1);
+          //   }
+          // );
         }
       }
     );
@@ -159,13 +160,14 @@ scrumInCeresControllers.controller('ModulesEpicsController', ['$rootScope', '$sc
       'Are you f#!%$ sure???',
       function(response) {
         if (response.value) {
-          Epic.delete(
-            {id: epic.id},
-            function() {
-              var index = _.findIndex($scope.epics, ['id', epic.id]);
-              $scope.epics.splice(index, 1);
-            }
-          );
+          Alert.itsOpenSourceDude();
+          // Epic.delete(
+          //   {id: epic.id},
+          //   function() {
+          //     var index = _.findIndex($scope.epics, ['id', epic.id]);
+          //     $scope.epics.splice(index, 1);
+          //   }
+          // );
         }
       }
     );
