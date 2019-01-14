@@ -20,7 +20,7 @@
           <li class="list-group-item" ng-repeat="module in modules | filter:{name: search.module}" ng-class="{'selected': module.id === selectedModule.id}" data-module-id="{{module.id}}" ng-click="selectModule(module)">
             [<span class="module-acronym" ng-bind="module.acronym"></span>]
             <span class="module-name" ng-bind="module.name"></span>
-            <button class="btn btn-xs btn-danger" ng-click="removeModule(module)"><i class="fa fa-close"></i></button>
+            <button class="btn btn-xs btn-danger" ng-click="removeModule(module, $event)"><i class="fa fa-close"></i></button>
           </li>
         </ul>
       </div>
@@ -91,7 +91,7 @@
         <ul class="list-group">
           <li class="list-group-item" ng-repeat="epic in epics | filter:{name: search.epic}" ng-class="{'selected': epic.id === selectedEpic.id}" data-epic-id="{{epic.id}}" ng-click="selectEpic(epic)">
             <span class="module-name" ng-bind="epic.name"></span>
-            <button class="btn btn-xs btn-danger" ng-click="removeEpic(module)"><i class="fa fa-close"></i></button>
+            <button class="btn btn-xs btn-danger" ng-click="removeEpic(epic, $event)"><i class="fa fa-close"></i></button>
           </li>
         </ul>
       </div>

@@ -135,7 +135,8 @@ scrumInCeresControllers.controller('ModulesEpicsController', ['$rootScope', '$sc
     $scope.selectedModule.epics.splice(index, 1);
   };
 
-  $scope.removeModule = function(module) {
+  $scope.removeModule = function(module, $event) {
+    $event.stopPropagation();
     Alert.warning(
       'WAAAAT?!?!',
       'Are you f#!%$ sure???',
@@ -154,7 +155,8 @@ scrumInCeresControllers.controller('ModulesEpicsController', ['$rootScope', '$sc
     );
   };
 
-  $scope.removeEpic = function(epic) {
+  $scope.removeEpic = function(epic, $event) {
+    $event.stopPropagation();
     Alert.warning(
       'WAAAAT?!?!',
       'Are you f#!%$ sure???',
