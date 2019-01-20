@@ -95,6 +95,7 @@ scrumInCeresControllers.controller('ModulesEpicsController', ['$rootScope', '$sc
       {id: module.id},
       function(result) {
         $scope.selectionStories = result.stories;
+        $scope.selectedModule.epics = result.epics;
       }
     )
   };
