@@ -1,5 +1,9 @@
 'use strict';
 
-scrumInCeresResources.factory('Epic', ['$resource', 'appConfig', function ($resource, appConfig) {
-  return $resource('{0}/users/me/epics/:id'.format([appConfig.backendURL]));
+scrumInCeresResources.factory('Project', ['$resource', 'appConfig', function ($resource, appConfig) {
+  return $resource(
+    '{0}/users/me/projects/:id'.format([appConfig.backendURL]),
+    null,
+    {update: {method: 'PUT'}}
+  );
 }]);

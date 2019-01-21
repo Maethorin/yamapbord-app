@@ -92,6 +92,7 @@ module.exports = function (grunt) {
       options: {},
       componentes: {
         src: [
+          "src/lib/slug/slug.js",
           "src/lib/moment/moment.js",
           "src/lib/moment/locale/pt-br.js",
           "src/lib/sweetalert2/dist/sweetalert2.js",

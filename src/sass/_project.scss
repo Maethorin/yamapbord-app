@@ -1,0 +1,93 @@
+.project {
+  margin: 60px 0 0 0;
+  height: 92vh;
+  overflow-y: auto;
+  padding: 20px 40px;
+  transition: margin 0.5s;
+
+  &.lateral-menu-open {
+    margin: 60px 0 0 311px;
+  }
+
+  .project-dates {
+    .working-days {
+      display: inline-block;
+      .fa {
+        font-size: 22px;
+      }
+      .number {
+        font-size: 22px;
+        display: inline-block;
+        margin: 0 25px;
+      }
+      .label {
+        font-size: 12px;
+        display: block;
+      }
+    }
+  }
+
+  .table{
+    .btn{
+      background-color: transparent;
+      border: none;
+    }
+    .btn-danger:hover{
+      background-color: $btn-danger-bg;
+    }
+    .btn-primary:hover{
+      background-color: $btn-primary-bg;
+    }
+    > tbody > tr:nth-of-type(odd) {
+      background-color: #3e4d45;
+      border-radius: 10px;
+    }
+    > tbody > tr:hover{
+      background-color: rgba(0, 0, 0, 0.25);
+    }
+  }
+  .table>thead>tr>th{
+    border: none;
+  }
+  .table>tbody>tr>td{
+    border: none;
+  }
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    border-radius: 5px;
+    background-color: #3e7298;
+  }
+
+  .fab-story-container {
+    margin-top: 0;
+    margin-bottom: -63px;
+    margin-left: 54px;
+    position: relative;
+    width: 300px;
+    top: -60px;
+    left: 30px;
+  }
+}
+
+.project-modal-body {
+  .dropdown {
+    &.date {
+      &.open {
+        &.start {
+          top: 152px;
+          left: 14px;
+        }
+        &.end {
+          top: 152px;
+          right: -517px;
+        }
+        .dropdown-menu {
+          width: 282px;
+        }
+      }
+    }
+  }
+}

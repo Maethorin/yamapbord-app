@@ -18,11 +18,14 @@ scrumInCeresServices.service('StoryService', ['$rootScope', '$q', '$timeout', 'A
     if (_filter.type) {
       filter.type = _filter.type.code;
     }
-    if (_filter.epic) {
-      filter.epicId = _filter.epic.id;
+    if (_filter.project) {
+      filter.projectId = _filter.project.id;
     }
     if (_filter.module) {
       filter.moduleId = _filter.module.id;
+    }
+    if (_filter.epic) {
+      filter.epicId = _filter.epic.id;
     }
     if (_filter.point) {
       filter.points = _filter.point;
@@ -256,8 +259,9 @@ scrumInCeresServices.service('StoryService', ['$rootScope', '$q', '$timeout', 'A
     compact.definitionOfDone = complete.definitionOfDone;
     compact.comments = complete.comments;
     compact.mergeRequests = complete.mergeRequests;
-    compact.epic = complete.epic;
+    compact.project = complete.project;
     compact.module = complete.module;
+    compact.epic = complete.epic;
     compact.requester = complete.requester;
     compact.owner = complete.owner;
   };
@@ -290,6 +294,7 @@ scrumInCeresServices.service('StoryService', ['$rootScope', '$q', '$timeout', 'A
         percentageComplete: 0,
         points: null,
         statement: null,
+        project: null,
         module: null,
         epic: null,
         status: 'PLAN',
@@ -306,6 +311,9 @@ scrumInCeresServices.service('StoryService', ['$rootScope', '$q', '$timeout', 'A
         }
         if (data.iterationType === 'sprint') {
           $scope.selectedStory.sprintId = data.iteration.id;
+        }
+        if (data.project) {
+          $scope.selectedStory.project = data.project;
         }
         if (data.module) {
           $scope.selectedStory.module = data.module;
@@ -328,6 +336,10 @@ scrumInCeresServices.service('StoryService', ['$rootScope', '$q', '$timeout', 'A
     $scope.setStoryType = function(story, type) {
       story.type = type.code;
       story.typeName = type.name;
+    };
+
+    $scope.setStoryProject = function(story, project) {
+      story.project = project;
     };
 
     $scope.setStoryModule = function(story, module) {

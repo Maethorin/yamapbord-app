@@ -10,6 +10,7 @@
 @import "ice-box";
 @import "backlog";
 @import "modules-epics";
+@import "project";
 
 body {
   overflow-y: hidden;
@@ -43,17 +44,24 @@ body {
   z-index: 9999;
   top: 62px;
   left: -18%;
-  height: 92%;
-  transition: left 0.5s;
-  padding: 0;
+  height: 92vh;
+  transition: all 0.5s;
+  padding: 4px;
+  border-right: 2px solid #777;
+  border-bottom: 2px solid #777;
+  background-color: darken(#485952, 15%);
+
+  &.opened {
+    left: 0;
+    background-color: #485952;
+  }
+
   .list-group{
     button:hover{
       background-color: #333e39;
     }
   }
-  &.opened {
-    left: 0;
-  }
+
   .form-group {
     .form-control {
       &.sm {

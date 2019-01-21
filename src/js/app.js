@@ -119,6 +119,17 @@ scrumInCeres.config(['$httpProvider', '$stateProvider', '$locationProvider', '$u
     })
 
     .state({
+      name: 'projectState',
+      url: '/projects',
+      templateUrl: 'templates/project.html',
+      controller: 'ProjectController',
+      cache: false,
+      headers: {
+        'Cache-Control' : 'no-cache'
+      }
+    })
+
+    .state({
       name: 'boardState',
       url: '/board/:boardId',
       templateUrl: 'templates/board.html',
