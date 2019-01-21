@@ -1,6 +1,6 @@
 'use strict';
 
-scrumInCeresControllers.controller('ProjectController', ['$rootScope', '$scope', '$uibModal', 'Alert', 'StoryService', 'Project', 'ProjectStory', function($rootScope, $scope, $uibModal, Alert, StoryService, Project, ProjectStory) {
+scrumInCeresControllers.controller('ProjectController', ['$rootScope', '$scope', '$uibModal', 'Alert', 'StoryService', 'HollydayService', 'Project', 'ProjectStory', function($rootScope, $scope, $uibModal, Alert, StoryService, HollydayService, Project, ProjectStory) {
   $rootScope.currentController = 'ProjectController';
   $rootScope.lateralMenuOpen = true;
 
@@ -18,10 +18,13 @@ scrumInCeresControllers.controller('ProjectController', ['$rootScope', '$scope',
   $scope.projects = [];
   $scope.selectedStory = null;
 
-  function loading(who) {
+  function loading() {
     Project.query(
       function(projects) {
         $scope.projects = projects;
+        _.forEach($scope.projects, function(project) {
+          HollydayService.setWorkingDays(project);
+        });
         Alert.close();
       },
       function(error) {
@@ -37,6 +40,7 @@ scrumInCeresControllers.controller('ProjectController', ['$rootScope', '$scope',
   $scope.addingProject = function() {
     var addModal = $uibModal.open({
       animation: true,
+      backdrop: false,
       ariaLabelledBy: 'modalTitle',
       ariaDescribedBy: 'modalBody',
       templateUrl: 'templates/include/modal-add-project.html',
@@ -46,8 +50,9 @@ scrumInCeresControllers.controller('ProjectController', ['$rootScope', '$scope',
 
     addModal.result.then(
       function(result) {
+        HollydayService.setWorkingDays(result);
         $scope.projects.push(result);
-        $scope.projects = _.sortBy($scope.projects, 'startDate');
+        $scope.projects = _.orderBy($scope.projects, ['startDate'], ['asc']);
         Alert.randomSuccessMessage();
       },
       function() {
@@ -148,7 +153,7 @@ scrumInCeresControllers.controller('ProjectController', ['$rootScope', '$scope',
 
 }]);
 
-scrumInCeresControllers.controller('AddProjectController', ['$scope', '$uibModalInstance', 'Alert', 'Module', function($scope, $uibModalInstance, Alert, Module) {
+scrumInCeresControllers.controller('AddProjectController', ['$scope', '$uibModalInstance', 'HollydayService', 'Alert', 'Project', function($scope, $uibModalInstance, HollydayService, Alert, Project) {
   $scope.project = {
     name: null,
     slug: null,
@@ -161,21 +166,64 @@ scrumInCeresControllers.controller('AddProjectController', ['$scope', '$uibModal
     if (!newValue) {
       return false;
     }
-    $scope.project.slug = slug(newValue);
+    $scope.project.slug = slug(newValue).toLowerCase();
   });
 
   $scope.cancel = function () {
     $uibModalInstance.dismiss('cancel');
   };
 
+  $scope.startDateOnSetTime = function() {
+    $scope.$broadcast('start-date-changed');
+    HollydayService.setWorkingDays($scope.project);
+  };
+
+  $scope.endDateOnSetTime = function() {
+    $scope.$broadcast('end-date-changed');
+    HollydayService.setWorkingDays($scope.project);
+  };
+
+  $scope.startDateBeforeRender = function($dates) {
+    if ($scope.project.endDate) {
+      var activeDate = moment($scope.project.endDate);
+
+      $dates.filter(
+        function(date) {
+          return date.localDateValue() >= activeDate.valueOf()
+        }
+      )
+        .forEach(
+          function(date) {
+            date.selectable = false;
+          }
+        );
+    }
+  };
+
+  $scope.endDateBeforeRender = function($view, $dates) {
+    if ($scope.project.startDate) {
+      var activeDate = moment($scope.project.startDate).subtract(1, $view).add(1, 'minute');
+
+      $dates.filter(
+        function(date) {
+          return date.localDateValue() <= activeDate.valueOf()
+        }
+      ).forEach(
+        function (date) {
+          date.selectable = false;
+        }
+      );
+    }
+  };
+
   $scope.save = function(formAdd) {
     if (formAdd.$invalid) {
-      Alert.error('Again?!?', 'We need a name for this epic. HTH are we going to call it when need it?');
+      Alert.error('Oh Dude?!?', 'There are incomplete things! Cmon! Dont be laziie, Okay?');
       return false;
     }
 
-    Epic.save(
-      $scope.model,
+    Project.save(
+      $scope.project,
       function(result) {
         $uibModalInstance.close(result);
       },

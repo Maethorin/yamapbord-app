@@ -6,5 +6,33 @@
 <div class="lateral-menu col-md-2" ng-class="{'opened': lateralMenuOpen}">
   <div class="list-group">
     <button type="button" class="list-group-item" ng-click="addingProject()">New Project</button>
+
+    <div class="list-group-item form-inline">
+      <div class="form-group">
+        <label for="groupBy">Group by: </label>
+        <select name="groupBy" id="groupBy" class="form-control sm" ng-model="storyGroupedBy">
+          <option value="both">Both</option>
+          <option value="module">Module</option>
+          <option value="epic">Epic</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="list-group-item project-item" ng-repeat="project in projects">
+      <div class="project-name" ng-bind="project.name"></div>
+      <div class="project-dates">
+        <div class="date">
+          <date-stamp date="project.startDate"></date-stamp>
+        </div>
+        <div class="working-days">
+          <i class="fa fa-long-arrow-left"></i>
+          <span class="number" ng-bind="project.workingDays"></span>
+          <i class="fa fa-long-arrow-right"></i>
+        </div>
+        <div class="date">
+          <date-stamp date="project.endDate"></date-stamp>
+        </div>
+      </div>
+    </div>
   </div>
 </div>

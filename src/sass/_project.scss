@@ -1,3 +1,33 @@
+.lateral-menu {
+  .project-item {
+    .project-dates {
+      overflow: hidden;
+      .date, .working-days {
+        display: inline-block;
+        width: 30%;
+        margin: 0 1px 0 0;
+      }
+      .working-days {
+        text-align: center;
+        vertical-align: super;
+      }
+      .date-stamp {
+        text-align: center;
+        background-color: $brand-info;
+        border-radius: 3px;
+        padding: 2px;
+        color: #CCC;
+        font-size: 12px;
+        .date-box {
+          span {
+            font-weight: bold;
+          }
+        }
+      }
+    }
+  }
+}
+
 .project {
   margin: 60px 0 0 0;
   height: 92vh;
@@ -7,24 +37,6 @@
 
   &.lateral-menu-open {
     margin: 60px 0 0 311px;
-  }
-
-  .project-dates {
-    .working-days {
-      display: inline-block;
-      .fa {
-        font-size: 22px;
-      }
-      .number {
-        font-size: 22px;
-        display: inline-block;
-        margin: 0 25px;
-      }
-      .label {
-        font-size: 12px;
-        display: block;
-      }
-    }
   }
 
   .table{
@@ -73,8 +85,44 @@
 }
 
 .project-modal-body {
+
+  .project-dates {
+
+    overflow: hidden;
+    float: left;
+    margin-bottom: 24px;
+
+    .working-days {
+      display: inline-block;
+      text-align: center;
+      .fa {
+        font-size: 22px;
+      }
+      .number {
+        font-size: 22px;
+        display: inline-block;
+        margin: 0 25px;
+      }
+      .label {
+        font-size: 15px;
+        font-weight: 700;
+        display: block;
+        margin-bottom: 10px;
+      }
+    }
+  }
+
   .dropdown {
     &.date {
+      td {
+        &.day {
+          &.disabled {
+            background-color: $gray-light;
+            color: $gray;
+            cursor: not-allowed;
+          }
+        }
+      }
       &.open {
         &.start {
           top: 152px;
