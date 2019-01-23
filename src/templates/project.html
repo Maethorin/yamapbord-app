@@ -1,6 +1,14 @@
 <div class="container-fluid project" ng-class="{'lateral-menu-open': lateralMenuOpen}">
-  bahahjahasd
-  asdasdadsd
+  <div class="project-stories">
+    <h2>Stories</h2>
+  </div>
+  <div class="project-sprints">
+    <h2>Sprints</h2>
+
+  </div>
+  <div class="project-kanbans">
+    <h2>Kanbans</h2>
+  </div>
 </div>
 
 <div class="lateral-menu col-md-2" ng-class="{'opened': lateralMenuOpen}">
@@ -18,8 +26,12 @@
       </div>
     </div>
 
-    <div class="list-group-item project-item" ng-repeat="project in projects">
-      <div class="project-name" ng-bind="project.name"></div>
+    <div class="list-group-item project-item" ng-class="{'selected': selectedProject.id === project.id}" ng-repeat="project in projects">
+      <div class="project-title">
+        <span class="project-name" ng-bind="project.name"></span>
+        <button class="btn btn-xs btn-primary" title="Open Project" ng-click="openProject(project)"><i class="fa fa-chevron-right"></i><i class="fa fa-chevron-right"></i></button>
+        <button class="btn btn-xs btn-primary" title="Edit Project" ng-click="editingProject(project)"><i class="fa fa-edit"></i></button>
+      </div>
       <div class="project-dates">
         <div class="date">
           <date-stamp date="project.startDate"></date-stamp>

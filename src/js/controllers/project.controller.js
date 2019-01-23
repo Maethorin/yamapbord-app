@@ -37,17 +37,29 @@ scrumInCeresControllers.controller('ProjectController', ['$rootScope', '$scope',
 
   StoryService.prepareScopeToEditStory($scope);
 
-  $scope.addingProject = function() {
-    var addModal = $uibModal.open({
+  function getModal(project) {
+    return $uibModal.open({
       animation: true,
-      backdrop: false,
+      backdrop: 'static',
       ariaLabelledBy: 'modalTitle',
       ariaDescribedBy: 'modalBody',
-      templateUrl: 'templates/include/modal-add-project.html',
-      controller: 'AddProjectController',
-      size: 'lg'
+      templateUrl: 'templates/include/modal-form-project.html',
+      controller: 'FormProjectController',
+      size: 'lg',
+      resolve: {
+        projectModel: project
+      }
     });
+  }
 
+  $scope.addingProject = function() {
+    var addModal = getModal({
+      name: null,
+      slug: null,
+      startDate: null,
+      endDate: null,
+      description: null
+    });
     addModal.result.then(
       function(result) {
         HollydayService.setWorkingDays(result);
@@ -61,10 +73,42 @@ scrumInCeresControllers.controller('ProjectController', ['$rootScope', '$scope',
     );
   };
 
-  $scope.selectProject = function(project) {
+  var editModal;
+  $scope.editingProject = function(project) {
+    $scope.selectedProject = project;
+    if (editModal) {
+      editModal.dismiss();
+    }
+    editModal = getModal({
+      name: project.name,
+      slug: project.slug,
+      startDate: project.startDate,
+      endDate: project.endDate,
+      description: project.description
+    });
+    editModal.result.then(
+      function(result) {
+        $scope.selectedProject = project;
+        project.name = result.name;
+        project.slug = result.slug;
+        project.startDate = result.startDate;
+        project.endDate = result.endDate;
+        project.description = result.description;
+        HollydayService.setWorkingDays(project);
+        $scope.projects = _.orderBy($scope.projects, ['startDate'], ['asc']);
+        Alert.randomSuccessMessage();
+      },
+      function() {
+        $scope.selectedProject = project;
+        console.log('dismiss');
+      }
+    );
+  };
+
+  $scope.openProject = function(project) {
     $scope.selectedProject = project;
     Project.get(
-      {id: project.id},
+      {projectId: project.id},
       function(result) {
         $scope.selectedProject.stories = result.stories;
         $scope.selectedProject.kanbans = result.kanbans;
@@ -153,14 +197,8 @@ scrumInCeresControllers.controller('ProjectController', ['$rootScope', '$scope',
 
 }]);
 
-scrumInCeresControllers.controller('AddProjectController', ['$scope', '$uibModalInstance', 'HollydayService', 'Alert', 'Project', function($scope, $uibModalInstance, HollydayService, Alert, Project) {
-  $scope.project = {
-    name: null,
-    slug: null,
-    startDate: null,
-    endDate: null,
-    description: null
-  };
+scrumInCeresControllers.controller('FormProjectController', ['$scope', '$uibModalInstance', 'HollydayService', 'Alert', 'Project', 'projectModel', function($scope, $uibModalInstance, HollydayService, Alert, Project, projectModel) {
+  $scope.project = projectModel;
 
   $scope.$watch('project.name', function(newValue) {
     if (!newValue) {
@@ -222,11 +260,31 @@ scrumInCeresControllers.controller('AddProjectController', ['$scope', '$uibModal
       return false;
     }
 
+    if ($scope.project.id) {
+      Project.update(
+        {projectId: $scope.project.id},
+
+        $scope.project,
+
+        function(result) {
+          $uibModalInstance.close(result);
+        },
+
+        function(error) {
+          Alert.randomErrorMessage(error);
+        }
+      );
+      return;
+    }
+
     Project.save(
       $scope.project,
+
       function(result) {
         $uibModalInstance.close(result);
+
       },
+
       function(error) {
         Alert.randomErrorMessage(error);
       }

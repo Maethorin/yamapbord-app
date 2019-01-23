@@ -6,7 +6,6 @@ $gray-darker: darken($gray-base, 13.5%) !default; // #222
 $gray-heading: #384641 !default;
 $gray: #72837d !default;
 $gray-light: #859993 !default;   // #999
-$gray-light-color: #b7cbc5 !default;   // #999
 $gray-lighter: #dce9eb !default; // #eee
 
 $brand-primary: #3b749c !default;
@@ -268,7 +267,7 @@ $input-bg:                       #fff !default;
 $input-bg-disabled:              $gray-lighter !default;
 
 //** Text color for `<input>`s
-$input-color:                    $gray-light-color !default;
+$input-color:                    $gray-dark !default;
 //** `<input>` border color
 $input-border:                   #f1f1f1 !default;
 

@@ -1,11 +1,24 @@
 .lateral-menu {
   .project-item {
+    &.selected {
+      background-color: $gray;
+      border-color: $gray-dark;
+    }
+
+    .project-title {
+      overflow: hidden;
+      margin-bottom: 10px;
+      button {
+        float: right;
+        margin-left: 5px;
+      }
+    }
     .project-dates {
       overflow: hidden;
       .date, .working-days {
         display: inline-block;
-        width: 30%;
-        margin: 0 1px 0 0;
+        width: 32.33%;
+        margin: 0;
       }
       .working-days {
         text-align: center;
