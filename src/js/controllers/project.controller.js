@@ -15,8 +15,8 @@ scrumInCeresControllers.controller('ProjectController', ['$rootScope', '$scope',
   };
 
   $scope.selectedProject = null;
+  $scope.selectedProjectOpened = false;
   $scope.projects = [];
-  $scope.selectedStory = null;
 
   function loading() {
     Project.query(
@@ -99,7 +99,7 @@ scrumInCeresControllers.controller('ProjectController', ['$rootScope', '$scope',
         Alert.randomSuccessMessage();
       },
       function() {
-        $scope.selectedProject = project;
+        $scope.selectedProject = null;
         console.log('dismiss');
       }
     );
@@ -107,6 +107,8 @@ scrumInCeresControllers.controller('ProjectController', ['$rootScope', '$scope',
 
   $scope.openProject = function(project) {
     $scope.selectedProject = project;
+    $scope.selectedProjectOpened = true;
+
     Project.get(
       {projectId: project.id},
       function(result) {
@@ -117,29 +119,41 @@ scrumInCeresControllers.controller('ProjectController', ['$rootScope', '$scope',
     )
   };
 
+  $scope.closeProject = function() {
+    $scope.selectedProject = null;
+    $scope.selectedProjectOpened = false;
+  };
+
   $scope.selectStory = function(story) {
-    $scope.selectedStory = story;
+    if (story.isLoaded) {
+      story.isOpen = !story.isOpen;
+      return;
+    }
+    story.loading = true;
     ProjectStory.get(
       {projectId: $scope.selectedProject.id, storyId: story.id},
 
       function(result) {
-        StoryService.turnCompactStoryAsComplete($scope.selectedStory, result);
+        story.isOpen = !story.isOpen;
+        story.isLoaded = true;
+        delete story.loading;
+        StoryService.turnCompactStoryAsComplete(story, result);
       }
     )
   };
 
-  $scope.addSelectedStoryToSelectedProject = function() {
-    if (_.find($scope.selectedProject.stories, {id: $scope.selectedStory.id})) {
+  $scope.addStoryToSelectedProject = function(story) {
+    if (_.find($scope.selectedProject.stories, {id: story.id})) {
       return false;
     }
     Alert.loading();
     ProjectStory.save(
       {projectId: $scope.selectedProject.id},
 
-      {storyId: $scope.selectedStory.id},
+      {storyId: story.id},
 
       function(result) {
-        $scope.selectedProject.stories.push($scope.selectedStory);
+        $scope.selectedProject.stories.push(story);
         $scope.selectedProject.stories = _.sortBy($scope.selectedProject.stories, 'name');
         Alert.randomSuccessMessage();
       },

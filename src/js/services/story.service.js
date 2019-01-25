@@ -602,6 +602,14 @@ scrumInCeresServices.service('StoryService', ['$rootScope', '$q', '$timeout', 'A
 
     $scope.stopPropagation = function(event) {
       event.stopPropagation();
+    };
+
+    $scope.getNameInitials = function(fullName) {
+      if (!fullName) {
+        return '';
+      }
+      fullName = fullName.split(' ');
+      return '{0}{1}'.format([fullName[0][0].toUpperCase(), fullName[fullName.length - 1][0].toUpperCase(), ])
     }
   }
 }]);

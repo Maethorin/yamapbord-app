@@ -63,6 +63,7 @@ var scrumInCeresControllers  = angular.module('scrumInCeres.controllers', []);
 var scrumInCeres = angular.module(
   'scrumInCeres', [
     'ngResource',
+    'ngAria',
     'ngAnimate',
     'ngCookies',
     'ngScrollable',

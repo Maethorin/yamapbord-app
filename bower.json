@@ -8,12 +8,12 @@
     "bootstrap-sass": "^3.3.7",
     "fontawesome": "^4.7.0",
     "sweetalert2": "7.33.1",
-    "angular": "1.6.4",
-    "angular-resource": "1.6.4",
-    "angular-animate": "1.6.4",
-    "angular-mocks": "1.6.4",
-    "angular-cookies": "1.6.4",
-    "angular-touch": "1.6.4",
+    "angular": "1.7.6",
+    "angular-resource": "1.7.6",
+    "angular-animate": "1.7.6",
+    "angular-mocks": "1.7.6",
+    "angular-cookies": "1.7.6",
+    "angular-touch": "1.7.6",
     "angular-input-masks": "2.5.0",
     "angular-ui-router": "1.0.19",
     "angular-sweetalert-2": "2.1.1",
@@ -27,6 +27,6 @@
     "slug": "^0.9.1"
   },
   "resolutions": {
-    "angular": "1.6.4"
+    "angular": "1.7.6"
   }
 }

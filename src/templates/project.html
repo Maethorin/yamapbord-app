@@ -1,14 +1,81 @@
 <div class="container-fluid project" ng-class="{'lateral-menu-open': lateralMenuOpen}">
-  <div class="project-stories">
-    <h2>Stories</h2>
-  </div>
-  <div class="project-sprints">
-    <h2>Sprints</h2>
-
-  </div>
-  <div class="project-kanbans">
-    <h2>Kanbans</h2>
-  </div>
+  <section id="selectedProject" ng-show="selectedProjectOpened">
+    <div class="panel panel-default panel-project">
+      <div class="panel-heading">Stories</div>
+      <ul class="list-group project-stories-list">
+        <li class="list-group-item" id="project{{selectedProject.id}}Story{{story.id}}" ng-repeat="story in selectedProject.stories">
+          <div class="panel panel-default panel-story">
+            <div class="panel-heading" title="{{story.name}}">
+              <span class="story-type" ng-class="story.type | lowercase " title="{{story.typeName}}"></span>
+              <span class="story-name" ng-show="!story.isOpen" ng-bind="story.name|limitWithEllipsis:60"></span>
+              <input type="text" class="story-name" ng-show="story.isOpen" ng-model="story.name" />
+              <span ng-click="selectStory(story)" class="story-chevron">
+                <i class="fa" ng-class="{'fa-spinner fa-spin': story.loading, 'fa-chevron-up': story.isOpen, 'fa-chevron-down': !story.isOpen}"></i>
+              </span>
+            </div>
+            <div class="panel-body" uib-collapse="!story.isOpen">
+              <form name="formStory" class="form-story">
+                <div class="form-group">
+                  <textarea name="storyStatement" id="storyStatement" placeholder="Statement" ng-model="story.statement" rows="2" class="form-control"></textarea>
+                </div>
+                <ul class="list-group col-md-6">
+                  <li class="list-group-item">
+                    <span class="form-story-label">STORY TYPE</span>
+                    <div class="form-group with-select">
+                      <select id="selectStoryType" ng-model="story.type" required class="select-story-type {{story.type | lowercase}} form-control">
+                        <option value="">-- choose --</option>
+                        <option ng-value="type.code" ng-repeat="type in storyTypes" ng-bind="type.name"></option>
+                      </select>
+                    </div>
+                  </li>
+                  <li class="list-group-item">
+                    <span class="form-story-label">STORY POINTS</span>
+                    <div class="project-story-points btn-group">
+                      <label class="btn btn-primary btn-xs points-null" ng-model="story.points" ng-class="{'active': !story.points && story.points != 0}" uib-btn-radio="null">N</label>
+                      <label class="btn btn-primary btn-xs points-{{point}}" ng-model="story.points" ng-class="{'active': point == story.points}" uib-btn-radio="point" ng-repeat="point in points" ng-bind="point"></label>
+                    </div>
+                  </li>
+                  <li class="list-group-item">
+                    <span class="form-story-label">VALUE POINTS</span>
+                    <div class="project-story-points btn-group">
+                      <label class="btn btn-primary btn-xs points-null" ng-model="story.valuePoints" ng-class="{'active': !story.valuePoints && story.valuePoints != 0}" uib-btn-radio="null">N</label>
+                      <label class="btn btn-primary btn-xs points-{{point}}" ng-model="story.valuePoints" ng-class="{'active': point == story.valuePoints}" uib-btn-radio="point" ng-repeat="point in points" ng-bind="point"></label>
+                    </div>
+                  </li>
+                </ul>
+                <ul class="list-group col-md-6">
+                  <li class="list-group-item">
+                    <span class="form-story-label">STATUS</span>
+                    <div class="project-story-status">
+''                  <span class="story-status" ng-class="story.status | lowercase" ng-bind="story.status"></span>
+                    </div>
+                  </li>
+                  <li class="list-group-item">
+                    <span class="form-story-label">REQUESTER</span>
+                    <div class="story-requester">
+                      <span class="story-requester-name-initials" ng-bind="getNameInitials(story.requester.name)"></span>
+                      <span class="story-requester-name" ng-bind="story.requester.name"></span>
+                    </div>
+                  </li>
+                  <li class="list-group-item">
+                    <span class="form-story-label">OWNER</span>
+                    <div class="story-owner">
+                      <span class="story-owner-name-initials" ng-bind="getNameInitials(story.owner.name)"></span>
+                      <span class="story-owner-name" ng-bind="story.owner.name"></span>
+                    </div>
+                  </li>
+                </ul>
+              <!--<div class="col-md-6">{{story.module.name}}</div>-->
+              <!--<div class="col-md-6">{{story.epic.name}}</div>-->
+              <!--<div class="col-md-6">{{story.requester.name}}</div>-->
+              <!--<div class="col-md-6">{{story.owner.name}}</div>-->
+              </form>
+            </div>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </section>
 </div>
 
 <div class="lateral-menu col-md-2" ng-class="{'opened': lateralMenuOpen}">
