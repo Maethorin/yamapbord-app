@@ -305,7 +305,8 @@ scrumInCeresServices.service('StoryService', ['$rootScope', '$q', '$timeout', 'A
         comments: [],
         mergeRequests: [],
         type: 'FEA',
-        typeName: 'Feature'
+        typeName: 'Feature',
+        requester: {id: $rootScope.loggedUser.id, name: $rootScope.loggedUser.name}
       };
       if (data) {
         $scope.selectedIteration = data.iteration;

@@ -103,15 +103,23 @@ scrumInCeresControllers.controller('ProjectController', ['$rootScope', '$scope',
   };
 
   $scope.openProject = function(project) {
+    project.loading = true;
     $scope.selectedProject = project;
     $scope.selectedProjectOpened = true;
 
     Project.get(
       {projectId: project.id},
+
       function(result) {
         $scope.selectedProject.stories = result.stories;
         $scope.selectedProject.kanbans = result.kanbans;
         $scope.selectedProject.sprints = result.sprints;
+        project.loading = false;
+      },
+
+      function(error) {
+        Alert.randomErrorMessage(error);
+        project.loading = false;
       }
     )
   };
@@ -124,6 +132,10 @@ scrumInCeresControllers.controller('ProjectController', ['$rootScope', '$scope',
   $scope.undoStoryChanges = function(story) {
     story.isLoaded = false;
     $scope.selectStory(story);
+  };
+
+  $scope.cancelNewStory = function($index) {
+    $scope.selectedProject.stories.splice($index, 1);
   };
 
   $scope.saveStory = function(story) {
@@ -259,8 +271,12 @@ scrumInCeresControllers.controller('ProjectController', ['$rootScope', '$scope',
     );
   };
 
-  $scope.addNewStoryToSelectedProject = function() {
-    var story = $scope.addNewStory({project: $scope.selectedProject}, true);
+  $scope.addingExistingStoryToSelectedProject = function() {
+
+  };
+
+  $scope.addNewStoryToSelectedProject = function(storyType) {
+    var story = $scope.addNewStory({project: $scope.selectedProject, type: storyType}, true);
     story.isOpen = true;
     story.isLoaded = true;
     story.currentTab = 0;

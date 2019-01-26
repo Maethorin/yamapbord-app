@@ -3,10 +3,42 @@
     <div class="panel panel-default panel-project">
       <div class="panel-heading">
         <span>Stories</span>
-        <button class="btn btn-primary btn-xs" type="button" ng-click="addNewStoryToSelectedProject()">Add Story</button>
+
+        <div class="fab-story-container">
+            <md-fab-toolbar md-open="false" md-direction="left">
+              <md-fab-trigger class="align-with-text">
+                <md-button aria-label="menu" class="md-fab md-mini md-primary">
+                  <md-icon md-font-icon="fa fa-plus"></md-icon>
+                </md-button>
+              </md-fab-trigger>
+
+              <md-toolbar>
+                <md-fab-actions class="md-toolbar-tools">
+                  <md-button aria-label="from icebox" class="md-icon-button" ng-click="addingExistingStoryToSelectedProject()">
+                    <md-icon md-font-icon="fa  fa-snowflake-o"></md-icon>
+                  </md-button>
+                  <md-button aria-label="comment" class="md-icon-button" ng-click="addNewStoryToSelectedProject('FEA')">
+                    <md-icon md-font-icon="fa fa-star"></md-icon>
+                  </md-button>
+                  <md-button aria-label="label" class="md-icon-button" ng-click="addNewStoryToSelectedProject('TEC')">
+                    <md-icon md-font-icon="fa fa-cog"></md-icon>
+                  </md-button>
+                  <md-button aria-label="photo" class="md-icon-button" ng-click="addNewStoryToSelectedProject('BUG')">
+                    <md-icon md-font-icon="fa fa-bug"></md-icon>
+                  </md-button>
+                  <md-button aria-label="photo" class="md-icon-button" ng-click="addNewStoryToSelectedProject('CHO')">
+                    <md-icon md-font-icon="fa fa-flag"></md-icon>
+                  </md-button>
+                </md-fab-actions>
+              </md-toolbar>
+            </md-fab-toolbar>
+          </div>
       </div>
       <ul class="list-group project-stories-list">
-        <li class="list-group-item" id="project{{selectedProject.id}}Story{{story.id}}" ng-repeat="story in selectedProject.stories">
+        <li class="list-group-item" ng-if="!selectedProject.stories.length">
+          <md-progress-linear md-mode="query"></md-progress-linear>
+        </li>
+        <li class="list-group-item animate-story" id="project{{selectedProject.id}}Story{{story.id}}" ng-repeat="story in selectedProject.stories">
           <div class="panel panel-default panel-story">
             <div class="panel-heading" title="{{story.name}}">
               <span class="story-type" ng-class="story.type | lowercase " title="{{story.typeName}}"></span>
@@ -24,7 +56,8 @@
                   </div>
                   <div class="col-sm-1">
                     <button class="btn btn-xs btn-success" type="button" title="Save story changes" ng-click="saveStory(story)"><i class="fa fa-save"></i></button>
-                    <button class="btn btn-xs btn-warning" type="button" title="Undo story changes" ng-click="undoStoryChanges(story)"><i class="fa fa-undo"></i></button>
+                    <button class="btn btn-xs btn-warning" ng-if="story.id" type="button" title="Undo story changes" ng-click="undoStoryChanges(story)"><i class="fa fa-undo"></i></button>
+                    <button class="btn btn-xs btn-danger" ng-if="!story.id" type="button" title="Cancel new story" ng-click="cancelNewStory($index)"><i class="fa fa-close"></i></button>
                   </div>
                 </section>
                 <ul class="list-group story-iterations">
@@ -39,7 +72,7 @@
                   </li>
                 </ul>
                 <section class="story-details">
-                  <ul class="list-group col-md-6">
+                  <ul class="list-group col-sm-6">
                     <li class="list-group-item">
                       <span class="form-story-label">MODULE</span>
                       <div class="form-group with-select with-module">
@@ -72,7 +105,7 @@
                       </div>
                     </li>
                   </ul>
-                  <ul class="list-group col-md-6">
+                  <ul class="list-group col-sm-6">
                     <li class="list-group-item">
                       <span class="form-story-label">EPIC</span>
                       <div class="form-group with-select with-epic">
@@ -91,7 +124,12 @@
                       <span class="form-story-label">REQUESTER</span>
                       <div class="story-requester">
                         <span class="story-requester-name-initials" ng-bind="getNameInitials(story.requester.name)"></span>
-                        <span class="story-requester-name" ng-bind="story.requester.name"></span>
+                        <div class="form-group with-select with-requester">
+                          <select id="selectRequester" ng-model="story.requester" required class="select-requester form-control" ng-options="requester.name for requester in requesters|orderBy:'name' track by requester.id">
+                            <option value="">-- Requester --</option>
+                          </select>
+                        </div>
+                        <!--<span class="story-requester-name" ng-bind="story.requester.name"></span>-->
                       </div>
                     </li>
                     <li class="list-group-item">
@@ -224,10 +262,10 @@
                           <textarea ng-model="newComment.comment" class="form-control comment-textarea" rows="3" ng-show="story.newCommentType === 'comment'" focus-me="story.newCommentType === 'comment'" ng-blur="blurInputCommentField($event, story)"></textarea>
                           <input ng-model="newComment.link" ng-show="story.newCommentType === 'link'" focus-me="story.newCommentType === 'link'" ng-blur="blurInputCommentField($event, story)" />
                           <div class="new-attachment" ng-show="story.newCommentType === 'file'">
-                            <div class="col-md-2">
+                            <div class="col-sm-2">
                               <input type="file" ngf-select focus-me="story.newCommentType === 'file'" ng-model="newComment.file" name="commentFile" accept="image/*" ngf-max-size="3MB">
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-sm-4">
                               <textarea ng-model="newComment.comment" class="form-control comment-textarea" rows="3" placeholder="Attachment Description"></textarea>
                             </div>
                           </div>
@@ -247,10 +285,10 @@
                           <input ng-model="mergeRequest.url" ng-show="mergeRequest.editing" focus-me="mergeRequest.editing" ng-blur="toggleEditStoryMergeRequest(mergeRequest)"/>
                           <div ng-if="!mergeRequest.editing">
                             <div class="merge-request-details">
-                              <div class="col-md-7">
+                              <div class="col-sm-7">
                                 Created by: {{mergeRequest.creator.name}}
                               </div>
-                              <div class="col-md-5">
+                              <div class="col-sm-5">
                                 Created at: {{mergeRequest.createdAt}}
                               </div>
                             </div>
@@ -298,7 +336,9 @@
     <div class="list-group-item project-item" ng-class="{'selected': selectedProject.id === project.id}" ng-repeat="project in projects">
       <div class="project-title">
         <span class="project-name" ng-bind="project.name"></span>
-        <button class="btn btn-xs btn-primary" title="Open Project" ng-click="openProject(project)"><i class="fa fa-chevron-right"></i><i class="fa fa-chevron-right"></i></button>
+        <button class="btn btn-xs btn-primary" title="Open Project" ng-click="openProject(project)">
+          <i class="fa" ng-class="{'fa-spinner fa-spin': project.loading, 'fa-chevron-right': !project.loading}"></i>
+        </button>
         <button class="btn btn-xs btn-primary" title="Edit Project" ng-click="editingProject(project)"><i class="fa fa-edit"></i></button>
       </div>
       <div class="project-dates">
