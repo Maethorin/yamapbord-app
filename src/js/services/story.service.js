@@ -264,6 +264,8 @@ scrumInCeresServices.service('StoryService', ['$rootScope', '$q', '$timeout', 'A
     compact.epic = complete.epic;
     compact.requester = complete.requester;
     compact.owner = complete.owner;
+    compact.sprint = complete.sprint;
+    compact.kanban = complete.kanban;
   };
 
   this.prepareScopeToEditStory = function($scope) {
@@ -443,11 +445,17 @@ scrumInCeresServices.service('StoryService', ['$rootScope', '$q', '$timeout', 'A
       $scope.toggleEditInStoryList(definition, $event);
     };
 
-    $scope.addingTaskToStory = function() {
+    $scope.addingTaskToStory = function(story) {
+      if (story) {
+        story.newTaskVisible = true;
+      }
       $scope.newTaskVisible = true;
     };
 
-    $scope.cancelAddTaskToStory = function($event) {
+    $scope.cancelAddTaskToStory = function($event, story) {
+      if (story) {
+        story.newTaskVisible = false;
+      }
       $scope.newTaskVisible = false;
       $scope.newTask = {task: null};
       $event.stopPropagation();
@@ -468,6 +476,7 @@ scrumInCeresServices.service('StoryService', ['$rootScope', '$q', '$timeout', 'A
       }
       story.tasks.push({task: $scope.newTask.task, complete: false});
       $scope.newTaskVisible = false;
+      story.newTaskVisible = false;
       $scope.newTask = {task: null};
       $event.stopPropagation();
     };

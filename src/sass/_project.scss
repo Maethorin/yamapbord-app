@@ -48,6 +48,23 @@
   padding: 20px 10px;
   transition: margin 0.5s;
 
+  .loading-story {
+    position: absolute;
+    top: 24px;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-color: rgba(0.4, 0.4, 0.4, 0.4);
+    text-align: center;
+    i {
+      &.fa-spinner {
+        font-size: 50px;
+        color: #FFF;
+        margin: 41%;
+      }
+    }
+  }
+
   .panel-project {
     width: 30%;
     margin: 0 1%;
@@ -102,10 +119,28 @@
         .panel-body {
           background-color: #f1f0ea;
           .form-story {
+            padding: 5px 0;
+            .statement-save {
+              overflow: hidden;
+              .btn-success {
+                margin: 5px 0;
+              }
+            }
+            .story-details, .story-tabs, .story-iterations {
+              overflow: hidden;
+              margin-top: 5px;
+              border-top: 1px solid #666;
+            }
             .list-group {
               .list-group-item {
                 background-color: #f1f0ea;
                 padding: 5px 0;
+                .project-story-iteration {
+                  color: #666;
+                  font-size: 13px;
+                  vertical-align: middle;
+                  margin-left: 5px;
+                }
                 .story-requester, .story-owner {
                   float: right;
                   margin: 0;
@@ -115,11 +150,12 @@
                   background-color: #a1a4ad;
                   font-size: 10px;
                   display: inline-block;
-                  height: 20px;
-                  width: 20px;
+                  height: 19px;
+                  width: 19px;
                   border-radius: 24px;
                   font-weight: bold;
-                  padding: 4px 0 0 3px;
+                  text-align: center;
+                  line-height: 19px;
                 }
                 .story-owner-name, .story-requester-name {
                   color: #666;
@@ -131,13 +167,13 @@
                   font-size: 10px;
                   display: inline-block;
                   float: left;
-                  margin: 3px 0 0;
+                  margin: 5px 0 0;
                 }
                 .project-story-points {
                   float: right;
                   label {
                     &.btn-xs {
-                      padding: 0 3px;
+                      padding: 2px 3px;
                       font-size: 11px;
                       font-family: Open Sans,open-sans,EmojiFontFace,helvetica,arial,sans-serif;
                       &.active {
@@ -147,18 +183,97 @@
                     }
                   }
                 }
+                .project-story-status {
+                  float: right;
+                  .story-status {
+                      padding: 4px 5px;
+                      border-radius: 2px;
+                      font-size: 12px;
+                      line-height: 14px;
+                  }
+                }
                 .form-group {
                   display: inline-block;
                   float: right;
                   margin: 0;
                   &.with-select {
                     width: 100px;
+                    &.with-module {
+                      width: 73%;
+                    }
+                    &.with-epic {
+                      width: 82%;
+                    }
                     select {
                       background-color: snow;
                       color: rgb(102, 102, 102);
                       padding: 0 0 0 17px;
-                      height: 24px;
+                      height: 22px;
                       background-position: 3px center;
+                      &.select-module, &.select-epic {
+                        padding: 0;
+                      }
+                    }
+                  }
+                }
+              }
+            }
+            .story-tabs {
+              padding: 5px 0;
+              ul {
+                li {
+                  background-color: transparent;
+                  a {
+                    background-color: transparent;
+                      padding: 0 5px;
+                      font-size: 12px;
+                      text-transform: uppercase;
+                      border-radius: 3px;
+                    &.active {
+                      background-color: transparent;
+                    }
+                  }
+                  .btn-save-task, .btn-remove-task, .btn-add-task {
+                    padding: 0 3px;
+                    line-height: 14px;
+                    border-radius: 2px;
+                    i {
+                      font-size: 12px;
+                    }
+                  }
+                }
+              }
+              .tab-content {
+                padding: 0;
+                .tab-pane {
+                  padding: 0;
+                  .list-group {
+                    background-color: transparent;
+                    padding: 0;
+                    .list-group-item {
+                      padding: 0;
+                      color: #666;
+                      i {
+                        font-size: 14px;
+                        margin-right: 0;
+                        vertical-align: middle;
+                      }
+                      .btn-remove-task, .btn-add-task {
+                        float: right;
+                        margin-top: 2px;
+                        padding: 1px;
+                      }
+                      span, input {
+                        font-family: Open Sans,open-sans,EmojiFontFace,helvetica,arial,sans-serif;
+                        font-size: 12px;
+                        vertical-align: middle;
+                      }
+                      input {
+                        background-color: transparent;
+                        padding: 0;
+                        height: 15px;
+                        color: #666;
+                      }
                     }
                   }
                 }

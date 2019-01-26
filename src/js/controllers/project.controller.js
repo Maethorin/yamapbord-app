@@ -1,13 +1,10 @@
 'use strict';
 
-scrumInCeresControllers.controller('ProjectController', ['$rootScope', '$scope', '$uibModal', 'Alert', 'StoryService', 'HollydayService', 'Project', 'ProjectStory', function($rootScope, $scope, $uibModal, Alert, StoryService, HollydayService, Project, ProjectStory) {
+scrumInCeresControllers.controller('ProjectController', ['$rootScope', '$scope', '$uibModal', 'Notifier', 'Alert', 'StoryService', 'HollydayService', 'Project', 'ProjectStory', function($rootScope, $scope, $uibModal, Notifier, Alert, StoryService, HollydayService, Project, ProjectStory) {
   $rootScope.currentController = 'ProjectController';
   $rootScope.lateralMenuOpen = true;
 
   Alert.loading();
-
-  var modulesLoaded = false;
-  var epicsLoaded = false;
 
   $scope.search = {
     project: {name: '', description: ''},
@@ -124,6 +121,34 @@ scrumInCeresControllers.controller('ProjectController', ['$rootScope', '$scope',
     $scope.selectedProjectOpened = false;
   };
 
+  $scope.undoStoryChanges = function(story) {
+    story.isLoaded = false;
+    $scope.selectStory(story);
+  };
+
+  $scope.saveStory = function(story) {
+    Notifier.warning('Saving story...');
+    var storyToSend = _.cloneDeep(story);
+    story.updating = true;
+    delete storyToSend.isOpen;
+    delete storyToSend.isLoaded;
+    delete storyToSend.currentTab;
+    delete storyToSend.newTaskVisible;
+
+    ProjectStory.update(
+      {projectId: $scope.selectedProject.id, storyId: story.id},
+      storyToSend,
+      function() {
+        delete story.updating;
+        Notifier.success('Story saved!')
+      },
+      function(error) {
+        Alert.randomErrorMessage(error);
+        delete story.updating;
+      }
+    );
+  };
+
   $scope.selectStory = function(story) {
     if (story.isLoaded) {
       story.isOpen = !story.isOpen;
@@ -134,12 +159,35 @@ scrumInCeresControllers.controller('ProjectController', ['$rootScope', '$scope',
       {projectId: $scope.selectedProject.id, storyId: story.id},
 
       function(result) {
-        story.isOpen = !story.isOpen;
+        story.isOpen = true;
         story.isLoaded = true;
+        story.currentTab = 0;
+        story.newTaskVisible = false;
         delete story.loading;
         StoryService.turnCompactStoryAsComplete(story, result);
       }
     )
+  };
+
+  $scope.changeStoryTab = function(story, tabIndex) {
+    story.currentTab = tabIndex;
+  };
+
+  $scope.saveStoryTasks = function(story) {
+    Notifier.warning('Saving tasks...');
+    story.updating = true;
+    ProjectStory.update(
+      {projectId: $scope.selectedProject.id, storyId: story.id},
+      {'tasks': story.tasks},
+      function() {
+        delete story.updating;
+        Notifier.success('Tasks saved!')
+      },
+      function(error) {
+        Alert.randomErrorMessage(error);
+        delete story.updating;
+      }
+    );
   };
 
   $scope.addStoryToSelectedProject = function(story) {

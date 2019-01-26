@@ -227,6 +227,17 @@ scrumInCeres.run(['$rootScope', '$timeout', '$q', 'AuthService', 'MeService', 'A
     }
   );
 
+  Module.query(
+    function(response) {
+      $rootScope.modules = response;
+      $rootScope.modulesNames = {};
+      _.forEach($rootScope.modules, function(module) {
+        $rootScope.modulesNames[module.id] = module.name;
+      });
+    }
+  );
+
+
   Epic.query(
     function(response) {
       $rootScope.epics = response;
@@ -237,15 +248,9 @@ scrumInCeres.run(['$rootScope', '$timeout', '$q', 'AuthService', 'MeService', 'A
     }
   );
 
-  Module.query(
-    function(response) {
-      $rootScope.modules = response;
-      $rootScope.modulesNames = {};
-      _.forEach($rootScope.modules, function(module) {
-        $rootScope.modulesNames[module.id] = module.name;
-      });
-    }
-  );
+  $rootScope.selectingEpicModule = function(module) {
+
+  };
 
   $rootScope.toggleFilterTimeline = function() {
     $rootScope.boardControlPanelButtonActive = !$rootScope.boardControlPanelButtonActive;
