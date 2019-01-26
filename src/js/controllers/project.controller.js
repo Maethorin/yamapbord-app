@@ -14,7 +14,7 @@ scrumInCeresControllers.controller('ProjectController', ['$rootScope', '$scope',
   $scope.selectedProject = null;
   $scope.selectedProjectOpened = false;
   $scope.projects = [];
-
+  $scope.storyItemsSortableOptions = { containerPositioning: 'relative' };
   function loading() {
     Project.query(
       function(projects) {

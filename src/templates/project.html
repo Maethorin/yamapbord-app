@@ -107,8 +107,8 @@
                         Tasks
                         <button ng-if="story.currentTab === 0" type="button" class="btn btn-success btn-sm btn-save-task" ng-click="saveStoryTasks(story)"><i class="fa fa-save"></i></button>
                       </uib-tab-heading>
-                      <ul class="list-group story-tasks" as-sortable ng-model="story.tasks">
-                        <li class="list-group-item" ng-class="{'list-group-item-success': task.complete, 'list-group-item-warning': !task.complete }" ng-repeat="task in story.tasks" ng-click="toggleEditStoryTask(task)" as-sortable-item>
+                      <ul class="list-group story-tasks" as-sortable="storyItemsSortableOptions" ng-model="story.tasks">
+                        <li class="list-group-item" ng-repeat="task in story.tasks" ng-click="toggleEditStoryTask(task)" as-sortable-item>
                           <div as-sortable-item-handle>
                             <i class="fa fa-fw" ng-class="{'fa-square-o': !task.complete, 'fa-check-square-o': task.complete}"></i>
                             <input type="text" ng-model="task.task" ng-show="task.editing" focus-me="task.editing" ng-blur="toggleEditStoryTask(task)" ng-keypress="toggleEditStoryTask(task, $event)"/>
