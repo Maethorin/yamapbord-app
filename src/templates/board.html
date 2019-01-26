@@ -166,8 +166,8 @@
                   <button type="button" class="btn btn-default btn-xs btn-remove-item" ng-if="!storyComment.editing" ng-click="removeStoryComment(selectedStory, $index)"><i class="fa fa-trash"></i></button>
                 </li>
                 <li class="new-item list-group-item" ng-show="newCommentVisible">
-                  <textarea ng-model="newComment.comment" class="form-control comment-textarea" rows="3" ng-show="newCommentType === 'comment'" focus-me="newCommentType === 'comment'" ng-blur="blurInputCommentFiled($event, selectedStory)"></textarea>
-                  <input ng-model="newComment.link" ng-show="newCommentType === 'link'" focus-me="newCommentType === 'link'" ng-blur="blurInputCommentFiled($event, selectedStory)" />
+                  <textarea ng-model="newComment.comment" class="form-control comment-textarea" rows="3" ng-show="newCommentType === 'comment'" focus-me="newCommentType === 'comment'" ng-blur="blurInputCommentField($event, selectedStory)"></textarea>
+                  <input ng-model="newComment.link" ng-show="newCommentType === 'link'" focus-me="newCommentType === 'link'" ng-blur="blurInputCommentField($event, selectedStory)" />
                   <div class="new-attachment" ng-show="newCommentType === 'file'">
                     <div class="col-md-2">
                       <input type="file" ngf-select focus-me="newCommentType === 'file'" ng-model="newComment.file" name="commentFile" accept="image/*" ngf-max-size="3MB">
@@ -205,7 +205,7 @@
                 </li>
                 <li class="new-item list-group-item" ng-click="addingMergeRequestToStory()">
                   <span ng-show="!newMergeRequestVisible">Add a merge request</span>
-                  <input ng-model="newMergeRequest.url" ng-show="newMergeRequestVisible" focus-me="newMergeRequestVisible" ng-blur="blurInputMergeRequestFiled($event, selectedStory)"/>
+                  <input ng-model="newMergeRequest.url" ng-show="newMergeRequestVisible" focus-me="newMergeRequestVisible" ng-blur="blurInputMergeRequestField($event, selectedStory)"/>
                   <button type="button" class="btn btn-primary btn-xs btn-add-item" ng-show="newMergeRequestVisible" ng-click="addMergeRequestToStory($event, selectedStory)">Add</button>
                   <button type="button" class="btn btn-default btn-xs btn-remove-item" ng-show="newMergeRequestVisible" ng-click="cancelAddMergeRequestToStory($event)"><i class="fa fa-close"></i></button>
                 </li>

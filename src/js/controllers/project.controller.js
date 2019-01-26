@@ -134,19 +134,39 @@ scrumInCeresControllers.controller('ProjectController', ['$rootScope', '$scope',
     delete storyToSend.isLoaded;
     delete storyToSend.currentTab;
     delete storyToSend.newTaskVisible;
-
-    ProjectStory.update(
-      {projectId: $scope.selectedProject.id, storyId: story.id},
-      storyToSend,
-      function() {
-        delete story.updating;
-        Notifier.success('Story saved!')
-      },
-      function(error) {
-        Alert.randomErrorMessage(error);
-        delete story.updating;
-      }
-    );
+    delete storyToSend.newDefinitionVisible;
+    delete storyToSend.newCommentVisible;
+    delete storyToSend.newCommentType;
+    delete storyToSend.newMergeRequestVisible;
+    if (story.id) {
+      ProjectStory.update(
+        {projectId: $scope.selectedProject.id, storyId: story.id},
+        storyToSend,
+        function() {
+          delete story.updating;
+          Notifier.success('Story saved!')
+        },
+        function(error) {
+          Alert.randomErrorMessage(error);
+          delete story.updating;
+        }
+      );
+    }
+    else {
+      ProjectStory.save(
+        {projectId: $scope.selectedProject.id},
+        storyToSend,
+        function(result) {
+          story.id = result.id;
+          delete story.updating;
+          Notifier.success('Story saved!')
+        },
+        function(error) {
+          Alert.randomErrorMessage(error);
+          delete story.updating;
+        }
+      );
+    }
   };
 
   $scope.selectStory = function(story) {
@@ -161,8 +181,19 @@ scrumInCeresControllers.controller('ProjectController', ['$rootScope', '$scope',
       function(result) {
         story.isOpen = true;
         story.isLoaded = true;
-        story.currentTab = 0;
+        story.currentTab = story.currentTab ? story.currentTab : 0;
         story.newTaskVisible = false;
+        story.newDefinitionVisible = false;
+        story.newCommentVisible = false;
+        story.newCommentType = null;
+        story.newMergeRequestVisible = false;
+        story.name = result.name;
+        story.statement = result.statement;
+        story.type = result.type;
+        story.typeName = result.typeName;
+        story.points = result.points;
+        story.valuePoints = result.valuePoints;
+
         delete story.loading;
         StoryService.turnCompactStoryAsComplete(story, result);
       }
@@ -190,6 +221,22 @@ scrumInCeresControllers.controller('ProjectController', ['$rootScope', '$scope',
     );
   };
 
+  $scope.saveStoryDefinitions = function(story) {
+    Notifier.warning('Saving definitions...');
+    story.updating = true;
+    ProjectStory.update(
+      {projectId: $scope.selectedProject.id, storyId: story.id},
+      {'definitionOfDone': story.definitionOfDone},
+      function() {
+        delete story.updating;
+        Notifier.success('Definitions saved!')
+      },
+      function(error) {
+        Alert.randomErrorMessage(error);
+        delete story.updating;
+      }
+    );
+  };
   $scope.addStoryToSelectedProject = function(story) {
     if (_.find($scope.selectedProject.stories, {id: story.id})) {
       return false;
@@ -213,7 +260,16 @@ scrumInCeresControllers.controller('ProjectController', ['$rootScope', '$scope',
   };
 
   $scope.addNewStoryToSelectedProject = function() {
-    $scope.addNewStory({project: $scope.selectedProject});
+    var story = $scope.addNewStory({project: $scope.selectedProject}, true);
+    story.isOpen = true;
+    story.isLoaded = true;
+    story.currentTab = 0;
+    story.newTaskVisible = false;
+    story.newDefinitionVisible = false;
+    story.newCommentVisible = false;
+    story.newCommentType = null;
+    story.newMergeRequestVisible = false;
+    $scope.selectedProject.stories.unshift(story);
   };
 
   $scope.removeStoryFromSelectedProject = function(story) {

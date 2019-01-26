@@ -288,7 +288,7 @@ scrumInCeresServices.service('StoryService', ['$rootScope', '$q', '$timeout', 'A
     $scope.scrollMergeRequestOptions = {scrollX: 'none', scrollY: 'right', preventWheelEvents: false, preventKeyEvents: false};
     $scope.saveAndClose = false;
 
-    $scope.addNewStory = function(data) {
+    $scope.addNewStory = function(data, forProject) {
       $scope.addingNewStory = true;
       $scope.selectedStory = {
         definitionOfDone: [],
@@ -300,6 +300,7 @@ scrumInCeresServices.service('StoryService', ['$rootScope', '$q', '$timeout', 'A
         module: null,
         epic: null,
         status: 'PLAN',
+        statusName: 'Planned',
         tasks: [],
         comments: [],
         mergeRequests: [],
@@ -315,7 +316,7 @@ scrumInCeresServices.service('StoryService', ['$rootScope', '$q', '$timeout', 'A
           $scope.selectedStory.sprintId = data.iteration.id;
         }
         if (data.project) {
-          $scope.selectedStory.project = data.project;
+          $scope.selectedStory.project = {id: data.project.id};
         }
         if (data.module) {
           $scope.selectedStory.module = data.module;
@@ -326,6 +327,9 @@ scrumInCeresServices.service('StoryService', ['$rootScope', '$q', '$timeout', 'A
         if (data.type) {
           $scope.selectedStory.type = data.type;
         }
+      }
+      if (forProject) {
+        return $scope.selectedStory;
       }
       $scope.completeStoryPopupOpened = true;
       $rootScope.lateralMenuOpen = false;
@@ -485,14 +489,29 @@ scrumInCeresServices.service('StoryService', ['$rootScope', '$q', '$timeout', 'A
       story.tasks.splice($index, 1);
     };
 
-    $scope.addingDefinitionToStory = function() {
+    $scope.addingDefinitionToStory = function(story) {
+      if (story) {
+        story.newDefinitionVisible = true;
+      }
       $scope.newDefinitionVisible = true;
     };
 
-    $scope.cancelAddDefinitionToStory = function($event) {
+    $scope.cancelAddDefinitionToStory = function($event, story) {
+      if (story) {
+        story.newDefinitionVisible = false;
+      }
       $scope.newDefinitionVisible = false;
       $scope.newDefinition = {definition: null};
       $event.stopPropagation();
+    };
+
+    $scope.blurInputDefinitionField = function($event, selectedStory) {
+      $timeout(
+        function() {
+          $scope.addDefinitionToStory($event, selectedStory);
+        },
+        150
+      );
     };
 
     $scope.addDefinitionToStory = function($event, story) {
@@ -500,6 +519,7 @@ scrumInCeresServices.service('StoryService', ['$rootScope', '$q', '$timeout', 'A
         return false;
       }
       story.definitionOfDone.push({definition: $scope.newDefinition.definition, done: false});
+      story.newDefinitionVisible = false;
       $scope.newDefinitionVisible = false;
       $scope.newDefinition = {definition: null};
       $event.stopPropagation();
@@ -509,13 +529,20 @@ scrumInCeresServices.service('StoryService', ['$rootScope', '$q', '$timeout', 'A
       story.definitionOfDone.splice($index, 1);
     };
 
-    $scope.addingCommentToStory = function(type) {
+    $scope.addingCommentToStory = function(type, story) {
+      if (story) {
+        story.newCommentVisible = true;
+        story.newCommentType = type;
+      }
       $scope.newCommentVisible = true;
       $scope.newCommentType = type;
       $scope.theButtonWasCliked = false;
     };
 
-    $scope.cancelAddCommentToStory = function($event) {
+    $scope.cancelAddCommentToStory = function($event, story) {
+      if (story) {
+        story.newCommentVisible = false;
+      }
       $scope.theButtonWasCliked = true;
       $scope.newCommentVisible = false;
       $scope.newCommentType = null;
@@ -523,7 +550,7 @@ scrumInCeresServices.service('StoryService', ['$rootScope', '$q', '$timeout', 'A
       $event.stopPropagation();
     };
 
-    $scope.blurInputCommentFiled = function($event, selectedStory) {
+    $scope.blurInputCommentField = function($event, selectedStory) {
       $timeout(
         function() {
           if (!$scope.theButtonWasCliked) {
@@ -552,6 +579,8 @@ scrumInCeresServices.service('StoryService', ['$rootScope', '$q', '$timeout', 'A
         creator: {name: $rootScope.loggedUser.name},
         createdAt: moment().format('YYYY-MM-DD HH:mm')
       });
+      story.newCommentVisible = false;
+      story.newCommentType = null;
       $scope.newCommentVisible = false;
       $scope.newCommentType = null;
       $scope.newComment = {comment: null, file: null, link: null, creator: null, createdAt: null};
@@ -572,7 +601,7 @@ scrumInCeresServices.service('StoryService', ['$rootScope', '$q', '$timeout', 'A
       $event.stopPropagation();
     };
 
-    $scope.blurInputMergeRequestFiled = function($event, selectedStory) {
+    $scope.blurInputMergeRequestField = function($event, selectedStory) {
       $timeout(
         function() {
           $scope.addMergeRequestToStory($event, selectedStory);

@@ -106,7 +106,7 @@
               </li>
               <li class="new-item list-group-item" ng-click="addingCommentToStory()">
                 <span ng-show="!newCommentVisible">Add a comment</span>
-                <textarea ng-model="newComment.comment" rows="3" ng-show="newCommentVisible" focus-me="newCommentVisible" ng-blur="blurInputCommentFiled($event, selectedStory)"></textarea>
+                <textarea ng-model="newComment.comment" rows="3" ng-show="newCommentVisible" focus-me="newCommentVisible" ng-blur="blurInputCommentField($event, selectedStory)"></textarea>
                 <button type="button" class="btn btn-primary btn-xs btn-add-item" ng-show="newCommentVisible" ng-click="addCommentToStory($event, selectedStory)">Add</button>
                 <button type="button" class="btn btn-default btn-xs btn-remove-item" ng-show="newCommentVisible" ng-click="cancelAddCommentToStory($event)"><i class="fa fa-close"></i></button>
               </li>

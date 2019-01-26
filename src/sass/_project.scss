@@ -233,7 +233,7 @@
                       background-color: transparent;
                     }
                   }
-                  .btn-save-task, .btn-remove-task, .btn-add-task {
+                  .btn-save-task, .btn-remove-task, .btn-add-task, .btn-remove-comment, .btn-add-comment {
                     padding: 0 3px;
                     line-height: 14px;
                     border-radius: 2px;
@@ -247,9 +247,77 @@
                 padding: 0;
                 .tab-pane {
                   padding: 0;
+                  .fab-story-comments {
+                    position: relative;
+                    width: 110px;
+                    top: -28px;
+                    left: 320px;
+                    .md-fab-toolbar-wrapper {
+                      height: 27px;
+                      md-toolbar {
+                        min-height: 27px;
+                        .md-toolbar-tools {
+                          height: 27px;
+                          min-height: 27px;
+                          .md-fab-action-item {
+                            padding: 0;
+                            width: 23px;
+                            button {
+                              margin: -5px 0 0;
+                              width: 21px;
+                              min-height: 24px;
+                              height: 24px;
+                              padding: 0;
+                              md-icon {
+                                font-size: 15px;
+                              }
+                              .md-ripple-container {
+                                padding: 0;
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                    .md-button {
+                      &.md-fab {
+                        &.md-mini {
+                          width: 20px;
+                          height: 20px;
+                          min-height: 20px;
+                          md-icon {
+                            line-height: 20px;
+                            font-size: 10px;
+                            min-width: 20px;
+                            min-height: 20px;
+                            width: 20px;
+                            height: 20px;
+                            left: -6px;
+                          }
+                        }
+                      }
+                    }
+                  }
+
                   .list-group {
                     background-color: transparent;
                     padding: 0;
+                    min-height: 80px;
+                    &.story-comments {
+                      margin-top: -20px;
+                      .comment-textarea {
+                        background-color: transparent;
+                        border-radius: 2px;
+                      }
+                      .comment-details {
+                        font-size: 12px;
+                      }
+                      .with-break-lines {
+                        a {
+                          text-transform: none;
+                        }
+                      }
+                    }
                     .as-sortable-placeholder {
                       background-color: #FFF;
                       border-radius: 6px;
@@ -265,7 +333,7 @@
                         margin-right: 0;
                         vertical-align: middle;
                       }
-                      .btn-remove-task, .btn-add-task {
+                      .btn-remove-task, .btn-add-task, .btn-remove-comment, .btn-add-comment {
                         float: right;
                         margin-top: 2px;
                         padding: 1px;
@@ -318,7 +386,7 @@
   }
 }
 
-.story-tasks {
+.story-tasks, .story-definitions {
   &.as-sortable-dragging {
     &.list-group {
       background-color: transparent;
