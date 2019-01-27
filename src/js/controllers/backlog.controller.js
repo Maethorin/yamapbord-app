@@ -54,6 +54,7 @@ scrumInCeresControllers.controller('BacklogController', ['$rootScope', '$scope',
       statement: ''
     };
   };
+
   $scope.clearStoryFilter();
 
   $scope.storyFilterComparator = function(actual, expected) {

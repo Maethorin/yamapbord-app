@@ -7,14 +7,22 @@ scrumInCeresControllers.controller('ProjectController', ['$rootScope', '$scope',
   Alert.loading();
 
   $scope.search = {
-    project: {name: '', description: ''},
-    story: {name: '', statement: ''}
+    project: {name: '', description: ''}
+  };
+
+  $scope.porraAngular = {storyFilterIteration: null, moduleAcronym: ''};
+
+  $scope.storyFilter = {
+    name: '',
+    statement: ''
   };
 
   $scope.selectedProject = null;
   $scope.selectedProjectOpened = false;
   $scope.projects = [];
   $scope.storyItemsSortableOptions = { containerPositioning: 'relative' };
+  $scope.newStories = [];
+
   function loading() {
     Project.query(
       function(projects) {
@@ -129,16 +137,43 @@ scrumInCeresControllers.controller('ProjectController', ['$rootScope', '$scope',
     $scope.selectedProjectOpened = false;
   };
 
+  $scope.selectStory = function(story) {
+    if (story.isLoaded) {
+      story.isOpen = !story.isOpen;
+      return;
+    }
+    story.loading = true;
+    ProjectStory.get(
+      {projectId: $scope.selectedProject.id, storyId: story.id},
+
+      function(result) {
+        story.isOpen = true;
+        story.isLoaded = true;
+        story.currentTab = story.currentTab ? story.currentTab : 0;
+        story.newTaskVisible = false;
+        story.newDefinitionVisible = false;
+        story.newCommentVisible = false;
+        story.newCommentType = null;
+        story.newMergeRequestVisible = false;
+        story.name = result.name;
+        story.statement = result.statement;
+        story.type = result.type;
+        story.typeName = result.typeName;
+        story.points = result.points;
+        story.valuePoints = result.valuePoints;
+
+        delete story.loading;
+        StoryService.turnCompactStoryAsComplete(story, result);
+      }
+    )
+  };
+
   $scope.undoStoryChanges = function(story) {
     story.isLoaded = false;
     $scope.selectStory(story);
   };
 
-  $scope.cancelNewStory = function($index) {
-    $scope.selectedProject.stories.splice($index, 1);
-  };
-
-  $scope.saveStory = function(story) {
+  $scope.saveStory = function(story, $index) {
     Notifier.warning('Saving story...');
     var storyToSend = _.cloneDeep(story);
     story.updating = true;
@@ -171,6 +206,8 @@ scrumInCeresControllers.controller('ProjectController', ['$rootScope', '$scope',
         function(result) {
           story.id = result.id;
           delete story.updating;
+          $scope.selectedProject.stories.push(story);
+          $scope.newStories.splice($index, 1);
           Notifier.success('Story saved!')
         },
         function(error) {
@@ -181,35 +218,39 @@ scrumInCeresControllers.controller('ProjectController', ['$rootScope', '$scope',
     }
   };
 
-  $scope.selectStory = function(story) {
-    if (story.isLoaded) {
-      story.isOpen = !story.isOpen;
-      return;
+  $scope.openStoryFilter = function() {
+    $scope.storyFilterIsOpen = !$scope.storyFilterIsOpen;
+  };
+
+  $scope.setIterationStoryFilter = function() {
+    delete $scope.storyFilter.sprintId;
+    delete $scope.storyFilter.kanbanId;
+    console.log = $scope.porraAngular.storyFilterIteration;
+    if ($scope.porraAngular.storyFilterIteration === 'icebox') {
+      $scope.storyFilter.sprintId = null;
+      $scope.storyFilter.kanbanId = null;
     }
-    story.loading = true;
-    ProjectStory.get(
-      {projectId: $scope.selectedProject.id, storyId: story.id},
+    if ($scope.porraAngular.storyFilterIteration === 'sprint') {
+      $scope.storyFilter.sprintId = '';
+      $scope.storyFilter.kanbanId = null;
+    }
+    if ($scope.porraAngular.storyFilterIteration === 'kanban') {
+      $scope.storyFilter.sprintId = null;
+      $scope.storyFilter.kanbanId = '';
+    }
+  };
 
-      function(result) {
-        story.isOpen = true;
-        story.isLoaded = true;
-        story.currentTab = story.currentTab ? story.currentTab : 0;
-        story.newTaskVisible = false;
-        story.newDefinitionVisible = false;
-        story.newCommentVisible = false;
-        story.newCommentType = null;
-        story.newMergeRequestVisible = false;
-        story.name = result.name;
-        story.statement = result.statement;
-        story.type = result.type;
-        story.typeName = result.typeName;
-        story.points = result.points;
-        story.valuePoints = result.valuePoints;
+  $scope.selectModuleStoryFilter = function() {
+    $scope.porraAngular.moduleAcronym = $rootScope.modulesNames[$scope.storyFilter.moduleId];
+  };
 
-        delete story.loading;
-        StoryService.turnCompactStoryAsComplete(story, result);
-      }
-    )
+  $scope.clearStoryFilter = function() {
+    $scope.porraAngular = {storyFilterIteration: null, moduleAcronym: ''};
+
+    $scope.storyFilter = {
+      name: '',
+      statement: ''
+    };
   };
 
   $scope.changeStoryTab = function(story, tabIndex) {
@@ -249,6 +290,7 @@ scrumInCeresControllers.controller('ProjectController', ['$rootScope', '$scope',
       }
     );
   };
+
   $scope.addStoryToSelectedProject = function(story) {
     if (_.find($scope.selectedProject.stories, {id: story.id})) {
       return false;
@@ -276,16 +318,20 @@ scrumInCeresControllers.controller('ProjectController', ['$rootScope', '$scope',
   };
 
   $scope.addNewStoryToSelectedProject = function(storyType) {
-    var story = $scope.addNewStory({project: $scope.selectedProject, type: storyType}, true);
-    story.isOpen = true;
-    story.isLoaded = true;
-    story.currentTab = 0;
-    story.newTaskVisible = false;
-    story.newDefinitionVisible = false;
-    story.newCommentVisible = false;
-    story.newCommentType = null;
-    story.newMergeRequestVisible = false;
-    $scope.selectedProject.stories.unshift(story);
+    var newStory = $scope.addNewStory({project: $scope.selectedProject, type: storyType}, true);
+    newStory.isOpen = true;
+    newStory.isLoaded = true;
+    newStory.currentTab = 0;
+    newStory.newTaskVisible = false;
+    newStory.newDefinitionVisible = false;
+    newStory.newCommentVisible = false;
+    newStory.newCommentType = null;
+    newStory.newMergeRequestVisible = false;
+    $scope.newStories.unshift(newStory);
+  };
+
+  $scope.cancelNewStory = function($index) {
+    $scope.newStories.splice($index, 1);
   };
 
   $scope.removeStoryFromSelectedProject = function(story) {

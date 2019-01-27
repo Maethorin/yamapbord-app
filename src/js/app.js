@@ -213,6 +213,16 @@ scrumInCeres.run(['$rootScope', '$timeout', '$q', 'AuthService', 'MeService', 'A
     {code: 'CHO', name: 'Chore'},
     {code: 'TEC', name: 'Technical'}
   ];
+  $rootScope.storyStatus = [
+    {code: "PLAN", name: 'Planned'},
+    {code: "STAR", name: 'Started'},
+    {code: "FINI", name: 'Finished'},
+    {code: "ITST", name: 'In Test'},
+    {code: "RTDP", name: 'Ready to Deploy'},
+    {code: "DPYD", name: 'Deployed'},
+    {code: "ACCP", name: 'Accepted'},
+    {code: "REJE", name: 'Rejected'}
+  ];
 
   $rootScope.itemsView = {mode: 'list'};
   $rootScope.requesters = [];
@@ -247,10 +257,6 @@ scrumInCeres.run(['$rootScope', '$timeout', '$q', 'AuthService', 'MeService', 'A
       });
     }
   );
-
-  $rootScope.selectingEpicModule = function(module) {
-
-  };
 
   $rootScope.toggleFilterTimeline = function() {
     $rootScope.boardControlPanelButtonActive = !$rootScope.boardControlPanelButtonActive;

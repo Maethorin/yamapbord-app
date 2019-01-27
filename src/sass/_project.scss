@@ -208,7 +208,7 @@
                   float: right;
                   label {
                     &.btn-xs {
-                      padding: 2px 3px;
+                      padding: 2px;
                       font-size: 11px;
                       font-family: Open Sans,open-sans,EmojiFontFace,helvetica,arial,sans-serif;
                       &.active {
@@ -232,11 +232,14 @@
                   float: right;
                   margin: 0;
                   &.with-select {
-                    width: 100px;
-                    &.with-module {
+                    padding: 0;
+                    &.with-story-type, &.with-story-status, &.with-requester {
+                      width: 67%;
+                    }
+                    &.with-module, &.with-iteration-filter {
                       width: 73%;
                     }
-                    &.with-epic, &.with-requester {
+                    &.with-epic {
                       width: 82%;
                       margin-left: 4px;
                     }
@@ -246,7 +249,7 @@
                       padding: 0 0 0 17px;
                       height: 22px;
                       background-position: 3px center;
-                      &.select-module, &.select-epic, &.select-requester {
+                      &.select-module, &.select-epic, &.select-requester, &.select-iteration-filter, &.select-story-status {
                         padding: 0;
                       }
                     }
@@ -400,7 +403,14 @@
             line-height: 18px;
             border-radius: 2px;
             border: 1px solid #CCC;
-            padding: 3px 5px;
+            padding: 0 5px;
+            background-color: #FFFAFA;
+            color: #666;
+          }
+          input {
+            &.form-control {
+              height: 24px;
+            }
           }
         }
       }
