@@ -65,6 +65,10 @@
     }
   }
 
+  .panel {
+    margin-bottom: 0;
+  }
+
   .panel-project {
     width: 30%;
     margin: 0 1%;
@@ -80,6 +84,9 @@
         background-color: #3e7298;
       }
       .stories-group-order {
+        &:hover {
+          background-color: transparent;
+        }
         .order-label, .group-label {
           font-family: Open Sans,open-sans,EmojiFontFace,helvetica,arial,sans-serif;
           color: $gray-light;
@@ -106,6 +113,9 @@
 
       .list-group-item {
         padding: 0;
+        &.stories-group-order {
+          padding: 3px 0;
+        }
         &.animate-story {
           &.ng-enter {
             transition: 0.5s linear all;
@@ -125,6 +135,47 @@
             opacity: 0;
           }
         }
+        &.no-story {
+          padding: 0 5px;
+          font-size: 12px;
+          color: #BBB;
+        }
+      }
+
+      .panel-module {
+        padding: 0;
+        .panel-heading {
+          &.module-heading, &.epic-heading {
+            color: $gray-lighter;
+            background-color: $gray-much-darker;
+            .module-chevron {
+              float: right;
+              display: inline-block;
+              margin-right: 5px;
+              margin-top: -2px;
+              color: $gray-light;
+              i {
+                font-size: 15px;
+              }
+            }
+          }
+          &.epic-heading {
+            background-color: $gray-darker;
+            font-size: 13px;
+          }
+          .grouped-total-stories {
+            font-size: smaller;
+            color: #777;
+          }
+        }
+        .panel-body {
+          padding: 0;
+          .panel-story {
+            .panel-body {
+              padding: 0 5px;
+            }
+          }
+        }
       }
       .panel-story {
         margin: 0;
@@ -133,6 +184,7 @@
           border-color: $gray-dark;
         }
         .panel-heading {
+          background-color: $gray-dark;
           .story-type {
             background-repeat: no-repeat;
             background-position: center left;
@@ -154,7 +206,7 @@
             }
           }
           .story-name {
-            font-size: 11px;
+            font-size: 12px;
             vertical-align: middle;
           }
           .story-chevron {
@@ -170,6 +222,7 @@
         }
         .panel-body {
           background-color: #f1f0ea;
+          padding: 0 5px;
           .form-story {
             padding: 5px 0;
             .statement-save {

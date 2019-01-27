@@ -12,9 +12,9 @@ scrumInCeresDirectives.directive('storyFilterTotal', [function() {
         if (newValue === undefined) {
           return false
         }
-        scope.storyFilterText = "{filteredStories} of {totalStories} stories filtered".format(scope);
+        scope.storyFilterText = "Found {filteredStories} of {totalStories} stories".format(scope);
         if (scope.filteredStories === scope.totalStories) {
-          scope.storyFilterText = 'No stories filtered of {totalStories} total'.format(scope);
+          scope.storyFilterText = 'Showing all {totalStories} stories'.format(scope);
         }
         if (scope.filteredStories === 0) {
           scope.storyFilterText = "No stories found for filter";
