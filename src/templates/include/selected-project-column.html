@@ -1,0 +1,729 @@
+<div class="panel panel-default panel-project" ng-controller="SelectedProjectController">
+  <div class="panel-heading">
+
+    <span>Stories</span>
+
+    <div class="fab-story-container">
+        <md-fab-toolbar md-open="false" md-direction="left">
+          <md-fab-trigger class="align-with-text">
+            <md-button aria-label="menu" class="md-fab md-mini md-primary">
+              <md-icon md-font-icon="fa fa-plus"></md-icon>
+            </md-button>
+          </md-fab-trigger>
+
+          <md-toolbar>
+            <md-fab-actions class="md-toolbar-tools">
+              <md-button aria-label="from icebox" class="md-icon-button" ng-click="addingExistingStoryToSelectedProject()">
+                <md-icon md-font-icon="fa  fa-snowflake-o"></md-icon>
+              </md-button>
+              <md-button aria-label="comment" class="md-icon-button" ng-click="addNewStoryToSelectedProject('FEA')">
+                <md-icon md-font-icon="fa fa-star"></md-icon>
+              </md-button>
+              <md-button aria-label="label" class="md-icon-button" ng-click="addNewStoryToSelectedProject('TEC')">
+                <md-icon md-font-icon="fa fa-cog"></md-icon>
+              </md-button>
+              <md-button aria-label="photo" class="md-icon-button" ng-click="addNewStoryToSelectedProject('BUG')">
+                <md-icon md-font-icon="fa fa-bug"></md-icon>
+              </md-button>
+              <md-button aria-label="photo" class="md-icon-button" ng-click="addNewStoryToSelectedProject('CHO')">
+                <md-icon md-font-icon="fa fa-flag"></md-icon>
+              </md-button>
+            </md-fab-actions>
+          </md-toolbar>
+        </md-fab-toolbar>
+      </div>
+  </div>
+  <ul class="list-group project-stories-list">
+    <li class="list-group-item stories-group-order">
+      <div class="col-sm-6">
+        <span class="order-label">ORDER BY</span>
+        <div class="form-group order-form-group">
+          <select ng-model="porraAngular.orderStoryBy" class="form-control select-story-order">
+            <option value="">No Order</option>
+            <option value="name">Name</option>
+            <option value="statement">Statement</option>
+            <option value="+createdAt">Created At ASC</option>
+            <option value="-createdAt">Created At DESC</option>
+          </select>
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <span class="group-label">GROUP BY</span>
+        <div class="form-group group-form-group">
+          <select ng-model="porraAngular.groupStoryBy" class="form-control select-story-group">
+            <option value="">No Group</option>
+            <option value="requester">Requester</option>
+            <option value="module">Module</option>
+            <option value="module-epic">Module and Epic</option>
+            <option value="type">Type</option>
+            <option value="status">Status</option>
+          </select>
+        </div>
+      </div>
+    </li>
+    <li class="list-group-item story-filters" ng-if="selectedProject.stories.length">
+      <div class="panel panel-default panel-story">
+        <div class="panel-heading">
+          <span><i class="fa fa-filter"></i> Filters: <story-filter-total total-stories="selectedProject.stories.length" filtered-stories="storiesFiltered.length"></story-filter-total></span>
+          <span ng-click="openStoryFilter()" class="story-chevron">
+            <i class="fa" ng-class="{'fa-chevron-up': storyFilterIsOpen, 'fa-chevron-down': !storyFilterIsOpen}"></i>
+          </span>
+        </div>
+        <div class="panel-body" uib-collapse="!storyFilterIsOpen">
+          <form name="formStory" class="form-story">
+            <section class="statement-save">
+              <div class="form-group col-sm-5">
+                <input placeholder="Name" ng-model="storyFilter.name" class="form-control" />
+              </div>
+              <div class="form-group col-sm-5">
+                <input placeholder="Statement" ng-model="storyFilter.statement" class="form-control" />
+              </div>
+              <div class="col-sm-2">
+                <button class="btn btn-xs btn-warning" type="button" ng-click="clearStoryFilter()"><i class="fa fa-refresh"></i></button>
+              </div>
+            </section>
+            <ul class="list-group story-iterations">
+              <li class="list-group-item">
+                <span class="form-story-label">ITERATION</span>
+                <div class="form-group with-select with-iteration-filter">
+                  <select ng-model="porraAngular.storyFilterIteration" class="form-control select-iteration-filter" ng-change="setIterationStoryFilter()">
+                    <option value="">-- All --</option>
+                    <option value="icebox">-- In Icebox --</option>
+                    <option value="sprint">-- In Sprint --</option>
+                    <option value="kanban">-- In Kanban --</option>
+                  </select>
+                </div>
+              </li>
+            </ul>
+            <ul class="list-group col-sm-6">
+              <li class="list-group-item">
+                <span class="form-story-label">MODULE</span>
+                <div class="form-group with-select with-module">
+                  <select ng-model="storyFilter.moduleId" ng-change="selectModuleStoryFilter()" class="select-module form-control">
+                    <option value="">-- All --</option>
+                    <option value="{{module.id}}" ng-bind="module.acronym" ng-repeat="module in modules|orderBy:'acronym' track by module.id"></option>
+                  </select>
+                </div>
+              </li>
+              <li class="list-group-item">
+                <span class="form-story-label">STORY TYPE</span>
+                <div class="form-group with-select with-story-type">
+                  <select ng-model="storyFilter.type" class="select-story-type {{storyFilter.type | lowercase}} form-control">
+                    <option value="">-- All --</option>
+                    <option ng-value="type.code" ng-repeat="type in storyTypes" ng-bind="type.name"></option>
+                  </select>
+                </div>
+              </li>
+              <li class="list-group-item">
+                <span class="form-story-label">STORY POINTS</span>
+                <div class="project-story-points btn-group">
+                  <label class="btn btn-danger btn-xs" ng-model="storyFilter.points" ng-class="{'active': false}" uib-btn-radio="">X</label>
+                  <label class="btn btn-primary btn-xs points-null" ng-model="storyFilter.points" ng-class="{'active': storyFilter.points === null}" uib-btn-radio="null">N</label>
+                  <label class="btn btn-primary btn-xs points-{{point}}" ng-model="storyFilter.points" ng-class="{'active': point === storyFilter.points}" uib-btn-radio="point" ng-repeat="point in points" ng-bind="point"></label>
+                </div>
+              </li>
+              <li class="list-group-item">
+                <span class="form-story-label">VALUE POINTS</span>
+                <div class="project-story-points btn-group">
+                  <label class="btn btn-danger btn-xs" ng-model="storyFilter.valuePoints" ng-class="{'active': false}" uib-btn-radio="">X</label>
+                  <label class="btn btn-primary btn-xs points-null" ng-model="storyFilter.valuePoints" ng-class="{'active': storyFilter.valuePoints === null}" uib-btn-radio="null">N</label>
+                  <label class="btn btn-primary btn-xs points-{{point}}" ng-model="storyFilter.valuePoints" ng-class="{'active': point === storyFilter.valuePoints}" uib-btn-radio="point" ng-repeat="point in points" ng-bind="point"></label>
+                </div>
+              </li>
+            </ul>
+            <ul class="list-group col-sm-6">
+              <li class="list-group-item">
+                <span class="form-story-label">EPIC</span>
+                <div class="form-group with-select with-epic">
+                  <select ng-model="storyFilter.epicId" class="select-epic form-control">
+                    <option value="">-- All --</option>
+                    <option value="{{epic.id}}" ng-bind="epic.name" ng-repeat="epic in epics|orderBy:'name'|filter:{modules: porraAngular.moduleAcronym} track by epic.id"></option>
+                  </select>
+                </div>
+              </li>
+              <li class="list-group-item">
+                <span class="form-story-label">STATUS</span>
+                <div class="form-group with-select with-story-status">
+                  <select ng-model="storyFilter.status" class="select-story-status {{storyFilter.status | lowercase}} form-control">
+                    <option value="">-- All --</option>
+                    <option ng-value="status.code" ng-repeat="status in storyStatus" ng-bind="status.name"></option>
+                  </select>
+                </div>
+              </li>
+              <li class="list-group-item">
+                <span class="form-story-label">REQUESTER</span>
+                <div class="form-group with-select with-requester">
+                  <select ng-model="storyFilter.requesterId" class="select-requester form-control">
+                    <option value="">-- All --</option>
+                    <option value="{{requester.id}}" ng-bind="requester.name" ng-repeat="requester in requesters|orderBy:'name' track by requester.id"></option>
+                  </select>
+                </div>
+              </li>
+              <li class="list-group-item">
+                <span class="form-story-label">OWNER</span>
+                <div class="form-group with-select with-requester">
+                  <select ng-model="storyFilter.ownerId" class="select-requester form-control">
+                    <option value="">-- All --</option>
+                    <option value="{{owner.id}}" ng-bind="owner.name" ng-repeat="owner in requesters|orderBy:'name' track by owner.id"></option>
+                  </select>
+                </div>
+              </li>
+            </ul>
+          </form>
+        </div>
+      </div>
+    </li>
+    <li class="list-group-item" ng-if="!selectedProject.stories.length">
+      <md-progress-linear md-mode="query"></md-progress-linear>
+    </li>
+    <li class="list-group-item animate-story new-story" ng-repeat="newStory in newStories">
+      <div class="panel panel-default panel-story">
+        <div class="panel-heading" title="{{newStory.name}}">
+          <span class="story-type" ng-class="newStory.type | lowercase " title="{{newStory.typeName}}"></span>
+          <span class="story-name" ng-show="!newStory.isOpen" ng-bind="newStory.name|limitWithEllipsis:60"></span>
+          <input type="text" class="story-name" ng-show="newStory.isOpen" ng-model="newStory.name" />
+          <span ng-click="selectStory(newStory)" class="story-chevron">
+            <i class="fa" ng-class="{'fa-spinner fa-spin': newStory.loading, 'fa-chevron-up': newStory.isOpen, 'fa-chevron-down': !newStory.isOpen}"></i>
+          </span>
+        </div>
+        <div class="panel-body" uib-collapse="!newStory.isOpen">
+          <form name="formStory" class="form-story">
+            <section class="statement-save">
+              <div class="form-group col-sm-11">
+                <textarea name="storyStatement" id="newStoryStatement" placeholder="Statement" required ng-model="newStory.statement" rows="3" class="form-control"></textarea>
+              </div>
+              <div class="col-sm-1">
+                <button class="btn btn-xs btn-success" type="button" title="Save new story" ng-click="saveStory(newStory, $index)"><i class="fa fa-save"></i></button>
+                <button class="btn btn-xs btn-danger" type="button" title="Cancel new story" ng-click="cancelNewStory($index)"><i class="fa fa-close"></i></button>
+              </div>
+            </section>
+            <ul class="list-group story-iterations">
+              <li class="list-group-item" ng-if="!newStory.sprint && !newStory.kanban">
+                <span class="form-story-label">NO ITERATION:</span> <span class="project-story-iteration">Story in Icebox (brrrr... it's freeeeezing!)</span>
+              </li>
+              <li class="list-group-item" ng-if="newStory.sprint">
+                <span class="form-story-label">SPRINT:</span> <span class="project-story-iteration" ng-bind="newStory.sprint.name"></span>
+              </li>
+              <li class="list-group-item" ng-if="newStory.kanban">
+                <span class="form-story-label">KANBAN:</span> <span class="project-story-iteration" ng-bind="newStory.kanban.name"></span>
+              </li>
+            </ul>
+            <section class="story-details">
+              <ul class="list-group col-sm-6">
+                <li class="list-group-item">
+                  <span class="form-story-label">MODULE</span>
+                  <div class="form-group with-select with-module">
+                    <select ng-model="newStory.module" required class="select-module form-control" ng-options="module.acronym for module in modules|orderBy:'acronym' track by module.id">
+                      <option value="">-- Module --</option>
+                    </select>
+                  </div>
+                </li>
+                <li class="list-group-item">
+                  <span class="form-story-label">STORY TYPE</span>
+                  <div class="form-group with-select">
+                    <select ng-model="newStory.type" required class="select-story-type {{newStory.type | lowercase}} form-control">
+                      <option value="">-- choose --</option>
+                      <option ng-value="type.code" ng-repeat="type in storyTypes" ng-bind="type.name"></option>
+                    </select>
+                  </div>
+                </li>
+                <li class="list-group-item">
+                  <span class="form-story-label">STORY POINTS</span>
+                  <div class="project-story-points btn-group">
+                    <label class="btn btn-primary btn-xs points-null" ng-model="newStory.points" ng-class="{'active': !newStory.points && newStory.points != 0}" uib-btn-radio="null">N</label>
+                    <label class="btn btn-primary btn-xs points-{{point}}" ng-model="newStory.points" ng-class="{'active': point == newStory.points}" uib-btn-radio="point" ng-repeat="point in points" ng-bind="point"></label>
+                  </div>
+                </li>
+                <li class="list-group-item">
+                  <span class="form-story-label">VALUE POINTS</span>
+                  <div class="project-story-points btn-group">
+                    <label class="btn btn-primary btn-xs points-null" ng-model="newStory.valuePoints" ng-class="{'active': !newStory.valuePoints && newStory.valuePoints != 0}" uib-btn-radio="null">N</label>
+                    <label class="btn btn-primary btn-xs points-{{point}}" ng-model="newStory.valuePoints" ng-class="{'active': point == newStory.valuePoints}" uib-btn-radio="point" ng-repeat="point in points" ng-bind="point"></label>
+                  </div>
+                </li>
+              </ul>
+              <ul class="list-group col-sm-6">
+                <li class="list-group-item">
+                  <span class="form-story-label">EPIC</span>
+                  <div class="form-group with-select with-epic">
+                    <select ng-model="newStory.epic" required class="select-epic form-control" ng-options="epic.name for epic in epics|orderBy:'name'|filter:{modules: newStory.module.acronym} track by epic.id">
+                      <option value="">-- Epic --</option>
+                    </select>
+                  </div>
+                </li>
+                <li class="list-group-item">
+                  <span class="form-story-label">STATUS</span>
+                  <div class="project-story-status">
+                    <span class="story-status" ng-class="newStory.status | lowercase" ng-bind="newStory.statusName"></span>
+                  </div>
+                </li>
+                <li class="list-group-item">
+                  <span class="form-story-label">REQUESTER</span>
+                  <div class="story-requester">
+                    <span class="story-requester-name-initials" ng-bind="getNameInitials(newStory.requester.name)"></span>
+                    <div class="form-group with-select with-requester">
+                      <select ng-model="newStory.requester" required class="select-requester form-control" ng-options="requester.name for requester in requesters|orderBy:'name' track by requester.id">
+                        <option value="">-- Requester --</option>
+                      </select>
+                    </div>
+                  </div>
+                </li>
+                <li class="list-group-item">
+                  <span class="form-story-label">OWNER</span>
+                  <div class="story-owner">
+                    <span class="story-owner-name-initials" ng-bind="getNameInitials(newStory.owner.name)"></span>
+                    <span class="story-owner-name" ng-bind="newStory.owner.name"></span>
+                  </div>
+                </li>
+              </ul>
+            </section>
+            <section class="story-tabs">
+              <uib-tabset>
+                <uib-tab index="0" select="changeStoryTab(newStory, 0)">
+                  <uib-tab-heading>
+                    Tasks
+                  </uib-tab-heading>
+                  <ul class="list-group story-tasks" as-sortable="storyItemsSortableOptions" ng-model="newStory.tasks">
+                    <li class="list-group-item" ng-repeat="task in newStory.tasks" ng-click="toggleEditStoryTask(task)" as-sortable-item>
+                      <div as-sortable-item-handle>
+                        <i class="fa fa-fw" ng-class="{'fa-square-o': !task.complete, 'fa-check-square-o': task.complete}"></i>
+                        <input type="text" ng-model="task.task" ng-show="task.editing" focus-me="task.editing" ng-blur="toggleEditStoryTask(task)" ng-keypress="toggleEditStoryTask(task, $event)"/>
+                        <span ng-bind="task.task|limitWithEllipsis:60" ng-if="!task.editing" title="{{task.task}}"></span>
+                        <button type="button" class="btn btn-danger btn-xs btn-remove-task" ng-if="!task.editing" ng-click="removeStoryTask(newStory, $index)"><i class="fa fa-trash"></i></button>
+                      </div>
+                    </li>
+                    <li class="new-item list-group-item" ng-click="addingTaskToStory(newStory)">
+                      <span class="btn btn-xs btn-primary" ng-show="!newStory.newTaskVisible">Add a task</span>
+                      <input type="text" ng-model="newTask.task" ng-show="newStory.newTaskVisible" focus-me="newStory.newTaskVisible" ng-blur="blurInputTaskField($event, newStory)"/>
+                      <button type="button" class="btn btn-success btn-xs btn-add-task" ng-show="newStory.newTaskVisible" ng-click="addTaskToStory($event, newStory)"><i class="fa fa-check"></i></button>
+                      <button type="button" class="btn btn-danger btn-xs btn-remove-task" ng-show="newStory.newTaskVisible" ng-click="cancelAddTaskToStory($event, newStory)"><i class="fa fa-close"></i></button>
+                    </li>
+                  </ul>
+                </uib-tab>
+
+                <uib-tab index="1" select="changeStoryTab(newStory, 1)">
+                  <uib-tab-heading>
+                    DoD
+                  </uib-tab-heading>
+                  <ul class="list-group story-definitions" as-sortable="storyItemsSortableOptions" ng-model="newStory.definitionOfDone">
+                    <li class="list-group-item" ng-repeat="definition in newStory.definitionOfDone" ng-click="toggleEditStoryDefinition(definition)" as-sortable-item>
+                      <div as-sortable-item-handle>
+                        <i class="fa fa-fw" ng-click="changeDefinitionStatus(definition, $index, newStory)" ng-class="{'fa-square-o': !definition.changing && !definition.done, 'fa-spinner fa-spin': definition.changing, 'fa-check-square-o': !definition.changing && definition.done}"></i>
+                        <input type="text" ng-model="definition.definition" ng-show="definition.editing" focus-me="definition.editing" ng-blur="toggleEditStoryDefinition(definition)" ng-keypress="toggleEditStoryDefinition(definition, $event)"/>
+                        <span ng-bind="definition.definition|limitWithEllipsis:60" ng-if="!definition.editing" title="{{definition.definition}}"></span>
+                        <button type="button" class="btn btn-danger btn-xs btn-remove-task" ng-if="!definition.editing" ng-click="removeStoryDefinition(newStory, $index)"><i class="fa fa-trash"></i></button>
+                      </div>
+                    </li>
+                    <li class="new-item list-group-item" ng-click="addingDefinitionToStory(newStory)">
+                      <span class="btn btn-xs btn-primary" ng-show="!newStory.newDefinitionVisible">Add a DoD</span>
+                      <input type="text" ng-model="newDefinition.definition" ng-show="newStory.newDefinitionVisible" focus-me="newStory.newDefinitionVisible" ng-blur="blurInputDefinitionField($event, newStory)"/>
+                      <button type="button" class="btn btn-success btn-xs btn-add-task" ng-show="newStory.newDefinitionVisible" ng-click="addDefinitionToStory($event, newStory)"><i class="fa fa-check"></i></button>
+                      <button type="button" class="btn btn-danger btn-xs btn-remove-task" ng-show="newStory.newDefinitionVisible" ng-click="cancelAddDefinitionToStory($event, newStory)"><i class="fa fa-close"></i></button>
+                    </li>
+                  </ul>
+                </uib-tab>
+
+                <uib-tab index="2" select="changeStoryTab(newStory, 2)">
+                  <uib-tab-heading>
+                    Comments
+                  </uib-tab-heading>
+                  <div class="fab-story-comments">
+                    <md-fab-toolbar md-open="false" md-direction="left">
+                      <md-fab-trigger class="align-with-text">
+                        <md-button aria-label="menu" class="md-fab md-primary md-mini">
+                          <md-icon md-font-icon="fa fa-plus"></md-icon>
+                        </md-button>
+                      </md-fab-trigger>
+                      <md-toolbar>
+                        <md-fab-actions class="md-toolbar-tools">
+                          <md-button class="md-icon-button" ng-click="addingCommentToStory('comment', newStory)">
+                            <md-icon md-font-icon="fa fa-pencil-square-o"></md-icon>
+                          </md-button>
+                          <md-button aria-label="comment" class="md-icon-button" ng-click="addingCommentToStory('link', newStory)">
+                            <md-icon md-font-icon="fa fa-link"></md-icon>
+                          </md-button>
+                          <md-button aria-label="comment" class="md-icon-button" ng-click="addingCommentToStory('file', newStory)">
+                            <md-icon md-font-icon="fa fa-image"></md-icon>
+                          </md-button>
+                        </md-fab-actions>
+                      </md-toolbar>
+                    </md-fab-toolbar>
+                  </div>
+
+                  <ul class="list-group story-comments">
+                    <li class="list-group-item" ng-repeat="storyComment in newStory.comments">
+                      <textarea ng-model="storyComment.comment" class="form-control comment-textarea" rows="2" ng-show="storyComment.editing" focus-me="storyComment.editing" ng-blur="toggleEditStoryComment(storyComment)"></textarea>
+                      <div ng-if="!storyComment.editing">
+                        <div class="comment-details">
+                          <div class="col-sm-7">
+                            Created by: {{storyComment.creator.name}}
+                          </div>
+                          <div class="col-sm-5">
+                            Created at: {{storyComment.createdAt}}
+                          </div>
+                        </div>
+                        <div class="comment-text col-sm-11">
+                          <span class="with-break-lines" ng-if="!storyComment.file && storyComment.comment" ng-bind="storyComment.comment"></span>
+                          <span class="with-break-lines" ng-if="storyComment.link"><a ng-href="{{storyComment.link}}" ng-bind="storyComment.link" target="_blank"></a> </span>
+                          <div class="comment-file" ng-if="storyComment.file">
+                            <div class="col-sm-2" ng-if="storyComment.file.name">
+                              <div>
+                                <label>Name:</label> {{storyComment.file.name}}
+                              </div>
+                              <div>
+                                <label>Size:</label> {{storyComment.file.size}}
+                              </div>
+                              <div>
+                                <label>Type:</label> {{storyComment.file.type}}
+                              </div>
+                            </div>
+                            <div class="col-sm-3">
+                              <a ng-href="{{storyComment.file}}" target="_blank">
+                                <img ngf-thumbnail="storyComment.file" />
+                              </a>
+                            </div>
+                            <div class="col-sm-5" ng-if="storyComment.comment">
+                              <label>Description:</label>
+                              <span class="with-break-lines" ng-bind="storyComment.comment"></span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <button type="button" class="btn btn-danger btn-xs btn-remove-comment" ng-if="!storyComment.editing" ng-click="removeStoryComment(newStory, $index)"><i class="fa fa-trash"></i></button>
+                    </li>
+                    <li class="new-item list-group-item" ng-show="newStory.newCommentVisible">
+                      <textarea ng-model="newComment.comment" class="form-control comment-textarea" rows="3" ng-show="newStory.newCommentType === 'comment'" focus-me="newStory.newCommentType === 'comment'" ng-blur="blurInputCommentField($event, newStory)"></textarea>
+                      <input ng-model="newComment.link" ng-show="newStory.newCommentType === 'link'" focus-me="newStory.newCommentType === 'link'" ng-blur="blurInputCommentField($event, newStory)" />
+                      <div class="new-attachment" ng-show="newStory.newCommentType === 'file'">
+                        <div class="col-sm-2">
+                          <input type="file" ngf-select focus-me="newStory.newCommentType === 'file'" ng-model="newComment.file" name="commentFile" accept="image/*" ngf-max-size="3MB">
+                        </div>
+                        <div class="col-sm-4">
+                          <textarea ng-model="newComment.comment" class="form-control comment-textarea" rows="3" placeholder="Attachment Description"></textarea>
+                        </div>
+                      </div>
+                      <button type="button" class="btn btn-success btn-xs btn-add-comment" ng-click="addCommentToStory($event, newStory)"><i class="fa fa-check"></i></button>
+                      <button type="button" class="btn btn-danger btn-xs btn-remove-comment" ng-click="cancelAddCommentToStory($event)"><i class="fa fa-close"></i></button>
+                    </li>
+                  </ul>
+                </uib-tab>
+
+                <uib-tab index="3" select="changeStoryTab(newStory, 3)">
+                  <uib-tab-heading>
+                    Merge Requests
+                  </uib-tab-heading>
+                  <ul class="list-group story-merge-requests" ng-scrollable="scrollMergeRequestOptions">
+                    <li class="list-group-item" ng-repeat="mergeRequest in newStory.mergeRequests" ng-click="toggleEditStoryMergeRequest(mergeRequest)">
+                      <input ng-model="mergeRequest.url" ng-show="mergeRequest.editing" focus-me="mergeRequest.editing" ng-blur="toggleEditStoryMergeRequest(mergeRequest)"/>
+                      <div ng-if="!mergeRequest.editing">
+                        <div class="merge-request-details">
+                          <div class="col-sm-7">
+                            Created by: {{mergeRequest.creator.name}}
+                          </div>
+                          <div class="col-sm-5">
+                            Created at: {{mergeRequest.createdAt}}
+                          </div>
+                        </div>
+                        <span class="with-break-lines"><a ng-href="{{mergeRequest.url}}" ng-bind="mergeRequest.url" target="_blank" ng-click="stopPropagation($event)"></a> </span>
+                      </div>
+                      <button type="button" class="btn btn-default btn-xs btn-remove-item" ng-if="!mergeRequest.editing" ng-click="removeStoryMergeRequest(newStory, $index)"><i class="fa fa-trash"></i></button>
+                    </li>
+                    <li class="new-item list-group-item" ng-click="addingMergeRequestToStory()">
+                      <span ng-show="!newMergeRequestVisible">Add a merge request</span>
+                      <input ng-model="newMergeRequest.url" ng-show="newMergeRequestVisible" focus-me="newMergeRequestVisible" ng-blur="blurInputMergeRequestField($event, newStory)"/>
+                      <button type="button" class="btn btn-primary btn-xs btn-add-item" ng-show="newMergeRequestVisible" ng-click="addMergeRequestToStory($event, newStory)">Add</button>
+                      <button type="button" class="btn btn-default btn-xs btn-remove-item" ng-show="newMergeRequestVisible" ng-click="cancelAddMergeRequestToStory($event)"><i class="fa fa-close"></i></button>
+                    </li>
+                  </ul>
+                </uib-tab>
+              </uib-tabset>
+            </section>
+          </form>
+          <div class="loading-story" ng-show="newStory.loading || newStory.updating">
+            <i class="fa fa-spinner fa-spin"></i>
+          </div>
+        </div>
+      </div>
+    </li>
+    <li class="list-group-item animate-story" id="project{{selectedProject.id}}Story{{story.id}}" ng-repeat="story in selectedProject.stories | orderBy:porraAngular.orderStoryBy | filter:storyFilter as storiesFiltered">
+      <div class="panel panel-default panel-story">
+        <div class="panel-heading" title="{{story.name}}">
+          <span class="story-type" ng-class="story.type | lowercase " title="{{story.typeName}}"></span>
+          <span class="story-name" ng-show="!story.isOpen" ng-bind="story.name|limitWithEllipsis:60"></span>
+          <input type="text" class="story-name" ng-show="story.isOpen" ng-model="story.name" />
+          <span ng-click="selectStory(story)" class="story-chevron">
+            <i class="fa" ng-class="{'fa-spinner fa-spin': story.loading, 'fa-chevron-up': story.isOpen, 'fa-chevron-down': !story.isOpen}"></i>
+          </span>
+        </div>
+        <div class="panel-body" uib-collapse="!story.isOpen">
+          <form name="formStory" class="form-story">
+            <section class="statement-save">
+              <div class="form-group col-sm-11">
+                <textarea name="storyStatement" id="storyStatement" placeholder="Statement" required ng-model="story.statement" rows="3" class="form-control"></textarea>
+              </div>
+              <div class="col-sm-1">
+                <button class="btn btn-xs btn-success" type="button" title="Save story changes" ng-click="saveStory(story)"><i class="fa fa-save"></i></button>
+                <button class="btn btn-xs btn-warning" ng-if="story.id" type="button" title="Undo story changes" ng-click="undoStoryChanges(story)"><i class="fa fa-undo"></i></button>
+                <button class="btn btn-xs btn-danger" ng-if="!story.id" type="button" title="Cancel new story" ng-click="cancelNewStory($index)"><i class="fa fa-close"></i></button>
+              </div>
+            </section>
+            <ul class="list-group story-date">
+              <li class="list-group-item">
+                <span class="form-story-label">CREATED AT:</span> <span class="project-story-date" ng-bind="story.createdAt|formatDateString"></span>
+              </li>
+            </ul>
+            <ul class="list-group story-iterations">
+              <li class="list-group-item" ng-if="!story.sprint && !story.kanban">
+                <span class="form-story-label">NO ITERATION:</span> <span class="project-story-iteration">Story in Icebox (brrrr... it's freeeeezing!)</span>
+              </li>
+              <li class="list-group-item" ng-if="story.sprint">
+                <span class="form-story-label">SPRINT:</span> <span class="project-story-iteration" ng-bind="story.sprint.name"></span>
+              </li>
+              <li class="list-group-item" ng-if="story.kanban">
+                <span class="form-story-label">KANBAN:</span> <span class="project-story-iteration" ng-bind="story.kanban.name"></span>
+              </li>
+            </ul>
+            <section class="story-details">
+              <ul class="list-group col-sm-6">
+                <li class="list-group-item">
+                  <span class="form-story-label">MODULE</span>
+                  <div class="form-group with-select with-module">
+                    <select id="selectModule" ng-model="story.module" ng-change="selectingEpicModule(module)" required class="select-module form-control" ng-options="module.acronym for module in modules|orderBy:'acronym' track by module.id">
+                      <option value="">-- Module --</option>
+                    </select>
+                  </div>
+                </li>
+                <li class="list-group-item">
+                  <span class="form-story-label">STORY TYPE</span>
+                  <div class="form-group with-select">
+                    <select id="selectStoryType" ng-model="story.type" required class="select-story-type {{story.type | lowercase}} form-control">
+                      <option value="">-- choose --</option>
+                      <option ng-value="type.code" ng-repeat="type in storyTypes" ng-bind="type.name"></option>
+                    </select>
+                  </div>
+                </li>
+                <li class="list-group-item">
+                  <span class="form-story-label">STORY POINTS</span>
+                  <div class="project-story-points btn-group">
+                    <label class="btn btn-primary btn-xs points-null" ng-model="story.points" ng-class="{'active': !story.points && story.points != 0}" uib-btn-radio="null">N</label>
+                    <label class="btn btn-primary btn-xs points-{{point}}" ng-model="story.points" ng-class="{'active': point == story.points}" uib-btn-radio="point" ng-repeat="point in points" ng-bind="point"></label>
+                  </div>
+                </li>
+                <li class="list-group-item">
+                  <span class="form-story-label">VALUE POINTS</span>
+                  <div class="project-story-points btn-group">
+                    <label class="btn btn-primary btn-xs points-null" ng-model="story.valuePoints" ng-class="{'active': !story.valuePoints && story.valuePoints != 0}" uib-btn-radio="null">N</label>
+                    <label class="btn btn-primary btn-xs points-{{point}}" ng-model="story.valuePoints" ng-class="{'active': point == story.valuePoints}" uib-btn-radio="point" ng-repeat="point in points" ng-bind="point"></label>
+                  </div>
+                </li>
+              </ul>
+              <ul class="list-group col-sm-6">
+                <li class="list-group-item">
+                  <span class="form-story-label">EPIC</span>
+                  <div class="form-group with-select with-epic">
+                    <select id="selectEpic" ng-model="story.epic" required class="select-epic form-control" ng-options="epic.name for epic in epics|orderBy:'name'|filter:{modules: story.module.acronym} track by epic.id">
+                      <option value="">-- Epic --</option>
+                    </select>
+                  </div>
+                </li>
+                <li class="list-group-item">
+                  <span class="form-story-label">STATUS</span>
+                  <div class="project-story-status">
+                    <span class="story-status" ng-class="story.status | lowercase" ng-bind="story.statusName"></span>
+                  </div>
+                </li>
+                <li class="list-group-item">
+                  <span class="form-story-label">REQUESTER</span>
+                  <div class="story-requester">
+                    <span class="story-requester-name-initials" ng-bind="getNameInitials(story.requester.name)"></span>
+                    <div class="form-group with-select with-requester">
+                      <select id="selectRequester" ng-model="story.requester" required class="select-requester form-control" ng-options="requester.name for requester in requesters|orderBy:'name' track by requester.id">
+                        <option value="">-- Requester --</option>
+                      </select>
+                    </div>
+                    <!--<span class="story-requester-name" ng-bind="story.requester.name"></span>-->
+                  </div>
+                </li>
+                <li class="list-group-item">
+                  <span class="form-story-label">OWNER</span>
+                  <div class="story-owner">
+                    <span class="story-owner-name-initials" ng-bind="getNameInitials(story.owner.name)"></span>
+                    <span class="story-owner-name" ng-bind="story.owner.name"></span>
+                  </div>
+                </li>
+              </ul>
+            </section>
+            <section class="story-tabs">
+              <uib-tabset>
+                <uib-tab index="0" select="changeStoryTab(story, 0)">
+                  <uib-tab-heading>
+                    Tasks
+                    <button ng-if="story.currentTab === 0" type="button" class="btn btn-success btn-sm btn-save-task" ng-click="saveStoryTasks(story)"><i class="fa fa-save"></i></button>
+                  </uib-tab-heading>
+                  <ul class="list-group story-tasks" as-sortable="storyItemsSortableOptions" ng-model="story.tasks">
+                    <li class="list-group-item" ng-repeat="task in story.tasks" ng-click="toggleEditStoryTask(task)" as-sortable-item>
+                      <div as-sortable-item-handle>
+                        <i class="fa fa-fw" ng-class="{'fa-square-o': !task.complete, 'fa-check-square-o': task.complete}"></i>
+                        <input type="text" ng-model="task.task" ng-show="task.editing" focus-me="task.editing" ng-blur="toggleEditStoryTask(task)" ng-keypress="toggleEditStoryTask(task, $event)"/>
+                        <span ng-bind="task.task|limitWithEllipsis:60" ng-if="!task.editing" title="{{task.task}}"></span>
+                        <button type="button" class="btn btn-danger btn-xs btn-remove-task" ng-if="!task.editing" ng-click="removeStoryTask(story, $index)"><i class="fa fa-trash"></i></button>
+                      </div>
+                    </li>
+                    <li class="new-item list-group-item" ng-click="addingTaskToStory(story)">
+                      <span class="btn btn-xs btn-primary" ng-show="!story.newTaskVisible">Add a task</span>
+                      <input type="text" ng-model="newTask.task" ng-show="story.newTaskVisible" focus-me="story.newTaskVisible" ng-blur="blurInputTaskField($event, story)"/>
+                      <button type="button" class="btn btn-success btn-xs btn-add-task" ng-show="story.newTaskVisible" ng-click="addTaskToStory($event, story)"><i class="fa fa-check"></i></button>
+                      <button type="button" class="btn btn-danger btn-xs btn-remove-task" ng-show="story.newTaskVisible" ng-click="cancelAddTaskToStory($event, story)"><i class="fa fa-close"></i></button>
+                    </li>
+                  </ul>
+                </uib-tab>
+
+                <uib-tab index="1" select="changeStoryTab(story, 1)">
+                  <uib-tab-heading>
+                    DoD
+                    <button ng-if="story.currentTab === 1" type="button" class="btn btn-success btn-sm btn-save-task" ng-click="saveStoryDefinitions(story)"><i class="fa fa-save"></i></button>
+                  </uib-tab-heading>
+                  <ul class="list-group story-definitions" as-sortable="storyItemsSortableOptions" ng-model="story.definitionOfDone">
+                    <li class="list-group-item" ng-repeat="definition in story.definitionOfDone" ng-click="toggleEditStoryDefinition(definition)" as-sortable-item>
+                      <div as-sortable-item-handle>
+                        <i class="fa fa-fw" ng-click="changeDefinitionStatus(definition, $index, story)" ng-class="{'fa-square-o': !definition.changing && !definition.done, 'fa-spinner fa-spin': definition.changing, 'fa-check-square-o': !definition.changing && definition.done}"></i>
+                        <input type="text" ng-model="definition.definition" ng-show="definition.editing" focus-me="definition.editing" ng-blur="toggleEditStoryDefinition(definition)" ng-keypress="toggleEditStoryDefinition(definition, $event)"/>
+                        <span ng-bind="definition.definition|limitWithEllipsis:60" ng-if="!definition.editing" title="{{definition.definition}}"></span>
+                        <button type="button" class="btn btn-danger btn-xs btn-remove-task" ng-if="!definition.editing" ng-click="removeStoryDefinition(story, $index)"><i class="fa fa-trash"></i></button>
+                      </div>
+                    </li>
+                    <li class="new-item list-group-item" ng-click="addingDefinitionToStory(story)">
+                      <span class="btn btn-xs btn-primary" ng-show="!story.newDefinitionVisible">Add a DoD</span>
+                      <input type="text" ng-model="newDefinition.definition" ng-show="story.newDefinitionVisible" focus-me="story.newDefinitionVisible" ng-blur="blurInputDefinitionField($event, story)"/>
+                      <button type="button" class="btn btn-success btn-xs btn-add-task" ng-show="story.newDefinitionVisible" ng-click="addDefinitionToStory($event, story)"><i class="fa fa-check"></i></button>
+                      <button type="button" class="btn btn-danger btn-xs btn-remove-task" ng-show="story.newDefinitionVisible" ng-click="cancelAddDefinitionToStory($event, story)"><i class="fa fa-close"></i></button>
+                    </li>
+                  </ul>
+                </uib-tab>
+
+                <uib-tab index="2" select="changeStoryTab(story, 2)">
+                  <uib-tab-heading>
+                    Comments
+                    <button ng-if="story.currentTab === 2" type="button" class="btn btn-success btn-sm btn-save-task" ng-click="saveStoryComments(story)"><i class="fa fa-save"></i></button>
+                  </uib-tab-heading>
+                  <div class="fab-story-comments">
+                    <md-fab-toolbar md-open="false" md-direction="left">
+                      <md-fab-trigger class="align-with-text">
+                        <md-button aria-label="menu" class="md-fab md-primary md-mini">
+                          <md-icon md-font-icon="fa fa-plus"></md-icon>
+                        </md-button>
+                      </md-fab-trigger>
+                      <md-toolbar>
+                        <md-fab-actions class="md-toolbar-tools">
+                          <md-button class="md-icon-button" ng-click="addingCommentToStory('comment', story)">
+                            <md-icon md-font-icon="fa fa-pencil-square-o"></md-icon>
+                          </md-button>
+                          <md-button aria-label="comment" class="md-icon-button" ng-click="addingCommentToStory('link', story)">
+                            <md-icon md-font-icon="fa fa-link"></md-icon>
+                          </md-button>
+                          <md-button aria-label="comment" class="md-icon-button" ng-click="addingCommentToStory('file', story)">
+                            <md-icon md-font-icon="fa fa-image"></md-icon>
+                          </md-button>
+                        </md-fab-actions>
+                      </md-toolbar>
+                    </md-fab-toolbar>
+                  </div>
+
+                  <ul class="list-group story-comments">
+                    <li class="list-group-item" ng-repeat="storyComment in story.comments">
+                      <textarea ng-model="storyComment.comment" class="form-control comment-textarea" rows="2" ng-show="storyComment.editing" focus-me="storyComment.editing" ng-blur="toggleEditStoryComment(storyComment)"></textarea>
+                      <div ng-if="!storyComment.editing">
+                        <div class="comment-details">
+                          <div class="col-sm-7">
+                            Created by: {{storyComment.creator.name}}
+                          </div>
+                          <div class="col-sm-5">
+                            Created at: {{storyComment.createdAt}}
+                          </div>
+                        </div>
+                        <div class="comment-text col-sm-11">
+                          <span class="with-break-lines" ng-if="!storyComment.file && storyComment.comment" ng-bind="storyComment.comment"></span>
+                          <span class="with-break-lines" ng-if="storyComment.link"><a ng-href="{{storyComment.link}}" ng-bind="storyComment.link" target="_blank"></a> </span>
+                          <div class="comment-file" ng-if="storyComment.file">
+                            <div class="col-sm-2" ng-if="storyComment.file.name">
+                              <div>
+                                <label>Name:</label> {{storyComment.file.name}}
+                              </div>
+                              <div>
+                                <label>Size:</label> {{storyComment.file.size}}
+                              </div>
+                              <div>
+                                <label>Type:</label> {{storyComment.file.type}}
+                              </div>
+                            </div>
+                            <div class="col-sm-3">
+                              <a ng-href="{{storyComment.file}}" target="_blank">
+                                <img ngf-thumbnail="storyComment.file" />
+                              </a>
+                            </div>
+                            <div class="col-sm-5" ng-if="storyComment.comment">
+                              <label>Description:</label>
+                              <span class="with-break-lines" ng-bind="storyComment.comment"></span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <button type="button" class="btn btn-danger btn-xs btn-remove-comment" ng-if="!storyComment.editing" ng-click="removeStoryComment(story, $index)"><i class="fa fa-trash"></i></button>
+                    </li>
+                    <li class="new-item list-group-item" ng-show="story.newCommentVisible">
+                      <textarea ng-model="newComment.comment" class="form-control comment-textarea" rows="3" ng-show="story.newCommentType === 'comment'" focus-me="story.newCommentType === 'comment'" ng-blur="blurInputCommentField($event, story)"></textarea>
+                      <input ng-model="newComment.link" ng-show="story.newCommentType === 'link'" focus-me="story.newCommentType === 'link'" ng-blur="blurInputCommentField($event, story)" />
+                      <div class="new-attachment" ng-show="story.newCommentType === 'file'">
+                        <div class="col-sm-2">
+                          <input type="file" ngf-select focus-me="story.newCommentType === 'file'" ng-model="newComment.file" name="commentFile" accept="image/*" ngf-max-size="3MB">
+                        </div>
+                        <div class="col-sm-4">
+                          <textarea ng-model="newComment.comment" class="form-control comment-textarea" rows="3" placeholder="Attachment Description"></textarea>
+                        </div>
+                      </div>
+                      <button type="button" class="btn btn-success btn-xs btn-add-comment" ng-click="addCommentToStory($event, story)"><i class="fa fa-check"></i></button>
+                      <button type="button" class="btn btn-danger btn-xs btn-remove-comment" ng-click="cancelAddCommentToStory($event)"><i class="fa fa-close"></i></button>
+                    </li>
+                  </ul>
+                </uib-tab>
+
+                <uib-tab index="3" select="changeStoryTab(story, 3)">
+                  <uib-tab-heading>
+                    Merge Requests
+                    <button ng-if="story.currentTab === 3" type="button" class="btn btn-success btn-sm btn-save-task" ng-click="saveMergeRequests(story)"><i class="fa fa-save"></i></button>
+                  </uib-tab-heading>
+                  <ul class="list-group story-merge-requests" ng-scrollable="scrollMergeRequestOptions">
+                    <li class="list-group-item" ng-repeat="mergeRequest in story.mergeRequests" ng-click="toggleEditStoryMergeRequest(mergeRequest)">
+                      <input ng-model="mergeRequest.url" ng-show="mergeRequest.editing" focus-me="mergeRequest.editing" ng-blur="toggleEditStoryMergeRequest(mergeRequest)"/>
+                      <div ng-if="!mergeRequest.editing">
+                        <div class="merge-request-details">
+                          <div class="col-sm-7">
+                            Created by: {{mergeRequest.creator.name}}
+                          </div>
+                          <div class="col-sm-5">
+                            Created at: {{mergeRequest.createdAt}}
+                          </div>
+                        </div>
+                        <span class="with-break-lines"><a ng-href="{{mergeRequest.url}}" ng-bind="mergeRequest.url" target="_blank" ng-click="stopPropagation($event)"></a> </span>
+                      </div>
+                      <button type="button" class="btn btn-default btn-xs btn-remove-item" ng-if="!mergeRequest.editing" ng-click="removeStoryMergeRequest(story, $index)"><i class="fa fa-trash"></i></button>
+                    </li>
+                    <li class="new-item list-group-item" ng-click="addingMergeRequestToStory()">
+                      <span ng-show="!newMergeRequestVisible">Add a merge request</span>
+                      <input ng-model="newMergeRequest.url" ng-show="newMergeRequestVisible" focus-me="newMergeRequestVisible" ng-blur="blurInputMergeRequestField($event, story)"/>
+                      <button type="button" class="btn btn-primary btn-xs btn-add-item" ng-show="newMergeRequestVisible" ng-click="addMergeRequestToStory($event, story)">Add</button>
+                      <button type="button" class="btn btn-default btn-xs btn-remove-item" ng-show="newMergeRequestVisible" ng-click="cancelAddMergeRequestToStory($event)"><i class="fa fa-close"></i></button>
+                    </li>
+                  </ul>
+                </uib-tab>
+              </uib-tabset>
+            </section>
+          </form>
+          <div class="loading-story" ng-show="story.loading || story.updating">
+            <i class="fa fa-spinner fa-spin"></i>
+          </div>
+        </div>
+      </div>
+    </li>
+  </ul>
+</div>

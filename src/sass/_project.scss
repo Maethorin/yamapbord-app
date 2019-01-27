@@ -69,8 +69,41 @@
     width: 30%;
     margin: 0 1%;
     .project-stories-list {
-      overflow-y: auto;
+      overflow-y: scroll;
       height: 85vh;
+      padding-left: 4px;
+      &::-webkit-scrollbar {
+        width: 4px;
+      }
+      &::-webkit-scrollbar-thumb {
+        border-radius: 2px;
+        background-color: #3e7298;
+      }
+      .stories-group-order {
+        .order-label, .group-label {
+          font-family: Open Sans,open-sans,EmojiFontFace,helvetica,arial,sans-serif;
+          color: $gray-light;
+          font-size: 10px;
+          display: inline-block;
+          float: left;
+          margin: 5px 0 0;
+        }
+        .order-form-group, .group-form-group {
+          padding: 0 2px;
+          margin: 0;
+          width: 65%;
+          display: inline-block;
+          float: right;
+          select {
+            background-color: $gray-dark;
+            color: $gray-light;
+            padding: 0;
+            height: 22px;
+            font-size: 12px;
+          }
+        }
+      }
+
       .list-group-item {
         padding: 0;
         &.animate-story {
@@ -145,7 +178,7 @@
                 margin: 5px 0;
               }
             }
-            .story-details, .story-tabs, .story-iterations {
+            .story-details, .story-tabs, .story-iterations, .story-date {
               overflow: hidden;
               margin-top: 5px;
               border-top: 1px solid #666;
@@ -166,7 +199,7 @@
               .list-group-item {
                 background-color: #f1f0ea;
                 padding: 5px 0;
-                .project-story-iteration {
+                .project-story-iteration, .project-story-date {
                   color: #666;
                   font-size: 13px;
                   vertical-align: middle;
