@@ -38,7 +38,7 @@
         <li class="list-group-item story-filters" ng-if="selectedProject.stories.length">
           <div class="panel panel-default panel-story">
             <div class="panel-heading">
-              <span><i class="fa fa-filter"></i> Filters</span>
+              <span><i class="fa fa-filter"></i> Filters: {{selectedProjectStoriesFiltered.length}} stories total</span>
               <span ng-click="openStoryFilter()" class="story-chevron">
                 <i class="fa" ng-class="{'fa-chevron-up': storyFilterIsOpen, 'fa-chevron-down': !storyFilterIsOpen}"></i>
               </span>
@@ -419,7 +419,7 @@
             </div>
           </div>
         </li>
-        <li class="list-group-item animate-story" id="project{{selectedProject.id}}Story{{story.id}}" ng-repeat="story in selectedProject.stories|filter:storyFilter">
+        <li class="list-group-item animate-story" id="project{{selectedProject.id}}Story{{story.id}}" ng-repeat="story in selectedProject.stories|filter:storyFilter as selectedProjectStoriesFiltered">
           <div class="panel panel-default panel-story">
             <div class="panel-heading" title="{{story.name}}">
               <span class="story-type" ng-class="story.type | lowercase " title="{{story.typeName}}"></span>
