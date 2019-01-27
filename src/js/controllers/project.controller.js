@@ -277,6 +277,7 @@ scrumInCeresControllers.controller('SelectedProjectController', ['$rootScope', '
   $scope.selectedProject = null;
   $scope.$on('projects.selectedProject', function(event, selectedProject) {
     $scope.selectedProject = selectedProject;
+    groupStories();
   });
   $scope.porraAngular = {storyFilterIteration: null, moduleAcronym: '', orderStoryBy: null, groupStoryBy: null};
   $scope.storyFilter = {

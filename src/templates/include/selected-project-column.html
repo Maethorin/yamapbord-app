@@ -62,7 +62,7 @@
       </div>
     </li>
 
-    <li class="list-group-item story-filters" ng-if="selectedProject.stories.length">
+    <li class="list-group-item story-filters" ng-if="!selectedProject.loading && selectedProject.stories.length">
       <div class="panel panel-default panel-story">
         <div class="panel-heading">
           <span><i class="fa fa-filter"></i> Filters: <story-filter-total total-stories="selectedProject.stories.length" filtered-stories="storiesFiltered.length"></story-filter-total></span>
@@ -175,7 +175,7 @@
       </div>
     </li>
 
-    <li class="list-group-item" ng-if="!selectedProject.stories.length">
+    <li class="list-group-item" ng-if="selectedProject.loading">
       <md-progress-linear md-mode="query"></md-progress-linear>
     </li>
 
@@ -449,9 +449,9 @@
       </div>
     </li>
 
-    <li class="list-group-item animate-story" ng-if="!groupedStories" id="project{{selectedProject.id}}Story{{story.id}}" ng-repeat="story in selectedProject.stories | orderBy:porraAngular.orderStoryBy | filter:storyFilter as storiesFiltered" ng-include="'storyPanel'"></li>
+    <li class="list-group-item animate-story" ng-if="!selectedProject.loading && !groupedStories" id="project{{selectedProject.id}}Story{{story.id}}" ng-repeat="story in selectedProject.stories | orderBy:porraAngular.orderStoryBy | filter:storyFilter as storiesFiltered" ng-include="'storyPanel'"></li>
 
-    <li class="list-group-item" ng-if="groupedStories && porraAngular.groupStoryBy !== 'module-epic'" ng-repeat="(group, stories) in groupedStories">
+    <li class="list-group-item" ng-if="!selectedProject.loading && groupedStories && porraAngular.groupStoryBy !== 'module-epic'" ng-repeat="(group, stories) in groupedStories">
       <ul class="list-group" ng-init="storiesGroupOpen[group].isOpen = false">
         <li class="list-group-item grouped-module">
           <div class="panel panel-default panel-module">
@@ -478,7 +478,7 @@
       </ul>
     </li>
 
-    <li class="list-group-item" ng-if="groupedStories && porraAngular.groupStoryBy === 'module-epic'" ng-repeat="(zas, module) in groupedStories">
+    <li class="list-group-item" ng-if="!selectedProject.loading && groupedStories && porraAngular.groupStoryBy === 'module-epic'" ng-repeat="(zas, module) in groupedStories">
       <ul class="list-group" ng-init="module.isOpen = false">
         <li class="list-group-item">
           <div class="panel panel-default panel-module">
