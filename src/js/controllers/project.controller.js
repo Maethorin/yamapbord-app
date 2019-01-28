@@ -1,6 +1,6 @@
 'use strict';
 
-scrumInCeresControllers.controller('ProjectController', ['$rootScope', '$scope', '$uibModal', 'Notifier', 'Alert', 'StoryService', 'HollydayService', 'Project', 'ProjectStory', function($rootScope, $scope, $uibModal, Notifier, Alert, StoryService, HollydayService, Project, ProjectStory) {
+scrumInCeresControllers.controller('ProjectController', ['$rootScope', '$scope', '$uibModal', 'Notifier', 'Alert', 'HollydayService', 'Project', function($rootScope, $scope, $uibModal, Notifier, Alert, HollydayService, Project) {
   $rootScope.currentController = 'ProjectController';
   $rootScope.lateralMenuOpen = true;
 
@@ -12,6 +12,7 @@ scrumInCeresControllers.controller('ProjectController', ['$rootScope', '$scope',
   $scope.selectedProject = null;
   $scope.selectedProjectOpened = false;
   $scope.projects = [];
+  $scope.showIceboxStories = false;
 
   function loading() {
     Project.query(
@@ -29,8 +30,6 @@ scrumInCeresControllers.controller('ProjectController', ['$rootScope', '$scope',
   }
 
   loading();
-
-  StoryService.prepareScopeToEditStory($scope);
 
   function getModal(project) {
     return $uibModal.open({
@@ -176,6 +175,11 @@ scrumInCeresControllers.controller('ProjectController', ['$rootScope', '$scope',
     );
   };
 
+  $scope.$on('projects.toggleIceboxStoriesVisible', function() {
+    $scope.showIceboxStories = !$scope.showIceboxStories;
+    $scope.$broadcast('projects.selectedProject', $scope.selectedProject);
+  })
+
 }]);
 
 scrumInCeresControllers.controller('FormProjectController', ['$scope', '$uibModalInstance', 'HollydayService', 'Alert', 'Project', 'projectModel', function($scope, $uibModalInstance, HollydayService, Alert, Project, projectModel) {
@@ -289,6 +293,8 @@ scrumInCeresControllers.controller('SelectedProjectController', ['$rootScope', '
   $scope.newStories = [];
   $scope.groupedStories = false;
   $scope.storiesGroupOpen = {};
+
+  StoryService.prepareScopeToEditStory($scope);
 
   function groupStories() {
     if (!$scope.selectedProject) {
@@ -464,7 +470,7 @@ scrumInCeresControllers.controller('SelectedProjectController', ['$rootScope', '
   };
 
   $scope.addingExistingStoryToSelectedProject = function() {
-
+    $scope.$emit('projects.toggleIceboxStoriesVisible');
   };
 
   $scope.addNewStoryToSelectedProject = function(storyType) {
@@ -518,21 +524,74 @@ scrumInCeresControllers.controller('SelectedProjectController', ['$rootScope', '
 
 }]);
 
-scrumInCeresControllers.controller('IceboxProjectController', ['$rootScope', '$scope', 'Notifier', 'Alert', 'StoryService', 'ProjectStory', function($rootScope, $scope, Notifier, Alert, StoryService, ProjectStory) {
+scrumInCeresControllers.controller('IceboxProjectController', ['$rootScope', '$scope', 'Notifier', 'Alert', 'StoryService', 'ProjectStory', 'IceBox', function($rootScope, $scope, Notifier, Alert, StoryService, ProjectStory, IceBox) {
+  $scope.iceboxStories = [];
+  $scope.iceboxLoading = true;
   $scope.selectedProject = null;
   $scope.$on('projects.selectedProject', function(event, selectedProject) {
     $scope.selectedProject = selectedProject;
+    groupStories();
   });
-  $scope.porraAngular = {storyFilterIteration: null, moduleAcronym: ''};
+  $scope.porraAngular = {storyFilterIteration: null, moduleAcronym: '', orderStoryBy: null, groupStoryBy: null};
   $scope.storyFilter = {
     name: '',
     statement: ''
   };
   $scope.storiesFiltered = [];
-  $scope.storiesGrupedFiltered = [];
-  $scope.storiesGrupedEpicFiltered = [];
   $scope.storyItemsSortableOptions = { containerPositioning: 'relative' };
   $scope.newStories = [];
+  $scope.groupedStories = false;
+  $scope.storiesGroupOpen = {};
+
+  IceBox.query(
+    function(stories) {
+      $scope.iceboxStories = stories;
+      groupStories();
+      $scope.iceboxLoading = false;
+    },
+
+    function(error) {
+      Alert.randomErrorMessage(error);
+      $scope.iceboxLoading = false;
+    }
+  );
+
+  StoryService.prepareScopeToEditStory($scope);
+
+  function groupStories() {
+    if (!$scope.iceboxStories) {
+      return false;
+    }
+    $scope.groupedStories = false;
+    if ($scope.porraAngular.groupStoryBy === 'module') {
+      $scope.groupedStories = _.groupBy($scope.iceboxStories, 'moduleId');
+    }
+    if ($scope.porraAngular.groupStoryBy === 'module-epic') {
+      $scope.groupedStories = [];
+      var tempGroupStories = _.groupBy($scope.iceboxStories, 'moduleId');
+      _.forEach(tempGroupStories, function(group) {
+        $scope.groupedStories.push(
+          {
+            id: group[0].moduleId,
+            isOpen: false,
+            stories: _.groupBy(group, 'epicId')
+          }
+        );
+      });
+    }
+    if ($scope.porraAngular.groupStoryBy === 'type') {
+      $scope.groupedStories = _.groupBy($scope.iceboxStories, 'type');
+    }
+    if ($scope.porraAngular.groupStoryBy === 'status') {
+      $scope.groupedStories = _.groupBy($scope.iceboxStories, 'status');
+    }
+  }
+
+  $scope.$watch('porraAngular.groupStoryBy', groupStories);
+
+  $scope.openGroupedStories = function(group) {
+    group.isOpen = !group.isOpen;
+  };
 
   $scope.selectStory = function(story) {
     if (story.isLoaded) {
@@ -540,8 +599,8 @@ scrumInCeresControllers.controller('IceboxProjectController', ['$rootScope', '$s
       return;
     }
     story.loading = true;
-    ProjectStory.get(
-      {projectId: $scope.selectedProject.id, storyId: story.id},
+    IceBox.get(
+      {id: story.id},
 
       function(result) {
         story.isOpen = true;
@@ -601,10 +660,9 @@ scrumInCeresControllers.controller('IceboxProjectController', ['$rootScope', '$s
         {projectId: $scope.selectedProject.id},
         storyToSend,
         function(result) {
-          story.id = result.id;
-          delete story.updating;
-          $scope.selectedProject.stories.push(story);
+          $scope.selectedProject.stories.push(result);
           $scope.newStories.splice($index, 1);
+          groupStories();
           Notifier.success('Story saved!')
         },
         function(error) {
@@ -674,7 +732,7 @@ scrumInCeresControllers.controller('IceboxProjectController', ['$rootScope', '$s
   };
 
   $scope.addingExistingStoryToSelectedProject = function() {
-
+    $scope.$emit('projects.toggleIceboxStoriesVisible');
   };
 
   $scope.addNewStoryToSelectedProject = function(storyType) {
@@ -688,6 +746,42 @@ scrumInCeresControllers.controller('IceboxProjectController', ['$rootScope', '$s
     newStory.newCommentType = null;
     newStory.newMergeRequestVisible = false;
     $scope.newStories.unshift(newStory);
+  };
+
+  $scope.openStoryFilter = function() {
+    $scope.storyFilterIsOpen = !$scope.storyFilterIsOpen;
+  };
+
+  $scope.setIterationStoryFilter = function() {
+    delete $scope.storyFilter.sprintId;
+    delete $scope.storyFilter.kanbanId;
+    console.log = $scope.porraAngular.storyFilterIteration;
+    if ($scope.porraAngular.storyFilterIteration === 'icebox') {
+      $scope.storyFilter.sprintId = null;
+      $scope.storyFilter.kanbanId = null;
+    }
+    if ($scope.porraAngular.storyFilterIteration === 'sprint') {
+      $scope.storyFilter.sprintId = '';
+      $scope.storyFilter.kanbanId = null;
+    }
+    if ($scope.porraAngular.storyFilterIteration === 'kanban') {
+      $scope.storyFilter.sprintId = null;
+      $scope.storyFilter.kanbanId = '';
+    }
+  };
+
+  $scope.selectModuleStoryFilter = function() {
+    $scope.porraAngular.moduleAcronym = $rootScope.modulesNames[$scope.storyFilter.moduleId];
+  };
+
+  $scope.clearStoryFilter = function() {
+    $scope.porraAngular.storyFilterIteration = null;
+    $scope.porraAngular.moduleAcronym = '';
+
+    $scope.storyFilter = {
+      name: '',
+      statement: ''
+    };
   };
 
 }]);
