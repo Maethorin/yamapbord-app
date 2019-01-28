@@ -9,6 +9,7 @@ scrumInCeresControllers.controller('ProjectController', ['$rootScope', '$scope',
   $scope.search = {
     project: {name: '', description: ''}
   };
+  $scope.imInIcebox = false;
   $scope.selectedProject = null;
   $scope.selectedProjectOpened = false;
   $scope.projects = [];
@@ -62,7 +63,6 @@ scrumInCeresControllers.controller('ProjectController', ['$rootScope', '$scope',
         Alert.randomSuccessMessage();
       },
       function() {
-        console.log('dismiss');
       }
     );
   };
@@ -94,7 +94,6 @@ scrumInCeresControllers.controller('ProjectController', ['$rootScope', '$scope',
       },
       function() {
         $scope.selectedProject = null;
-        console.log('dismiss');
       }
     );
   };
@@ -127,29 +126,6 @@ scrumInCeresControllers.controller('ProjectController', ['$rootScope', '$scope',
     $scope.selectedProjectOpened = false;
   };
 
-  // TODO: IceboxController
-  // $scope.addStoryToSelectedProject = function(story) {
-  //   if (_.find($scope.selectedProject.stories, {id: story.id})) {
-  //     return false;
-  //   }
-  //   Alert.loading();
-  //   ProjectStory.save(
-  //     {projectId: $scope.selectedProject.id},
-  //
-  //     {storyId: story.id},
-  //
-  //     function(result) {
-  //       $scope.selectedProject.stories.push(story);
-  //       $scope.selectedProject.stories = _.sortBy($scope.selectedProject.stories, 'name');
-  //       Alert.randomSuccessMessage();
-  //     },
-  //
-  //     function(error) {
-  //       Alert.randomErrorMessage(error);
-  //     }
-  //   );
-  // };
-
   $scope.removeProject = function(project, $event) {
     $event.stopPropagation();
     Alert.warning(
@@ -178,8 +154,15 @@ scrumInCeresControllers.controller('ProjectController', ['$rootScope', '$scope',
   $scope.$on('projects.toggleIceboxStoriesVisible', function() {
     $scope.showIceboxStories = !$scope.showIceboxStories;
     $scope.$broadcast('projects.selectedProject', $scope.selectedProject);
-  })
+  });
 
+  $scope.$on('projects.sendSelectedProject', function() {
+    $scope.$broadcast('projects.selectedProject', $scope.selectedProject);
+  });
+
+  $scope.$on('projects.addingStoryToSelectedProject', function(ev, story) {
+    $scope.$broadcast('projects.addStoryToSelectedProject', story);
+  });
 }]);
 
 scrumInCeresControllers.controller('FormProjectController', ['$scope', '$uibModalInstance', 'HollydayService', 'Alert', 'Project', 'projectModel', function($scope, $uibModalInstance, HollydayService, Alert, Project, projectModel) {
@@ -278,11 +261,21 @@ scrumInCeresControllers.controller('FormProjectController', ['$scope', '$uibModa
 }]);
 
 scrumInCeresControllers.controller('SelectedProjectController', ['$rootScope', '$scope', 'Notifier', 'Alert', 'StoryService', 'ProjectStory', function($rootScope, $scope, Notifier, Alert, StoryService, ProjectStory) {
+  $scope.imInIcebox = false;
   $scope.selectedProject = null;
   $scope.$on('projects.selectedProject', function(event, selectedProject) {
+    if ($scope.selectedProject !== null && $scope.selectedProject.id === selectedProject.id) {
+      return;
+    }
     $scope.selectedProject = selectedProject;
     groupStories();
   });
+
+  $scope.$on('projects.addStoryToSelectedProject', function(ev, story) {
+    $scope.selectedProject.stories.push(story);
+    groupStories();
+  });
+
   $scope.porraAngular = {storyFilterIteration: null, moduleAcronym: '', orderStoryBy: null, groupStoryBy: null};
   $scope.storyFilter = {
     name: '',
@@ -525,13 +518,14 @@ scrumInCeresControllers.controller('SelectedProjectController', ['$rootScope', '
 }]);
 
 scrumInCeresControllers.controller('IceboxProjectController', ['$rootScope', '$scope', 'Notifier', 'Alert', 'StoryService', 'ProjectStory', 'IceBox', function($rootScope, $scope, Notifier, Alert, StoryService, ProjectStory, IceBox) {
+  $scope.imInIcebox = true;
   $scope.iceboxStories = [];
   $scope.iceboxLoading = true;
   $scope.selectedProject = null;
   $scope.$on('projects.selectedProject', function(event, selectedProject) {
     $scope.selectedProject = selectedProject;
-    groupStories();
   });
+  $scope.$emit('projects.sendSelectedProject');
   $scope.porraAngular = {storyFilterIteration: null, moduleAcronym: '', orderStoryBy: null, groupStoryBy: null};
   $scope.storyFilter = {
     name: '',
@@ -641,14 +635,18 @@ scrumInCeresControllers.controller('IceboxProjectController', ['$rootScope', '$s
     delete storyToSend.newCommentVisible;
     delete storyToSend.newCommentType;
     delete storyToSend.newMergeRequestVisible;
+
     if (story.id) {
-      ProjectStory.update(
-        {projectId: $scope.selectedProject.id, storyId: story.id},
+      IceBox.update(
+        {id: story.id},
+
         storyToSend,
+
         function() {
           delete story.updating;
           Notifier.success('Story saved!')
         },
+
         function(error) {
           Alert.randomErrorMessage(error);
           delete story.updating;
@@ -656,15 +654,16 @@ scrumInCeresControllers.controller('IceboxProjectController', ['$rootScope', '$s
       );
     }
     else {
-      ProjectStory.save(
-        {projectId: $scope.selectedProject.id},
+      IceBox.save(
         storyToSend,
+
         function(result) {
-          $scope.selectedProject.stories.push(result);
+          $scope.iceboxStories.push(result);
           $scope.newStories.splice($index, 1);
           groupStories();
           Notifier.success('Story saved!')
         },
+
         function(error) {
           Alert.randomErrorMessage(error);
           delete story.updating;
@@ -680,9 +679,11 @@ scrumInCeresControllers.controller('IceboxProjectController', ['$rootScope', '$s
   $scope.saveStoryTasks = function(story) {
     Notifier.warning('Saving tasks...');
     story.updating = true;
-    ProjectStory.update(
-      {projectId: $scope.selectedProject.id, storyId: story.id},
+    IceBox.update(
+      {id: story.id},
+
       {'tasks': story.tasks},
+
       function() {
         delete story.updating;
         Notifier.success('Tasks saved!')
@@ -697,13 +698,16 @@ scrumInCeresControllers.controller('IceboxProjectController', ['$rootScope', '$s
   $scope.saveStoryDefinitions = function(story) {
     Notifier.warning('Saving definitions...');
     story.updating = true;
-    ProjectStory.update(
-      {projectId: $scope.selectedProject.id, storyId: story.id},
+    IceBox.update(
+      {id: story.id},
+
       {'definitionOfDone': story.definitionOfDone},
+
       function() {
         delete story.updating;
         Notifier.success('Definitions saved!')
       },
+
       function(error) {
         Alert.randomErrorMessage(error);
         delete story.updating;
@@ -715,28 +719,34 @@ scrumInCeresControllers.controller('IceboxProjectController', ['$rootScope', '$s
     $scope.newStories.splice($index, 1);
   };
 
-  $scope.removeStoryFromSelectedProject = function(story) {
-    ProjectStory.delete(
-      {projectId: $scope.selectedProject.id, storyId: story.id},
+  $scope.addStoryToSelectedProject = function(story, stories) {
+    Notifier.warning('Adding story...');
+    story.updating = true;
+    IceBox.update(
+      {id: story.id},
 
-      function() {
-        var index = _.findIndex($scope.selectedProject.stories, ['id', story.id]);
-        $scope.selectedProject.stories.splice(index, 1);
-        Alert.randomSuccessMessage();
+      {projectId: $scope.selectedProject.id},
+
+      function(result) {
+        var indexFull = _.findIndex($scope.iceboxStories, ['id', story.id]);
+        $scope.iceboxStories.splice(indexFull, 1);
+        if (stories) {
+          var indexGroup = _.findIndex(stories, ['id', story.id]);
+          stories.splice(indexGroup, 1);
+        }
+        story.updating = false;
+        $scope.$emit('projects.addingStoryToSelectedProject', story);
+        Notifier.success('Story added!')
       },
 
       function(error) {
         Alert.randomErrorMessage(error);
       }
-    )
+    );
   };
 
-  $scope.addingExistingStoryToSelectedProject = function() {
-    $scope.$emit('projects.toggleIceboxStoriesVisible');
-  };
-
-  $scope.addNewStoryToSelectedProject = function(storyType) {
-    var newStory = $scope.addNewStory({project: $scope.selectedProject, type: storyType}, true);
+  $scope.addNewStoryToIcebox = function(storyType) {
+    var newStory = $scope.addNewStory({type: storyType}, true);
     newStory.isOpen = true;
     newStory.isLoaded = true;
     newStory.currentTab = 0;

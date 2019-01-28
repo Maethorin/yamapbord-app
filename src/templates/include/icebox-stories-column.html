@@ -80,19 +80,6 @@
                 <button class="btn btn-xs btn-warning" type="button" ng-click="clearStoryFilter()"><i class="fa fa-refresh"></i></button>
               </div>
             </section>
-            <ul class="list-group story-iterations">
-              <li class="list-group-item">
-                <span class="form-story-label">ITERATION</span>
-                <div class="form-group with-select with-iteration-filter">
-                  <select ng-model="porraAngular.storyFilterIteration" class="form-control select-iteration-filter" ng-change="setIterationStoryFilter()">
-                    <option value="">-- All --</option>
-                    <option value="icebox">-- In Icebox --</option>
-                    <option value="sprint">-- In Sprint --</option>
-                    <option value="kanban">-- In Kanban --</option>
-                  </select>
-                </div>
-              </li>
-            </ul>
             <ul class="list-group col-sm-6">
               <li class="list-group-item">
                 <span class="form-story-label">MODULE</span>
@@ -120,14 +107,6 @@
                   <label class="btn btn-primary btn-xs points-{{point}}" ng-model="storyFilter.points" ng-class="{'active': point === storyFilter.points}" uib-btn-radio="point" ng-repeat="point in points" ng-bind="point"></label>
                 </div>
               </li>
-              <li class="list-group-item">
-                <span class="form-story-label">VALUE POINTS</span>
-                <div class="project-story-points btn-group">
-                  <label class="btn btn-danger btn-xs" ng-model="storyFilter.valuePoints" ng-class="{'active': false}" uib-btn-radio="">X</label>
-                  <label class="btn btn-primary btn-xs points-null" ng-model="storyFilter.valuePoints" ng-class="{'active': storyFilter.valuePoints === null}" uib-btn-radio="null">N</label>
-                  <label class="btn btn-primary btn-xs points-{{point}}" ng-model="storyFilter.valuePoints" ng-class="{'active': point === storyFilter.valuePoints}" uib-btn-radio="point" ng-repeat="point in points" ng-bind="point"></label>
-                </div>
-              </li>
             </ul>
             <ul class="list-group col-sm-6">
               <li class="list-group-item">
@@ -136,15 +115,6 @@
                   <select ng-model="storyFilter.epicId" class="select-epic form-control">
                     <option value="">-- All --</option>
                     <option value="{{epic.id}}" ng-bind="epic.name" ng-repeat="epic in epics|orderBy:'name'|filter:{modules: porraAngular.moduleAcronym} track by epic.id"></option>
-                  </select>
-                </div>
-              </li>
-              <li class="list-group-item">
-                <span class="form-story-label">STATUS</span>
-                <div class="form-group with-select with-story-status">
-                  <select ng-model="storyFilter.status" class="select-story-status {{storyFilter.status | lowercase}} form-control">
-                    <option value="">-- All --</option>
-                    <option ng-value="status.code" ng-repeat="status in storyStatus" ng-bind="status.name"></option>
                   </select>
                 </div>
               </li>
@@ -158,12 +128,11 @@
                 </div>
               </li>
               <li class="list-group-item">
-                <span class="form-story-label">OWNER</span>
-                <div class="form-group with-select with-requester">
-                  <select ng-model="storyFilter.ownerId" class="select-requester form-control">
-                    <option value="">-- All --</option>
-                    <option value="{{owner.id}}" ng-bind="owner.name" ng-repeat="owner in requesters|orderBy:'name' track by owner.id"></option>
-                  </select>
+                <span class="form-story-label">VALUE POINTS</span>
+                <div class="project-story-points btn-group">
+                  <label class="btn btn-danger btn-xs" ng-model="storyFilter.valuePoints" ng-class="{'active': false}" uib-btn-radio="">X</label>
+                  <label class="btn btn-primary btn-xs points-null" ng-model="storyFilter.valuePoints" ng-class="{'active': storyFilter.valuePoints === null}" uib-btn-radio="null">N</label>
+                  <label class="btn btn-primary btn-xs points-{{point}}" ng-model="storyFilter.valuePoints" ng-class="{'active': point === storyFilter.valuePoints}" uib-btn-radio="point" ng-repeat="point in points" ng-bind="point"></label>
                 </div>
               </li>
             </ul>
@@ -475,7 +444,7 @@
       </ul>
     </li>
 
-    <li class="list-group-item" ng-if="!iceboxLoading && groupedStories && porraAngular.groupStoryBy === 'module-epic'" ng-repeat="(zas, module) in groupedStories">
+    <li class="list-group-item" ng-if="!iceboxLoading && groupedStories && porraAngular.groupStoryBy === 'module-epic'" ng-repeat="(moduleGroup, module) in groupedStories">
       <ul class="list-group" ng-init="module.isOpen = false">
         <li class="list-group-item">
           <div class="panel panel-default panel-module">

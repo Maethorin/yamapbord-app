@@ -186,6 +186,14 @@
         }
         .panel-heading {
           background-color: $gray-dark;
+          .btn-add-to-project {
+            padding: 0 2px;
+            line-height: 13px;
+            border-radius: 2px;
+            i {
+              font-size: 12px;
+            }
+          }
           .story-type {
             background-repeat: no-repeat;
             background-position: center left;
