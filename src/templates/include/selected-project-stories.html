@@ -1,37 +1,20 @@
-<div class="panel panel-default panel-project" ng-controller="SelectedProjectController">
+<div class="panel panel-default panel-project" ng-controller="SelectedProjectStoriesController">
   <div class="panel-heading">
-
     <span>Project Stories</span>
 
-    <div class="fab-story-container">
-        <md-fab-toolbar md-open="false" md-direction="left">
-          <md-fab-trigger class="align-with-text">
-            <md-button aria-label="menu" class="md-fab md-mini md-primary">
-              <md-icon md-font-icon="fa fa-plus"></md-icon>
-            </md-button>
-          </md-fab-trigger>
-
-          <md-toolbar>
-            <md-fab-actions class="md-toolbar-tools">
-              <md-button aria-label="from icebox" class="md-icon-button" ng-click="addingExistingStoryToSelectedProject()">
-                <md-icon md-font-icon="fa  fa-snowflake-o"></md-icon>
-              </md-button>
-              <md-button aria-label="comment" class="md-icon-button" ng-click="addNewStoryToSelectedProject('FEA')">
-                <md-icon md-font-icon="fa fa-star"></md-icon>
-              </md-button>
-              <md-button aria-label="label" class="md-icon-button" ng-click="addNewStoryToSelectedProject('TEC')">
-                <md-icon md-font-icon="fa fa-cog"></md-icon>
-              </md-button>
-              <md-button aria-label="photo" class="md-icon-button" ng-click="addNewStoryToSelectedProject('BUG')">
-                <md-icon md-font-icon="fa fa-bug"></md-icon>
-              </md-button>
-              <md-button aria-label="photo" class="md-icon-button" ng-click="addNewStoryToSelectedProject('CHO')">
-                <md-icon md-font-icon="fa fa-flag"></md-icon>
-              </md-button>
-            </md-fab-actions>
-          </md-toolbar>
-        </md-fab-toolbar>
-      </div>
+    <div class="btn-group dropdown-add-story" uib-dropdown>
+      <button id="simple-btn-keyboard-nav" type="button" class="btn btn-xs btn-primary" uib-dropdown-toggle>
+        Add Story <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="simple-btn-keyboard-nav">
+        <li role="menuitem"><a ng-click="addingExistingStoryToSelectedProject()"><i class="fa fa-snowflake-o"></i> From Icebox</a></li>
+        <li class="divider"></li>
+        <li role="menuitem"><a ng-click="addNewStoryToSelectedProject('FEA')"><i class="fa fa-star"></i> New Feature</a></li>
+        <li role="menuitem"><a ng-click="addNewStoryToSelectedProject('BUG')"><i class="fa fa-bug"></i> New BUG</a></li>
+        <li role="menuitem"><a ng-click="addNewStoryToSelectedProject('TEC')"><i class="fa fa-cog"></i> New Techinical</a></li>
+        <li role="menuitem"><a ng-click="addNewStoryToSelectedProject('CHO')"><i class="fa fa-flag"></i> New Chore</a></li>
+      </ul>
+    </div>
   </div>
   <ul class="list-group project-stories-list">
     <li class="list-group-item stories-group-order">
@@ -42,6 +25,8 @@
             <option value="">No Order</option>
             <option value="name">Name</option>
             <option value="statement">Statement</option>
+            <option value="type">Type</option>
+            <option value="status">Status</option>
             <option value="+createdAt">Created At ASC</option>
             <option value="-createdAt">Created At DESC</option>
           </select>
