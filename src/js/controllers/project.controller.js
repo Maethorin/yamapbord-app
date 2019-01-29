@@ -528,7 +528,6 @@ scrumInCeresControllers.controller('SelectedProjectSprintsController', ['$rootSc
     groupStories();
   });
 
-
   $scope.openSprint = function(sprint) {
     if (sprint.isLoaded) {
       sprint.isOpen = !sprint.isOpen;
@@ -541,6 +540,10 @@ scrumInCeresControllers.controller('SelectedProjectSprintsController', ['$rootSc
 
       function(result) {
         sprint.stories = result.stories;
+        sprint.startDate = moment(sprint.startDate).toDate();
+        sprint.endDate = moment(sprint.endDate).toDate();
+        $scope.changeStartDate(sprint);
+        $scope.changeEndDate(sprint);
         sprint.isOpen = true;
         sprint.isLoaded = true;
         delete sprint.loading;
@@ -550,6 +553,40 @@ scrumInCeresControllers.controller('SelectedProjectSprintsController', ['$rootSc
         Alert.randomErrorMessage(error);
       }
     )
+  };
+
+  $scope.altInputFormats = ['d!/M!/yyyy', 'yyyy-M!-d!', 'dd MMM yyyy'];
+
+  $scope.startDateOptions = {
+    formatYear: 'yyyy',
+    maxDate: new Date(2021, 12, 31),
+    minDate: new Date(2017, 1, 1),
+    startingDay: 1
+  };
+
+  $scope.endDateOptions = {
+    formatYear: 'yyyy',
+    maxDate: new Date(2021, 12, 31),
+    minDate: new Date(2017, 1, 1),
+    startingDay: 1
+  };
+
+  $scope.openStartDate = function(sprint) {
+    sprint.startDateIsOpen = !sprint.startDateIsOpen;
+  };
+
+  $scope.openEndDate = function(sprint) {
+    sprint.endDateIsOpen = !sprint.endDateIsOpen;
+  };
+
+  $scope.changeStartDate = function(sprint) {
+    var startDate = moment(sprint.startDate).startOf('day');
+    $scope.endDateOptions.minDate = startDate.add(1, 'days').toDate();
+  };
+
+  $scope.changeEndDate = function(sprint) {
+    var endDate = moment(sprint.endDate).startOf('day');
+    $scope.startDateOptions.maxDate = endDate.add(-1, 'days').toDate();
   };
 
   $scope.$on('projects.addStoryToSelectedProject', function(ev, story) {

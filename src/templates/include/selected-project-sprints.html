@@ -153,12 +153,89 @@
     <li class="list-group-item project-sprint" ng-repeat="sprint in selectedProject.sprints">
       <div class="panel panel-default panel-sprint">
         <div class="panel-heading">
-          <span>{{sprint.name}}</span>
+          <span class="sprint-name" ng-show="!sprint.isOpen" ng-bind="sprint.name|limitWithEllipsis:60"></span>
+          <input type="text" class="sprint-name" ng-show="sprint.isOpen" ng-model="sprint.name" />
           <span ng-click="openSprint(sprint)" class="sprint-chevron">
             <i class="fa" ng-class="{'fa-chevron-up': sprint.isOpen, 'fa-chevron-down': !sprint.isOpen}"></i>
           </span>
         </div>
         <div class="panel-body" uib-collapse="!sprint.isOpen">
+          <form name="formSprint" class="form-sprint" ng-if="sprint.isOpen">
+            <section class="sprint-save">
+              <div class="form-group col-sm-11">
+                <textarea name="sprintObjective" id="sprintObjective" placeholder="Objective" required ng-model="sprint.objective" rows="3" class="form-control"></textarea>
+              </div>
+              <div class="col-sm-1">
+                <button class="btn btn-xs btn-success" type="button" title="Save sprint changes" ng-click="saveSprint(sprint)"><i class="fa fa-save"></i></button>
+                <button class="btn btn-xs btn-warning" ng-if="story.id" type="button" title="Undo story changes" ng-click="undoSprintChanges(sprint)"><i class="fa fa-undo"></i></button>
+                <button class="btn btn-xs btn-danger" ng-if="!story.id" type="button" title="Cancel new story" ng-click="cancelNewSprint($index)"><i class="fa fa-close"></i></button>
+              </div>
+            </section>
+            <ul class="list-group story-date">
+              <li class="list-group-item">
+                <span class="form-story-label">CREATED AT:</span> <span class="project-story-date" ng-bind="sprint.createdAt|formatDateString"></span>
+              </li>
+            </ul>
+            <section class="sprint-details">
+              <ul class="list-group col-sm-6">
+                <li class="list-group-item">
+                  <span class="form-story-label">START DATE</span>
+                  <div class="input-group sprint-date">
+                    <input type="text" class="form-control" uib-datepicker-popup="dd MMM yyyy" alt-input-formats="altInputFormats" ng-change="changeStartDate(sprint)" ng-model="sprint.startDate" is-open="sprint.startDateIsOpen" datepicker-options="startDateOptions" ng-required="true" close-text="Close" />
+                    <span class="input-group-btn">
+                      <button type="button" class="btn btn-xs btn-default" ng-click="openStartDate(sprint)"><i class="fa fa-calendar"></i></button>
+                    </span>
+                  </div>
+                </li>
+                <li class="list-group-item">
+                  <span class="form-story-label">WORKING DAYS</span>
+                  <div class="form-group">
+                  </div>
+                </li>
+                <li class="list-group-item">
+                  <span class="form-story-label">STATUS</span>
+                  <div class="form-group">
+                  </div>
+                </li>
+                <li class="list-group-item">
+                  <span class="form-story-label">STORY POINTS</span>
+                  <div class="project-sprint-points">
+                  </div>
+                </li>
+              </ul>
+
+              <ul class="list-group col-sm-6">
+                <li class="list-group-item">
+                  <span class="form-story-label">END DATE</span>
+                  <div class="input-group sprint-date">
+                    <input type="text" class="form-control" uib-datepicker-popup="dd MMM yyyy" alt-input-formats="altInputFormats" ng-change="changeEndDate(sprint)" ng-model="sprint.endDate" is-open="sprint.endDateIsOpen" datepicker-options="endDateOptions" ng-required="true" close-text="Close" />
+                    <span class="input-group-btn">
+                      <button type="button" class="btn btn-xs btn-default" ng-click="openEndDate(sprint)"><i class="fa fa-calendar"></i></button>
+                    </span>
+                  </div>
+                </li>
+                <li class="list-group-item">
+                  <span class="form-story-label">STORIES</span>
+                  <div class="form-group">
+                  </div>
+                </li>
+                <li class="list-group-item">
+                  <span class="form-story-label">TEAM</span>
+                  <div class="form-group">
+                  </div>
+                </li>
+                <li class="list-group-item">
+                  <span class="form-story-label">VALUE POINTS</span>
+                  <div class="project-sprint-points btn-group">
+                  </div>
+                </li>
+              </ul>
+            </section>
+          </form>
+
+
+
+
           <ul class="list-group project-stories-list" ng-if="sprint.isOpen">
 
             <li class="list-group-item animate-story new-story" ng-repeat="newStory in newStories">

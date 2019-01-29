@@ -284,7 +284,7 @@
 <div class="container-fluid project" ng-class="{'lateral-menu-open': lateralMenuOpen}">
   <section id="selectedProjectStories" ng-if="selectedProject !== null" ng-include="'templates/include/selected-project-stories.html'"></section>
   <section id="iceboxStories" ng-if="showIceboxStories" ng-include="'templates/include/icebox-stories-column.html'"></section>
-  <section id="selectedProjectSprints" ng-if="false && selectedProject !== null" ng-include="'templates/include/selected-project-sprints.html'"></section>
+  <section id="selectedProjectSprints" ng-if="selectedProject !== null" ng-include="'templates/include/selected-project-sprints.html'"></section>
 </div>
 
 <div class="lateral-menu col-md-2" ng-class="{'opened': lateralMenuOpen}">

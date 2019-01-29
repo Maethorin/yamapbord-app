@@ -156,30 +156,6 @@
         }
       }
 
-      .panel-sprint {
-        padding: 0;
-        .panel-heading {
-          .sprint-chevron {
-            float: right;
-            display: inline-block;
-            margin-right: 5px;
-            margin-top: -2px;
-            color: $gray-light;
-            i {
-              font-size: 12px;
-            }
-          }
-        }
-        .panel-body {
-          padding: 0;
-          .project-stories-list {
-            padding: 0;
-            height: auto;
-            overflow: hidden;
-          }
-        }
-      }
-
       .panel-module {
         padding: 0;
         .panel-heading {
@@ -215,14 +191,17 @@
           }
         }
       }
-      .panel-story {
+
+      .panel-story, .panel-sprint {
         margin: 0;
         padding: 0;
         &:hover {
           border-color: $gray-dark;
         }
+
         .panel-heading {
           background-color: $gray-dark;
+
           .btn-add-to-project {
             padding: 0 2px;
             line-height: 13px;
@@ -231,6 +210,7 @@
               font-size: 12px;
             }
           }
+
           .story-type {
             background-repeat: no-repeat;
             background-position: center left;
@@ -240,8 +220,9 @@
             width: 13px;
             height: 13px;
           }
+
           input {
-            &.story-name {
+            &.story-name, &.sprint-name {
               height: 18px;
               border: 1px solid $gray;
               background-color: $gray-dark;
@@ -250,11 +231,18 @@
               font-size: 12px;
               padding: 2px;
             }
+            &.sprint-name {
+              font-size: 15px;
+              background-color: $gray-darker;
+              vertical-align: inherit;
+            }
           }
+
           .story-name {
             font-size: 12px;
             vertical-align: middle;
           }
+
           .story-chevron {
             float: right;
             display: inline-block;
@@ -266,23 +254,26 @@
             }
           }
         }
+
         .panel-body {
           background-color: #f1f0ea;
           padding: 0 5px;
-          .form-story {
+          .form-story, .form-sprint {
             padding: 5px 0;
-            .statement-save {
+            .statement-save, .sprint-save {
               overflow: hidden;
               .btn-success {
                 margin: 5px 0;
               }
             }
-            .story-details, .story-tabs, .story-iterations, .story-date {
+
+            .story-details, .sprint-details, .story-tabs, .story-iterations, .story-date {
               overflow: hidden;
               margin-top: 5px;
               border-top: 1px solid #666;
             }
-            .story-details {
+
+            .story-details, .sprint-details {
               .list-group {
                 li {
                   div {
@@ -291,6 +282,7 @@
                 }
               }
             }
+
             .list-group {
               &.col-sm-6 {
                 padding: 0 5px;
@@ -365,13 +357,13 @@
                   margin: 0;
                   &.with-select {
                     padding: 0;
-                    &.with-story-type, &.with-story-status, &.with-requester {
+                    &.with-story-type, &.with-story-status {
                       width: 67%;
                     }
                     &.with-module, &.with-iteration-filter {
                       width: 73%;
                     }
-                    &.with-epic {
+                    &.with-epic, &.with-requester {
                       width: 82%;
                       margin-left: 4px;
                     }
@@ -389,6 +381,7 @@
                 }
               }
             }
+
             .story-tabs {
               padding: 5px 0;
               ul {
@@ -526,9 +519,11 @@
               }
             }
           }
+
           .form-group {
             margin: 0;
           }
+
           .form-control {
             font-family: Open Sans,open-sans,EmojiFontFace,helvetica,arial,sans-serif;
             font-size: 12px;
@@ -539,6 +534,7 @@
             background-color: #FFFAFA;
             color: #666;
           }
+
           input {
             &.form-control {
               height: 24px;
@@ -546,6 +542,81 @@
           }
         }
       }
+
+      .panel-sprint {
+        padding: 0;
+        .panel-heading {
+          background-color: $gray-darker;
+
+          .sprint-name {
+            font-size: 15px;
+            vertical-align: middle;
+          }
+
+          .sprint-chevron {
+            float: right;
+            display: inline-block;
+            margin-right: 5px;
+            margin-top: -2px;
+            color: $gray-light;
+            i {
+              font-size: 12px;
+            }
+          }
+        }
+        .panel-body {
+          padding: 0;
+
+          .form-sprint {
+            padding: 5px;
+            .sprint-details {
+              overflow: unset;
+              height: 120px;
+              .list-group {
+                .list-group-item {
+                  overflow: unset;
+                  height: 30px;
+                  .sprint-date {
+                    width: 53%;
+                    float: right;
+                    .form-control {
+                      text-align: right;
+                      height: 20px;
+                      font-size: 12px;
+                    }
+                    .input-group-btn {
+                      .btn-xs {
+                        padding: 0 5px;
+                        line-height: 18px;
+                        i {
+                          font-size: 13px;
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+
+          .project-stories-list {
+            padding: 0;
+            height: auto;
+            overflow: hidden;
+            .panel-story {
+              .panel-heading {
+                background-color: $gray-dark;
+              }
+            }
+            .form-story {
+              padding: 5px;
+            }
+          }
+        }
+      }
+    }
+    .project-sprint {
+      overflow: initial;
     }
   }
 
