@@ -154,7 +154,7 @@
       <div class="panel panel-default panel-sprint">
         <div class="panel-heading">
           <span class="sprint-name" ng-show="!sprint.isOpen" ng-bind="sprint.name|limitWithEllipsis:60"></span>
-          <input type="text" class="sprint-name" ng-show="sprint.isOpen" ng-model="sprint.name" />
+          <input type="text" class="sprint-name" required ng-disabled="!sprint.isPlanned" ng-show="sprint.isOpen" ng-model="sprint.name" />
           <span ng-click="openSprint(sprint)" class="sprint-chevron">
             <i class="fa" ng-class="{'fa-chevron-up': sprint.isOpen, 'fa-chevron-down': !sprint.isOpen}"></i>
           </span>
@@ -163,7 +163,7 @@
           <form name="formSprint" class="form-sprint" ng-if="sprint.isOpen">
             <section class="sprint-save">
               <div class="form-group col-sm-11">
-                <textarea name="sprintObjective" id="sprintObjective" placeholder="Objective" required ng-model="sprint.objective" rows="3" class="form-control"></textarea>
+                <textarea name="sprintObjective" id="sprintObjective" ng-disabled="!sprint.isPlanned" placeholder="Objective" required ng-model="sprint.objective" rows="3" class="form-control"></textarea>
               </div>
               <div class="col-sm-1">
                 <button class="btn btn-xs btn-success" type="button" title="Save sprint changes" ng-click="saveSprint(sprint)"><i class="fa fa-save"></i></button>
@@ -181,25 +181,33 @@
                 <li class="list-group-item">
                   <span class="form-story-label">START DATE</span>
                   <div class="input-group sprint-date">
-                    <input type="text" class="form-control" uib-datepicker-popup="dd MMM yyyy" alt-input-formats="altInputFormats" ng-change="changeStartDate(sprint)" ng-model="sprint.startDate" is-open="sprint.startDateIsOpen" datepicker-options="startDateOptions" ng-required="true" close-text="Close" />
+                    <input type="text" class="form-control" required ng-disabled="!sprint.isPlanned" uib-datepicker-popup="dd MMM yyyy" alt-input-formats="altInputFormats" ng-change="changeStartDate(sprint)" ng-model="sprint.startDate" is-open="sprint.startDateIsOpen" datepicker-options="startDateOptions" ng-required="true" close-text="Close" />
                     <span class="input-group-btn">
-                      <button type="button" class="btn btn-xs btn-default" ng-click="openStartDate(sprint)"><i class="fa fa-calendar"></i></button>
+                      <button type="button" class="btn btn-xs btn-default" ng-disabled="!sprint.isPlanned" ng-click="openStartDate(sprint)"><i class="fa fa-calendar"></i></button>
                     </span>
                   </div>
                 </li>
                 <li class="list-group-item">
                   <span class="form-story-label">WORKING DAYS</span>
                   <div class="form-group">
+                    <span class="sprint-numeric-label" ng-bind="sprint.workingDays"></span>
                   </div>
                 </li>
                 <li class="list-group-item">
                   <span class="form-story-label">STATUS</span>
-                  <div class="form-group">
+                  <div class="form-group with-select">
+                    <select id="selectStatus" ng-model="sprint.status" name="status" required class="select-status form-control">
+                      <option value="PLAN" class="sprint-status sprint-planned" ng-disabled="!sprint.isPlanned">PLANNED</option>
+                      <option value="CURR" class="sprint-status sprint-current">CURRENT</option>
+                      <option value="FAIL" class="sprint-status sprint-failure">FAIL</option>
+                      <option value="SUCC" class="sprint-status sprint-success">SUCCESS</option>
+                    </select>
                   </div>
                 </li>
                 <li class="list-group-item">
                   <span class="form-story-label">STORY POINTS</span>
-                  <div class="project-sprint-points">
+                  <div class="form-group">
+                    <span class="sprint-numeric-label">{{sprint.storiesPerDay.toFixed(2)}}/day = {{sprint.sumStoriesPoints}}</span>
                   </div>
                 </li>
               </ul>
@@ -208,25 +216,30 @@
                 <li class="list-group-item">
                   <span class="form-story-label">END DATE</span>
                   <div class="input-group sprint-date">
-                    <input type="text" class="form-control" uib-datepicker-popup="dd MMM yyyy" alt-input-formats="altInputFormats" ng-change="changeEndDate(sprint)" ng-model="sprint.endDate" is-open="sprint.endDateIsOpen" datepicker-options="endDateOptions" ng-required="true" close-text="Close" />
+                    <input type="text" class="form-control" required ng-disabled="!sprint.isPlanned" uib-datepicker-popup="dd MMM yyyy" alt-input-formats="altInputFormats" ng-change="changeEndDate(sprint)" ng-model="sprint.endDate" is-open="sprint.endDateIsOpen" datepicker-options="endDateOptions" ng-required="true" close-text="Close" />
                     <span class="input-group-btn">
-                      <button type="button" class="btn btn-xs btn-default" ng-click="openEndDate(sprint)"><i class="fa fa-calendar"></i></button>
+                      <button type="button" class="btn btn-xs btn-default" ng-disabled="!sprint.isPlanned" ng-click="openEndDate(sprint)"><i class="fa fa-calendar"></i></button>
                     </span>
                   </div>
                 </li>
                 <li class="list-group-item">
                   <span class="form-story-label">STORIES</span>
                   <div class="form-group">
+                    <span class="sprint-numeric-label" ng-bind="sprint.stories.length"></span>
                   </div>
                 </li>
                 <li class="list-group-item">
                   <span class="form-story-label">TEAM</span>
-                  <div class="form-group">
+                  <div class="form-group with-select">
+                    <select id="selectTeam" ng-model="sprint.team" name="team" required ng-disabled="!sprint.isPlanned" class="select-team form-control" ng-options="team.name for team in teams track by team.id">
+                      <option value="">-- Team --</option>
+                    </select>
                   </div>
                 </li>
                 <li class="list-group-item">
                   <span class="form-story-label">VALUE POINTS</span>
-                  <div class="project-sprint-points btn-group">
+                  <div class="form-group">
+                    <span class="sprint-numeric-label" ng-bind="sprint.sumValuePoints"></span>
                   </div>
                 </li>
               </ul>

@@ -517,7 +517,7 @@ scrumInCeresControllers.controller('SelectedProjectStoriesController', ['$rootSc
 
 }]);
 
-scrumInCeresControllers.controller('SelectedProjectSprintsController', ['$rootScope', '$scope', 'Notifier', 'Alert', 'StoryService', 'ProjectStory', 'BacklogSprint', function($rootScope, $scope, Notifier, Alert, StoryService, ProjectStory, BacklogSprint) {
+scrumInCeresControllers.controller('SelectedProjectSprintsController', ['$rootScope', '$scope', 'Notifier', 'Alert', 'MeService', 'StoryService', 'HollydayService', 'ProjectStory', 'BacklogSprint', function($rootScope, $scope, Notifier, Alert, MeService, StoryService, HollydayService, ProjectStory, BacklogSprint) {
   $scope.imInIcebox = false;
   $scope.selectedProject = null;
   $scope.$on('projects.selectedProject', function(event, selectedProject) {
@@ -527,6 +527,24 @@ scrumInCeresControllers.controller('SelectedProjectSprintsController', ['$rootSc
     $scope.selectedProject = selectedProject;
     groupStories();
   });
+
+  $scope.teams = [];
+  MeService.getInfo().then(
+    function(info) {
+      $scope.teams = info.teams;
+      if ($scope.teams == null || $scope.teams.length === 0) {
+        $scope.teams = [info.team];
+      }
+    }
+  );
+
+  function updateWorkingDays(sprint) {
+    HollydayService.setWorkingDays(sprint).then(
+      function() {
+        sprint.storiesPerDay = sprint.sumStoriesPoints / sprint.workingDays;
+      }
+    );
+  }
 
   $scope.openSprint = function(sprint) {
     if (sprint.isLoaded) {
@@ -542,10 +560,17 @@ scrumInCeresControllers.controller('SelectedProjectSprintsController', ['$rootSc
         sprint.stories = result.stories;
         sprint.startDate = moment(sprint.startDate).toDate();
         sprint.endDate = moment(sprint.endDate).toDate();
-        $scope.changeStartDate(sprint);
+        $scope.changeStartDate(sprint, true);
         $scope.changeEndDate(sprint);
         sprint.isOpen = true;
         sprint.isLoaded = true;
+        sprint.sumStoriesPoints = _.sumBy(sprint.stories, function(story) {
+          return story.points || 0;
+        });
+        sprint.sumValuePoints = _.sumBy(sprint.stories, function(story) {
+          return story.valuePoints || 0;
+        });
+        updateWorkingDays(sprint);
         delete sprint.loading;
       },
 
@@ -579,15 +604,63 @@ scrumInCeresControllers.controller('SelectedProjectSprintsController', ['$rootSc
     sprint.endDateIsOpen = !sprint.endDateIsOpen;
   };
 
-  $scope.changeStartDate = function(sprint) {
+  $scope.changeStartDate = function(sprint, noUpdate) {
     var startDate = moment(sprint.startDate).startOf('day');
     $scope.endDateOptions.minDate = startDate.add(1, 'days').toDate();
+    if (noUpdate) {
+      return;
+    }
+    updateWorkingDays(sprint);
   };
 
   $scope.changeEndDate = function(sprint) {
     var endDate = moment(sprint.endDate).startOf('day');
     $scope.startDateOptions.maxDate = endDate.add(-1, 'days').toDate();
+    updateWorkingDays(sprint);
   };
+
+  $scope.saveSprint = function(sprint) {
+    Notifier.warning('Saving sprint...');
+    var sprintToSend = _.cloneDeep(sprint);
+    sprint.updating = true;
+    delete sprintToSend.isOpen;
+    delete sprintToSend.isLoaded;
+    delete sprintToSend.sumStoriesPoints;
+    delete sprintToSend.sumValuePoints;
+    delete sprintToSend.workingDays;
+    sprintToSend.stories = _.map(sprint.stories, 'id');
+    if (sprint.id) {
+      BacklogSprint.update(
+        {id: sprint.id},
+        sprintToSend,
+        function() {
+          delete sprint.updating;
+          Notifier.success('Sprint saved!')
+        },
+        function(error) {
+          Alert.randomErrorMessage(error);
+          delete sprint.updating;
+        }
+      );
+    }
+    else {
+      BacklogSprint.save(
+        sprintToSend,
+        function(result) {
+          $scope.selectedProject.sprints.push(result);
+          $scope.newSprints.splice($index, 1);
+          // groupStories();
+          Notifier.success('Sprint saved!')
+        },
+        function(error) {
+          Alert.randomErrorMessage(error);
+          delete sprint.updating;
+        }
+      );
+    }
+  };
+
+
 
   $scope.$on('projects.addStoryToSelectedProject', function(ev, story) {
     $scope.selectedProject.stories.push(story);

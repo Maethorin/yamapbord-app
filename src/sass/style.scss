@@ -393,6 +393,11 @@ h4 {
   padding: 0;
 }
 
+
+.sprint-status {
+  @include sprint-status-backgrounds();
+}
+
 .list-group {
   margin-bottom: 0;
   li {

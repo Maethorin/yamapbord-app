@@ -31,6 +31,7 @@ scrumInCeresServices.service('HollydayService', ['$window', '$q', 'Hollyday', fu
   };
 
   this.setWorkingDays = function(component) {
+    var defer = $q.defer();
     self.getHollydays().then(
       function() {
         var startDate = moment(component.startDate).startOf('day');
@@ -41,8 +42,10 @@ scrumInCeresServices.service('HollydayService', ['$window', '$q', 'Hollyday', fu
             component.workingDays += 1;
           }
         }
+        defer.resolve();
       }
     );
-  }
+    return defer.promise;
+  };
 
 }]);

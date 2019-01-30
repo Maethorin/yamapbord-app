@@ -152,10 +152,6 @@
     }
   }
 
-  .sprint-status {
-    @include sprint-status-backgrounds();
-  }
-
   .sprint-dates {
     overflow: hidden;
     margin-bottom: 20px;
