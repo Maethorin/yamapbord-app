@@ -20,7 +20,7 @@ scrumInCeresDirectives.directive('storyFilterTotal', [function() {
           scope.storyFilterText = "No stories found for filter";
         }
         if (scope.totalStories === 0) {
-          scope.storyFilterText = "There is no stories for this project";
+''          scope.storyFilterText = "There is no stories here";
         }
       });
     },

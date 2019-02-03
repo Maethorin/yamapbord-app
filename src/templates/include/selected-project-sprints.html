@@ -208,10 +208,10 @@
                 <ul class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="simple-btn-keyboard-nav">
                   <li role="menuitem"><a ng-click="addingExistingStoryToSelectedProject()"><i class="fa fa-snowflake-o"></i> From Icebox</a></li>
                   <li class="divider"></li>
-                  <li role="menuitem"><a ng-click="addNewStoryToSelectedProject('FEA')"><i class="fa fa-star"></i> New Feature</a></li>
-                  <li role="menuitem"><a ng-click="addNewStoryToSelectedProject('BUG')"><i class="fa fa-bug"></i> New BUG</a></li>
-                  <li role="menuitem"><a ng-click="addNewStoryToSelectedProject('TEC')"><i class="fa fa-cog"></i> New Techinical</a></li>
-                  <li role="menuitem"><a ng-click="addNewStoryToSelectedProject('CHO')"><i class="fa fa-flag"></i> New Chore</a></li>
+                  <li role="menuitem"><a ng-click="addNewStoryToSprint('FEA', sprint)"><i class="fa fa-star"></i> New Feature</a></li>
+                  <li role="menuitem"><a ng-click="addNewStoryToSprint('BUG', sprint)"><i class="fa fa-bug"></i> New BUG</a></li>
+                  <li role="menuitem"><a ng-click="addNewStoryToSprint('TEC', sprint)"><i class="fa fa-cog"></i> New Techinical</a></li>
+                  <li role="menuitem"><a ng-click="addNewStoryToSprint('CHO', sprint)"><i class="fa fa-flag"></i> New Chore</a></li>
                 </ul>
               </div>
             </div>
@@ -220,7 +220,7 @@
 
               <li-story-filter porra-angular="sprint.porraAngular" story-filter="sprint.storyFilter" show-iteration="false" stories="sprint.stories" stories-filtered="storiesFiltered"></li-story-filter>
 
-              <li class="list-group-item animate-story new-story" ng-repeat="newStory in newStories" ng-include="'newStoryPanel'"></li>
+              <li class="list-group-item animate-story new-story" ng-repeat="newStory in sprint.newStories" ng-include="'newStoryPanel'"></li>
 
               <li class="list-group-item animate-story" ng-if="!selectedProject.loading && !sprint.loading && !sprint.groupedStories" id="project{{selectedProject.id}}Sprint{{sprint.id}}Story{{story.id}}" ng-repeat="story in sprint.stories | orderBy:sprint.porraAngular.orderStoryBy | filter:sprint.storyFilter as storiesFiltered" ng-include="'storyPanel'"></li>
             </ul>

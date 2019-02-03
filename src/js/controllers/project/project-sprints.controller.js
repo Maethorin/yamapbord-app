@@ -4,6 +4,9 @@ scrumInCeresControllers.controller('SelectedProjectSprintsController', ['$rootSc
   $scope.imInIcebox = false;
   $scope.selectedProject = null;
   $scope.newSprints = [];
+  $scope.storiesFiltered = [];
+  $scope.storyItemsSortableOptions = { containerPositioning: 'relative' };
+  StoryService.prepareScopeToEditStory($scope);
 
   $scope.$on('projects.selectedProject', function(event, selectedProject) {
     if ($scope.selectedProject !== null && $scope.selectedProject.id === selectedProject.id) {
@@ -58,12 +61,13 @@ scrumInCeresControllers.controller('SelectedProjectSprintsController', ['$rootSc
         sprint.sumValuePoints = _.sumBy(sprint.stories, function(story) {
           return story.valuePoints || 0;
         });
-        updateWorkingDays(sprint);
         sprint.porraAngular = {storyFilterIsOpen: false, storyFilterIteration: null, moduleAcronym: '', orderStoryBy: null, groupStoryBy: null};
         sprint.storyFilter = {
           name: '',
           statement: ''
         };
+        sprint.newStories = [];
+        updateWorkingDays(sprint);
         delete sprint.loading;
       },
 
@@ -129,6 +133,8 @@ scrumInCeresControllers.controller('SelectedProjectSprintsController', ['$rootSc
     delete sprintToSend.startDateIsOpen;
     delete sprintToSend.porraAngular;
     delete sprintToSend.storyFilter;
+    delete sprintToSend.newStories;
+
     sprintToSend.stories = _.map(sprint.stories, 'id');
     if (sprint.id) {
       BacklogSprint.update(
@@ -187,6 +193,7 @@ scrumInCeresControllers.controller('SelectedProjectSprintsController', ['$rootSc
       name: '',
       statement: ''
     };
+    newSprint.newStories = [];
 
     $scope.startDateOptions.maxDate = new Date(2021, 12, 31);
     $scope.startDateOptions.minDate = new Date(2017, 1, 1);
@@ -196,57 +203,73 @@ scrumInCeresControllers.controller('SelectedProjectSprintsController', ['$rootSc
     $scope.newSprints.unshift(newSprint);
   };
 
+  $scope.addNewStoryToSprint = function(storyType, sprint) {
+    var newStory = $scope.addNewStory(
+      {project: $scope.selectedProject, type: storyType, iterationType: 'sprint', iteration: sprint},
+      true
+    );
+    newStory.isOpen = true;
+    newStory.isLoaded = true;
+    newStory.currentTab = 0;
+    newStory.newTaskVisible = false;
+    newStory.newDefinitionVisible = false;
+    newStory.newCommentVisible = false;
+    newStory.newCommentType = null;
+    newStory.newMergeRequestVisible = false;
+    sprint.newStories.unshift(newStory);
+  };
 
-
-
-
-
-  $scope.$on('projects.addStoryToSelectedProject', function(ev, story) {
-    $scope.selectedProject.stories.push(story);
-    groupStories();
-  });
-
-  $scope.storiesFiltered = [];
-  $scope.storyItemsSortableOptions = { containerPositioning: 'relative' };
-  $scope.newStories = [];
-  $scope.groupedStories = false;
-  $scope.storiesGroupOpen = {};
-
-  StoryService.prepareScopeToEditStory($scope);
-
-  function groupStories() {
-    if (!$scope.selectedProject) {
-      return false;
+  $scope.saveStory = function(story, $index, sprint) {
+    Notifier.warning('Saving story...');
+    var storyToSend = _.cloneDeep(story);
+    story.updating = true;
+    delete storyToSend.isOpen;
+    delete storyToSend.isLoaded;
+    delete storyToSend.currentTab;
+    delete storyToSend.newTaskVisible;
+    delete storyToSend.newDefinitionVisible;
+    delete storyToSend.newCommentVisible;
+    delete storyToSend.newCommentType;
+    delete storyToSend.newMergeRequestVisible;
+    if (story.id) {
+      ProjectStory.update(
+        {projectId: $scope.selectedProject.id, storyId: story.id},
+        storyToSend,
+        function() {
+          delete story.updating;
+          Notifier.success('Story saved!')
+        },
+        function(error) {
+          Alert.randomErrorMessage(error);
+          delete story.updating;
+        }
+      );
     }
-    $scope.groupedStories = false;
-    if ($scope.porraAngular.groupStoryBy === 'module') {
-      $scope.groupedStories = _.groupBy($scope.selectedProject.stories, 'moduleId');
+    else {
+      ProjectStory.save(
+        {projectId: $scope.selectedProject.id},
+        storyToSend,
+        function(result) {
+          sprint.stories.push(result);
+          sprint.newStories.splice($index, 1);
+          // groupStories();
+          Notifier.success('Story saved!')
+        },
+        function(error) {
+          Alert.randomErrorMessage(error);
+          delete story.updating;
+        }
+      );
     }
-    if ($scope.porraAngular.groupStoryBy === 'module-epic') {
-      $scope.groupedStories = [];
-      var tempGroupStories = _.groupBy($scope.selectedProject.stories, 'moduleId');
-      _.forEach(tempGroupStories, function(group) {
-        $scope.groupedStories.push(
-          {
-            id: group[0].moduleId,
-            isOpen: false,
-            stories: _.groupBy(group, 'epicId')
-          }
-        );
-      });
-    }
-    if ($scope.porraAngular.groupStoryBy === 'type') {
-      $scope.groupedStories = _.groupBy($scope.selectedProject.stories, 'type');
-    }
-    if ($scope.porraAngular.groupStoryBy === 'status') {
-      $scope.groupedStories = _.groupBy($scope.selectedProject.stories, 'status');
-    }
-  }
+  };
 
-  $scope.$watch('porraAngular.groupStoryBy', groupStories);
+  $scope.cancelNewStory = function($index, sprint) {
+    sprint.newStories.splice($index, 1);
+  };
 
-  $scope.openGroupedStories = function(group) {
-    group.isOpen = !group.isOpen;
+  $scope.undoStoryChanges = function(story) {
+    story.isLoaded = false;
+    $scope.selectStory(story);
   };
 
   $scope.selectStory = function(story) {
@@ -278,55 +301,6 @@ scrumInCeresControllers.controller('SelectedProjectSprintsController', ['$rootSc
         StoryService.turnCompactStoryAsComplete(story, result);
       }
     )
-  };
-
-  $scope.undoStoryChanges = function(story) {
-    story.isLoaded = false;
-    $scope.selectStory(story);
-  };
-
-  $scope.saveStory = function(story, $index) {
-    Notifier.warning('Saving story...');
-    var storyToSend = _.cloneDeep(story);
-    story.updating = true;
-    delete storyToSend.isOpen;
-    delete storyToSend.isLoaded;
-    delete storyToSend.currentTab;
-    delete storyToSend.newTaskVisible;
-    delete storyToSend.newDefinitionVisible;
-    delete storyToSend.newCommentVisible;
-    delete storyToSend.newCommentType;
-    delete storyToSend.newMergeRequestVisible;
-    if (story.id) {
-      ProjectStory.update(
-        {projectId: $scope.selectedProject.id, storyId: story.id},
-        storyToSend,
-        function() {
-          delete story.updating;
-          Notifier.success('Story saved!')
-        },
-        function(error) {
-          Alert.randomErrorMessage(error);
-          delete story.updating;
-        }
-      );
-    }
-    else {
-      ProjectStory.save(
-        {projectId: $scope.selectedProject.id},
-        storyToSend,
-        function(result) {
-          $scope.selectedProject.stories.push(result);
-          $scope.newStories.splice($index, 1);
-          groupStories();
-          Notifier.success('Story saved!')
-        },
-        function(error) {
-          Alert.randomErrorMessage(error);
-          delete story.updating;
-        }
-      );
-    }
   };
 
   $scope.changeStoryTab = function(story, tabIndex) {
@@ -367,8 +341,54 @@ scrumInCeresControllers.controller('SelectedProjectSprintsController', ['$rootSc
     );
   };
 
-  $scope.cancelNewStory = function($index) {
-    $scope.newStories.splice($index, 1);
+
+
+
+
+
+  $scope.$on('projects.addStoryToSelectedProject', function(ev, story) {
+    $scope.selectedProject.stories.push(story);
+    groupStories();
+  });
+
+  $scope.newStories = [];
+  $scope.groupedStories = false;
+  $scope.storiesGroupOpen = {};
+
+
+  function groupStories() {
+    if (!$scope.selectedProject) {
+      return false;
+    }
+    $scope.groupedStories = false;
+    if ($scope.porraAngular.groupStoryBy === 'module') {
+      $scope.groupedStories = _.groupBy($scope.selectedProject.stories, 'moduleId');
+    }
+    if ($scope.porraAngular.groupStoryBy === 'module-epic') {
+      $scope.groupedStories = [];
+      var tempGroupStories = _.groupBy($scope.selectedProject.stories, 'moduleId');
+      _.forEach(tempGroupStories, function(group) {
+        $scope.groupedStories.push(
+          {
+            id: group[0].moduleId,
+            isOpen: false,
+            stories: _.groupBy(group, 'epicId')
+          }
+        );
+      });
+    }
+    if ($scope.porraAngular.groupStoryBy === 'type') {
+      $scope.groupedStories = _.groupBy($scope.selectedProject.stories, 'type');
+    }
+    if ($scope.porraAngular.groupStoryBy === 'status') {
+      $scope.groupedStories = _.groupBy($scope.selectedProject.stories, 'status');
+    }
+  }
+
+  $scope.$watch('porraAngular.groupStoryBy', groupStories);
+
+  $scope.openGroupedStories = function(group) {
+    group.isOpen = !group.isOpen;
   };
 
   $scope.removeStoryFromSelectedProject = function(story) {
@@ -389,18 +409,5 @@ scrumInCeresControllers.controller('SelectedProjectSprintsController', ['$rootSc
 
   $scope.addingExistingStoryToSelectedProject = function() {
     $scope.$emit('projects.toggleIceboxStoriesVisible');
-  };
-
-  $scope.addNewStoryToSelectedProject = function(storyType) {
-    var newStory = $scope.addNewStory({project: $scope.selectedProject, type: storyType}, true);
-    newStory.isOpen = true;
-    newStory.isLoaded = true;
-    newStory.currentTab = 0;
-    newStory.newTaskVisible = false;
-    newStory.newDefinitionVisible = false;
-    newStory.newCommentVisible = false;
-    newStory.newCommentType = null;
-    newStory.newMergeRequestVisible = false;
-    $scope.newStories.unshift(newStory);
   };
 }]);

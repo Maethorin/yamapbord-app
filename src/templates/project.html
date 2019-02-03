@@ -18,9 +18,9 @@
             <textarea name="storyStatement" id="storyStatement" placeholder="Statement" required ng-model="story.statement" rows="3" class="form-control"></textarea>
           </div>
           <div class="col-sm-1">
-            <button class="btn btn-xs btn-success" type="button" title="Save story changes" ng-click="saveStory(story)"><i class="fa fa-save"></i></button>
+            <button class="btn btn-xs btn-success" type="button" title="Save story changes" ng-click="saveStory(story, sprint)"><i class="fa fa-save"></i></button>
             <button class="btn btn-xs btn-warning" ng-if="story.id" type="button" title="Undo story changes" ng-click="undoStoryChanges(story)"><i class="fa fa-undo"></i></button>
-            <button class="btn btn-xs btn-danger" ng-if="!story.id" type="button" title="Cancel new story" ng-click="cancelNewStory($index)"><i class="fa fa-close"></i></button>
+            <button class="btn btn-xs btn-danger" ng-if="!story.id" type="button" title="Cancel new story" ng-click="cancelNewStory($index, sprint)"><i class="fa fa-close"></i></button>
           </div>
         </section>
         <ul class="list-group story-date">
@@ -298,8 +298,8 @@
             <textarea name="storyStatement" id="newStoryStatement" placeholder="Statement" required ng-model="newStory.statement" rows="3" class="form-control"></textarea>
           </div>
           <div class="col-sm-1">
-            <button class="btn btn-xs btn-success" type="button" title="Save new story" ng-click="saveStory(newStory, $index)"><i class="fa fa-save"></i></button>
-            <button class="btn btn-xs btn-danger" type="button" title="Cancel new story" ng-click="cancelNewStory($index)"><i class="fa fa-close"></i></button>
+            <button class="btn btn-xs btn-success" type="button" title="Save new story" ng-click="saveStory(newStory, $index, sprint)"><i class="fa fa-save"></i></button>
+            <button class="btn btn-xs btn-danger" type="button" title="Cancel new story" ng-click="cancelNewStory($index, sprint)"><i class="fa fa-close"></i></button>
           </div>
         </section>
         <ul class="list-group story-iterations">
