@@ -26,7 +26,10 @@ scrumInCeresControllers.controller('SelectedProjectSprintsController', ['$rootSc
   function updateWorkingDays(sprint) {
     HollydayService.setWorkingDays(sprint).then(
       function() {
-        sprint.storiesPerDay = (sprint.sumStoriesPoints || 0) / sprint.workingDays;
+        sprint.storiesPerDay = 0;
+        if (sprint.workingDays) {
+          sprint.storiesPerDay = (sprint.sumStoriesPoints || 0) / sprint.workingDays;
+        }
       }
     );
   }
@@ -178,9 +181,11 @@ scrumInCeresControllers.controller('SelectedProjectSprintsController', ['$rootSc
 
     $scope.endDateOptions.maxDate = new Date(2021, 12, 31);
     $scope.endDateOptions.minDate = new Date(2017, 1, 1);
-
+    updateWorkingDays(newSprint);
     $scope.newSprints.unshift(newSprint);
   };
+
+
 
 
 

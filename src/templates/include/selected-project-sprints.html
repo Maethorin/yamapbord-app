@@ -186,7 +186,7 @@
                 <li class="list-group-item">
                   <span class="form-story-label">WORKING DAYS</span>
                   <div class="form-group">
-                    <span class="sprint-numeric-label" ng-bind="sprint.workingDays"></span>
+                    <span class="sprint-numeric-label" ng-bind="sprint.workingDays || 0"></span>
                   </div>
                 </li>
                 <li class="list-group-item">
@@ -203,7 +203,7 @@
                 <li class="list-group-item">
                   <span class="form-story-label">STORY POINTS</span>
                   <div class="form-group">
-                    <span class="sprint-numeric-label">{{sprint.storiesPerDay.toFixed(2)}}/day = {{sprint.sumStoriesPoints}}</span>
+                    <span class="sprint-numeric-label">{{sprint.storiesPerDay.toFixed(2)}}/day = {{sprint.sumStoriesPoints || 0}}</span>
                   </div>
                 </li>
               </ul>
