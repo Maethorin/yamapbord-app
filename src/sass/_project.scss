@@ -75,6 +75,13 @@
     float: left;
 
     .panel-heading {
+      .btn-create-sprint {
+        float: right;
+        padding: 0 5px;
+        i {
+          font-size: 13px;
+        }
+      }
       .dropdown-add-story {
         float: right;
         .dropdown-menu {
