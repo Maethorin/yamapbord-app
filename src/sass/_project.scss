@@ -84,13 +84,6 @@
       }
       .dropdown-add-story {
         float: right;
-        .dropdown-menu {
-          li {
-            a {
-              cursor: pointer;
-            }
-          }
-        }
       }
     }
     .project-stories-list, .project-sprint-list {
@@ -559,9 +552,10 @@
         padding: 0;
         .panel-heading {
           background-color: $gray-darker;
+          padding: 4px 5px;
 
           .sprint-name {
-            font-size: 15px;
+            font-size: 16px;
             vertical-align: middle;
           }
 
@@ -635,17 +629,34 @@
             }
           }
 
-          .project-stories-list {
+          .panel-sprint-stories {
             padding: 0;
-            height: auto;
-            overflow: hidden;
-            .panel-story {
-              .panel-heading {
-                background-color: $gray-dark;
+            .panel-heading {
+              padding: 2px 5px;
+              background-color: #434e49;
+              .dropdown-add-story {
+                padding: 0 5px;
+                .btn-xs {
+                  padding: 0 5px;
+                }
+              }
+              .dropdown-menu {
+                left: -83px;
               }
             }
-            .form-story {
-              padding: 5px;
+            .sprint-stories-list {
+              padding: 0;
+              height: auto;
+              overflow: hidden;
+              min-height: 180px;
+              .panel-story {
+                .panel-heading {
+                  background-color: $gray-dark;
+                }
+              }
+              .form-story {
+                padding: 5px;
+              }
             }
           }
         }

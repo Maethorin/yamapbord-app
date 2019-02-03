@@ -195,7 +195,7 @@ scrumInCeresControllers.controller('SelectedProjectSprintsController', ['$rootSc
     groupStories();
   });
 
-  $scope.porraAngular = {storyFilterIteration: null, moduleAcronym: '', orderStoryBy: null, groupStoryBy: null};
+  $scope.porraAngular = {storyFilterIsOpen: false, storyFilterIteration: null, moduleAcronym: '', orderStoryBy: null, groupStoryBy: null};
   $scope.storyFilter = {
     name: '',
     statement: ''
@@ -398,10 +398,6 @@ scrumInCeresControllers.controller('SelectedProjectSprintsController', ['$rootSc
     $scope.newStories.unshift(newStory);
   };
 
-  $scope.openStoryFilter = function() {
-    $scope.storyFilterIsOpen = !$scope.storyFilterIsOpen;
-  };
-
   $scope.setIterationStoryFilter = function() {
     delete $scope.storyFilter.sprintId;
     delete $scope.storyFilter.kanbanId;
@@ -422,16 +418,6 @@ scrumInCeresControllers.controller('SelectedProjectSprintsController', ['$rootSc
 
   $scope.selectModuleStoryFilter = function() {
     $scope.porraAngular.moduleAcronym = $rootScope.modulesNames[$scope.storyFilter.moduleId];
-  };
-
-  $scope.clearStoryFilter = function() {
-    $scope.porraAngular.storyFilterIteration = null;
-    $scope.porraAngular.moduleAcronym = '';
-
-    $scope.storyFilter = {
-      name: '',
-      statement: ''
-    };
   };
 
 }]);

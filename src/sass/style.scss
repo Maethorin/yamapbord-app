@@ -398,6 +398,14 @@ h4 {
   @include sprint-status-backgrounds();
 }
 
+.dropdown-menu {
+  li {
+    a {
+      cursor: pointer;
+    }
+  }
+}
+
 .list-group {
   margin-bottom: 0;
   li {

@@ -16,7 +16,7 @@ scrumInCeresControllers.controller('SelectedProjectStoriesController', ['$rootSc
     groupStories();
   });
 
-  $scope.porraAngular = {storyFilterIteration: null, moduleAcronym: '', orderStoryBy: null, groupStoryBy: null};
+  $scope.porraAngular = {storyFilterIsOpen: false, storyFilterIteration: null, moduleAcronym: '', orderStoryBy: null, groupStoryBy: null};
   $scope.storyFilter = {
     name: '',
     statement: ''
@@ -219,40 +219,7 @@ scrumInCeresControllers.controller('SelectedProjectStoriesController', ['$rootSc
     $scope.newStories.unshift(newStory);
   };
 
-  $scope.openStoryFilter = function() {
-    $scope.storyFilterIsOpen = !$scope.storyFilterIsOpen;
-  };
-
-  $scope.setIterationStoryFilter = function() {
-    delete $scope.storyFilter.sprintId;
-    delete $scope.storyFilter.kanbanId;
-    console.log = $scope.porraAngular.storyFilterIteration;
-    if ($scope.porraAngular.storyFilterIteration === 'icebox') {
-      $scope.storyFilter.sprintId = null;
-      $scope.storyFilter.kanbanId = null;
-    }
-    if ($scope.porraAngular.storyFilterIteration === 'sprint') {
-      $scope.storyFilter.sprintId = '';
-      $scope.storyFilter.kanbanId = null;
-    }
-    if ($scope.porraAngular.storyFilterIteration === 'kanban') {
-      $scope.storyFilter.sprintId = null;
-      $scope.storyFilter.kanbanId = '';
-    }
-  };
-
   $scope.selectModuleStoryFilter = function() {
     $scope.porraAngular.moduleAcronym = $rootScope.modulesNames[$scope.storyFilter.moduleId];
   };
-
-  $scope.clearStoryFilter = function() {
-    $scope.porraAngular.storyFilterIteration = null;
-    $scope.porraAngular.moduleAcronym = '';
-
-    $scope.storyFilter = {
-      name: '',
-      statement: ''
-    };
-  };
-
 }]);

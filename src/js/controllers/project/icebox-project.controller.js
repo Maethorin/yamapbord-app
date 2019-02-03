@@ -9,7 +9,7 @@ scrumInCeresControllers.controller('IceboxProjectController', ['$rootScope', '$s
     $scope.selectedProject = selectedProject;
   });
   $scope.$emit('projects.sendSelectedProject');
-  $scope.porraAngular = {storyFilterIteration: null, moduleAcronym: '', orderStoryBy: null, groupStoryBy: null};
+  $scope.porraAngular = {storyFilterIsOpen: false, storyFilterIteration: null, moduleAcronym: '', orderStoryBy: null, groupStoryBy: null};
   $scope.storyFilter = {
     name: '',
     statement: ''
@@ -239,10 +239,6 @@ scrumInCeresControllers.controller('IceboxProjectController', ['$rootScope', '$s
     newStory.newCommentType = null;
     newStory.newMergeRequestVisible = false;
     $scope.newStories.unshift(newStory);
-  };
-
-  $scope.openStoryFilter = function() {
-    $scope.storyFilterIsOpen = !$scope.storyFilterIsOpen;
   };
 
   $scope.setIterationStoryFilter = function() {

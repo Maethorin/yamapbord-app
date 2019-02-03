@@ -1,0 +1,29 @@
+<li class="list-group-item stories-group-order">
+  <div class="col-sm-6">
+    <span class="order-label">ORDER BY</span>
+    <div class="form-group order-form-group">
+      <select ng-model="porraAngular.orderStoryBy" class="form-control select-story-order">
+        <option value="">No Order</option>
+        <option value="name">Name</option>
+        <option value="statement">Statement</option>
+        <option value="type">Type</option>
+        <option value="status">Status</option>
+        <option value="+createdAt">Created At ASC</option>
+        <option value="-createdAt">Created At DESC</option>
+      </select>
+    </div>
+  </div>
+  <div class="col-sm-6">
+    <span class="group-label">GROUP BY</span>
+    <div class="form-group group-form-group">
+      <select ng-model="porraAngular.groupStoryBy" class="form-control select-story-group">
+        <option value="">No Group</option>
+        <option value="module">Module</option>
+        <option value="module-epic">Module and Epic</option>
+        <option value="type">Type</option>
+        <option value="status">Status</option>
+        <option value="requester">Requester</option>
+      </select>
+    </div>
+  </div>
+</li>
