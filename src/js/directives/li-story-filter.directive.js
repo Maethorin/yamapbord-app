@@ -1,6 +1,6 @@
 'use strict';
 
-scrumInCeresDirectives.directive('liStoryFilter', [function() {
+scrumInCeresDirectives.directive('liStoryFilter', ['$rootScope', function($rootScope) {
   return {
     replace: true,
     scope: {
@@ -35,6 +35,10 @@ scrumInCeresDirectives.directive('liStoryFilter', [function() {
         }
         $scope.storyFilter.sprintId = $scope.porraAngular.storyFilterIteration === 'sprint' ? '' : null;
         $scope.storyFilter.kanbanId = $scope.porraAngular.storyFilterIteration === 'kanban' ? '' : null;
+      };
+
+      $scope.selectModuleStoryFilter = function() {
+        $scope.porraAngular.moduleAcronym = $rootScope.modulesNames[$scope.storyFilter.moduleId];
       };
     },
     templateUrl: "templates/directives/li-story-filter.html"

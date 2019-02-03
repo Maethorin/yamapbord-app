@@ -10,7 +10,7 @@ scrumInCeresControllers.controller('SelectedProjectSprintsController', ['$rootSc
       return;
     }
     $scope.selectedProject = selectedProject;
-    groupStories();
+    // groupStories();
   });
 
   $scope.teams = [];
@@ -59,6 +59,11 @@ scrumInCeresControllers.controller('SelectedProjectSprintsController', ['$rootSc
           return story.valuePoints || 0;
         });
         updateWorkingDays(sprint);
+        sprint.porraAngular = {storyFilterIsOpen: false, storyFilterIteration: null, moduleAcronym: '', orderStoryBy: null, groupStoryBy: null};
+        sprint.storyFilter = {
+          name: '',
+          statement: ''
+        };
         delete sprint.loading;
       },
 
@@ -122,6 +127,8 @@ scrumInCeresControllers.controller('SelectedProjectSprintsController', ['$rootSc
     delete sprintToSend.workingDays;
     delete sprintToSend.endDateIsOpen;
     delete sprintToSend.startDateIsOpen;
+    delete sprintToSend.porraAngular;
+    delete sprintToSend.storyFilter;
     sprintToSend.stories = _.map(sprint.stories, 'id');
     if (sprint.id) {
       BacklogSprint.update(
@@ -175,10 +182,14 @@ scrumInCeresControllers.controller('SelectedProjectSprintsController', ['$rootSc
 
     newSprint.isOpen = true;
     newSprint.isLoaded = true;
+    newSprint.porraAngular = {storyFilterIsOpen: false, storyFilterIteration: null, moduleAcronym: '', orderStoryBy: null, groupStoryBy: null};
+    newSprint.storyFilter = {
+      name: '',
+      statement: ''
+    };
 
     $scope.startDateOptions.maxDate = new Date(2021, 12, 31);
     $scope.startDateOptions.minDate = new Date(2017, 1, 1);
-
     $scope.endDateOptions.maxDate = new Date(2021, 12, 31);
     $scope.endDateOptions.minDate = new Date(2017, 1, 1);
     updateWorkingDays(newSprint);
@@ -195,11 +206,6 @@ scrumInCeresControllers.controller('SelectedProjectSprintsController', ['$rootSc
     groupStories();
   });
 
-  $scope.porraAngular = {storyFilterIsOpen: false, storyFilterIteration: null, moduleAcronym: '', orderStoryBy: null, groupStoryBy: null};
-  $scope.storyFilter = {
-    name: '',
-    statement: ''
-  };
   $scope.storiesFiltered = [];
   $scope.storyItemsSortableOptions = { containerPositioning: 'relative' };
   $scope.newStories = [];
@@ -397,27 +403,4 @@ scrumInCeresControllers.controller('SelectedProjectSprintsController', ['$rootSc
     newStory.newMergeRequestVisible = false;
     $scope.newStories.unshift(newStory);
   };
-
-  $scope.setIterationStoryFilter = function() {
-    delete $scope.storyFilter.sprintId;
-    delete $scope.storyFilter.kanbanId;
-    console.log = $scope.porraAngular.storyFilterIteration;
-    if ($scope.porraAngular.storyFilterIteration === 'icebox') {
-      $scope.storyFilter.sprintId = null;
-      $scope.storyFilter.kanbanId = null;
-    }
-    if ($scope.porraAngular.storyFilterIteration === 'sprint') {
-      $scope.storyFilter.sprintId = '';
-      $scope.storyFilter.kanbanId = null;
-    }
-    if ($scope.porraAngular.storyFilterIteration === 'kanban') {
-      $scope.storyFilter.sprintId = null;
-      $scope.storyFilter.kanbanId = '';
-    }
-  };
-
-  $scope.selectModuleStoryFilter = function() {
-    $scope.porraAngular.moduleAcronym = $rootScope.modulesNames[$scope.storyFilter.moduleId];
-  };
-
 }]);

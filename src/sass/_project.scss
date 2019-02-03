@@ -649,6 +649,22 @@
               height: auto;
               overflow: hidden;
               min-height: 180px;
+
+              .order-form-group, .group-form-group {
+                padding: 0 2px;
+                margin: 0;
+                width: 65%;
+                display: inline-block;
+                float: right;
+                select {
+                  background-color: $gray-dark;
+                  color: $gray-light;
+                  padding: 0;
+                  height: 22px;
+                  font-size: 12px;
+                }
+              }
+
               .panel-story {
                 .panel-heading {
                   background-color: $gray-dark;
