@@ -29,6 +29,12 @@ scrumInCeresControllers.controller('SelectedProjectSprintsController', ['$rootSc
   function updateWorkingDays(sprint) {
     HollydayService.setWorkingDays(sprint).then(
       function() {
+        sprint.sumStoriesPoints = _.sumBy(sprint.stories, function(story) {
+          return story.points || 0;
+        });
+        sprint.sumValuePoints = _.sumBy(sprint.stories, function(story) {
+          return story.valuePoints || 0;
+        });
         sprint.storiesPerDay = 0;
         if (sprint.workingDays) {
           sprint.storiesPerDay = (sprint.sumStoriesPoints || 0) / sprint.workingDays;
@@ -55,18 +61,12 @@ scrumInCeresControllers.controller('SelectedProjectSprintsController', ['$rootSc
         $scope.changeEndDate(sprint, true);
         sprint.isOpen = true;
         sprint.isLoaded = true;
-        sprint.sumStoriesPoints = _.sumBy(sprint.stories, function(story) {
-          return story.points || 0;
-        });
-        sprint.sumValuePoints = _.sumBy(sprint.stories, function(story) {
-          return story.valuePoints || 0;
-        });
         sprint.porraAngular = {storyFilterIsOpen: false, storyFilterIteration: null, moduleAcronym: '', orderStoryBy: null, groupStoryBy: null};
+        sprint.newStories = [];
         sprint.storyFilter = {
           name: '',
           statement: ''
         };
-        sprint.newStories = [];
         updateWorkingDays(sprint);
         delete sprint.loading;
       },
@@ -135,7 +135,9 @@ scrumInCeresControllers.controller('SelectedProjectSprintsController', ['$rootSc
     delete sprintToSend.storyFilter;
     delete sprintToSend.newStories;
 
-    sprintToSend.stories = _.map(sprint.stories, 'id');
+    sprintToSend.stories = _.map(sprint.stories, function(story) {
+      return {id: story.id, points: story.points};
+    });
     if (sprint.id) {
       BacklogSprint.update(
         {id: sprint.id},
@@ -237,7 +239,8 @@ scrumInCeresControllers.controller('SelectedProjectSprintsController', ['$rootSc
         storyToSend,
         function() {
           delete story.updating;
-          Notifier.success('Story saved!')
+          Notifier.success('Story saved!');
+          updateWorkingDays(sprint);
         },
         function(error) {
           Alert.randomErrorMessage(error);
@@ -252,6 +255,7 @@ scrumInCeresControllers.controller('SelectedProjectSprintsController', ['$rootSc
         function(result) {
           sprint.stories.push(result);
           sprint.newStories.splice($index, 1);
+          updateWorkingDays(sprint);
           // groupStories();
           Notifier.success('Story saved!')
         },
@@ -346,12 +350,6 @@ scrumInCeresControllers.controller('SelectedProjectSprintsController', ['$rootSc
 
 
 
-  $scope.$on('projects.addStoryToSelectedProject', function(ev, story) {
-    $scope.selectedProject.stories.push(story);
-    groupStories();
-  });
-
-  $scope.newStories = [];
   $scope.groupedStories = false;
   $scope.storiesGroupOpen = {};
 
@@ -385,7 +383,7 @@ scrumInCeresControllers.controller('SelectedProjectSprintsController', ['$rootSc
     }
   }
 
-  $scope.$watch('porraAngular.groupStoryBy', groupStories);
+  // $scope.$watch('porraAngular.groupStoryBy', groupStories);
 
   $scope.openGroupedStories = function(group) {
     group.isOpen = !group.isOpen;
