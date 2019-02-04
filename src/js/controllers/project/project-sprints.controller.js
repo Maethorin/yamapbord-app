@@ -54,9 +54,13 @@ scrumInCeresControllers.controller('SelectedProjectSprintsController', ['$rootSc
       {id: sprint.id},
 
       function(result) {
+        sprint.name = result.name;
+        sprint.objective = result.objective;
+        sprint.status = result.status;
+        sprint.team = result.team;
         sprint.stories = result.stories;
-        sprint.startDate = moment(sprint.startDate).toDate();
-        sprint.endDate = moment(sprint.endDate).toDate();
+        sprint.startDate = moment(result.startDate).toDate();
+        sprint.endDate = moment(result.endDate).toDate();
         $scope.changeStartDate(sprint, true);
         $scope.changeEndDate(sprint, true);
         sprint.isOpen = true;
@@ -171,6 +175,11 @@ scrumInCeresControllers.controller('SelectedProjectSprintsController', ['$rootSc
 
   $scope.cancelNewSprint = function($index) {
     $scope.newSprints.splice($index, 1);
+  };
+
+  $scope.undoSprintChanges = function(sprint) {
+    sprint.isLoaded = false;
+    $scope.openSprint(sprint);
   };
 
   $scope.addNewSprintToSelectedProject = function() {
