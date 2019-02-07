@@ -178,4 +178,8 @@ scrumInCeresControllers.controller('ProjectController', ['$rootScope', '$scope',
   $scope.$on('projects.storyRemovedFromProject', function(ev, story) {
     $scope.$broadcast('projects.movingStoryToIcebox', story);
   });
+
+  $scope.$on('projects.storyRemovedFromSprint', function(ev, story) {
+    $scope.$broadcast('projects.movingStoryToProjectIcebox', story);
+  });
 }]);

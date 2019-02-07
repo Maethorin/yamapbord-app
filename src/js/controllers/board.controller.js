@@ -166,13 +166,13 @@ scrumInCeresControllers.controller('BoardController', ['$rootScope', '$scope', '
       {boardId: $scope.selectedSprint.id, id: story.id},
       {'status': story.status},
       function(response) {
-        story.updating = false;
+        delete story.updating;
         story.owner = response.owner;
         Alert.close();
       },
       function(error) {
         Alert.randomErrorMessage(error);
-        story.updating = false;
+        delete story.updating;
       }
     );
   }

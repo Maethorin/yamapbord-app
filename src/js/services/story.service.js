@@ -311,13 +311,13 @@ scrumInCeresServices.service('StoryService', ['$rootScope', '$q', '$timeout', 'A
       if (data) {
         $scope.selectedIteration = data.iteration;
         if (data.iterationType === 'kanban') {
-          $scope.selectedStory.kanbanId = data.iteration.id;
+          $scope.selectedStory.kanban = {id: data.iteration.id, name: data.iteration.name};
         }
         if (data.iterationType === 'sprint') {
-          $scope.selectedStory.sprintId = data.iteration.id;
+          $scope.selectedStory.sprint = {id: data.iteration.id, name: data.iteration.name};
         }
         if (data.project) {
-          $scope.selectedStory.project = {id: data.project.id};
+          $scope.selectedStory.project = {id: data.project.id, name: data.project.name};
         }
         if (data.module) {
           $scope.selectedStory.module = data.module;

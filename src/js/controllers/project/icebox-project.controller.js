@@ -228,13 +228,14 @@ scrumInCeresControllers.controller('IceboxProjectController', ['$rootScope', '$s
           const indexGroup = _.findIndex(stories, ['id', story.id]);
           stories.splice(indexGroup, 1);
         }
-        story.updating = false;
         $scope.$emit('projects.addingStoryToSelectedProject', story);
+        delete story.updating;
         Notifier.success('Story added!')
       },
 
       function(error) {
         Alert.randomErrorMessage(error);
+        delete story.updating;
       }
     );
   };

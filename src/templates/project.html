@@ -7,7 +7,7 @@
       <span class="story-type" ng-class="story.type | lowercase " title="{{story.typeName}}"></span>
       <span class="story-name" ng-show="!story.isOpen" ng-bind="story.name|limitWithEllipsis:60"></span>
       <input type="text" class="story-name" ng-show="story.isOpen" ng-model="story.name" />
-      <button class="btn btn-xs btn-danger btn-remove-from" title="{{removeStoryTitle}}" type="button" ng-if="canRemoveStoryFrom" ng-click="removeStoryFromSelected(story, stories)">
+      <button class="btn btn-xs btn-danger btn-remove-from" title="{{removeStoryTitle}}" type="button" ng-if="canRemoveStoryFrom" ng-click="removeStoryFromSelected(story, stories, sprint)">
         <i class="fa fa-chevron-right"></i>
       </button>
       <span ng-click="selectStory(story)" class="story-chevron">
@@ -21,7 +21,7 @@
             <textarea name="storyStatement" id="storyStatement" placeholder="Statement" required ng-model="story.statement" rows="3" class="form-control"></textarea>
           </div>
           <div class="col-sm-1">
-            <button class="btn btn-xs btn-success" type="button" title="Save story changes" ng-click="saveStory(story, sprint)"><i class="fa fa-save"></i></button>
+            <button class="btn btn-xs btn-success" type="button" title="Save story changes" ng-click="saveStory(story, $index, sprint)"><i class="fa fa-save"></i></button>
             <button class="btn btn-xs btn-warning" ng-if="story.id" type="button" title="Undo story changes" ng-click="undoStoryChanges(story)"><i class="fa fa-undo"></i></button>
           </div>
         </section>

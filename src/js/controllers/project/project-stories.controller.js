@@ -30,6 +30,11 @@ scrumInCeresControllers.controller('SelectedProjectStoriesController', ['$rootSc
     $scope.addStoryTitle = $scope.canAddStoryTo ? 'Add story to {name}'.format(selectedSprint) : 'Add story to selected sprint';
   });
 
+  $scope.$on('projects.movingStoryToProjectIcebox', function(ev, story) {
+    $scope.selectedProject.stories.push(story);
+    groupStories();
+  });
+
   $scope.porraAngular = {storyFilterIsOpen: false, storyFilterIteration: null, moduleAcronym: '', orderStoryBy: null, groupStoryBy: null};
   $scope.storyFilter = {
     name: '',
@@ -214,14 +219,13 @@ scrumInCeresControllers.controller('SelectedProjectStoriesController', ['$rootSc
           stories.splice(indexGroup, 1);
         }
         delete story.updating;
-        Notifier.success('Story removed!');
         $scope.$emit('projects.storyRemovedFromProject', story);
-        Alert.randomSuccessMessage();
+        Notifier.success('Story removed!');
       },
 
       function(error) {
-        delete story.updating;
         Alert.randomErrorMessage(error);
+        delete story.updating;
       }
     )
   };
@@ -262,13 +266,14 @@ scrumInCeresControllers.controller('SelectedProjectStoriesController', ['$rootSc
           const indexGroup = _.findIndex(stories, ['id', story.id]);
           stories.splice(indexGroup, 1);
         }
-        story.updating = false;
+        delete story.updating;
         $scope.$emit('projects.addingStoryToSelectedSprint', story);
         Notifier.success('Story added!')
       },
 
       function(error) {
         Alert.randomErrorMessage(error);
+        delete story.updating;
       }
     );
   };

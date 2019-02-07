@@ -23,6 +23,7 @@ scrumInCeresControllers.controller('SelectedProjectSprintsController', ['$rootSc
 
   $scope.$on('projects.addStoryToSelectedSprint', function(ev, story) {
     $scope.selectedSprint.stories.push(story);
+    updateWorkingDays($scope.selectedSprint)
     // groupStories();
   });
 
@@ -53,11 +54,11 @@ scrumInCeresControllers.controller('SelectedProjectSprintsController', ['$rootSc
     );
   }
 
-  function updateSelectedSprint(sprint) {
-    const sprintOpenedCount = _.filter($scope.selectedProject.sprints, 'isOpen').length;
+  function updateSelectedSprint() {
+    const sprintsOpened = _.filter($scope.selectedProject.sprints, 'isOpen');
     $scope.selectedSprint = null;
-    if (sprintOpenedCount === 1) {
-      $scope.selectedSprint = sprint;
+    if (sprintsOpened.length === 1) {
+      $scope.selectedSprint = sprintsOpened[0];
       $scope.removeStoryTitle = 'Remove story from {0} (back to {1} Icebox)'.format([$scope.selectedSprint.name, $scope.selectedProject.name]);
     }
     $scope.$emit('projects.selectingSprint', $scope.selectedSprint);
@@ -66,7 +67,7 @@ scrumInCeresControllers.controller('SelectedProjectSprintsController', ['$rootSc
   $scope.openSprint = function(sprint) {
     if (sprint.isLoaded) {
       sprint.isOpen = !sprint.isOpen;
-      updateSelectedSprint(sprint);
+      updateSelectedSprint();
       return;
     }
     sprint.loading = true;
@@ -93,12 +94,13 @@ scrumInCeresControllers.controller('SelectedProjectSprintsController', ['$rootSc
           statement: ''
         };
         updateWorkingDays(sprint);
-        updateSelectedSprint(sprint);
+        updateSelectedSprint();
         delete sprint.loading;
       },
 
       function(error) {
         Alert.randomErrorMessage(error);
+        delete sprint.loading;
       }
     )
   };
@@ -270,8 +272,8 @@ scrumInCeresControllers.controller('SelectedProjectSprintsController', ['$rootSc
         storyToSend,
         function() {
           delete story.updating;
-          Notifier.success('Story saved!');
           updateWorkingDays(sprint);
+          Notifier.success('Story saved!');
         },
         function(error) {
           Alert.randomErrorMessage(error);
@@ -376,6 +378,33 @@ scrumInCeresControllers.controller('SelectedProjectSprintsController', ['$rootSc
     );
   };
 
+  $scope.removeStoryFromSelected = function(story, stories, sprint) {
+    Notifier.warning('Removing story from sprint...');
+    story.updating = true;
+    ProjectStory.update(
+      {projectId: $scope.selectedProject.id, storyId: story.id},
+
+      {sprintId: null},
+
+      function() {
+        const index = _.findIndex(sprint.stories, ['id', story.id]);
+        sprint.stories.splice(index, 1);
+        if (stories) {
+          const indexGroup = _.findIndex(stories, ['id', story.id]);
+          stories.splice(indexGroup, 1);
+        }
+        delete story.updating;
+        updateWorkingDays(sprint);
+        $scope.$emit('projects.storyRemovedFromSprint', story);
+        Notifier.success('Story removed!');
+      },
+
+      function(error) {
+        Alert.randomErrorMessage(error);
+        delete story.updating;
+      }
+    )
+  };
 
 
 
@@ -414,26 +443,9 @@ scrumInCeresControllers.controller('SelectedProjectSprintsController', ['$rootSc
     }
   }
 
-  // $scope.$watch('porraAngular.groupStoryBy', groupStories);
 
   $scope.openGroupedStories = function(group) {
     group.isOpen = !group.isOpen;
-  };
-
-  $scope.removeStoryFromSelectedProject = function(story) {
-    ProjectStory.delete(
-      {projectId: $scope.selectedProject.id, storyId: story.id},
-
-      function() {
-        var index = _.findIndex($scope.selectedProject.stories, ['id', story.id]);
-        $scope.selectedProject.stories.splice(index, 1);
-        Alert.randomSuccessMessage();
-      },
-
-      function(error) {
-        Alert.randomErrorMessage(error);
-      }
-    )
   };
 
 }]);
