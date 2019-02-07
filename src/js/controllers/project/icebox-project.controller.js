@@ -2,15 +2,12 @@
 
 scrumInCeresControllers.controller('IceboxProjectController', ['$rootScope', '$scope', 'Notifier', 'Alert', 'StoryService', 'ProjectStory', 'IceBox', function($rootScope, $scope, Notifier, Alert, StoryService, ProjectStory, IceBox) {
   $scope.canAddStoryTo = true;
+  $scope.canRemoveStoryFrom = false;
   $scope.addStoryTitle = "Add story to Selected Project's Icebox";
   $scope.iceboxStories = [];
   $scope.iceboxLoading = true;
   $scope.selectedProject = null;
-  $scope.$on('projects.selectedProject', function(event, selectedProject) {
-    $scope.selectedProject = selectedProject;
-    $scope.addStoryTitle = "Add story to {name}'s Icebox".format(selectedProject);
-  });
-  $scope.$emit('projects.sendSelectedProject');
+
   $scope.porraAngular = {storyFilterIsOpen: false, storyFilterIteration: null, moduleAcronym: '', orderStoryBy: null, groupStoryBy: null};
   $scope.storyFilter = {
     name: '',
@@ -21,6 +18,18 @@ scrumInCeresControllers.controller('IceboxProjectController', ['$rootScope', '$s
   $scope.newStories = [];
   $scope.groupedStories = false;
   $scope.storiesGroupOpen = {};
+
+  $scope.$on('projects.selectedProject', function(event, selectedProject) {
+    $scope.selectedProject = selectedProject;
+    $scope.addStoryTitle = "Add story to {name}'s Icebox".format(selectedProject);
+  });
+
+  $scope.$on('projects.movingStoryToIcebox', function(ev, story) {
+    $scope.iceboxStories.push(story);
+    groupStories();
+  });
+
+  $scope.$emit('projects.sendSelectedProject');
 
   IceBox.query(
     function(stories) {
@@ -213,10 +222,10 @@ scrumInCeresControllers.controller('IceboxProjectController', ['$rootScope', '$s
       {projectId: $scope.selectedProject.id},
 
       function(result) {
-        var indexFull = _.findIndex($scope.iceboxStories, ['id', story.id]);
+        const indexFull = _.findIndex($scope.iceboxStories, ['id', story.id]);
         $scope.iceboxStories.splice(indexFull, 1);
         if (stories) {
-          var indexGroup = _.findIndex(stories, ['id', story.id]);
+          const indexGroup = _.findIndex(stories, ['id', story.id]);
           stories.splice(indexGroup, 1);
         }
         story.updating = false;

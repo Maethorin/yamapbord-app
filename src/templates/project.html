@@ -7,6 +7,9 @@
       <span class="story-type" ng-class="story.type | lowercase " title="{{story.typeName}}"></span>
       <span class="story-name" ng-show="!story.isOpen" ng-bind="story.name|limitWithEllipsis:60"></span>
       <input type="text" class="story-name" ng-show="story.isOpen" ng-model="story.name" />
+      <button class="btn btn-xs btn-danger btn-remove-from" title="{{removeStoryTitle}}" type="button" ng-if="canRemoveStoryFrom" ng-click="removeStoryFromSelected(story, stories)">
+        <i class="fa fa-chevron-right"></i>
+      </button>
       <span ng-click="selectStory(story)" class="story-chevron">
         <i class="fa" ng-class="{'fa-spinner fa-spin': story.loading, 'fa-chevron-up': story.isOpen, 'fa-chevron-down': !story.isOpen}"></i>
       </span>

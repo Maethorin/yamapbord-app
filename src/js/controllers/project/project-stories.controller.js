@@ -2,6 +2,7 @@
 
 scrumInCeresControllers.controller('SelectedProjectStoriesController', ['$rootScope', '$scope', 'Notifier', 'Alert', 'StoryService', 'ProjectStory', function($rootScope, $scope, Notifier, Alert, StoryService, ProjectStory) {
   $scope.canAddStoryTo = false;
+  $scope.canRemoveStoryFrom = true;
   $scope.addStoryTitle = 'Add story to selected sprint';
   $scope.selectedProject = null;
   $scope.selectedSprint = null;
@@ -11,6 +12,7 @@ scrumInCeresControllers.controller('SelectedProjectStoriesController', ['$rootSc
     }
     $scope.selectedProject = selectedProject;
     $scope.columnName = "{name}'s Stories in Icebox".format(selectedProject);
+    $scope.removeStoryTitle = 'Remove story from {name} (back to Icebox)'.format($scope.selectedProject);
     groupStories();
   });
 
@@ -198,17 +200,27 @@ scrumInCeresControllers.controller('SelectedProjectStoriesController', ['$rootSc
     $scope.newStories.splice($index, 1);
   };
 
-  $scope.removeStoryFromSelectedProject = function(story) {
+  $scope.removeStoryFromSelected = function(story, stories) {
+    Notifier.warning('Removing story...');
+    story.updating = true;
     ProjectStory.delete(
       {projectId: $scope.selectedProject.id, storyId: story.id},
 
       function() {
-        var index = _.findIndex($scope.selectedProject.stories, ['id', story.id]);
+        const index = _.findIndex($scope.selectedProject.stories, ['id', story.id]);
         $scope.selectedProject.stories.splice(index, 1);
+        if (stories) {
+          const indexGroup = _.findIndex(stories, ['id', story.id]);
+          stories.splice(indexGroup, 1);
+        }
+        delete story.updating;
+        Notifier.success('Story removed!');
+        $scope.$emit('projects.storyRemovedFromProject', story);
         Alert.randomSuccessMessage();
       },
 
       function(error) {
+        delete story.updating;
         Alert.randomErrorMessage(error);
       }
     )

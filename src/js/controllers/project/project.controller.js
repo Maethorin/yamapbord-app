@@ -9,12 +9,11 @@ scrumInCeresControllers.controller('ProjectController', ['$rootScope', '$scope',
   $scope.search = {
     project: {name: '', description: ''}
   };
-  $scope.canAddStoryTo = false;
   $scope.selectedProject = null;
   $scope.selectedSprint = null;
   $scope.selectedProjectOpened = false;
   $scope.projects = [];
-  $scope.showIceboxStories = false;
+  $rootScope.showIceboxStories = false;
 
   function loading() {
     Project.query(
@@ -153,8 +152,7 @@ scrumInCeresControllers.controller('ProjectController', ['$rootScope', '$scope',
   };
 
   $scope.$on('projects.toggleIceboxStoriesVisible', function() {
-    $scope.showIceboxStories = !$scope.showIceboxStories;
-    $scope.$broadcast('projects.selectedProject', $scope.selectedProject);
+    $rootScope.showIceboxStories = !$rootScope.showIceboxStories;
   });
 
   $scope.$on('projects.sendSelectedProject', function() {
@@ -175,5 +173,9 @@ scrumInCeresControllers.controller('ProjectController', ['$rootScope', '$scope',
 
   $scope.$on('projects.addingStoryToSelectedSprint', function(ev, story) {
     $scope.$broadcast('projects.addStoryToSelectedSprint', story);
+  });
+
+  $scope.$on('projects.storyRemovedFromProject', function(ev, story) {
+    $scope.$broadcast('projects.movingStoryToIcebox', story);
   });
 }]);

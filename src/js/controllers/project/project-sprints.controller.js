@@ -2,6 +2,8 @@
 
 scrumInCeresControllers.controller('SelectedProjectSprintsController', ['$rootScope', '$scope', 'Notifier', 'Alert', 'MeService', 'StoryService', 'HollydayService', 'ProjectStory', 'BacklogSprint', function($rootScope, $scope, Notifier, Alert, MeService, StoryService, HollydayService, ProjectStory, BacklogSprint) {
   $scope.canAddStoryTo = false;
+  $scope.canRemoveStoryFrom = true;
+  $scope.removeStoryTitle = 'Remove story from selected sprint (back to Project Icebox)';
   $scope.selectedProject = null;
   $scope.selectedSprint = null;
   $scope.newSprints = [];
@@ -15,7 +17,7 @@ scrumInCeresControllers.controller('SelectedProjectSprintsController', ['$rootSc
       return;
     }
     $scope.selectedProject = selectedProject;
-    $scope.columnName = "{name}'s Sprints".format(selectedProject)
+    $scope.columnName = "{name}'s Sprints".format(selectedProject);
     // groupStories();
   });
 
@@ -56,6 +58,7 @@ scrumInCeresControllers.controller('SelectedProjectSprintsController', ['$rootSc
     $scope.selectedSprint = null;
     if (sprintOpenedCount === 1) {
       $scope.selectedSprint = sprint;
+      $scope.removeStoryTitle = 'Remove story from {0} (back to {1} Icebox)'.format([$scope.selectedSprint.name, $scope.selectedProject.name]);
     }
     $scope.$emit('projects.selectingSprint', $scope.selectedSprint);
   }
@@ -433,7 +436,4 @@ scrumInCeresControllers.controller('SelectedProjectSprintsController', ['$rootSc
     )
   };
 
-  $scope.addingExistingStoryToSelectedProject = function() {
-    $scope.$emit('projects.toggleIceboxStoriesVisible');
-  };
 }]);
