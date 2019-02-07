@@ -207,9 +207,6 @@ scrumInCeresControllers.controller('BoardController', ['$rootScope', '$scope', '
               if (response.status > 0) {
                 Notifier.danger(response.data);
               }
-            },
-            function(evt) {
-              console.log(Math.min(100, parseInt(100.0 * evt.loaded / evt.total)));
             }
           );
         }

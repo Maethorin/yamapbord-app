@@ -335,7 +335,6 @@ scrumInCeresControllers.controller('BacklogController', ['$rootScope', '$scope',
     else {
       $scope.selectedSprint.teams.push(team);
     }
-    console.log($scope.selectedSprint.teams)
   };
 
   function saveSelectedSprint() {

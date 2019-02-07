@@ -1,7 +1,7 @@
 <script type="text/ng-template" id="storyPanel">
   <div class="panel panel-default panel-story">
     <div class="panel-heading story-heading" title="{{story.name}}">
-      <button class="btn btn-xs btn-success btn-add-to-project" title="{{addStoryTitle}}" type="button" ng-if="canAddStoryTo" ng-click="addStoryToSelectedProject(story, stories)">
+      <button class="btn btn-xs btn-success btn-add-to-project" title="{{addStoryTitle}}" type="button" ng-if="canAddStoryTo" ng-click="addStoryToSelected(story, stories)">
         <i class="fa fa-chevron-left"></i>
       </button>
       <span class="story-type" ng-class="story.type | lowercase " title="{{story.typeName}}"></span>

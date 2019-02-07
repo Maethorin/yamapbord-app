@@ -234,4 +234,30 @@ scrumInCeresControllers.controller('SelectedProjectStoriesController', ['$rootSc
   $scope.selectModuleStoryFilter = function() {
     $scope.porraAngular.moduleAcronym = $rootScope.modulesNames[$scope.storyFilter.moduleId];
   };
+
+  $scope.addStoryToSelected = function(story, stories) {
+    Notifier.warning('Adding story to {name}...'.format($scope.selectedSprint));
+    story.updating = true;
+    ProjectStory.update(
+      {projectId: $scope.selectedProject.id, storyId: story.id},
+
+      {sprintId: $scope.selectedSprint.id},
+
+      function(result) {
+        const indexFull = _.findIndex($scope.selectedProject.stories, ['id', story.id]);
+        $scope.selectedProject.stories.splice(indexFull, 1);
+        if (stories) {
+          const indexGroup = _.findIndex(stories, ['id', story.id]);
+          stories.splice(indexGroup, 1);
+        }
+        story.updating = false;
+        $scope.$emit('projects.addingStoryToSelectedSprint', story);
+        Notifier.success('Story added!')
+      },
+
+      function(error) {
+        Alert.randomErrorMessage(error);
+      }
+    );
+  };
 }]);

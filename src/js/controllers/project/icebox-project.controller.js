@@ -204,8 +204,8 @@ scrumInCeresControllers.controller('IceboxProjectController', ['$rootScope', '$s
     $scope.newStories.splice($index, 1);
   };
 
-  $scope.addStoryToSelectedProject = function(story, stories) {
-    Notifier.warning('Adding story...');
+  $scope.addStoryToSelected = function(story, $index, stories) {
+    Notifier.warning("Adding story to {name}'s Icebox...".format($scope.selectedProject));
     story.updating = true;
     IceBox.update(
       {id: story.id},

@@ -170,7 +170,10 @@ scrumInCeresControllers.controller('ProjectController', ['$rootScope', '$scope',
       return;
     }
     $scope.selectedSprint = selectedSprint;
-    console.log(2, selectedSprint)
     $scope.$broadcast('projects.selectedSprint', $scope.selectedSprint);
+  });
+
+  $scope.$on('projects.addingStoryToSelectedSprint', function(ev, story) {
+    $scope.$broadcast('projects.addStoryToSelectedSprint', story);
   });
 }]);

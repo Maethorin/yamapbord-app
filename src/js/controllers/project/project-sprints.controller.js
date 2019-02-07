@@ -19,6 +19,11 @@ scrumInCeresControllers.controller('SelectedProjectSprintsController', ['$rootSc
     // groupStories();
   });
 
+  $scope.$on('projects.addStoryToSelectedSprint', function(ev, story) {
+    $scope.selectedSprint.stories.push(story);
+    // groupStories();
+  });
+
   $scope.teams = [];
   MeService.getInfo().then(
     function(info) {
@@ -48,11 +53,9 @@ scrumInCeresControllers.controller('SelectedProjectSprintsController', ['$rootSc
 
   function updateSelectedSprint(sprint) {
     const sprintOpenedCount = _.filter($scope.selectedProject.sprints, 'isOpen').length;
-    console.log(0, sprintOpenedCount)
     $scope.selectedSprint = null;
     if (sprintOpenedCount === 1) {
       $scope.selectedSprint = sprint;
-      console.log(1, sprint)
     }
     $scope.$emit('projects.selectingSprint', $scope.selectedSprint);
   }
