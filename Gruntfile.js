@@ -147,6 +147,16 @@ module.exports = function (grunt) {
           ]
         }
       },
+      devUg: {
+        files: {
+          'www/index.html': [
+            minComponentsFile,
+            minAppFile,
+            '{0}/*.css'.format([wwwExtraCssFolder]),
+            cssFile
+          ]
+        }
+      },
       prod: {
         files: {
           'www/index.html': [
@@ -235,7 +245,10 @@ module.exports = function (grunt) {
     },
 
     uglify: {
-      options: {},
+      options: {
+        compress: true,
+        beautify: false
+      },
       componentes: {
         files: {
           'www/js/componentes.min.js': [componentsFile]
@@ -287,7 +300,7 @@ module.exports = function (grunt) {
     }
   });
 
-  grunt.loadNpmTasks('grunt-contrib-uglify');
+  grunt.loadNpmTasks('grunt-contrib-uglify-es');
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-compass');
@@ -298,7 +311,8 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-open');
   grunt.loadNpmTasks('grunt-replace');
 
-  grunt.registerTask('api', ['clean:static', 'compass', 'copy', 'concat', 'injector:dev', 'replace:dev', 'watch']);
+  grunt.registerTask('api', ['clean:static', 'compass', 'copy', 'concat', 'replace:dev', 'injector:dev', 'watch']);
+  grunt.registerTask('api-ug', ['clean:static', 'compass', 'copy', 'concat', 'replace:dev', 'uglify', 'injector:devUg', 'clean:concated', 'watch']);
   grunt.registerTask('iframe', ['clean:static', 'compass', 'copy', 'concat', 'injector:dev', 'replace:dev', 'connect', 'watch']);
   grunt.registerTask('dev', ['clean:static', 'compass', 'copy', 'concat', 'injector:dev', 'replace:dev', 'connect', 'open', 'watch']);
   grunt.registerTask('sandbox', ['clean:static', 'compass', 'copy', 'concat', 'replace:sandbox', 'injector:dev']);
