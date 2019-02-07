@@ -9,8 +9,9 @@ scrumInCeresControllers.controller('ProjectController', ['$rootScope', '$scope',
   $scope.search = {
     project: {name: '', description: ''}
   };
-  $scope.imInIcebox = false;
+  $scope.canAddStoryTo = false;
   $scope.selectedProject = null;
+  $scope.selectedSprint = null;
   $scope.selectedProjectOpened = false;
   $scope.projects = [];
   $scope.showIceboxStories = false;
@@ -67,7 +68,7 @@ scrumInCeresControllers.controller('ProjectController', ['$rootScope', '$scope',
     );
   };
 
-  var editModal;
+  let editModal;
   $scope.editingProject = function(project) {
     $scope.selectedProject = project;
     if (editModal) {
@@ -162,5 +163,14 @@ scrumInCeresControllers.controller('ProjectController', ['$rootScope', '$scope',
 
   $scope.$on('projects.addingStoryToSelectedProject', function(ev, story) {
     $scope.$broadcast('projects.addStoryToSelectedProject', story);
+  });
+
+  $scope.$on('projects.selectingSprint', function(event, selectedSprint) {
+    if (selectedSprint !== null && $scope.selectedSprint !== null && $scope.selectedSprint.id === selectedSprint.id) {
+      return;
+    }
+    $scope.selectedSprint = selectedSprint;
+    console.log(2, selectedSprint)
+    $scope.$broadcast('projects.selectedSprint', $scope.selectedSprint);
   });
 }]);

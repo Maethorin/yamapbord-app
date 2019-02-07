@@ -1,19 +1,31 @@
 'use strict';
 
 scrumInCeresControllers.controller('SelectedProjectStoriesController', ['$rootScope', '$scope', 'Notifier', 'Alert', 'StoryService', 'ProjectStory', function($rootScope, $scope, Notifier, Alert, StoryService, ProjectStory) {
-  $scope.imInIcebox = false;
+  $scope.canAddStoryTo = false;
+  $scope.addStoryTitle = 'Add story to selected sprint';
   $scope.selectedProject = null;
+  $scope.selectedSprint = null;
   $scope.$on('projects.selectedProject', function(event, selectedProject) {
     if ($scope.selectedProject !== null && $scope.selectedProject.id === selectedProject.id) {
       return;
     }
     $scope.selectedProject = selectedProject;
+    $scope.columnName = "{name}'s Stories in Icebox".format(selectedProject);
     groupStories();
   });
 
   $scope.$on('projects.addStoryToSelectedProject', function(ev, story) {
     $scope.selectedProject.stories.push(story);
     groupStories();
+  });
+
+  $scope.$on('projects.selectedSprint', function(event, selectedSprint) {
+    if (selectedSprint !== null && $scope.selectedSprint !== null && $scope.selectedSprint.id === selectedSprint.id) {
+      return;
+    }
+    $scope.selectedSprint = selectedSprint;
+    $scope.canAddStoryTo = selectedSprint !== null;
+    $scope.addStoryTitle = $scope.canAddStoryTo ? 'Add story to {name}'.format(selectedSprint) : 'Add story to selected sprint';
   });
 
   $scope.porraAngular = {storyFilterIsOpen: false, storyFilterIteration: null, moduleAcronym: '', orderStoryBy: null, groupStoryBy: null};

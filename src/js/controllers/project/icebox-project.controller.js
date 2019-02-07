@@ -1,12 +1,14 @@
 'use strict';
 
 scrumInCeresControllers.controller('IceboxProjectController', ['$rootScope', '$scope', 'Notifier', 'Alert', 'StoryService', 'ProjectStory', 'IceBox', function($rootScope, $scope, Notifier, Alert, StoryService, ProjectStory, IceBox) {
-  $scope.imInIcebox = true;
+  $scope.canAddStoryTo = true;
+  $scope.addStoryTitle = "Add story to Selected Project's Icebox";
   $scope.iceboxStories = [];
   $scope.iceboxLoading = true;
   $scope.selectedProject = null;
   $scope.$on('projects.selectedProject', function(event, selectedProject) {
     $scope.selectedProject = selectedProject;
+    $scope.addStoryTitle = "Add story to {name}'s Icebox".format(selectedProject);
   });
   $scope.$emit('projects.sendSelectedProject');
   $scope.porraAngular = {storyFilterIsOpen: false, storyFilterIteration: null, moduleAcronym: '', orderStoryBy: null, groupStoryBy: null};

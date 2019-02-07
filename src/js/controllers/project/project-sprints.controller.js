@@ -1,11 +1,13 @@
 'use strict';
 
 scrumInCeresControllers.controller('SelectedProjectSprintsController', ['$rootScope', '$scope', 'Notifier', 'Alert', 'MeService', 'StoryService', 'HollydayService', 'ProjectStory', 'BacklogSprint', function($rootScope, $scope, Notifier, Alert, MeService, StoryService, HollydayService, ProjectStory, BacklogSprint) {
-  $scope.imInIcebox = false;
+  $scope.canAddStoryTo = false;
   $scope.selectedProject = null;
+  $scope.selectedSprint = null;
   $scope.newSprints = [];
   $scope.storiesFiltered = [];
   $scope.storyItemsSortableOptions = { containerPositioning: 'relative' };
+
   StoryService.prepareScopeToEditStory($scope);
 
   $scope.$on('projects.selectedProject', function(event, selectedProject) {
@@ -13,6 +15,7 @@ scrumInCeresControllers.controller('SelectedProjectSprintsController', ['$rootSc
       return;
     }
     $scope.selectedProject = selectedProject;
+    $scope.columnName = "{name}'s Sprints".format(selectedProject)
     // groupStories();
   });
 
@@ -43,9 +46,21 @@ scrumInCeresControllers.controller('SelectedProjectSprintsController', ['$rootSc
     );
   }
 
+  function updateSelectedSprint(sprint) {
+    const sprintOpenedCount = _.filter($scope.selectedProject.sprints, 'isOpen').length;
+    console.log(0, sprintOpenedCount)
+    $scope.selectedSprint = null;
+    if (sprintOpenedCount === 1) {
+      $scope.selectedSprint = sprint;
+      console.log(1, sprint)
+    }
+    $scope.$emit('projects.selectingSprint', $scope.selectedSprint);
+  }
+
   $scope.openSprint = function(sprint) {
     if (sprint.isLoaded) {
       sprint.isOpen = !sprint.isOpen;
+      updateSelectedSprint(sprint);
       return;
     }
     sprint.loading = true;
@@ -72,6 +87,7 @@ scrumInCeresControllers.controller('SelectedProjectSprintsController', ['$rootSc
           statement: ''
         };
         updateWorkingDays(sprint);
+        updateSelectedSprint(sprint);
         delete sprint.loading;
       },
 
