@@ -190,6 +190,10 @@ scrumInCeresServices.service('StoryService', ['$rootScope', '$q', '$timeout', 'A
 
   this.addToIceLog = function(newStory) {
     var result = $q.defer();
+    delete newStory.newDefinitionVisible;
+    delete newStory.newTaskVisible;
+    delete newStory.newCommentVisible;
+    delete newStory.newMergeRequestVisible;
     IceBox.save(
       newStory,
       function(response) {
@@ -212,6 +216,10 @@ scrumInCeresServices.service('StoryService', ['$rootScope', '$q', '$timeout', 'A
 
   this.updateInIceLog = function(story) {
     var result = $q.defer();
+    delete story.newDefinitionVisible;
+    delete story.newTaskVisible;
+    delete story.newCommentVisible;
+    delete story.newMergeRequestVisible;
     IceBox.update(
       {id: story.id},
       story,
