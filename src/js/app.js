@@ -193,7 +193,7 @@ scrumInCeres.config(['$httpProvider', '$stateProvider', '$locationProvider', '$u
   $urlRouterProvider.when('', '/');
 }]);
 
-scrumInCeres.run(['$rootScope', '$timeout', '$q', 'AuthService', 'MeService', 'Alert', 'Requester', 'Epic', 'Module', function($rootScope, $timeout, $q, AuthService, MeService, Alert, Requester, Epic, Module) {
+scrumInCeres.run(['$rootScope', '$timeout', '$q', 'appConfig', 'AuthService', 'MeService', 'Alert', 'Requester', 'Epic', 'Module', function($rootScope, $timeout, $q, appConfig, AuthService, MeService, Alert, Requester, Epic, Module) {
   AuthService.update();
   $rootScope.lateralMenuOpen = false;
 
@@ -285,26 +285,66 @@ scrumInCeres.run(['$rootScope', '$timeout', '$q', 'AuthService', 'MeService', 'A
     Alert.itsOpenSourceDude();
   };
 
-  var pusher = new Pusher('cf7366082066d84f2706', {
-    cluster: 'us2',
-    encrypted: true
-  });
 
-  $rootScope.pusherSocketId = null;
-  pusher.connection.bind('connected', function() {
-    $rootScope.pusherSocketId = pusher.connection.socket_id;
-  });
+  const source = new EventSource("{backendURL}/subscribe".format(appConfig));
+  source.addEventListener('message', function(event) {
+      console.log('message', JSON.parse(event.data))
+  }, false);
 
-  var channel = pusher.subscribe('scruminceres');
-  channel.bind('board', function(data) {
-    $rootScope.$broadcast('board.{message}'.format(data), data);
-  });
+  source.addEventListener(
+    'board',
+    function(event) {
+      // console.log('board', JSON.parse(event.data));
+      const data = JSON.parse(event.data);
+      $rootScope.$broadcast('board.{message}'.format(data), data);
+    },
+    false
+  );
 
-  channel.bind('backlog', function(data) {
-    $rootScope.$broadcast('backlog.{message}'.format(data), data);
-  });
+  source.addEventListener(
+    'backlog',
+    function(event) {
+      // console.log('backlog', JSON.parse(event.data));
+      const data = JSON.parse(event.data);
+      $rootScope.$broadcast('backlog.{message}'.format(data), data);
+    },
+    false
+  );
 
-  channel.bind('icebox', function(data) {
-    $rootScope.$broadcast('icebox.{message}'.format(data), data);
-  });
+  source.addEventListener(
+    'icebox',
+    function(event) {
+      // console.log('icebox', JSON.parse(event.data));
+      const data = JSON.parse(event.data);
+      $rootScope.$broadcast('icebox.{message}'.format(data), data);
+    },
+    false
+  );
+
+
+  // var pusher = new Pusher('cf7366082066d84f2706', {
+  //   cluster: 'us2',
+  //   encrypted: true
+  // });
+
+  // $rootScope.pusherSocketId = null;
+  // pusher.connection.bind('connected', function() {
+  //   $rootScope.pusherSocketId = pusher.connection.socket_id;
+  // });
+
+  // var channel = pusher.subscribe('scruminceres');
+  // channel.bind('board', function(data) {
+  //     console.log('pusher-board', data);
+  //   $rootScope.$broadcast('board.{message}'.format(data), data);
+  // });
+
+  // channel.bind('backlog', function(data) {
+  //     console.log('pusher-backlog', data);
+  //   $rootScope.$broadcast('backlog.{message}'.format(data), data);
+  // });
+
+  // channel.bind('icebox', function(data) {
+  //     console.log('pusher-icebox', data);
+  //   $rootScope.$broadcast('icebox.{message}'.format(data), data);
+  // });
 }]);
