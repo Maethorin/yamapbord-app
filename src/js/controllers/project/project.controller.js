@@ -99,17 +99,24 @@ scrumInCeresControllers.controller('ProjectController', ['$rootScope', '$scope',
   };
 
   $scope.openProject = function(project) {
+    _.map($scope.projects, function(project) {
+      project.isOpen = false;
+    });
     project.loading = true;
     $scope.selectedProject = project;
     $scope.selectedProjectOpened = true;
-
     Project.get(
       {projectId: project.id},
 
       function(result) {
-        $scope.selectedProject.stories = result.stories;
-        $scope.selectedProject.kanbans = result.kanbans;
-        $scope.selectedProject.sprints = result.sprints;
+        project.stories = result.stories;
+        project.kanbans = result.kanbans;
+        project.sprints = result.sprints;
+        project.showIcebox = project.showIcebox === undefined ? true : project.showIcebox;
+        project.showSprints = project.showSprints === undefined ? true : project.showSprints;
+        project.showKanbans = project.showKanbans === undefined ? true : project.showKanbans;
+        project.showAttachment = project.showAttachment === undefined ? true : project.showAttachment;
+        project.isOpen = true;
         project.loading = false;
         $scope.$broadcast('projects.selectedProject', $scope.selectedProject);
       },
@@ -121,9 +128,14 @@ scrumInCeresControllers.controller('ProjectController', ['$rootScope', '$scope',
     )
   };
 
-  $scope.closeProject = function() {
+  $scope.toogleProjectPartVisible = function(project, part) {
+    project['show{0}'.format([part])] = !project['show{0}'.format([part])];
+  };
+
+  $scope.closeProject = function(project) {
     $scope.selectedProject = null;
     $scope.selectedProjectOpened = false;
+    project.isOpen = false;
   };
 
   $scope.removeProject = function(project, $event) {

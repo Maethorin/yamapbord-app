@@ -554,8 +554,8 @@
 </script>
 
 <div class="container-fluid project" ng-class="{'lateral-menu-open': lateralMenuOpen}">
-  <section id="selectedProjectSprints" ng-if="selectedProject !== null" ng-include="'templates/include/selected-project-sprints.html'"></section>
-  <section id="selectedProjectStories" ng-if="selectedProject !== null" ng-include="'templates/include/selected-project-stories.html'"></section>
+  <section id="selectedProjectSprints" ng-if="selectedProject !== null" ng-show="selectedProject.showSprints" ng-include="'templates/include/selected-project-sprints.html'"></section>
+  <section id="selectedProjectStories" ng-if="selectedProject !== null" ng-show="selectedProject.showIcebox" ng-include="'templates/include/selected-project-stories.html'"></section>
   <section id="iceboxStories" ng-if="showIceboxStories" ng-include="'templates/include/icebox-stories-column.html'"></section>
 </div>
 
@@ -588,6 +588,24 @@
         <div class="date">
           <date-stamp date="project.endDate"></date-stamp>
         </div>
+      </div>
+      <div class="project-control" uib-collapse="!project.isOpen">
+        <button class="btn btn-default btn-project-control" ng-class="{'active': project.showIcebox}" ng-click="toogleProjectPartVisible(project, 'Icebox')">
+          IB
+          <i class="fa" ng-class="{'fa-eye': project.showIcebox, 'fa-eye-slash': !project.showIcebox}"></i>
+        </button>
+        <button class="btn btn-default btn-project-control" ng-class="{'active': project.showSprints}" ng-click="toogleProjectPartVisible(project, 'Sprints')">
+          SP
+          <i class="fa" ng-class="{'fa-eye': project.showSprints, 'fa-eye-slash': !project.showSprints}"></i>
+        </button>
+        <button class="btn btn-default btn-project-control" ng-class="{'active': project.showKanbans}" ng-click="toogleProjectPartVisible(project, 'Kanbans')">
+          KB
+          <i class="fa" ng-class="{'fa-eye': project.showKanbans, 'fa-eye-slash': !project.showKanbans}"></i>
+        </button>
+        <button class="btn btn-default btn-project-control" ng-class="{'active': project.showAttachment}" ng-click="toogleProjectPartVisible(project, 'Attachment')">
+          AT
+          <i class="fa" ng-class="{'fa-eye': project.showAttachment, 'fa-eye-slash': !project.showAttachment}"></i>
+        </button>
       </div>
     </div>
   </div>
