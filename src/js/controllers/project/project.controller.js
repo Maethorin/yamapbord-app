@@ -11,6 +11,7 @@ scrumInCeresControllers.controller('ProjectController', ['$rootScope', '$scope',
   };
   $scope.selectedProject = null;
   $scope.selectedSprint = null;
+  $scope.selectedKanban = null;
   $scope.selectedProjectOpened = false;
   $scope.projects = [];
   $rootScope.showIceboxStories = false;
