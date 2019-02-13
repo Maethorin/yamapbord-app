@@ -1,0 +1,368 @@
+'use strict';
+
+scrumInCeresControllers.controller('SelectedProjectKanbansController', ['$rootScope', '$scope', 'Notifier', 'Alert', 'MeService', 'StoryService', 'HollydayService', 'ProjectStory', 'BacklogKanban', function($rootScope, $scope, Notifier, Alert, MeService, StoryService, HollydayService, ProjectStory, BacklogKanban) {
+  $scope.canAddStoryTo = false;
+  $scope.canRemoveStoryFrom = true;
+  $scope.removeStoryTitle = 'Remove story from selected kanban (back to Project Icebox)';
+  $scope.selectedProject = null;
+  $scope.selectedKanban = null;
+  $scope.newKanbans = [];
+  $scope.storiesFiltered = [];
+  $scope.storyItemsSortableOptions = { containerPositioning: 'relative' };
+
+  StoryService.prepareScopeToEditStory($scope);
+
+  $scope.$on('projects.selectedProject', function(event, selectedProject) {
+    if ($scope.selectedProject !== null && $scope.selectedProject.id === selectedProject.id) {
+      return;
+    }
+    $scope.selectedProject = selectedProject;
+    $scope.columnName = "{name}'s Kanbans".format(selectedProject);
+    // groupStories();
+  });
+
+  $scope.$on('projects.addStoryToSelectedKanban', function(ev, story) {
+    $scope.selectedKanban.stories.push(story);
+    // groupStories();
+  });
+
+  $scope.teams = [];
+  MeService.getInfo().then(
+    function(info) {
+      $scope.teams = info.teams;
+      if ($scope.teams == null || $scope.teams.length === 0) {
+        $scope.teams = [info.team];
+      }
+    }
+  );
+
+  function updateSelectedKanban() {
+    const kanbansOpened = _.filter($scope.selectedProject.kanbans, 'isOpen');
+    $scope.selectedKanban = null;
+    if (kanbansOpened.length === 1) {
+      $scope.selectedKanban = kanbansOpened[0];
+      $scope.removeStoryTitle = 'Remove story from {0} (back to {1} Icebox)'.format([$scope.selectedKanban.name, $scope.selectedProject.name]);
+    }
+    $scope.$emit('projects.selectingKanban', $scope.selectedKanban);
+  }
+
+  $scope.openKanban = function(kanban) {
+    if (kanban.isLoaded) {
+      kanban.isOpen = !kanban.isOpen;
+      updateSelectedKanban();
+      return;
+    }
+    kanban.loading = true;
+
+    BacklogKanban.get(
+      {id: kanban.id},
+
+      function(result) {
+        kanban.name = result.name;
+        kanban.objective = result.objective;
+        kanban.team = result.team;
+        kanban.stories = result.stories;
+        kanban.isOpen = true;
+        kanban.isLoaded = true;
+        kanban.porraAngular = {storyFilterIsOpen: false, storyFilterIteration: null, moduleAcronym: '', orderStoryBy: null, groupStoryBy: null};
+        kanban.newStories = [];
+        kanban.storyFilter = {
+          name: '',
+          statement: ''
+        };
+        updateSelectedKanban();
+        delete kanban.loading;
+      },
+
+      function(error) {
+        Alert.randomErrorMessage(error);
+        delete kanban.loading;
+      }
+    )
+  };
+
+
+  $scope.saveKanban = function(kanban, $index) {
+    Notifier.warning('Saving kanban...');
+    var kanbanToSend = _.cloneDeep(kanban);
+    kanban.updating = true;
+    delete kanbanToSend.isOpen;
+    delete kanbanToSend.isLoaded;
+    delete kanbanToSend.porraAngular;
+    delete kanbanToSend.storyFilter;
+    delete kanbanToSend.newStories;
+
+    kanbanToSend.stories = _.map(kanban.stories, function(story) {
+      return {id: story.id, points: story.points};
+    });
+    if (kanban.id) {
+      BacklogKanban.update(
+        {id: kanban.id},
+        kanbanToSend,
+        function() {
+          delete kanban.updating;
+          Notifier.success('Kanban saved!')
+        },
+        function(error) {
+          Alert.randomErrorMessage(error);
+          delete kanban.updating;
+        }
+      );
+    }
+    else {
+      BacklogKanban.save(
+        kanbanToSend,
+        function(result) {
+          $scope.selectedProject.kanbans.push(result);
+          $scope.newKanbans.splice($index, 1);
+          // groupStories();
+          Notifier.success('Kanban saved!')
+        },
+        function(error) {
+          Alert.randomErrorMessage(error);
+          delete kanban.updating;
+        }
+      );
+    }
+  };
+
+  $scope.cancelNewKanban = function($index) {
+    $scope.newKanbans.splice($index, 1);
+  };
+
+  $scope.undoKanbanChanges = function(kanban) {
+    kanban.isLoaded = false;
+    $scope.openKanban(kanban);
+  };
+
+  $scope.addNewKanbanToSelectedProject = function() {
+    var newKanban = {
+      name: null,
+      objective: null,
+      type: 'kanban',
+      team: null,
+      stories: [],
+      project: {id: $scope.selectedProject.id}
+    };
+
+    newKanban.isOpen = true;
+    newKanban.isLoaded = true;
+    newKanban.porraAngular = {storyFilterIsOpen: false, storyFilterIteration: null, moduleAcronym: '', orderStoryBy: null, groupStoryBy: null};
+    newKanban.storyFilter = {
+      name: '',
+      statement: ''
+    };
+    newKanban.newStories = [];
+
+    $scope.newKanbans.unshift(newKanban);
+  };
+
+  $scope.addNewStoryToKanban = function(storyType, kanban) {
+    var newStory = $scope.addNewStory(
+      {project: $scope.selectedProject, type: storyType, iterationType: 'kanban', iteration: kanban},
+      true
+    );
+    newStory.isOpen = true;
+    newStory.isLoaded = true;
+    newStory.currentTab = 0;
+    newStory.newTaskVisible = false;
+    newStory.newDefinitionVisible = false;
+    newStory.newCommentVisible = false;
+    newStory.newCommentType = null;
+    newStory.newMergeRequestVisible = false;
+    kanban.newStories.unshift(newStory);
+  };
+
+  $scope.saveStory = function(story, $index, kanban) {
+    Notifier.warning('Saving story...');
+    var storyToSend = _.cloneDeep(story);
+    story.updating = true;
+    delete storyToSend.isOpen;
+    delete storyToSend.isLoaded;
+    delete storyToSend.currentTab;
+    delete storyToSend.newTaskVisible;
+    delete storyToSend.newDefinitionVisible;
+    delete storyToSend.newCommentVisible;
+    delete storyToSend.newCommentType;
+    delete storyToSend.newMergeRequestVisible;
+    if (story.id) {
+      ProjectStory.update(
+        {projectId: $scope.selectedProject.id, storyId: story.id},
+        storyToSend,
+        function() {
+          delete story.updating;
+          Notifier.success('Story saved!');
+        },
+        function(error) {
+          Alert.randomErrorMessage(error);
+          delete story.updating;
+        }
+      );
+    }
+    else {
+      ProjectStory.save(
+        {projectId: $scope.selectedProject.id},
+        storyToSend,
+        function(result) {
+          kanban.stories.push(result);
+          kanban.newStories.splice($index, 1);
+          // groupStories();
+          Notifier.success('Story saved!')
+        },
+        function(error) {
+          Alert.randomErrorMessage(error);
+          delete story.updating;
+        }
+      );
+    }
+  };
+
+  $scope.cancelNewStory = function($index, kanban) {
+    kanban.newStories.splice($index, 1);
+  };
+
+  $scope.undoStoryChanges = function(story) {
+    story.isLoaded = false;
+    $scope.selectStory(story);
+  };
+
+  $scope.selectStory = function(story) {
+    if (story.isLoaded) {
+      story.isOpen = !story.isOpen;
+      return;
+    }
+    story.loading = true;
+    ProjectStory.get(
+      {projectId: $scope.selectedProject.id, storyId: story.id},
+
+      function(result) {
+        story.isOpen = true;
+        story.isLoaded = true;
+        story.currentTab = story.currentTab ? story.currentTab : 0;
+        story.newTaskVisible = false;
+        story.newDefinitionVisible = false;
+        story.newCommentVisible = false;
+        story.newCommentType = null;
+        story.newMergeRequestVisible = false;
+        story.name = result.name;
+        story.statement = result.statement;
+        story.type = result.type;
+        story.typeName = result.typeName;
+        story.points = result.points;
+        story.valuePoints = result.valuePoints;
+
+        delete story.loading;
+        StoryService.turnCompactStoryAsComplete(story, result);
+      }
+    )
+  };
+
+  $scope.changeStoryTab = function(story, tabIndex) {
+    story.currentTab = tabIndex;
+  };
+
+  $scope.saveStoryTasks = function(story) {
+    Notifier.warning('Saving tasks...');
+    story.updating = true;
+    ProjectStory.update(
+      {projectId: $scope.selectedProject.id, storyId: story.id},
+      {'tasks': story.tasks},
+      function() {
+        delete story.updating;
+        Notifier.success('Tasks saved!')
+      },
+      function(error) {
+        Alert.randomErrorMessage(error);
+        delete story.updating;
+      }
+    );
+  };
+
+  $scope.saveStoryDefinitions = function(story) {
+    Notifier.warning('Saving definitions...');
+    story.updating = true;
+    ProjectStory.update(
+      {projectId: $scope.selectedProject.id, storyId: story.id},
+      {'definitionOfDone': story.definitionOfDone},
+      function() {
+        delete story.updating;
+        Notifier.success('Definitions saved!')
+      },
+      function(error) {
+        Alert.randomErrorMessage(error);
+        delete story.updating;
+      }
+    );
+  };
+
+  $scope.removeStoryFromSelected = function(story, stories, kanban) {
+    Notifier.warning('Removing story from kanban...');
+    story.updating = true;
+    ProjectStory.update(
+      {projectId: $scope.selectedProject.id, storyId: story.id},
+
+      {kanbanId: null},
+
+      function() {
+        const index = _.findIndex(kanban.stories, ['id', story.id]);
+        kanban.stories.splice(index, 1);
+        if (stories) {
+          const indexGroup = _.findIndex(stories, ['id', story.id]);
+          stories.splice(indexGroup, 1);
+        }
+        delete story.updating;
+        updateWorkingDays(kanban);
+        $scope.$emit('projects.storyRemovedFromKanban', story);
+        Notifier.success('Story removed!');
+      },
+
+      function(error) {
+        Alert.randomErrorMessage(error);
+        delete story.updating;
+      }
+    )
+  };
+
+
+
+
+
+  $scope.groupedStories = false;
+  $scope.storiesGroupOpen = {};
+
+
+  function groupStories() {
+    if (!$scope.selectedProject) {
+      return false;
+    }
+    $scope.groupedStories = false;
+    if ($scope.porraAngular.groupStoryBy === 'module') {
+      $scope.groupedStories = _.groupBy($scope.selectedProject.stories, 'moduleId');
+    }
+    if ($scope.porraAngular.groupStoryBy === 'module-epic') {
+      $scope.groupedStories = [];
+      var tempGroupStories = _.groupBy($scope.selectedProject.stories, 'moduleId');
+      _.forEach(tempGroupStories, function(group) {
+        $scope.groupedStories.push(
+          {
+            id: group[0].moduleId,
+            isOpen: false,
+            stories: _.groupBy(group, 'epicId')
+          }
+        );
+      });
+    }
+    if ($scope.porraAngular.groupStoryBy === 'type') {
+      $scope.groupedStories = _.groupBy($scope.selectedProject.stories, 'type');
+    }
+    if ($scope.porraAngular.groupStoryBy === 'status') {
+      $scope.groupedStories = _.groupBy($scope.selectedProject.stories, 'status');
+    }
+  }
+
+
+  $scope.openGroupedStories = function(group) {
+    group.isOpen = !group.isOpen;
+  };
+
+}]);

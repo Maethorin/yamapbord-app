@@ -111,7 +111,7 @@
     float: left;
 
     .panel-heading {
-      .btn-create-sprint {
+      .btn-create-sprint, .btn-create-kanban {
         float: right;
         padding: 0 5px;
         i {
@@ -122,7 +122,7 @@
         float: right;
       }
     }
-    .project-stories-list, .project-sprint-list {
+    .project-stories-list, .project-sprint-list, .project-kanban-list {
       overflow-y: scroll;
       height: 85vh;
       padding-left: 4px;
@@ -228,7 +228,7 @@
         }
       }
 
-      .panel-story, .panel-sprint {
+      .panel-sprint, .panel-kanban, .panel-story {
         margin: 0;
         padding: 0;
         &:hover {
@@ -264,7 +264,7 @@
           }
 
           input {
-            &.story-name, &.sprint-name {
+            &.story-name, &.sprint-name, &.kanban-name {
               height: 18px;
               border: 1px solid $gray;
               background-color: $gray-dark;
@@ -274,7 +274,7 @@
               padding: 2px;
               width: 80%;
             }
-            &.sprint-name {
+            &.sprint-name, &.kanban-name {
               font-size: 16px;
               background-color: $gray-darker;
               vertical-align: inherit;
@@ -303,22 +303,22 @@
         .panel-body {
           background-color: #f1f0ea;
           padding: 0 5px;
-          .form-story, .form-sprint {
+          .form-sprint, .form-kanban, .form-story{
             padding: 5px 0;
-            .statement-save, .sprint-save {
+            .statement-save, .sprint-save, .kanban-save {
               overflow: hidden;
               .btn-success {
                 margin: 5px 0;
               }
             }
 
-            .story-details, .sprint-details, .story-tabs, .story-iterations, .story-date {
+            .sprint-details, .kanban-details, .story-details, .story-tabs, .story-iterations, .story-date {
               overflow: hidden;
               margin-top: 5px;
               border-top: 1px solid #666;
             }
 
-            .story-details, .sprint-details {
+            .story-details, .sprint-details, .kanban-details {
               .list-group {
                 li {
                   div {
@@ -593,18 +593,18 @@
         }
       }
 
-      .panel-sprint {
+      .panel-sprint, .panel-kanban {
         padding: 0;
         .panel-heading {
           background-color: $gray-darker;
           padding: 4px 5px;
 
-          .sprint-name {
+          .sprint-name, .kanban-name {
             font-size: 16px;
             vertical-align: middle;
           }
 
-          .sprint-chevron {
+          .sprint-chevron, .kanban-chevron {
             float: right;
             display: inline-block;
             margin-right: 5px;
@@ -618,9 +618,9 @@
         .panel-body {
           padding: 0;
 
-          .form-sprint {
+          .form-sprint, .form-kanban {
             padding: 5px;
-            .sprint-details {
+            .sprint-details, .kanban-details {
               overflow: unset;
               height: 120px;
               .list-group {
@@ -660,12 +660,12 @@
                   color: #EEE;
                   font-weight: bold;
                 }
-                .sprint-team {
+                .sprint-team, .kanban-team {
                   color: #EEE;
                   background-color: $gray;
                   font-weight: bold;
                 }
-                .sprint-numeric-label {
+                .sprint-numeric-label, .kanban-numeric-label {
                   color: #EEE;
                   background-color: $gray;
                   font-weight: bold;
@@ -674,7 +674,7 @@
             }
           }
 
-          .panel-sprint-stories {
+          .panel-sprint-stories, .panel-kanban-stories {
             padding: 0;
             .panel-heading {
               padding: 2px 5px;
@@ -689,7 +689,7 @@
                 left: -83px;
               }
             }
-            .sprint-stories-list {
+            .sprint-stories-list, .kanban-stories-list {
               padding: 0;
               height: auto;
               overflow: hidden;
@@ -723,7 +723,7 @@
         }
       }
     }
-    .project-sprint {
+    .project-sprint, .project-kanban {
       overflow: initial;
     }
   }

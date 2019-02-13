@@ -26,8 +26,17 @@ scrumInCeresControllers.controller('SelectedProjectStoriesController', ['$rootSc
       return;
     }
     $scope.selectedSprint = selectedSprint;
-    $scope.canAddStoryTo = selectedSprint !== null;
+    $scope.canAddStoryTo = $scope.selectedSprint !== null && $scope.selectedKanban === null;
     $scope.addStoryTitle = $scope.canAddStoryTo ? 'Add story to {name}'.format(selectedSprint) : 'Add story to selected sprint';
+  });
+
+  $scope.$on('projects.selectedKanban', function(event, selectedKanban) {
+    if (selectedKanban !== null && $scope.selectedKanban !== null && $scope.selectedKanban.id === selectedKanban.id) {
+      return;
+    }
+    $scope.selectedKanban = selectedKanban;
+    $scope.canAddStoryTo = $scope.selectedKanban !== null && $scope.selectedSprint === null;
+    $scope.addStoryTitle = $scope.canAddStoryTo ? 'Add story to {name}'.format(selectedKanban) : 'Add story to selected kanban';
   });
 
   $scope.$on('projects.movingStoryToProjectIcebox', function(ev, story) {

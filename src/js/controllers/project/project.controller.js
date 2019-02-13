@@ -183,8 +183,20 @@ scrumInCeresControllers.controller('ProjectController', ['$rootScope', '$scope',
     $scope.$broadcast('projects.selectedSprint', $scope.selectedSprint);
   });
 
+  $scope.$on('projects.selectingKanban', function(event, selectedKanban) {
+    if (selectedKanban !== null && $scope.selectedKanban !== null && $scope.selectedKanban.id === selectedKanban.id) {
+      return;
+    }
+    $scope.selectedKanban = selectedKanban;
+    $scope.$broadcast('projects.selectedKanban', $scope.selectedKanban);
+  });
+
   $scope.$on('projects.addingStoryToSelectedSprint', function(ev, story) {
     $scope.$broadcast('projects.addStoryToSelectedSprint', story);
+  });
+
+  $scope.$on('projects.addingStoryToSelectedKanban', function(ev, story) {
+    $scope.$broadcast('projects.addStoryToSelectedKanban', story);
   });
 
   $scope.$on('projects.storyRemovedFromProject', function(ev, story) {
@@ -192,6 +204,10 @@ scrumInCeresControllers.controller('ProjectController', ['$rootScope', '$scope',
   });
 
   $scope.$on('projects.storyRemovedFromSprint', function(ev, story) {
+    $scope.$broadcast('projects.movingStoryToProjectIcebox', story);
+  });
+
+  $scope.$on('projects.storyRemovedFromKanban', function(ev, story) {
     $scope.$broadcast('projects.movingStoryToProjectIcebox', story);
   });
 }]);
