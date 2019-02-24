@@ -3,11 +3,16 @@
   <div class="row timeline" ng-if="boards.length > 0">
     <button type="button" class="btn-scroll-home btn btn-default btn-xs" ng-click="scrollOptions.scrollPosX = 0"><i class="fa fa-chevron-circle-left"></i></button>
     <div class="timeline-events" ng-scrollable="scrollOptions" spy-x="scrollOptions.scrollPosX">
-      <div class="timeline-event" ng-repeat="board in boards" ng-class="{'selected': selectedSprint.id === board.id, 'current': board.statusSlug == 'sprint-current'}" ui-sref="boardState({boardId: board.id})">
+      <div class="timeline-event" ng-repeat="board in boards" ng-class="{'selected': selectedSprint.id === board.id, 'current': board.statusSlug == 'sprint-current'}" ui-sref="boardState({boardType: board.type, boardId: board.id})">
         <div class="start-date" ng-if="board.type === 'sprint'">
           <div class="month" ng-bind="board.startDateObj.month"></div>
           <div class="day" ng-bind="board.startDateObj.day"></div>
           <div class="year" ng-bind="board.startDateObj.year"></div>
+        </div>
+        <div class="start-date" ng-if="board.type === 'kanban'">
+          <div class="month" ng-bind="board.createdAtObj.month"></div>
+          <div class="day" ng-bind="board.createdAtObj.day"></div>
+          <div class="year" ng-bind="board.createdAtObj.year"></div>
         </div>
         <div class="{{board.type}}-data">
           <div class="{{board.type}}-name" title="{{board.name}}" ng-bind="board.name|limitWithEllipsis:15"></div>
@@ -219,7 +224,7 @@
             <i class="fa fa-chevron-left minus-margin"></i>
             Go Story Back
           </button>
-          <button type="button" class="btn btn-primary" ui-sref="boardState({boardId: selectedSprint.id})">Close</button>
+          <button type="button" class="btn btn-primary" ui-sref="boardState({boardType: selectedSprint.type, boardId: selectedSprint.id})">Close</button>
           <button type="button" class="btn btn-warning" ng-if="selectedStory.status === 'ACCP'" ng-click="archiveStory(selectedStory, true)">Archive</button>
           <button type="button" class="btn btn-success btn-go-forward-story" ng-click="moveStoryForward(selectedStory)" ng-if="selectedStory.status !== 'REJE'">
             Go Story Forward
@@ -288,20 +293,14 @@
 
         <div class="form-group">
           <label for="team">Team</label>
-          <select name="team" id="team" class="form-control" ng-model="timelineFilter.team" ng-options="team.name for team in teams track by team.id">
+          <select name="team" id="team" class="form-control" ng-disabled="teams.length === 1" ng-model="timelineFilter.team" ng-options="team.name for team in teams track by team.id">
             <option value="">All</option>
           </select>
         </div>
 
         <div class="form-group">
           <label for="team">Status</label>
-          <select name="status" id="status" class="form-control" ng-model="timelineFilter.status">
-            <option value="">All</option>
-            <option value="PLAN">PLANNED</option>
-            <option value="CURR">CURRENT</option>
-            <option value="FAIL">FAIL</option>
-            <option value="SUCC">SUCCESS</option>
-          </select>
+          <multiple-autocomplete ng-model="timelineFilter.status" close-after-selected="true" suggestions-arr="['PLAN', 'CURR', 'FAIL', 'SUCC']"></multiple-autocomplete>
         </div>
 
         <button class="btn btn-primary" type="button" ng-click="filterTimeline()">Filter</button>

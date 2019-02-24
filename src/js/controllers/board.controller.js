@@ -66,7 +66,7 @@ scrumInCeresControllers.controller('BoardController', ['$rootScope', '$scope', '
 
         $scope.filterTimeline();
         if ($stateParams.boardId) {
-          $scope.selectSprint(_.find($scope.fullBoards, {id: parseInt($stateParams.boardId)}));
+          $scope.selectSprint(_.find($scope.fullBoards, {id: parseInt($stateParams.boardId), type: $stateParams.boardType}));
         }
         Alert.close();
       }
@@ -78,6 +78,7 @@ scrumInCeresControllers.controller('BoardController', ['$rootScope', '$scope', '
       $scope.teams = info.teams;
       if ($scope.teams == null || $scope.teams.length === 0) {
         $scope.teams = [info.team];
+        $scope.timelineFilter.team = info.team;
       }
       getBoardsList();
     }
@@ -254,23 +255,36 @@ scrumInCeresControllers.controller('BoardController', ['$rootScope', '$scope', '
     if ($scope.timelineFilter.type !== null) {
       filter.type = $scope.timelineFilter.type;
     }
+
+    $scope.boards = $filter('filter')($scope.fullBoards, filter);
+
     if ($scope.timelineFilter.team !== null) {
-      filter.team = $scope.timelineFilter.team;
-    }
-    if ($scope.timelineFilter.status) {
-      $scope.boards = $scope.fullBoards.filter(function(board) {
-        return board.status === $scope.timelineFilter.status || board.type === 'kanban';
-      });
       $scope.boards = $scope.boards.filter(function(board) {
-        return moment(board.startDate).isBetween($scope.timelineFilter.startDate, $scope.timelineFilter.endDate);
+        if (board.hasOwnProperty('team')) {
+          return board.team.id === $scope.timelineFilter.team.id;
+        }
+        return _.findIndex(board.teams, ['id', $scope.timelineFilter.team.id]) > -1;
       });
     }
-    else {
-      $scope.boards = $scope.fullBoards.filter(function(board) {
-        return moment(board.startDate).isBetween($scope.timelineFilter.startDate, $scope.timelineFilter.endDate);
+
+    if ($scope.timelineFilter.type === '' || $scope.timelineFilter.type === null) {
+      $scope.boards = $scope.boards.filter(function(board) {
+        return board.type === 'kanban' || $scope.timelineFilter.status.length === 0 || $scope.timelineFilter.status.indexOf(board.status) > -1;
       });
     }
-    $scope.boards = $filter('filter')($scope.boards, filter);
+
+    if ($scope.timelineFilter.type === 'sprint') {
+      $scope.boards = $scope.boards.filter(function(board) {
+        return $scope.timelineFilter.status.length === 0 || $scope.timelineFilter.status.indexOf(board.status) > -1;
+      });
+    }
+
+    $scope.boards = $scope.boards.filter(function(board) {
+      if (board.hasOwnProperty('startDate')) {
+        return moment(board.startDate).isBetween($scope.timelineFilter.startDate, $scope.timelineFilter.endDate);
+      }
+      return moment(board.createdAt).isBetween($scope.timelineFilter.startDate, $scope.timelineFilter.endDate);
+    });
   };
 
   $scope.clearFilterTimeline = function() {

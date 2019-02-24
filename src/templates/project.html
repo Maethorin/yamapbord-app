@@ -203,23 +203,23 @@
                         <span class="with-break-lines" ng-if="!storyComment.file && storyComment.comment" ng-bind="storyComment.comment"></span>
                         <span class="with-break-lines" ng-if="storyComment.link"><a ng-href="{{storyComment.link}}" ng-bind="storyComment.link" target="_blank"></a> </span>
                         <div class="comment-file" ng-if="storyComment.file">
-                          <div class="col-sm-2" ng-if="storyComment.file.name">
-                            <div>
+                          <div class="col-sm-12" ng-if="storyComment.file.name">
+                            <div class="col-sm-4">
                               <label>Name:</label> {{storyComment.file.name}}
                             </div>
-                            <div>
+                            <div class="col-sm-4">
                               <label>Size:</label> {{storyComment.file.size}}
                             </div>
-                            <div>
+                            <div class="col-sm-4">
                               <label>Type:</label> {{storyComment.file.type}}
                             </div>
                           </div>
-                          <div class="col-sm-3">
+                          <div class="col-sm-5">
                             <a ng-href="{{storyComment.file}}" target="_blank">
                               <img ngf-thumbnail="storyComment.file" />
                             </a>
                           </div>
-                          <div class="col-sm-5" ng-if="storyComment.comment">
+                          <div class="col-sm-7" ng-if="storyComment.comment">
                             <label>Description:</label>
                             <span class="with-break-lines" ng-bind="storyComment.comment"></span>
                           </div>
@@ -232,11 +232,11 @@
                 <li class="new-item list-group-item" ng-show="story.newCommentVisible">
                   <textarea ng-model="newComment.comment" class="form-control comment-textarea" rows="3" ng-show="story.newCommentType === 'comment'" focus-me="story.newCommentType === 'comment'" ng-blur="blurInputCommentField($event, story)"></textarea>
                   <input ng-model="newComment.link" ng-show="story.newCommentType === 'link'" focus-me="story.newCommentType === 'link'" ng-blur="blurInputCommentField($event, story)" />
-                  <div class="new-attachment" ng-show="story.newCommentType === 'file'">
-                    <div class="col-sm-2">
+                  <div class="new-attachment col-sm-11" ng-show="story.newCommentType === 'file'">
+                    <div class="col-sm-5">
                       <input type="file" ngf-select focus-me="story.newCommentType === 'file'" ng-model="newComment.file" name="commentFile" accept="image/*" ngf-max-size="3MB">
                     </div>
-                    <div class="col-sm-4">
+                    <div class="col-sm-7">
                       <textarea ng-model="newComment.comment" class="form-control comment-textarea" rows="3" placeholder="Attachment Description"></textarea>
                     </div>
                   </div>

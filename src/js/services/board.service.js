@@ -7,11 +7,11 @@ scrumInCeresServices.service('BoardService', ['$rootScope', '$q', 'Board', 'Boar
   var shouldQueryBoardStories = true;
 
   this.timelineFilter = {
-    type: null,
+    type: 'sprint',
     startDate: moment().add(-12, 'months'),
     endDate: moment().add(4, 'months'),
     team: null,
-    status: 'CURR'
+    status: ['CURR', 'PLAN']
   };
 
   this.listBoards = function(currentBoardId) {
