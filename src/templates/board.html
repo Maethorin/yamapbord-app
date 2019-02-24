@@ -203,11 +203,11 @@
                   </div>
                   <button type="button" class="btn btn-default btn-xs btn-remove-item" ng-if="!mergeRequest.editing" ng-click="removeStoryMergeRequest(selectedStory, $index)"><i class="fa fa-trash"></i></button>
                 </li>
-                <li class="new-item list-group-item" ng-click="addingMergeRequestToStory()">
-                  <span ng-show="!newMergeRequestVisible">Add a merge request</span>
-                  <input ng-model="newMergeRequest.url" ng-show="newMergeRequestVisible" focus-me="newMergeRequestVisible" ng-blur="blurInputMergeRequestField($event, selectedStory)"/>
-                  <button type="button" class="btn btn-primary btn-xs btn-add-item" ng-show="newMergeRequestVisible" ng-click="addMergeRequestToStory($event, selectedStory)">Add</button>
-                  <button type="button" class="btn btn-default btn-xs btn-remove-item" ng-show="newMergeRequestVisible" ng-click="cancelAddMergeRequestToStory($event)"><i class="fa fa-close"></i></button>
+                <li class="new-item list-group-item" ng-click="addingMergeRequestToStory(story)">
+                  <span ng-show="!story.newMergeRequestVisible">Add a merge request</span>
+                  <input ng-model="newMergeRequest.url" ng-show="story.newMergeRequestVisible" focus-me="story.newMergeRequestVisible" ng-blur="blurInputMergeRequestField($event, selectedStory)"/>
+                  <button type="button" class="btn btn-primary btn-xs btn-add-item" ng-show="story.newMergeRequestVisible" ng-click="addMergeRequestToStory($event, selectedStory)">Add</button>
+                  <button type="button" class="btn btn-default btn-xs btn-remove-item" ng-show="story.newMergeRequestVisible" ng-click="cancelAddMergeRequestToStory($event)"><i class="fa fa-close"></i></button>
                 </li>
               </ul>
             </uib-tab>

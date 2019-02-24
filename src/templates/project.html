@@ -138,7 +138,7 @@
             <uib-tab index="1" select="changeStoryTab(story, 1)">
               <uib-tab-heading>
                 DoD
-                <button ng-if="story.currentTab === 1" type="button" class="btn btn-success btn-sm btn-save-task" ng-click="saveStoryDefinitions(story)"><i class="fa fa-save"></i></button>
+                <button ng-if="story.currentTab === 1" type="button" class="btn btn-success btn-sm btn-save-task" ng-click="saveStoryDefinitionOfDone(story)"><i class="fa fa-save"></i></button>
               </uib-tab-heading>
               <ul class="list-group story-definitions" as-sortable="storyItemsSortableOptions" ng-model="story.definitionOfDone">
                 <li class="list-group-item" ng-repeat="definition in story.definitionOfDone" ng-click="toggleEditStoryDefinition(definition)" as-sortable-item>
@@ -161,7 +161,7 @@
             <uib-tab index="2" select="changeStoryTab(story, 2)">
               <uib-tab-heading>
                 Comments
-                <!--<button ng-if="story.currentTab === 2" type="button" class="btn btn-success btn-sm btn-save-task" ng-click="saveStoryComments(story)"><i class="fa fa-save"></i></button>-->
+                <button ng-if="story.currentTab === 2" type="button" class="btn btn-success btn-sm btn-save-task" ng-click="saveStoryComments(story)"><i class="fa fa-save"></i></button>
               </uib-tab-heading>
               <div class="fab-story-comments">
                 <md-fab-toolbar md-open="false" md-direction="left">
@@ -186,46 +186,48 @@
                 </md-fab-toolbar>
               </div>
 
-              <ul class="list-group story-comments">
-                <li class="list-group-item" ng-repeat="storyComment in story.comments">
-                  <textarea ng-model="storyComment.comment" class="form-control comment-textarea" rows="2" ng-show="storyComment.editing" focus-me="storyComment.editing" ng-blur="toggleEditStoryComment(storyComment)"></textarea>
-                  <div ng-if="!storyComment.editing">
-                    <div class="comment-details">
-                      <div class="col-sm-7">
-                        Created by: {{storyComment.creator.name}}
+              <ul class="list-group story-comments" as-sortable="storyItemsSortableOptions" ng-model="story.comments">
+                <li class="list-group-item" ng-repeat="storyComment in story.comments" as-sortable-item>
+                  <div as-sortable-item-handle>
+                    <textarea ng-model="storyComment.comment" class="form-control comment-textarea" rows="2" ng-show="storyComment.editing" focus-me="storyComment.editing" ng-blur="toggleEditStoryComment(storyComment)"></textarea>
+                    <div ng-if="!storyComment.editing">
+                      <div class="comment-details">
+                        <div class="col-sm-7">
+                          Created by: {{storyComment.creator.name}}
+                        </div>
+                        <div class="col-sm-5">
+                          Created at: {{storyComment.createdAt}}
+                        </div>
                       </div>
-                      <div class="col-sm-5">
-                        Created at: {{storyComment.createdAt}}
+                      <div class="comment-text col-sm-11">
+                        <span class="with-break-lines" ng-if="!storyComment.file && storyComment.comment" ng-bind="storyComment.comment"></span>
+                        <span class="with-break-lines" ng-if="storyComment.link"><a ng-href="{{storyComment.link}}" ng-bind="storyComment.link" target="_blank"></a> </span>
+                        <div class="comment-file" ng-if="storyComment.file">
+                          <div class="col-sm-2" ng-if="storyComment.file.name">
+                            <div>
+                              <label>Name:</label> {{storyComment.file.name}}
+                            </div>
+                            <div>
+                              <label>Size:</label> {{storyComment.file.size}}
+                            </div>
+                            <div>
+                              <label>Type:</label> {{storyComment.file.type}}
+                            </div>
+                          </div>
+                          <div class="col-sm-3">
+                            <a ng-href="{{storyComment.file}}" target="_blank">
+                              <img ngf-thumbnail="storyComment.file" />
+                            </a>
+                          </div>
+                          <div class="col-sm-5" ng-if="storyComment.comment">
+                            <label>Description:</label>
+                            <span class="with-break-lines" ng-bind="storyComment.comment"></span>
+                          </div>
+                        </div>
                       </div>
                     </div>
-                    <div class="comment-text col-sm-11">
-                      <span class="with-break-lines" ng-if="!storyComment.file && storyComment.comment" ng-bind="storyComment.comment"></span>
-                      <span class="with-break-lines" ng-if="storyComment.link"><a ng-href="{{storyComment.link}}" ng-bind="storyComment.link" target="_blank"></a> </span>
-                      <div class="comment-file" ng-if="storyComment.file">
-                        <div class="col-sm-2" ng-if="storyComment.file.name">
-                          <div>
-                            <label>Name:</label> {{storyComment.file.name}}
-                          </div>
-                          <div>
-                            <label>Size:</label> {{storyComment.file.size}}
-                          </div>
-                          <div>
-                            <label>Type:</label> {{storyComment.file.type}}
-                          </div>
-                        </div>
-                        <div class="col-sm-3">
-                          <a ng-href="{{storyComment.file}}" target="_blank">
-                            <img ngf-thumbnail="storyComment.file" />
-                          </a>
-                        </div>
-                        <div class="col-sm-5" ng-if="storyComment.comment">
-                          <label>Description:</label>
-                          <span class="with-break-lines" ng-bind="storyComment.comment"></span>
-                        </div>
-                      </div>
-                    </div>
+                    <button type="button" class="btn btn-danger btn-xs btn-remove-comment" ng-if="!storyComment.editing" ng-click="removeStoryComment(story, $index)"><i class="fa fa-trash"></i></button>
                   </div>
-                  <button type="button" class="btn btn-danger btn-xs btn-remove-comment" ng-if="!storyComment.editing" ng-click="removeStoryComment(story, $index)"><i class="fa fa-trash"></i></button>
                 </li>
                 <li class="new-item list-group-item" ng-show="story.newCommentVisible">
                   <textarea ng-model="newComment.comment" class="form-control comment-textarea" rows="3" ng-show="story.newCommentType === 'comment'" focus-me="story.newCommentType === 'comment'" ng-blur="blurInputCommentField($event, story)"></textarea>
@@ -247,29 +249,34 @@
             <uib-tab index="3" select="changeStoryTab(story, 3)">
               <uib-tab-heading>
                 Merge Requests
-                <!--<button ng-if="story.currentTab === 3" type="button" class="btn btn-success btn-sm btn-save-task" ng-click="saveMergeRequests(story)"><i class="fa fa-save"></i></button>-->
+                <button ng-if="story.currentTab === 3" type="button" class="btn btn-success btn-sm btn-save-task" ng-click="saveStoryMergeRequests(story)"><i class="fa fa-save"></i></button>
               </uib-tab-heading>
-              <ul class="list-group story-merge-requests" ng-scrollable="scrollMergeRequestOptions">
-                <li class="list-group-item" ng-repeat="mergeRequest in story.mergeRequests" ng-click="toggleEditStoryMergeRequest(mergeRequest)">
-                  <input ng-model="mergeRequest.url" ng-show="mergeRequest.editing" focus-me="mergeRequest.editing" ng-blur="toggleEditStoryMergeRequest(mergeRequest)"/>
-                  <div ng-if="!mergeRequest.editing">
-                    <div class="merge-request-details">
-                      <div class="col-sm-7">
-                        Created by: {{mergeRequest.creator.name}}
-                      </div>
-                      <div class="col-sm-5">
-                        Created at: {{mergeRequest.createdAt}}
+
+              <ul class="list-group story-merge-requests" as-sortable="storyItemsSortableOptions" ng-model="story.mergeRequests">
+                <li class="list-group-item" ng-repeat="mergeRequest in story.mergeRequests" ng-click="toggleEditStoryMergeRequest(mergeRequest)" as-sortable-item>
+                  <div as-sortable-item-handle>
+                    <input ng-model="mergeRequest.url" ng-show="mergeRequest.editing" focus-me="mergeRequest.editing" ng-blur="toggleEditStoryMergeRequest(mergeRequest)"/>
+                    <div ng-if="!mergeRequest.editing">
+                      <div class="merge-request-details">
+                        <div class="col-sm-7">
+                          Created by: {{mergeRequest.creator.name}}
+                        </div>
+                        <div class="col-sm-5">
+                          Created at: {{mergeRequest.createdAt}}
+                        </div>
                       </div>
                     </div>
-                    <span class="with-break-lines"><a ng-href="{{mergeRequest.url}}" ng-bind="mergeRequest.url" target="_blank" ng-click="stopPropagation($event)"></a> </span>
+                    <div class="merge-url col-sm-11">
+                      <span class="with-break-lines"><a ng-href="{{mergeRequest.url}}" ng-bind="mergeRequest.url" target="_blank" ng-click="stopPropagation($event)"></a> </span>
+                    </div>
+                    <button type="button" class="btn btn-danger btn-xs btn-remove-merge" ng-if="!mergeRequest.editing" ng-click="removeStoryMergeRequest(story, $index)"><i class="fa fa-trash"></i></button>
                   </div>
-                  <button type="button" class="btn btn-default btn-xs btn-remove-item" ng-if="!mergeRequest.editing" ng-click="removeStoryMergeRequest(story, $index)"><i class="fa fa-trash"></i></button>
                 </li>
-                <li class="new-item list-group-item" ng-click="addingMergeRequestToStory()">
-                  <span ng-show="!newMergeRequestVisible">Add a merge request</span>
-                  <input ng-model="newMergeRequest.url" ng-show="newMergeRequestVisible" focus-me="newMergeRequestVisible" ng-blur="blurInputMergeRequestField($event, story)"/>
-                  <button type="button" class="btn btn-primary btn-xs btn-add-item" ng-show="newMergeRequestVisible" ng-click="addMergeRequestToStory($event, story)">Add</button>
-                  <button type="button" class="btn btn-default btn-xs btn-remove-item" ng-show="newMergeRequestVisible" ng-click="cancelAddMergeRequestToStory($event)"><i class="fa fa-close"></i></button>
+                <li class="new-item list-group-item" ng-click="addingMergeRequestToStory(story)">
+                  <span class="btn btn-xs btn-primary" ng-show="!story.newMergeRequestVisible">Add a merge request</span>
+                  <input ng-model="newMergeRequest.url" ng-show="story.newMergeRequestVisible" focus-me="story.newMergeRequestVisible" ng-blur="blurInputMergeRequestField($event, story)"/>
+                  <button type="button" class="btn btn-success btn-xs btn-add-merge" ng-show="story.newMergeRequestVisible" ng-click="addMergeRequestToStory($event, story)"><i class="fa fa-check"></i></button>
+                  <button type="button" class="btn btn-danger btn-xs btn-remove-merge" ng-show="story.newMergeRequestVisible" ng-click="cancelAddMergeRequestToStory($event, story)"><i class="fa fa-close"></i></button>
                 </li>
               </ul>
             </uib-tab>
@@ -535,11 +542,11 @@
                   </div>
                   <button type="button" class="btn btn-default btn-xs btn-remove-item" ng-if="!mergeRequest.editing" ng-click="removeStoryMergeRequest(newStory, $index)"><i class="fa fa-trash"></i></button>
                 </li>
-                <li class="new-item list-group-item" ng-click="addingMergeRequestToStory()">
-                  <span ng-show="!newMergeRequestVisible">Add a merge request</span>
-                  <input ng-model="newMergeRequest.url" ng-show="newMergeRequestVisible" focus-me="newMergeRequestVisible" ng-blur="blurInputMergeRequestField($event, newStory)"/>
-                  <button type="button" class="btn btn-primary btn-xs btn-add-item" ng-show="newMergeRequestVisible" ng-click="addMergeRequestToStory($event, newStory)">Add</button>
-                  <button type="button" class="btn btn-default btn-xs btn-remove-item" ng-show="newMergeRequestVisible" ng-click="cancelAddMergeRequestToStory($event)"><i class="fa fa-close"></i></button>
+                <li class="new-item list-group-item" ng-click="addingMergeRequestToStory(story)">
+                  <span ng-show="!story.newMergeRequestVisible">Add a merge request</span>
+                  <input ng-model="newMergeRequest.url" ng-show="story.newMergeRequestVisible" focus-me="story.newMergeRequestVisible" ng-blur="blurInputMergeRequestField($event, newStory)"/>
+                  <button type="button" class="btn btn-primary btn-xs btn-add-item" ng-show="story.newMergeRequestVisible" ng-click="addMergeRequestToStory($event, newStory)">Add</button>
+                  <button type="button" class="btn btn-default btn-xs btn-remove-item" ng-show="story.newMergeRequestVisible" ng-click="cancelAddMergeRequestToStory($event)"><i class="fa fa-close"></i></button>
                 </li>
               </ul>
             </uib-tab>

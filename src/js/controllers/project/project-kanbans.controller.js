@@ -238,37 +238,24 @@ scrumInCeresControllers.controller('SelectedProjectKanbansController', ['$rootSc
   };
 
   $scope.saveStoryTasks = function(story) {
-    Notifier.warning('Saving tasks...');
-    story.updating = true;
-    ProjectStory.update(
+    $scope.saveSelectedStoryTasks(story, ProjectStory, {projectId: $scope.selectedProject.id, storyId: story.id});
+  };
+
+  $scope.saveStoryDefinitionOfDone = function(story) {
+    $scope.saveSelectedStoryDefinitionOfDone(story, ProjectStory, {projectId: $scope.selectedProject.id, storyId: story.id});
+  };
+
+  $scope.saveStoryComments = function(story) {
+    $scope.saveSelectedStoryComments(
+      story,
+      ProjectStory,
       {projectId: $scope.selectedProject.id, storyId: story.id},
-      {'tasks': story.tasks},
-      function() {
-        delete story.updating;
-        Notifier.success('Tasks saved!')
-      },
-      function(error) {
-        Alert.randomErrorMessage(error);
-        delete story.updating;
-      }
+      '{0}/users/me/projects/{1}/stories/{2}'.format([appConfig.backendURL, $scope.selectedProject.id, story.id])
     );
   };
 
-  $scope.saveStoryDefinitions = function(story) {
-    Notifier.warning('Saving definitions...');
-    story.updating = true;
-    ProjectStory.update(
-      {projectId: $scope.selectedProject.id, storyId: story.id},
-      {'definitionOfDone': story.definitionOfDone},
-      function() {
-        delete story.updating;
-        Notifier.success('Definitions saved!')
-      },
-      function(error) {
-        Alert.randomErrorMessage(error);
-        delete story.updating;
-      }
-    );
+  $scope.saveStoryMergeRequests = function(story) {
+    $scope.saveSelectedStoryMergeRequests(story, ProjectStory, {projectId: $scope.selectedProject.id, storyId: story.id});
   };
 
   $scope.removeStoryFromSelected = function(story, stories, kanban) {

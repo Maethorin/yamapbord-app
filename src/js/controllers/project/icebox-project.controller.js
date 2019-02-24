@@ -138,42 +138,24 @@ scrumInCeresControllers.controller('IceboxProjectController', ['$rootScope', '$s
   };
 
   $scope.saveStoryTasks = function(story) {
-    Notifier.warning('Saving tasks...');
-    story.updating = true;
-    IceBox.update(
-      {id: story.id},
+    $scope.saveSelectedStoryTasks(story, ProjectStory, {projectId: $scope.selectedProject.id, storyId: story.id});
+  };
 
-      {'tasks': story.tasks},
+  $scope.saveStoryDefinitionOfDone = function(story) {
+    $scope.saveSelectedStoryDefinitionOfDone(story, ProjectStory, {projectId: $scope.selectedProject.id, storyId: story.id});
+  };
 
-      function() {
-        delete story.updating;
-        Notifier.success('Tasks saved!')
-      },
-      function(error) {
-        Alert.randomErrorMessage(error);
-        delete story.updating;
-      }
+  $scope.saveStoryComments = function(story) {
+    $scope.saveSelectedStoryComments(
+      story,
+      ProjectStory,
+      {projectId: $scope.selectedProject.id, storyId: story.id},
+      '{0}/users/me/projects/{1}/stories/{2}'.format([appConfig.backendURL, $scope.selectedProject.id, story.id])
     );
   };
 
-  $scope.saveStoryDefinitions = function(story) {
-    Notifier.warning('Saving definitions...');
-    story.updating = true;
-    IceBox.update(
-      {id: story.id},
-
-      {'definitionOfDone': story.definitionOfDone},
-
-      function() {
-        delete story.updating;
-        Notifier.success('Definitions saved!')
-      },
-
-      function(error) {
-        Alert.randomErrorMessage(error);
-        delete story.updating;
-      }
-    );
+  $scope.saveStoryMergeRequests = function(story) {
+    $scope.saveSelectedStoryMergeRequests(story, ProjectStory, {projectId: $scope.selectedProject.id, storyId: story.id});
   };
 
   $scope.cancelNewStory = function($index) {

@@ -419,6 +419,7 @@ scrumInCeresControllers.controller('BoardController', ['$rootScope', '$scope', '
 
   $scope.saveSelectedBoardStoryComments = function() {
     $scope.saveSelectedStoryComments(
+      $scope.selectedStory,
       BoardStory,
       {boardId: $scope.selectedSprint.id, id: $scope.selectedStory.id},
       '{0}/users/me/boards/{1}/stories/{2}'.format([appConfig.backendURL, $scope.selectedSprint.id, $scope.selectedStory.id])
@@ -427,6 +428,7 @@ scrumInCeresControllers.controller('BoardController', ['$rootScope', '$scope', '
 
   $scope.saveSelectedBoardStoryMergeRequests = function() {
     $scope.saveSelectedStoryMergeRequests(
+      $scope.selectedStory,
       BoardStory,
       {boardId: $scope.selectedSprint.id, id: $scope.selectedStory.id}
     );
@@ -434,6 +436,7 @@ scrumInCeresControllers.controller('BoardController', ['$rootScope', '$scope', '
 
   $scope.saveSelectedBoardStoryTasks = function() {
     $scope.saveSelectedStoryTasks(
+      $scope.selectedStory,
       BoardStory,
       {boardId: $scope.selectedSprint.id, id: $scope.selectedStory.id}
     );

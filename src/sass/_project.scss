@@ -442,7 +442,7 @@
                       background-color: transparent;
                     }
                   }
-                  .btn-save-task, .btn-remove-task, .btn-add-task, .btn-remove-comment, .btn-add-comment {
+                  .btn-save-task, .btn-remove-task, .btn-add-task, .btn-remove-comment, .btn-add-comment, .btn-add-merge, .btn-remove-merge {
                     padding: 0 3px;
                     line-height: 14px;
                     border-radius: 2px;
@@ -527,6 +527,17 @@
                         }
                       }
                     }
+
+                    &.story-merge-requests {
+                      .merge-request-details {
+                        font-size: 12px;
+                      }
+                      .with-break-lines {
+                        a {
+                          text-transform: none;
+                        }
+                      }
+                    }
                     .as-sortable-placeholder {
                       background-color: #FFF;
                       border-radius: 6px;
@@ -542,7 +553,7 @@
                         margin-right: 0;
                         vertical-align: middle;
                       }
-                      .btn-remove-task, .btn-add-task, .btn-remove-comment, .btn-add-comment {
+                      .btn-remove-task, .btn-add-task, .btn-remove-comment, .btn-add-comment, .btn-add-merge, .btn-remove-merge {
                         float: right;
                         margin-top: 2px;
                         padding: 1px;
@@ -812,7 +823,7 @@
   }
 }
 
-.story-tasks, .story-definitions {
+.story-tasks, .story-definitions, .story-comments, .story-merge-requests {
   &.as-sortable-dragging {
     &.list-group {
       background-color: transparent;
@@ -827,7 +838,7 @@
           margin-right: 0;
           vertical-align: middle;
         }
-        .btn-remove-task, .btn-add-task {
+        .btn-remove-task, .btn-add-task, .btn-add-merge, .btn-remove-merge {
           display: none;
         }
         span, input {

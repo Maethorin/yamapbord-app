@@ -626,11 +626,17 @@ scrumInCeresServices.service('StoryService', ['$rootScope', '$q', '$timeout', 'A
       story.comments.splice($index, 1);
     };
 
-    $scope.addingMergeRequestToStory = function() {
+    $scope.addingMergeRequestToStory = function(story) {
+      if (story) {
+        story.newMergeRequestVisible = true;
+      }
       $scope.newMergeRequestVisible = true;
     };
 
-    $scope.cancelAddMergeRequestToStory = function($event) {
+    $scope.cancelAddMergeRequestToStory = function($event, story) {
+      if (story) {
+        story.newMergeRequestVisible = false;
+      }
       $scope.newMergeRequestVisible = false;
       $scope.newMergeRequest = {url: null};
       $event.stopPropagation();
@@ -647,7 +653,6 @@ scrumInCeresServices.service('StoryService', ['$rootScope', '$q', '$timeout', 'A
 
     $scope.addMergeRequestToStory = function($event, story) {
       if ($scope.newMergeRequest.url === null) {
-        Notifier.warning('I think is something missing, like THE merge request URL...');
         return false;
       }
       if (!$scope.newMergeRequest.url.startsWith('http')) {
@@ -685,13 +690,47 @@ scrumInCeresServices.service('StoryService', ['$rootScope', '$q', '$timeout', 'A
       return '{0}{1}'.format([fullName[0][0].toUpperCase(), fullName[fullName.length - 1][0].toUpperCase(), ])
     };
 
-    $scope.saveSelectedStoryComments = function(resource, urlData, uploadUrl) {
+    $scope.saveSelectedStoryTasks = function(story, resource, urlData) {
+      Notifier.warning('Saving tasks...');
+      story.updating = true;
+      resource.update(
+        urlData,
+        {tasks: story.tasks},
+        function() {
+          delete story.updating;
+          Notifier.success('Tasks saved!')
+        },
+        function(error) {
+          Alert.randomErrorMessage(error);
+          delete story.updating;
+        }
+      );
+    };
+
+    $scope.saveSelectedStoryDefinitionOfDone = function(story, resource, urlData) {
+      Notifier.warning('Saving DoDs...');
+      story.updating = true;
+      resource.update(
+        urlData,
+        {definitionOfDone: story.definitionOfDone},
+        function() {
+          delete story.updating;
+          Notifier.success('DoDs saved!')
+        },
+        function(error) {
+          Alert.randomErrorMessage(error);
+          delete story.updating;
+        }
+      );
+    };
+
+    $scope.saveSelectedStoryComments = function(story, resource, urlData, uploadUrl) {
       Notifier.warning('Saving comments...');
-      $scope.selectedStory.updating = true;
-      var commentsWithFiles = _.filter($scope.selectedStory.comments, function(comment) {
+      story.updating = true;
+      var commentsWithFiles = _.filter(story.comments, function(comment) {
         return comment.file !== null && comment.file.name !== undefined
       });
-      var commentsWithoutFiles = _.filter($scope.selectedStory.comments, function(comment) {
+      var commentsWithoutFiles = _.filter(story.comments, function(comment) {
         return comment.file === null || comment.file.name === undefined
       });
       resource.update(
@@ -699,65 +738,51 @@ scrumInCeresServices.service('StoryService', ['$rootScope', '$q', '$timeout', 'A
         {'comments': commentsWithoutFiles},
         function() {
           if (commentsWithFiles.length > 0) {
-            Notifier.warning('Comments done! Uploading attachments...');
+            Notifier.warning('Comments saved! Uploading attachments...');
             Upload.upload({
               url: uploadUrl,
               method: 'PUT',
               data: {comments: commentsWithFiles}
             }).then(
               function(response) {
-                $scope.selectedStory.comments = response.data.comments;
+                delete story.updating;
+                story.comments = response.data.comments;
                 $timeout(function () {
-                  Notifier.success('Attachments done!');
+                  Notifier.success('Attachments saved!');
                 });
               },
               function(response) {
+                delete story.updating;
                 if (response.status > 0) {
                   Notifier.danger(response.data);
                 }
               }
             );
+            return;
           }
-          $scope.selectedStory.updating = false;
-          Notifier.success('Done!')
+          delete story.updating;
+          Notifier.success('Comments saved!')
         },
         function(error) {
           Alert.randomErrorMessage(error);
-          $scope.selectedStory.updating = false;
+          delete story.updating;
         }
       );
     };
 
-    $scope.saveSelectedStoryMergeRequests = function(resource, urlData) {
+    $scope.saveSelectedStoryMergeRequests = function(story, resource, urlData) {
       Notifier.warning('Saving merge requests...');
-      $scope.selectedStory.updating = true;
+      story.updating = true;
       resource.update(
         urlData,
-        {mergeRequests: $scope.selectedStory.mergeRequests},
+        {mergeRequests: story.mergeRequests},
         function() {
-          $scope.selectedStory.updating = false;
+          delete story.updating;
           Notifier.success('Done!')
         },
         function(error) {
           Alert.randomErrorMessage(error);
-          $scope.selectedStory.updating = false;
-        }
-      );
-    };
-
-    $scope.saveSelectedStoryTasks = function(resource, urlData) {
-      Notifier.warning('Saving tasks...');
-      $scope.selectedStory.updating = true;
-      resource.update(
-        urlData,
-        {tasks: $scope.selectedStory.tasks},
-        function() {
-          $scope.selectedStory.updating = false;
-          Notifier.success('Done!')
-        },
-        function(error) {
-          Alert.randomErrorMessage(error);
-          $scope.selectedStory.updating = false;
+          delete story.updating;
         }
       );
     };
