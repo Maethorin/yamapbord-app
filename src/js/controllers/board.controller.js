@@ -177,83 +177,7 @@ scrumInCeresControllers.controller('BoardController', ['$rootScope', '$scope', '
     );
   }
 
-  function updatingStoryCommentsList() {
-    Notifier.warning('Saving comments...');
-    $scope.selectedStory.updating = true;
-    var commentsWithFiles = _.filter($scope.selectedStory.comments, function(comment) {
-      return comment.file !== null && comment.file.name !== undefined
-    });
-    var commentsWithoutFiles = _.filter($scope.selectedStory.comments, function(comment) {
-      return comment.file === null || comment.file.name === undefined
-    });
-    BoardStory.update(
-      {boardId: $scope.selectedSprint.id, id: $scope.selectedStory.id},
-      {'comments': commentsWithoutFiles},
-      function() {
-        if (commentsWithFiles.length > 0) {
-          Notifier.warning('Comments done! Uploading attachments...');
-          Upload.upload({
-            url: '{0}/users/me/boards/{1}/stories/{2}'.format([appConfig.backendURL, $scope.selectedSprint.id, $scope.selectedStory.id]),
-            method: 'PUT',
-            data: {comments: commentsWithFiles}
-          }).then(
-            function(response) {
-              $scope.selectedStory.comments = response.data.comments;
-              $timeout(function () {
-                Notifier.success('Attachments done!');
-              });
-            },
-            function(response) {
-              if (response.status > 0) {
-                Notifier.danger(response.data);
-              }
-            }
-          );
-        }
-        $scope.selectedStory.updating = false;
-        Notifier.success('Done!')
-      },
-      function(error) {
-        Alert.randomErrorMessage(error);
-        $scope.selectedStory.updating = false;
-      }
-    );
-  }
-
-  // TODO: Sim, está repetido e eu estou sem saco para arrumar... é Open Source!
-  function updatingStoryTaskList() {
-    Notifier.warning('Saving tasks...');
-    $scope.selectedStory.updating = true;
-    BoardStory.update(
-      {boardId: $scope.selectedSprint.id, id: $scope.selectedStory.id},
-      {'tasks': $scope.selectedStory.tasks},
-      function() {
-        $scope.selectedStory.updating = false;
-        Notifier.success('Done!')
-      },
-      function(error) {
-        Alert.randomErrorMessage(error);
-        $scope.selectedStory.updating = false;
-      }
-    );
-  }
-
-  function updatingStoryMergeRequestsList() {
-    Notifier.warning('Saving merge requests...');
-    $scope.selectedStory.updating = true;
-    BoardStory.update(
-      {boardId: $scope.selectedSprint.id, id: $scope.selectedStory.id},
-      {mergeRequests: $scope.selectedStory.mergeRequests},
-      function() {
-        $scope.selectedStory.updating = false;
-        Notifier.success('Done!')
-      },
-      function(error) {
-        Alert.randomErrorMessage(error);
-        $scope.selectedStory.updating = false;
-      }
-    );
-  }
+  StoryService.prepareScopeToEditStory($scope);
 
   $rootScope.$on('board.story.moved', function(event, data) {
     if ($scope.selectedSprint === null || $scope.selectedSprint.id !== data.sprintId) {
@@ -303,7 +227,6 @@ scrumInCeresControllers.controller('BoardController', ['$rootScope', '$scope', '
       }
     });
   });
-
 
   $rootScope.$on('board.story.updated', function(event, data) {
     if ($scope.selectedSprint  === null || $scope.selectedSprint.id !== data.sprintId) {
@@ -494,19 +417,27 @@ scrumInCeresControllers.controller('BoardController', ['$rootScope', '$scope', '
     $scope.$broadcast('content.changed');
   };
 
-  $scope.saveSelectedStoryComments = function() {
-    updatingStoryCommentsList();
+  $scope.saveSelectedBoardStoryComments = function() {
+    $scope.saveSelectedStoryComments(
+      BoardStory,
+      {boardId: $scope.selectedSprint.id, id: $scope.selectedStory.id},
+      '{0}/users/me/boards/{1}/stories/{2}'.format([appConfig.backendURL, $scope.selectedSprint.id, $scope.selectedStory.id])
+    );
   };
 
-  $scope.saveSelectedStoryMergeRequests = function() {
-    updatingStoryMergeRequestsList();
+  $scope.saveSelectedBoardStoryMergeRequests = function() {
+    $scope.saveSelectedStoryMergeRequests(
+      BoardStory,
+      {boardId: $scope.selectedSprint.id, id: $scope.selectedStory.id}
+    );
   };
 
-  $scope.saveSelectedStoryTasks = function() {
-    updatingStoryTaskList();
+  $scope.saveSelectedBoardStoryTasks = function() {
+    $scope.saveSelectedStoryTasks(
+      BoardStory,
+      {boardId: $scope.selectedSprint.id, id: $scope.selectedStory.id}
+    );
   };
-
-  StoryService.prepareScopeToEditStory($scope);
 
   $scope.toggleControlPanelOpen = function () {
     $scope.boardControlPanelOpen = !$scope.boardControlPanelOpen;

@@ -73,7 +73,7 @@ scrumInCeresControllers.controller('IceBoxController', ['$rootScope', '$scope', 
 
   Alert.loading();
   var clearFilter = true;
-  StoryService.getStories(clearFilter).then(function(stories) {
+  StoryService.getIceboxStories(clearFilter).then(function(stories) {
     $scope.stories = stories;
     $scope.fullStories = stories;
     $scope.searchStories();

@@ -178,47 +178,19 @@ scrumInCeresControllers.controller('SelectedProjectKanbansController', ['$rootSc
   };
 
   $scope.saveStory = function(story, $index, kanban) {
-    Notifier.warning('Saving story...');
-    var storyToSend = _.cloneDeep(story);
-    story.updating = true;
-    delete storyToSend.isOpen;
-    delete storyToSend.isLoaded;
-    delete storyToSend.currentTab;
-    delete storyToSend.newTaskVisible;
-    delete storyToSend.newDefinitionVisible;
-    delete storyToSend.newCommentVisible;
-    delete storyToSend.newCommentType;
-    delete storyToSend.newMergeRequestVisible;
     if (story.id) {
-      ProjectStory.update(
-        {projectId: $scope.selectedProject.id, storyId: story.id},
-        storyToSend,
-        function() {
-          delete story.updating;
-          Notifier.success('Story saved!');
-        },
-        function(error) {
-          Alert.randomErrorMessage(error);
-          delete story.updating;
-        }
-      );
+      StoryService.updateStory(story, ProjectStory, {projectId: $scope.selectedProject.id, storyId: story.id});
+      return;
     }
-    else {
-      ProjectStory.save(
-        {projectId: $scope.selectedProject.id},
-        storyToSend,
-        function(result) {
-          kanban.stories.push(result);
-          kanban.newStories.splice($index, 1);
-          // groupStories();
-          Notifier.success('Story saved!')
-        },
-        function(error) {
-          Alert.randomErrorMessage(error);
-          delete story.updating;
-        }
-      );
-    }
+    StoryService.createNewStory(story, ProjectStory, {projectId: $scope.selectedProject.id}).then(
+      function(result) {
+        kanban.stories.push(result);
+        kanban.newStories.splice($index, 1);
+        // groupStories();
+      },
+      function(error) {
+      }
+    );
   };
 
   $scope.cancelNewStory = function($index, kanban) {

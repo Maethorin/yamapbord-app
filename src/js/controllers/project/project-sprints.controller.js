@@ -255,49 +255,27 @@ scrumInCeresControllers.controller('SelectedProjectSprintsController', ['$rootSc
   };
 
   $scope.saveStory = function(story, $index, sprint) {
-    Notifier.warning('Saving story...');
-    var storyToSend = _.cloneDeep(story);
-    story.updating = true;
-    delete storyToSend.isOpen;
-    delete storyToSend.isLoaded;
-    delete storyToSend.currentTab;
-    delete storyToSend.newTaskVisible;
-    delete storyToSend.newDefinitionVisible;
-    delete storyToSend.newCommentVisible;
-    delete storyToSend.newCommentType;
-    delete storyToSend.newMergeRequestVisible;
     if (story.id) {
-      ProjectStory.update(
-        {projectId: $scope.selectedProject.id, storyId: story.id},
-        storyToSend,
+      StoryService.updateStory(story, ProjectStory, {projectId: $scope.selectedProject.id, storyId: story.id}).then(
         function() {
-          delete story.updating;
           updateWorkingDays(sprint);
-          Notifier.success('Story saved!');
         },
         function(error) {
-          Alert.randomErrorMessage(error);
-          delete story.updating;
         }
       );
+      return;
     }
-    else {
-      ProjectStory.save(
-        {projectId: $scope.selectedProject.id},
-        storyToSend,
-        function(result) {
-          sprint.stories.push(result);
-          sprint.newStories.splice($index, 1);
-          updateWorkingDays(sprint);
-          // groupStories();
-          Notifier.success('Story saved!')
-        },
-        function(error) {
-          Alert.randomErrorMessage(error);
-          delete story.updating;
-        }
-      );
-    }
+
+    StoryService.createNewStory(story, ProjectStory, {projectId: $scope.selectedProject.id}).then(
+      function(result) {
+        sprint.stories.push(result);
+        sprint.newStories.splice($index, 1);
+        updateWorkingDays(sprint);
+        // groupStories();
+      },
+      function(error) {
+      }
+    );
   };
 
   $scope.cancelNewStory = function($index, sprint) {

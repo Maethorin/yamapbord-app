@@ -1,6 +1,6 @@
 'use strict';
 
-scrumInCeresServices.service('StoryService', ['$rootScope', '$q', '$timeout', 'Alert', 'Notifier', 'IceBox', function($rootScope, $q, $timeout, Alert, Notifier, IceBox) {
+scrumInCeresServices.service('StoryService', ['$rootScope', '$q', '$timeout', 'Alert', 'Notifier', 'IceBox', 'Upload', function($rootScope, $q, $timeout, Alert, Notifier, IceBox, Upload) {
   var self = this;
   var filter = {};
   this.filterByType = function(type) {
@@ -10,7 +10,7 @@ scrumInCeresServices.service('StoryService', ['$rootScope', '$q', '$timeout', 'A
     else {
       delete this.filter.type;
     }
-    return this.getStories();
+    return this.getIceboxStories();
   };
 
   this.filter = function(_filter) {
@@ -39,15 +39,15 @@ scrumInCeresServices.service('StoryService', ['$rootScope', '$q', '$timeout', 'A
     if (_filter.status) {
       filter.status = _filter.status;
     }
-    return this.getStories();
+    return this.getIceboxStories();
   };
 
   this.getReadyUse = function() {
     filter.readyToUse = true;
-    return this.getStories();
+    return this.getIceboxStories();
   };
 
-  this.getStories = function(clearFilter) {
+  this.getIceboxStories = function(clearFilter) {
     var result = $q.defer();
     if (clearFilter) {
       filter = {};
@@ -97,18 +97,11 @@ scrumInCeresServices.service('StoryService', ['$rootScope', '$q', '$timeout', 'A
       });
     }
     else {
-      updateStory($scope, function($scope) {
+      updatingStory($scope, function($scope) {
         recalculateSelectedIterationPoints($scope);
         closingPopup($scope)
       });
     }
-  }
-
-  function deleteStoryAndClosePopup($scope) {
-    deleteStory($scope, function($scope) {
-      recalculateSelectedIterationPoints($scope);
-      closingPopup($scope)
-    });
   }
 
   function saveStoryAndKeepPopupOpen($scope) {
@@ -127,14 +120,26 @@ scrumInCeresServices.service('StoryService', ['$rootScope', '$q', '$timeout', 'A
       });
     }
     else {
-      updateStory($scope, function($scope) {
+      updatingStory($scope, function($scope) {
         recalculateSelectedIterationPoints($scope);
       });
     }
   }
 
-  function updateStory($scope, success) {
-    self.updateInIceLog($scope.selectedStory).then(
+  function createStory($scope, success) {
+    $scope.addingNewStory = false;
+    self.createNewStory($scope.selectedStory, IceBox, {}, true).then(
+      function(result) {
+        success(result);
+      },
+      function(error) {
+        Alert.randomErrorMessage(error);
+      }
+    );
+  }
+
+  function updatingStory($scope, success) {
+    self.updateStory($scope.selectedStory).then(
       function() {
         if (success) {
           success($scope);
@@ -145,6 +150,13 @@ scrumInCeresServices.service('StoryService', ['$rootScope', '$q', '$timeout', 'A
         Alert.randomErrorMessage(error);
       }
     );
+  }
+
+  function deleteStoryAndClosePopup($scope) {
+    deleteStory($scope, function($scope) {
+      recalculateSelectedIterationPoints($scope);
+      closingPopup($scope)
+    });
   }
 
   function deleteStory($scope, success) {
@@ -175,29 +187,35 @@ scrumInCeresServices.service('StoryService', ['$rootScope', '$q', '$timeout', 'A
     );
   }
 
-  function createStory($scope, success) {
-    $scope.addingNewStory = false;
-    self.addToIceLog($scope.selectedStory).then(
-      function(result) {
-        success(result);
-        Alert.randomSuccessMessage();
-      },
-      function(error) {
-        Alert.randomErrorMessage(error);
-      }
-    );
+  function prepateStoryToSave(story) {
+    Notifier.warning('Saving story...');
+    var storyToSend = _.cloneDeep(story);
+    story.updating = true;
+    delete storyToSend.isOpen;
+    delete storyToSend.isLoaded;
+    delete storyToSend.currentTab;
+    delete storyToSend.newTaskVisible;
+    delete storyToSend.newDefinitionVisible;
+    delete storyToSend.newCommentVisible;
+    delete storyToSend.newCommentType;
+    delete storyToSend.newMergeRequestVisible;
+    return storyToSend;
   }
 
-  this.addToIceLog = function(newStory) {
+  this.createNewStory = function(newStory, resource, urlData, updateIcebox) {
     var result = $q.defer();
-    delete newStory.newDefinitionVisible;
-    delete newStory.newTaskVisible;
-    delete newStory.newCommentVisible;
-    delete newStory.newMergeRequestVisible;
-    IceBox.save(
-      newStory,
+    var toSend = prepateStoryToSave(newStory);
+    resource.save(
+      urlData,
+      toSend,
       function(response) {
-        self.getStories().then(
+        delete newStory.updating;
+        if (!updateIcebox) {
+          Notifier.success('Story created!');
+          result.resolve(response);
+          return;
+        }
+        self.getIceboxStories().then(
           function(stories) {
             result.resolve({stories: stories, story: response});
           },
@@ -208,25 +226,33 @@ scrumInCeresServices.service('StoryService', ['$rootScope', '$q', '$timeout', 'A
         );
       },
       function(error) {
+        delete newStory.updating;
         result.reject(error);
       }
     );
     return result.promise;
   };
 
-  this.updateInIceLog = function(story) {
+  this.updateStory = function(story, resource, urlData) {
+    if (!resource) {
+      resource = IceBox;
+    }
+    if (!urlData) {
+      urlData = {id: story.id};
+    }
     var result = $q.defer();
-    delete story.newDefinitionVisible;
-    delete story.newTaskVisible;
-    delete story.newCommentVisible;
-    delete story.newMergeRequestVisible;
-    IceBox.update(
-      {id: story.id},
-      story,
-      function() {
-        result.resolve();
+    var toSend = prepateStoryToSave(story);
+    resource.update(
+      urlData,
+      toSend,
+      function(response) {
+        delete story.updating;
+        Notifier.success('Story saved!');
+        result.resolve(response);
       },
       function(error) {
+        delete story.updating;
+        Alert.randomErrorMessage(error);
         result.reject(error);
       }
     );
@@ -572,7 +598,7 @@ scrumInCeresServices.service('StoryService', ['$rootScope', '$q', '$timeout', 'A
 
     $scope.addCommentToStory = function($event, story) {
       if ($scope.newComment[$scope.newCommentType] === null) {
-        Notifier.warning('You want to {0}, you need to {0} something!'.format([$scope.newCommentType]))
+        Notifier.warning('You want to {0}, you need to {0} something!'.format([$scope.newCommentType]));
         return false;
       }
       if ($scope.newCommentType === 'link' && !$scope.newComment[$scope.newCommentType].startsWith('http')) {
@@ -657,6 +683,83 @@ scrumInCeresServices.service('StoryService', ['$rootScope', '$q', '$timeout', 'A
       }
       fullName = fullName.split(' ');
       return '{0}{1}'.format([fullName[0][0].toUpperCase(), fullName[fullName.length - 1][0].toUpperCase(), ])
-    }
+    };
+
+    $scope.saveSelectedStoryComments = function(resource, urlData, uploadUrl) {
+      Notifier.warning('Saving comments...');
+      $scope.selectedStory.updating = true;
+      var commentsWithFiles = _.filter($scope.selectedStory.comments, function(comment) {
+        return comment.file !== null && comment.file.name !== undefined
+      });
+      var commentsWithoutFiles = _.filter($scope.selectedStory.comments, function(comment) {
+        return comment.file === null || comment.file.name === undefined
+      });
+      resource.update(
+        urlData,
+        {'comments': commentsWithoutFiles},
+        function() {
+          if (commentsWithFiles.length > 0) {
+            Notifier.warning('Comments done! Uploading attachments...');
+            Upload.upload({
+              url: uploadUrl,
+              method: 'PUT',
+              data: {comments: commentsWithFiles}
+            }).then(
+              function(response) {
+                $scope.selectedStory.comments = response.data.comments;
+                $timeout(function () {
+                  Notifier.success('Attachments done!');
+                });
+              },
+              function(response) {
+                if (response.status > 0) {
+                  Notifier.danger(response.data);
+                }
+              }
+            );
+          }
+          $scope.selectedStory.updating = false;
+          Notifier.success('Done!')
+        },
+        function(error) {
+          Alert.randomErrorMessage(error);
+          $scope.selectedStory.updating = false;
+        }
+      );
+    };
+
+    $scope.saveSelectedStoryMergeRequests = function(resource, urlData) {
+      Notifier.warning('Saving merge requests...');
+      $scope.selectedStory.updating = true;
+      resource.update(
+        urlData,
+        {mergeRequests: $scope.selectedStory.mergeRequests},
+        function() {
+          $scope.selectedStory.updating = false;
+          Notifier.success('Done!')
+        },
+        function(error) {
+          Alert.randomErrorMessage(error);
+          $scope.selectedStory.updating = false;
+        }
+      );
+    };
+
+    $scope.saveSelectedStoryTasks = function(resource, urlData) {
+      Notifier.warning('Saving tasks...');
+      $scope.selectedStory.updating = true;
+      resource.update(
+        urlData,
+        {tasks: $scope.selectedStory.tasks},
+        function() {
+          $scope.selectedStory.updating = false;
+          Notifier.success('Done!')
+        },
+        function(error) {
+          Alert.randomErrorMessage(error);
+          $scope.selectedStory.updating = false;
+        }
+      );
+    };
   }
 }]);

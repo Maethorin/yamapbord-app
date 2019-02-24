@@ -69,7 +69,7 @@
             <uib-tab index="0" select="changeScroll(0)">
               <uib-tab-heading>
                 Tasks
-                <button ng-if="selectedStoryCurrentTab === 0" type="button" class="btn btn-success btn-sm btn-save-task" ng-click="saveSelectedStoryTasks()"><i class="fa fa-save"></i></button>
+                <button ng-if="selectedStoryCurrentTab === 0" type="button" class="btn btn-success btn-sm btn-save-task" ng-click="saveSelectedBoardStoryTasks()"><i class="fa fa-save"></i></button>
               </uib-tab-heading>
               <ul class="list-group story-tasks" as-sortable ng-model="selectedStory.tasks">
                 <li class="list-group-item" ng-class="{'list-group-item-success': task.complete, 'list-group-item-warning': !task.complete }" ng-repeat="task in selectedStory.tasks" ng-click="toggleEditStoryTask(task)" as-sortable-item>
@@ -101,7 +101,7 @@
             <uib-tab index="2" select="changeScroll(2)">
               <uib-tab-heading>
                 Comments
-                <button ng-if="selectedStoryCurrentTab === 2" type="button" class="btn btn-success btn-sm btn-save-task" ng-click="saveSelectedStoryComments()"><i class="fa fa-save"></i></button>
+                <button ng-if="selectedStoryCurrentTab === 2" type="button" class="btn btn-success btn-sm btn-save-task" ng-click="saveSelectedBoardStoryComments()"><i class="fa fa-save"></i></button>
               </uib-tab-heading>
               <div class="fab-story-comments">
                 <md-fab-toolbar md-open="false" md-direction="right">
@@ -185,7 +185,7 @@
             <uib-tab index="3" select="changeScroll(3)">
               <uib-tab-heading>
                 Merge Requests
-                <button ng-if="selectedStoryCurrentTab === 3" type="button" class="btn btn-success btn-sm btn-save-task" ng-click="saveSelectedStoryMergeRequests()"><i class="fa fa-save"></i></button>
+                <button ng-if="selectedStoryCurrentTab === 3" type="button" class="btn btn-success btn-sm btn-save-task" ng-click="saveSelectedBoardStoryMergeRequests()"><i class="fa fa-save"></i></button>
               </uib-tab-heading>
               <ul class="list-group story-merge-requests" ng-scrollable="scrollMergeRequestOptions">
                 <li class="list-group-item" ng-repeat="mergeRequest in selectedStory.mergeRequests" ng-click="toggleEditStoryMergeRequest(mergeRequest)">

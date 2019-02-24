@@ -509,7 +509,7 @@ scrumInCeresControllers.controller('BacklogController', ['$rootScope', '$scope',
     if (story.sprintId) {
       Alert.warning('Watch Out!', 'This story is already associated with this sprint. Are you sure you want to desassociate it?', function() {
         Alert.loading();
-        StoryService.updateInIceLog({id: story.id, removeSprint: true}).then(
+        StoryService.updateStory({id: story.id, removeSprint: true}).then(
           function() {
             $scope.selectedSprint.stories.splice($index, 1);
             recalculateSelectedSprintPoints();

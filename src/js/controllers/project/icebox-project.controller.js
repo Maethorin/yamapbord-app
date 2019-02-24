@@ -118,52 +118,19 @@ scrumInCeresControllers.controller('IceboxProjectController', ['$rootScope', '$s
   };
 
   $scope.saveStory = function(story, $index) {
-    Notifier.warning('Saving story...');
-    var storyToSend = _.cloneDeep(story);
-    story.updating = true;
-    delete storyToSend.isOpen;
-    delete storyToSend.isLoaded;
-    delete storyToSend.currentTab;
-    delete storyToSend.newTaskVisible;
-    delete storyToSend.newDefinitionVisible;
-    delete storyToSend.newCommentVisible;
-    delete storyToSend.newCommentType;
-    delete storyToSend.newMergeRequestVisible;
-
     if (story.id) {
-      IceBox.update(
-        {id: story.id},
-
-        storyToSend,
-
-        function() {
-          delete story.updating;
-          Notifier.success('Story saved!')
-        },
-
-        function(error) {
-          Alert.randomErrorMessage(error);
-          delete story.updating;
-        }
-      );
+      StoryService.updateStory(story, IceBox, {id: story.id});
+      return;
     }
-    else {
-      IceBox.save(
-        storyToSend,
-
-        function(result) {
-          $scope.iceboxStories.push(result);
-          $scope.newStories.splice($index, 1);
-          groupStories();
-          Notifier.success('Story saved!')
-        },
-
-        function(error) {
-          Alert.randomErrorMessage(error);
-          delete story.updating;
-        }
-      );
-    }
+    StoryService.createNewStory(story, IceBox, {}).then(
+      function(result) {
+        $scope.iceboxStories.push(result);
+        $scope.newStories.splice($index, 1);
+        groupStories();
+      },
+      function(error) {
+      }
+    );
   };
 
   $scope.changeStoryTab = function(story, tabIndex) {
