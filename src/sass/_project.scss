@@ -521,6 +521,13 @@
                       .comment-details {
                         font-size: 12px;
                       }
+                      .comment-file {
+                        font-size: 12px;
+                        overflow: hidden;
+                      }
+                      .new-attachment {
+                        overflow: hidden;
+                      }
                       .with-break-lines {
                         a {
                           text-transform: none;
