@@ -118,6 +118,7 @@ module.exports = function (grunt) {
           "src/lib/angular-messages/angular-messages.js",
           "src/lib/angular-material/angular-material.js",
           "src/lib/ng-file-upload/ng-file-upload.js",
+          "src/lib/angular-multiple-select/build/multiple-select.js",
 
           "node_modules/angular-bootstrap-datetimepicker/src/js/datetimepicker.js",
           "node_modules/angular-bootstrap-datetimepicker/src/js/datetimepicker.templates.js",

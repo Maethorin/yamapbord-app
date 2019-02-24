@@ -17,7 +17,7 @@
           <form name="formKanban" class="form-kanban">
             <section class="kanban-save">
               <div class="form-group col-sm-11">
-                <textarea name="kanbanObjective" placeholder="Objective" required ng-model="kanban.objective" rows="3" class="form-control"></textarea>
+                <textarea name="kanbanDescription" placeholder="Description" ng-model="kanban.description" rows="3" class="form-control"></textarea>
               </div>
               <div class="col-sm-1">
                 <button class="btn btn-xs btn-success" type="button" title="Save kanban changes" ng-click="saveKanban(kanban, $index)"><i class="fa fa-save"></i></button>
@@ -28,19 +28,13 @@
               <li class="list-group-item">
                 <span class="form-story-label">CREATED AT:</span> <span class="project-story-date" ng-bind="kanban.createdAt|formatDateString"></span>
               </li>
+              <li class="list-group-multiple-select">
+                <div class="project-teams-label">TEAMS</div>
+                <div class="project-select-team">
+                  <multiple-autocomplete ng-model="kanban.teams" close-after-selected="true" ng-disabled="!kanban.isPlanned" suggestions-arr="teams" object-property="name"></multiple-autocomplete>
+                </div>
+              </li>
             </ul>
-            <section class="kanban-details">
-              <ul class="list-group col-sm-6">
-                <li class="list-group-item">
-                  <span class="form-story-label">TEAM</span>
-                  <div class="form-group with-select">
-                    <select ng-model="kanban.team" name="team" required ng-disabled="!kanban.isPlanned" class="select-team form-control" ng-options="team.name for team in teams track by team.id">
-                      <option value="">-- Team --</option>
-                    </select>
-                  </div>
-                </li>
-              </ul>
-            </section>
           </form>
         </div>
       </div>
@@ -59,7 +53,7 @@
           <form name="formKanban" class="form-kanban" ng-if="kanban.isOpen">
             <section class="kanban-save">
               <div class="form-group col-sm-11">
-                <textarea name="kanbanObjective" id="kanbanObjective" ng-disabled="!kanban.isPlanned" placeholder="Objective" required ng-model="kanban.objective" rows="3" class="form-control"></textarea>
+                <textarea name="kanbanDescription" id="kanbanDescription" ng-disabled="!kanban.isPlanned" placeholder="Objective" required ng-model="kanban.description" rows="3" class="form-control"></textarea>
               </div>
               <div class="col-sm-1">
                 <button class="btn btn-xs btn-success" type="button" title="Save kanban changes" ng-click="saveKanban(kanban)"><i class="fa fa-save"></i></button>
@@ -71,19 +65,56 @@
               <li class="list-group-item">
                 <span class="form-story-label">CREATED AT:</span> <span class="project-story-date" ng-bind="kanban.createdAt|formatDateString"></span>
               </li>
+              <li class="list-group-multiple-select">
+                <div class="project-teams-label">TEAMS</div>
+                <div class="project-select-team">
+                  <multiple-autocomplete ng-model="kanban.teams" close-after-selected="true" ng-disabled="!kanban.isPlanned" suggestions-arr="teams" object-property="name"></multiple-autocomplete>
+                </div>
+              </li>
             </ul>
             <section class="kanban-details">
-
               <ul class="list-group col-sm-6">
                 <li class="list-group-item">
-                  <span class="form-story-label">TEAM</span>
-                  <div class="form-group with-select">
-                    <select id="selectTeam" ng-model="kanban.team" name="team" required ng-disabled="!kanban.isPlanned" class="select-team form-control" ng-options="team.name for team in teams track by team.id">
-                      <option value="">-- Team --</option>
-                    </select>
+                  <span class="form-story-label">TOTAL STORIES</span>
+                  <div class="form-group">
+                    <span class="sprint-numeric-label" ng-bind="kanban.stories.length"></span>
+                  </div>
+                </li>
+                <li class="list-group-item">
+                  <span class="form-story-label">STARTED</span>
+                  <div class="form-group">
+                    <span class="sprint-numeric-label" ng-bind="quantityOf(kanban.stories, 'STAR')"></span>
+                  </div>
+                </li>
+                <li class="list-group-item">
+                  <span class="form-story-label">ACCEPTED</span>
+                  <div class="form-group">
+                    <span class="sprint-numeric-label" ng-bind="quantityOf(kanban.stories, 'ACCP')"></span>
                   </div>
                 </li>
               </ul>
+
+              <ul class="list-group col-sm-6">
+                <li class="list-group-item">
+                  <span class="form-story-label">PLANNED</span>
+                  <div class="form-group">
+                    <span class="sprint-numeric-label" ng-bind="quantityOf(kanban.stories, 'PLAN')"></span>
+                  </div>
+                </li>
+                <li class="list-group-item">
+                  <span class="form-story-label">FINISHED</span>
+                  <div class="form-group">
+                    <span class="sprint-numeric-label" ng-bind="quantityOf(kanban.stories, 'FINI')"></span>
+                  </div>
+                </li>
+                <li class="list-group-item">
+                  <span class="form-story-label">REJECTED</span>
+                  <div class="form-group">
+                    <span class="sprint-numeric-label" ng-bind="quantityOf(kanban.stories, 'REJE')"></span>
+                  </div>
+                </li>
+              </ul>
+
             </section>
           </form>
 

@@ -22,20 +22,14 @@ scrumInCeresControllers.controller('SelectedProjectStoriesController', ['$rootSc
   });
 
   $scope.$on('projects.selectedSprint', function(event, selectedSprint) {
-    if (selectedSprint !== null && $scope.selectedSprint !== null && $scope.selectedSprint.id === selectedSprint.id) {
-      return;
-    }
     $scope.selectedSprint = selectedSprint;
-    $scope.canAddStoryTo = $scope.selectedSprint !== null && $scope.selectedKanban === null;
+    $scope.canAddStoryTo = ($scope.selectedSprint !== null && $scope.selectedKanban === null) || ($scope.selectedSprint === null && $scope.selectedKanban !== null);
     $scope.addStoryTitle = $scope.canAddStoryTo ? 'Add story to {name}'.format(selectedSprint) : 'Add story to selected sprint';
   });
 
   $scope.$on('projects.selectedKanban', function(event, selectedKanban) {
-    if (selectedKanban !== null && $scope.selectedKanban !== null && $scope.selectedKanban.id === selectedKanban.id) {
-      return;
-    }
     $scope.selectedKanban = selectedKanban;
-    $scope.canAddStoryTo = $scope.selectedKanban !== null && $scope.selectedSprint === null;
+    $scope.canAddStoryTo = ($scope.selectedSprint !== null && $scope.selectedKanban === null) || ($scope.selectedSprint === null && $scope.selectedKanban !== null);
     $scope.addStoryTitle = $scope.canAddStoryTo ? 'Add story to {name}'.format(selectedKanban) : 'Add story to selected kanban';
   });
 
@@ -261,12 +255,15 @@ scrumInCeresControllers.controller('SelectedProjectStoriesController', ['$rootSc
   };
 
   $scope.addStoryToSelected = function(story, stories) {
-    Notifier.warning('Adding story to {name}...'.format($scope.selectedSprint));
+    var iteration = $scope.selectedSprint || $scope.selectedKanban;
+    Notifier.warning('Adding story to {name}...'.format(iteration));
+    var isSprint = iteration.type === 'sprint';
+    var toSend = isSprint ? {sprintId: iteration.id} : {kanbanId: iteration.id};
     story.updating = true;
     ProjectStory.update(
       {projectId: $scope.selectedProject.id, storyId: story.id},
 
-      {sprintId: $scope.selectedSprint.id},
+      toSend,
 
       function(result) {
         const indexFull = _.findIndex($scope.selectedProject.stories, ['id', story.id]);
@@ -276,7 +273,7 @@ scrumInCeresControllers.controller('SelectedProjectStoriesController', ['$rootSc
           stories.splice(indexGroup, 1);
         }
         delete story.updating;
-        $scope.$emit('projects.addingStoryToSelectedSprint', story);
+        $scope.$emit('projects.addingStoryToSelected{0}'.format([(isSprint ? 'Sprint' : 'Kanban')]), story);
         Notifier.success('Story added!')
       },
 

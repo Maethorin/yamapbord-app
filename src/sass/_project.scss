@@ -84,6 +84,16 @@
   padding: 10px 0 0 5px;
   transition: margin 0.5s;
 
+  .story-details, .sprint-details, .kanban-details {
+    .list-group {
+      li {
+        div {
+          padding: 0;
+        }
+      }
+    }
+  }
+
   .loading-story {
     position: absolute;
     top: 24px;
@@ -316,16 +326,6 @@
               overflow: hidden;
               margin-top: 5px;
               border-top: 1px solid #666;
-            }
-
-            .story-details, .sprint-details, .kanban-details {
-              .list-group {
-                li {
-                  div {
-                    padding: 0;
-                  }
-                }
-              }
             }
 
             .list-group {
@@ -566,7 +566,7 @@
           }
 
           .form-group {
-            span {
+            .sprint-numeric-label {
               font-family: Open Sans,open-sans,EmojiFontFace,helvetica,arial,sans-serif;
               color: $gray-dark;
               font-size: 14px;
@@ -648,7 +648,7 @@
                 }
               }
               .form-group {
-                span {
+                .sprint-numeric-label {
                   padding: 2px 6px;
                   line-height: 14px;
                   display: block;
@@ -738,6 +738,77 @@
     width: 300px;
     top: -34px;
     left: 76px;
+  }
+
+  .list-group-multiple-select {
+    background: none;
+    &:hover {
+      background: none;
+    }
+  }
+
+  .project-teams-label {
+    font-family: Open Sans,open-sans,EmojiFontFace,helvetica,arial,sans-serif;
+    color: $gray-dark;
+    font-size: 10px;
+    margin: 5px 0 0;
+  }
+
+  multiple-autocomplete {
+    .list-inline {
+      li {
+        background: none;
+        font-size: 12px;
+        color: $gray-darker;
+        border: 1px solid $gray-dark;
+        border-radius: 3px;
+        padding: 0 2px 0 4px;
+        margin: 0 1px;
+        width: 16%;
+        input {
+          width: 100%;
+          padding: 0;
+          height: auto;
+          font-size: 12px;
+          background: none;
+          color: $gray-dark;
+        }
+        span {
+          line-height: 18px;
+          .remove {
+            display: inline-block;
+            padding: 0;
+            vertical-align: middle;
+            float: right;
+            margin-top: 1px;
+            .glyphicon {
+              font-size: 12px;
+            }
+          }
+        }
+      }
+    }
+    .autocomplete-list {
+      position: absolute;
+      z-index: 100;
+      box-shadow: 6px 2px 4px 1px rgba(0,0,0,0.5);
+      ul {
+        list-style: none;
+        padding: 0 13px 0 0;
+        margin-left: -5px;
+        li {
+          background-color: #EEE;
+          color: $gray-dark;
+          padding: 2px 5px;
+          font-weight: normal;
+          font-size: 13px;
+          width: 150%;
+          &:hover {
+            background-color: #AAA;
+          }
+        }
+      }
+    }
   }
 }
 

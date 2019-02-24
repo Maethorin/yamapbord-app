@@ -59,8 +59,8 @@ scrumInCeresControllers.controller('SelectedProjectKanbansController', ['$rootSc
 
       function(result) {
         kanban.name = result.name;
-        kanban.objective = result.objective;
-        kanban.team = result.team;
+        kanban.description = result.description;
+        kanban.teams = result.teams;
         kanban.stories = result.stories;
         kanban.isOpen = true;
         kanban.isLoaded = true;
@@ -138,9 +138,9 @@ scrumInCeresControllers.controller('SelectedProjectKanbansController', ['$rootSc
   $scope.addNewKanbanToSelectedProject = function() {
     var newKanban = {
       name: null,
-      objective: null,
+      description: null,
       type: 'kanban',
-      team: null,
+      teams: [],
       stories: [],
       project: {id: $scope.selectedProject.id}
     };
@@ -155,6 +155,10 @@ scrumInCeresControllers.controller('SelectedProjectKanbansController', ['$rootSc
     newKanban.newStories = [];
 
     $scope.newKanbans.unshift(newKanban);
+  };
+
+  $scope.quantityOf = function(stories, status) {
+    return _.filter(stories, ['status', status]).length;
   };
 
   $scope.addNewStoryToKanban = function(storyType, kanban) {

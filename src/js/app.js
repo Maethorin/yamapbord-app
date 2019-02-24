@@ -77,6 +77,7 @@ var scrumInCeres = angular.module(
     'as.sortable',
     '19degrees.ngSweetAlert2',
     'ngMaterial',
+    'multipleSelect',
     'scrumInCeres.services',
     'scrumInCeres.factories',
     'scrumInCeres.resources',

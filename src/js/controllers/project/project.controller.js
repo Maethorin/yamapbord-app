@@ -177,17 +177,11 @@ scrumInCeresControllers.controller('ProjectController', ['$rootScope', '$scope',
   });
 
   $scope.$on('projects.selectingSprint', function(event, selectedSprint) {
-    if (selectedSprint !== null && $scope.selectedSprint !== null && $scope.selectedSprint.id === selectedSprint.id) {
-      return;
-    }
     $scope.selectedSprint = selectedSprint;
     $scope.$broadcast('projects.selectedSprint', $scope.selectedSprint);
   });
 
   $scope.$on('projects.selectingKanban', function(event, selectedKanban) {
-    if (selectedKanban !== null && $scope.selectedKanban !== null && $scope.selectedKanban.id === selectedKanban.id) {
-      return;
-    }
     $scope.selectedKanban = selectedKanban;
     $scope.$broadcast('projects.selectedKanban', $scope.selectedKanban);
   });
