@@ -13,9 +13,6 @@ scrumInCeresControllers.controller('SelectedProjectSprintsController', ['$rootSc
   StoryService.prepareScopeToEditStory($scope);
 
   $scope.$on('projects.selectedProject', function(event, selectedProject) {
-    if ($scope.selectedProject !== null && $scope.selectedProject.id === selectedProject.id) {
-      return;
-    }
     $scope.selectedProject = selectedProject;
     $scope.columnName = "{name}'s Sprints".format(selectedProject);
     // groupStories();

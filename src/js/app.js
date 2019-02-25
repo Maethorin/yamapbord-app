@@ -231,6 +231,12 @@ scrumInCeres.run(['$rootScope', '$timeout', '$q', 'appConfig', 'AuthService', 'M
   $rootScope.modules = [];
   $rootScope.points = [0, 1, 2, 3, 5, 8, 13];
   $rootScope.pointsFilter = ['0', '1', '2', '3', '5', '8', '13'];
+  $rootScope.newAttachmentFileTypeAccepts = {
+    I: 'image/*',
+    P: '.pdf',
+    D: '.doc,.docx,.xls,.xlsx,.txt,',
+    Z: '.zip,.rar,.tar-gz'
+  };
 
   Requester.query(
     function(response) {

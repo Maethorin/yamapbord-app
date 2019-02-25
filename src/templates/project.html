@@ -199,7 +199,7 @@
               <ul class="list-group story-comments" as-sortable="storyItemsSortableOptions" ng-model="story.comments">
                 <li class="list-group-item" ng-repeat="storyComment in story.comments" as-sortable-item>
                   <div as-sortable-item-handle>
-                    <textarea ng-model="storyComment.comment" class="form-control comment-textarea" rows="2" ng-show="storyComment.editing" focus-me="storyComment.editing" ng-blur="toggleEditStoryComment(storyComment)"></textarea>
+                    <textarea ng-model="storyComment.comment" class="form-control comment-textarea" rows="2" ng-show="storyComment.editing" focus-me="storyComment.editing" ng-blur="toggleEditStoryComment(storyComment, $event)"></textarea>
                     <div ng-if="!storyComment.editing">
                       <div class="comment-details">
                         <div class="col-sm-7">
@@ -515,6 +515,7 @@
   <section id="selectedProjectSprints" ng-if="selectedProject !== null" ng-show="selectedProject.showSprints" ng-include="'templates/include/selected-project-sprints.html'"></section>
   <section id="selectedProjectKanbans" ng-if="selectedProject !== null" ng-show="selectedProject.showKanbans" ng-include="'templates/include/selected-project-kanbans.html'"></section>
   <section id="selectedProjectStories" ng-if="selectedProject !== null" ng-show="selectedProject.showIcebox" ng-include="'templates/include/selected-project-stories.html'"></section>
+  <section id="selectedProjectAttachment" ng-if="selectedProject !== null" ng-show="selectedProject.showAttachment" ng-include="'templates/include/selected-project-attachments.html'"></section>
   <section id="iceboxStories" ng-if="showIceboxStories" ng-include="'templates/include/icebox-stories-column.html'"></section>
 </div>
 

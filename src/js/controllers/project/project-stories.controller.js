@@ -7,9 +7,6 @@ scrumInCeresControllers.controller('SelectedProjectStoriesController', ['$rootSc
   $scope.selectedProject = null;
   $scope.selectedSprint = null;
   $scope.$on('projects.selectedProject', function(event, selectedProject) {
-    if ($scope.selectedProject !== null && $scope.selectedProject.id === selectedProject.id) {
-      return;
-    }
     $scope.selectedProject = selectedProject;
     $scope.columnName = "{name}'s Stories in Icebox".format(selectedProject);
     $scope.removeStoryTitle = 'Remove story from {name} (back to Icebox)'.format($scope.selectedProject);

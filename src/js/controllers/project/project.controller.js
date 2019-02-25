@@ -113,6 +113,7 @@ scrumInCeresControllers.controller('ProjectController', ['$rootScope', '$scope',
         project.stories = result.stories;
         project.kanbans = result.kanbans;
         project.sprints = result.sprints;
+        project.attachments = result.attachments;
         project.showIcebox = project.showIcebox === undefined ? true : project.showIcebox;
         project.showSprints = project.showSprints === undefined ? true : project.showSprints;
         project.showKanbans = project.showKanbans === undefined ? true : project.showKanbans;
@@ -143,7 +144,7 @@ scrumInCeresControllers.controller('ProjectController', ['$rootScope', '$scope',
     $event.stopPropagation();
     Alert.warning(
       'WAAAAT?!?!',
-      'Are you f#!%$ sure???',
+      'Are you f#!%$ sure??? This will really really remove completely and for EVER this project!',
       function(response) {
         if (response.value) {
           Project.delete(

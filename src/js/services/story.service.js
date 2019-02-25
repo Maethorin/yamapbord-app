@@ -320,15 +320,9 @@ scrumInCeresServices.service('StoryService', ['$rootScope', '$q', '$timeout', 'A
     $scope.newDefinition = {definition: null};
     $scope.newDefinitionVisible = false;
     $scope.newComment = {comment: null, file: null, fileType: null, link: null, creator: null, createdAt: null};
-    $scope.newCommentFileTypeAccepts = {
-      I: 'image/*',
-      P: '.pdf',
-      D: '.doc,.docx,.xls,.xlsx,.txt,',
-      Z: '.zip,.rar,.tar-gz'
-    };
     $scope.newCommentVisible = false;
     $scope.newCommentType = null;
-    $scope.newCommentFileTypeAccept = $scope.newCommentFileTypeAccepts['I'];
+    $scope.newCommentFileTypeAccept = $rootScope.newAttachmentFileTypeAccepts['I'];
     $scope.theButtonWasCliked = false;
     $scope.scrollCommentOptions = {scrollX: 'none', scrollY: 'right', preventWheelEvents: false, preventKeyEvents: false};
     $scope.newMergeRequest = {url: null, creator: null, createdAt: null};
@@ -613,7 +607,7 @@ scrumInCeresServices.service('StoryService', ['$rootScope', '$q', '$timeout', 'A
     $scope.clearNewComment = function(component) {
       component.newCommentVisible = false;
       component.newCommentType = null;
-      component.newCommentFileTypeAccept = $scope.newCommentFileTypeAccepts['I'];
+      component.newCommentFileTypeAccept = $rootScope.newAttachmentFileTypeAccepts['I'];
       $scope.newComment = {comment: null, file: null, fileType: 'I', link: null, creator: null, createdAt: null};
     };
 
@@ -621,7 +615,7 @@ scrumInCeresServices.service('StoryService', ['$rootScope', '$q', '$timeout', 'A
       component.newCommentVisible = true;
       component.newCommentType = type;
       $scope.newComment.fileType = fileType;
-      component.newCommentFileTypeAccept = $scope.newCommentFileTypeAccepts[fileType];
+      component.newCommentFileTypeAccept = $rootScope.newAttachmentFileTypeAccepts[fileType];
     };
 
     $scope.addingCommentToStory = function(type, story, fileType) {
