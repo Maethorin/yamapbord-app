@@ -1,6 +1,6 @@
 'use strict';
 
-scrumInCeresControllers.controller('SelectedProjectAttachmentsController', ['$rootScope', '$scope', '$timeout', 'Notifier', 'Alert', 'ProjectAttachment', function($rootScope, $scope, $timeout, Notifier, Alert, ProjectAttachment) {
+scrumInCeresControllers.controller('SelectedProjectAttachmentsController', ['$rootScope', '$scope', '$timeout', 'appConfig', 'Notifier', 'Alert', 'ProjectAttachment', 'Upload', function($rootScope, $scope, $timeout, appConfig, Notifier, Alert, ProjectAttachment, Upload) {
   $scope.theButtonWasCliked = false;
   $scope.newAttachment = {comment: null, file: null, fileType: 'I', link: null, creator: null, createdAt: null};
 
@@ -51,6 +51,7 @@ scrumInCeresControllers.controller('SelectedProjectAttachmentsController', ['$ro
   };
 
   $scope.addAttachmentToProject = function($event) {
+    $event.stopPropagation();
     if ($scope.newAttachment[$scope.newAttachmentType] === null) {
       Notifier.warning('You want to {0}, you need to {0} something!'.format([$scope.newAttachmentType]));
       return false;
@@ -59,7 +60,6 @@ scrumInCeresControllers.controller('SelectedProjectAttachmentsController', ['$ro
       Notifier.warning('Links should start with http or https. Didnt you know that?!?');
       return false;
     }
-    Notifier.warning('Saving attachment...');
     $scope.theButtonWasCliked = true;
 
     var toSend =  {
@@ -68,10 +68,35 @@ scrumInCeresControllers.controller('SelectedProjectAttachmentsController', ['$ro
       fileType: $scope.newAttachment.fileType,
       link: $scope.newAttachment.link,
       creatorId: $rootScope.loggedUser.id,
-      creator: {name: $rootScope.loggedUser.name},
       createdAt: moment().format('YYYY-MM-DD HH:mm'),
     };
 
+    var hasFile = toSend.file !== null && toSend.file.name !== undefined;
+    if (hasFile) {
+      Notifier.warning('Uploading attachments...');
+      Upload.upload(
+        {
+          url: '{0}/users/me/projects/{1}/attachments'.format([appConfig.backendURL, $scope.project.id]),
+          method: 'POST',
+          data: toSend
+        }
+      ).then(
+        function(response) {
+          $scope.project.attachments.push(response.data);
+          $scope.clearNewAttachment();
+          $timeout(function () {
+            Notifier.success('File attachments created!');
+          });
+        },
+
+        function(error) {
+          Alert.randomErrorMessage(error);
+        }
+      );
+      return;
+    }
+
+    Notifier.warning('Saving attachment...');
     ProjectAttachment.save(
       {projectId: $scope.project.id},
 
@@ -79,6 +104,7 @@ scrumInCeresControllers.controller('SelectedProjectAttachmentsController', ['$ro
 
       function(response) {
         $scope.project.attachments.push(response);
+        $scope.clearNewAttachment();
         Notifier.success('Attachment created!');
       },
 
@@ -86,8 +112,6 @@ scrumInCeresControllers.controller('SelectedProjectAttachmentsController', ['$ro
         Alert.randomErrorMessage(error);
       }
     );
-    $scope.clearNewAttachment();
-    $event.stopPropagation();
   };
 
   $scope.removeProjectAttachment = function(attachment, $index) {

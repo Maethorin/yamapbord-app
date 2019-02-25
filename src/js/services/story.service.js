@@ -777,10 +777,10 @@ scrumInCeresServices.service('StoryService', ['$rootScope', '$q', '$timeout', 'A
       Notifier.warning('Saving comments...');
       story.updating = true;
       var commentsWithFiles = _.filter(story.comments, function(comment) {
-        return comment.file !== null && comment.file.name !== undefined
+        return comment.file !== null && comment.file.name !== undefined;
       });
       var commentsWithoutFiles = _.filter(story.comments, function(comment) {
-        return comment.file === null || comment.file.name === undefined
+        return comment.file === null || comment.file.name === undefined;
       });
       resource.update(
         urlData,
@@ -800,17 +800,15 @@ scrumInCeresServices.service('StoryService', ['$rootScope', '$q', '$timeout', 'A
                   Notifier.success('Attachments saved!');
                 });
               },
-              function(response) {
+              function(error) {
                 delete story.updating;
-                if (response.status > 0) {
-                  Notifier.danger(response.data);
-                }
+                Alert.randomErrorMessage(error);
               }
             );
             return;
           }
           delete story.updating;
-          Notifier.success('Comments saved!')
+          Notifier.success('Comments saved!');
         },
         function(error) {
           Alert.randomErrorMessage(error);
