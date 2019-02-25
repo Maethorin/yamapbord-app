@@ -614,8 +614,8 @@ scrumInCeresServices.service('StoryService', ['$rootScope', '$q', '$timeout', 'A
     $scope.setNewComment = function(component, type, fileType) {
       component.newCommentVisible = true;
       component.newCommentType = type;
-      $scope.newComment.fileType = fileType;
       component.newCommentFileTypeAccept = $rootScope.newAttachmentFileTypeAccepts[fileType];
+      $scope.newComment.fileType = fileType;
     };
 
     $scope.addingCommentToStory = function(type, story, fileType) {
