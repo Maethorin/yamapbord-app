@@ -470,9 +470,6 @@
                       <md-button aria-label="comment" class="md-icon-button" ng-click="addingCommentToStory('link', newStory)">
                         <md-icon md-font-icon="fa fa-link"></md-icon>
                       </md-button>
-                      <md-button aria-label="comment" class="md-icon-button" ng-click="addingCommentToStory('file', newStory)">
-                        <md-icon md-font-icon="fa fa-image"></md-icon>
-                      </md-button>
                     </md-fab-actions>
                   </md-toolbar>
                 </md-fab-toolbar>
@@ -493,28 +490,6 @@
                     <div class="comment-text col-sm-11">
                       <span class="with-break-lines" ng-if="!storyComment.file && storyComment.comment" ng-bind="storyComment.comment"></span>
                       <span class="with-break-lines" ng-if="storyComment.link"><a ng-href="{{storyComment.link}}" ng-bind="storyComment.link" target="_blank"></a> </span>
-                      <div class="comment-file" ng-if="storyComment.file">
-                        <div class="col-sm-2" ng-if="storyComment.file.name">
-                          <div>
-                            <label>Name:</label> {{storyComment.file.name}}
-                          </div>
-                          <div>
-                            <label>Size:</label> {{storyComment.file.size}}
-                          </div>
-                          <div>
-                            <label>Type:</label> {{storyComment.file.type}}
-                          </div>
-                        </div>
-                        <div class="col-sm-3">
-                          <a ng-href="{{storyComment.file}}" target="_blank">
-                            <img ngf-thumbnail="storyComment.file" />
-                          </a>
-                        </div>
-                        <div class="col-sm-5" ng-if="storyComment.comment">
-                          <label>Description:</label>
-                          <span class="with-break-lines" ng-bind="storyComment.comment"></span>
-                        </div>
-                      </div>
                     </div>
                   </div>
                   <button type="button" class="btn btn-danger btn-xs btn-remove-comment" ng-if="!storyComment.editing" ng-click="removeStoryComment(newStory, $index)"><i class="fa fa-trash"></i></button>
@@ -522,49 +497,11 @@
                 <li class="new-item list-group-item" ng-show="newStory.newCommentVisible">
                   <textarea ng-model="newComment.comment" class="form-control comment-textarea" rows="3" ng-show="newStory.newCommentType === 'comment'" focus-me="newStory.newCommentType === 'comment'" ng-blur="blurInputCommentField($event, newStory)"></textarea>
                   <input ng-model="newComment.link" ng-show="newStory.newCommentType === 'link'" focus-me="newStory.newCommentType === 'link'" ng-blur="blurInputCommentField($event, newStory)" />
-                  <div class="new-attachment" ng-show="newStory.newCommentType === 'file'">
-                    <div class="col-sm-2">
-                      <input type="file" ngf-select focus-me="newStory.newCommentType === 'file'" ng-model="newComment.file" name="commentFile" accept="image/*" ngf-max-size="3MB">
-                    </div>
-                    <div class="col-sm-4">
-                      <textarea ng-model="newComment.comment" class="form-control comment-textarea" rows="3" placeholder="Attachment Description"></textarea>
-                    </div>
-                  </div>
                   <button type="button" class="btn btn-success btn-xs btn-add-comment" ng-click="addCommentToStory($event, newStory)"><i class="fa fa-check"></i></button>
                   <button type="button" class="btn btn-danger btn-xs btn-remove-comment" ng-click="cancelAddCommentToStory($event)"><i class="fa fa-close"></i></button>
                 </li>
               </ul>
             </uib-tab>
-
-            <uib-tab index="3" select="changeStoryTab(newStory, 3)">
-              <uib-tab-heading>
-                Merge Requests
-              </uib-tab-heading>
-              <ul class="list-group story-merge-requests" ng-scrollable="scrollMergeRequestOptions">
-                <li class="list-group-item" ng-repeat="mergeRequest in newStory.mergeRequests" ng-click="toggleEditStoryMergeRequest(mergeRequest)">
-                  <input ng-model="mergeRequest.url" ng-show="mergeRequest.editing" focus-me="mergeRequest.editing" ng-blur="toggleEditStoryMergeRequest(mergeRequest)"/>
-                  <div ng-if="!mergeRequest.editing">
-                    <div class="merge-request-details">
-                      <div class="col-sm-7">
-                        Created by: {{mergeRequest.creator.name}}
-                      </div>
-                      <div class="col-sm-5">
-                        Created at: {{mergeRequest.createdAt}}
-                      </div>
-                    </div>
-                    <span class="with-break-lines"><a ng-href="{{mergeRequest.url}}" ng-bind="mergeRequest.url" target="_blank" ng-click="stopPropagation($event)"></a> </span>
-                  </div>
-                  <button type="button" class="btn btn-default btn-xs btn-remove-item" ng-if="!mergeRequest.editing" ng-click="removeStoryMergeRequest(newStory, $index)"><i class="fa fa-trash"></i></button>
-                </li>
-                <li class="new-item list-group-item" ng-click="addingMergeRequestToStory(story)">
-                  <span ng-show="!story.newMergeRequestVisible">Add a merge request</span>
-                  <input ng-model="newMergeRequest.url" ng-show="story.newMergeRequestVisible" focus-me="story.newMergeRequestVisible" ng-blur="blurInputMergeRequestField($event, newStory)"/>
-                  <button type="button" class="btn btn-primary btn-xs btn-add-item" ng-show="story.newMergeRequestVisible" ng-click="addMergeRequestToStory($event, newStory)">Add</button>
-                  <button type="button" class="btn btn-default btn-xs btn-remove-item" ng-show="story.newMergeRequestVisible" ng-click="cancelAddMergeRequestToStory($event)"><i class="fa fa-close"></i></button>
-                </li>
-              </ul>
-            </uib-tab>
-          </uib-tabset>
         </section>
       </form>
       <div class="loading-story" ng-show="newStory.loading || newStory.updating">
