@@ -198,6 +198,7 @@ scrumInCeresServices.service('StoryService', ['$rootScope', '$q', '$timeout', 'A
     delete storyToSend.newDefinitionVisible;
     delete storyToSend.newCommentVisible;
     delete storyToSend.newCommentType;
+    delete storyToSend.newCommentFileTypeAccept;
     delete storyToSend.newMergeRequestVisible;
     return storyToSend;
   }
@@ -289,6 +290,12 @@ scrumInCeresServices.service('StoryService', ['$rootScope', '$q', '$timeout', 'A
   };
 
   this.turnCompactStoryAsComplete = function(compact, complete) {
+    compact.name = complete.name;
+    compact.statement = complete.statement;
+    compact.type = complete.type;
+    compact.typeName = complete.typeName;
+    compact.points = complete.points;
+    compact.valuePoints = complete.valuePoints;
     compact.tasks = complete.tasks;
     compact.definitionOfDone = complete.definitionOfDone;
     compact.comments = complete.comments;
@@ -312,9 +319,16 @@ scrumInCeresServices.service('StoryService', ['$rootScope', '$q', '$timeout', 'A
     $scope.newTaskVisible = false;
     $scope.newDefinition = {definition: null};
     $scope.newDefinitionVisible = false;
-    $scope.newComment = {comment: null, file: null, link: null, creator: null, createdAt: null};
+    $scope.newComment = {comment: null, file: null, fileType: null, link: null, creator: null, createdAt: null};
+    $scope.newCommentFileTypeAccepts = {
+      I: 'image/*',
+      P: '.pdf',
+      D: '.doc,.docx,.xls,.xlsx,.txt,',
+      Z: '.zip,.rar,.tar-gz'
+    };
     $scope.newCommentVisible = false;
     $scope.newCommentType = null;
+    $scope.newCommentFileTypeAccept = $scope.newCommentFileTypeAccepts['I'];
     $scope.theButtonWasCliked = false;
     $scope.scrollCommentOptions = {scrollX: 'none', scrollY: 'right', preventWheelEvents: false, preventKeyEvents: false};
     $scope.newMergeRequest = {url: null, creator: null, createdAt: null};
@@ -324,7 +338,7 @@ scrumInCeresServices.service('StoryService', ['$rootScope', '$q', '$timeout', 'A
 
     $scope.addNewStory = function(data, forProject) {
       $scope.addingNewStory = true;
-      $scope.selectedStory = {
+      var newStory = {
         definitionOfDone: [],
         name: null,
         percentageComplete: 0,
@@ -345,27 +359,35 @@ scrumInCeresServices.service('StoryService', ['$rootScope', '$q', '$timeout', 'A
       if (data) {
         $scope.selectedIteration = data.iteration;
         if (data.iterationType === 'kanban') {
-          $scope.selectedStory.kanban = {id: data.iteration.id, name: data.iteration.name};
+          newStory.kanban = {id: data.iteration.id, name: data.iteration.name};
         }
         if (data.iterationType === 'sprint') {
-          $scope.selectedStory.sprint = {id: data.iteration.id, name: data.iteration.name};
+          newStory.sprint = {id: data.iteration.id, name: data.iteration.name};
         }
         if (data.project) {
-          $scope.selectedStory.project = {id: data.project.id, name: data.project.name};
+          newStory.project = {id: data.project.id, name: data.project.name};
         }
         if (data.module) {
-          $scope.selectedStory.module = data.module;
+          newStory.module = data.module;
         }
         if (data.epic) {
-          $scope.selectedStory.epic = data.epic;
+          newStory.epic = data.epic;
         }
         if (data.type) {
-          $scope.selectedStory.type = data.type;
+          newStory.type = data.type;
         }
       }
       if (forProject) {
-        return $scope.selectedStory;
+        newStory.isOpen = true;
+        newStory.isLoaded = true;
+        newStory.currentTab = 0;
+        newStory.newTaskVisible = false;
+        newStory.newDefinitionVisible = false;
+        $scope.clearNewComment(newStory);
+        newStory.newMergeRequestVisible = false;
+        return newStory;
       }
+      $scope.selectedStory = newStory;
       $scope.completeStoryPopupOpened = true;
       $rootScope.lateralMenuOpen = false;
     };
@@ -391,6 +413,30 @@ scrumInCeresServices.service('StoryService', ['$rootScope', '$q', '$timeout', 'A
       story.epic = epic;
     };
 
+    $scope.selectingStory = function(story, resource, urlData) {
+      if (story.isLoaded) {
+        story.isOpen = !story.isOpen;
+        return;
+      }
+      story.loading = true;
+      resource.get(
+        urlData,
+
+        function(result) {
+          story.isOpen = true;
+          story.isLoaded = true;
+          story.currentTab = story.currentTab ? story.currentTab : 0;
+          story.newTaskVisible = false;
+          story.newDefinitionVisible = false;
+          story.newMergeRequestVisible = false;
+          $scope.clearNewComment(story);
+          self.turnCompactStoryAsComplete(story, result);
+          delete story.loading;
+        }
+      )
+    };
+
+    // TODO: Isso está aqui pq é usado no Icebox. Um dia, isso poderá morrer
     $scope.selectStoryToEdit = function($event, story, $index) {
       $event.stopPropagation();
       Alert.loading();
@@ -564,24 +610,34 @@ scrumInCeresServices.service('StoryService', ['$rootScope', '$q', '$timeout', 'A
       story.definitionOfDone.splice($index, 1);
     };
 
-    $scope.addingCommentToStory = function(type, story) {
+    $scope.clearNewComment = function(component) {
+      component.newCommentVisible = false;
+      component.newCommentType = null;
+      component.newCommentFileTypeAccept = $scope.newCommentFileTypeAccepts['I'];
+      $scope.newComment = {comment: null, file: null, fileType: 'I', link: null, creator: null, createdAt: null};
+    };
+
+    $scope.setNewComment = function(component, type, fileType) {
+      component.newCommentVisible = true;
+      component.newCommentType = type;
+      $scope.newComment.fileType = fileType;
+      component.newCommentFileTypeAccept = $scope.newCommentFileTypeAccepts[fileType];
+    };
+
+    $scope.addingCommentToStory = function(type, story, fileType) {
       if (story) {
-        story.newCommentVisible = true;
-        story.newCommentType = type;
+        $scope.setNewComment(story, type, fileType);
       }
-      $scope.newCommentVisible = true;
-      $scope.newCommentType = type;
+      $scope.setNewComment($scope, type, fileType);
       $scope.theButtonWasCliked = false;
     };
 
     $scope.cancelAddCommentToStory = function($event, story) {
       if (story) {
-        story.newCommentVisible = false;
+        $scope.clearNewComment(story)
       }
       $scope.theButtonWasCliked = true;
-      $scope.newCommentVisible = false;
-      $scope.newCommentType = null;
-      $scope.newComment = {comment: null, file: null, link: null, creator: null, createdAt: null};
+      $scope.clearNewComment($scope);
       $event.stopPropagation();
     };
 
@@ -609,16 +665,15 @@ scrumInCeresServices.service('StoryService', ['$rootScope', '$q', '$timeout', 'A
       story.comments.push({
         comment: $scope.newComment.comment,
         file: $scope.newComment.file,
+        fileType: $scope.newComment.fileType,
         link: $scope.newComment.link,
         creatorId: $rootScope.loggedUser.id,
         creator: {name: $rootScope.loggedUser.name},
-        createdAt: moment().format('YYYY-MM-DD HH:mm')
+        createdAt: moment().format('YYYY-MM-DD HH:mm'),
+        isDirty: true
       });
-      story.newCommentVisible = false;
-      story.newCommentType = null;
-      $scope.newCommentVisible = false;
-      $scope.newCommentType = null;
-      $scope.newComment = {comment: null, file: null, link: null, creator: null, createdAt: null};
+      $scope.clearNewComment(story);
+      $scope.clearNewComment($scope);
       $event.stopPropagation();
     };
 

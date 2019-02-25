@@ -82,34 +82,36 @@ scrumInCeresControllers.controller('IceboxProjectController', ['$rootScope', '$s
   };
 
   $scope.selectStory = function(story) {
-    if (story.isLoaded) {
-      story.isOpen = !story.isOpen;
-      return;
-    }
-    story.loading = true;
-    IceBox.get(
-      {id: story.id},
+    $scope.selectingStory(story, IceBox, {id: story.id});
 
-      function(result) {
-        story.isOpen = true;
-        story.isLoaded = true;
-        story.currentTab = story.currentTab ? story.currentTab : 0;
-        story.newTaskVisible = false;
-        story.newDefinitionVisible = false;
-        story.newCommentVisible = false;
-        story.newCommentType = null;
-        story.newMergeRequestVisible = false;
-        story.name = result.name;
-        story.statement = result.statement;
-        story.type = result.type;
-        story.typeName = result.typeName;
-        story.points = result.points;
-        story.valuePoints = result.valuePoints;
-
-        delete story.loading;
-        StoryService.turnCompactStoryAsComplete(story, result);
-      }
-    )
+    // if (story.isLoaded) {
+    //   story.isOpen = !story.isOpen;
+    //   return;
+    // }
+    // story.loading = true;
+    // IceBox.get(
+    //   {id: story.id},
+    //
+    //   function(result) {
+    //     story.isOpen = true;
+    //     story.isLoaded = true;
+    //     story.currentTab = story.currentTab ? story.currentTab : 0;
+    //     story.newTaskVisible = false;
+    //     story.newDefinitionVisible = false;
+    //     story.newCommentVisible = false;
+    //     story.newCommentType = null;
+    //     story.newMergeRequestVisible = false;
+    //     story.name = result.name;
+    //     story.statement = result.statement;
+    //     story.type = result.type;
+    //     story.typeName = result.typeName;
+    //     story.points = result.points;
+    //     story.valuePoints = result.valuePoints;
+    //
+    //     delete story.loading;
+    //     StoryService.turnCompactStoryAsComplete(story, result);
+    //   }
+    // )
   };
 
   $scope.undoStoryChanges = function(story) {
@@ -190,16 +192,7 @@ scrumInCeresControllers.controller('IceboxProjectController', ['$rootScope', '$s
   };
 
   $scope.addNewStoryToIcebox = function(storyType) {
-    var newStory = $scope.addNewStory({type: storyType}, true);
-    newStory.isOpen = true;
-    newStory.isLoaded = true;
-    newStory.currentTab = 0;
-    newStory.newTaskVisible = false;
-    newStory.newDefinitionVisible = false;
-    newStory.newCommentVisible = false;
-    newStory.newCommentType = null;
-    newStory.newMergeRequestVisible = false;
-    $scope.newStories.unshift(newStory);
+    $scope.newStories.unshift($scope.addNewStory({type: storyType}, true));
   };
 
   $scope.setIterationStoryFilter = function() {

@@ -239,19 +239,12 @@ scrumInCeresControllers.controller('SelectedProjectSprintsController', ['$rootSc
   };
 
   $scope.addNewStoryToSprint = function(storyType, sprint) {
-    var newStory = $scope.addNewStory(
-      {project: $scope.selectedProject, type: storyType, iterationType: 'sprint', iteration: sprint},
-      true
+    sprint.newStories.unshift(
+      $scope.addNewStory(
+        {project: $scope.selectedProject, type: storyType, iterationType: 'sprint', iteration: sprint},
+        true
+      )
     );
-    newStory.isOpen = true;
-    newStory.isLoaded = true;
-    newStory.currentTab = 0;
-    newStory.newTaskVisible = false;
-    newStory.newDefinitionVisible = false;
-    newStory.newCommentVisible = false;
-    newStory.newCommentType = null;
-    newStory.newMergeRequestVisible = false;
-    sprint.newStories.unshift(newStory);
   };
 
   $scope.saveStory = function(story, $index, sprint) {
@@ -288,34 +281,35 @@ scrumInCeresControllers.controller('SelectedProjectSprintsController', ['$rootSc
   };
 
   $scope.selectStory = function(story) {
-    if (story.isLoaded) {
-      story.isOpen = !story.isOpen;
-      return;
-    }
-    story.loading = true;
-    ProjectStory.get(
-      {projectId: $scope.selectedProject.id, storyId: story.id},
-
-      function(result) {
-        story.isOpen = true;
-        story.isLoaded = true;
-        story.currentTab = story.currentTab ? story.currentTab : 0;
-        story.newTaskVisible = false;
-        story.newDefinitionVisible = false;
-        story.newCommentVisible = false;
-        story.newCommentType = null;
-        story.newMergeRequestVisible = false;
-        story.name = result.name;
-        story.statement = result.statement;
-        story.type = result.type;
-        story.typeName = result.typeName;
-        story.points = result.points;
-        story.valuePoints = result.valuePoints;
-
-        delete story.loading;
-        StoryService.turnCompactStoryAsComplete(story, result);
-      }
-    )
+    $scope.selectingStory(story, ProjectStory, {projectId: $scope.selectedProject.id, storyId: story.id});
+    // if (story.isLoaded) {
+    //   story.isOpen = !story.isOpen;
+    //   return;
+    // }
+    // story.loading = true;
+    // ProjectStory.get(
+    //   {projectId: $scope.selectedProject.id, storyId: story.id},
+    //
+    //   function(result) {
+    //     story.isOpen = true;
+    //     story.isLoaded = true;
+    //     story.currentTab = story.currentTab ? story.currentTab : 0;
+    //     story.newTaskVisible = false;
+    //     story.newDefinitionVisible = false;
+    //     story.newCommentVisible = false;
+    //     story.newCommentType = null;
+    //     story.newMergeRequestVisible = false;
+    //     story.name = result.name;
+    //     story.statement = result.statement;
+    //     story.type = result.type;
+    //     story.typeName = result.typeName;
+    //     story.points = result.points;
+    //     story.valuePoints = result.valuePoints;
+    //
+    //     delete story.loading;
+    //     StoryService.turnCompactStoryAsComplete(story, result);
+    //   }
+    // )
   };
 
   $scope.changeStoryTab = function(story, tabIndex) {

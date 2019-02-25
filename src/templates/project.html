@@ -163,6 +163,7 @@
                 Comments
                 <button ng-if="story.currentTab === 2" type="button" class="btn btn-success btn-sm btn-save-task" ng-click="saveStoryComments(story)"><i class="fa fa-save"></i></button>
               </uib-tab-heading>
+
               <div class="fab-story-comments">
                 <md-fab-toolbar md-open="false" md-direction="left">
                   <md-fab-trigger class="align-with-text">
@@ -178,8 +179,17 @@
                       <md-button aria-label="comment" class="md-icon-button" ng-click="addingCommentToStory('link', story)">
                         <md-icon md-font-icon="fa fa-link"></md-icon>
                       </md-button>
-                      <md-button aria-label="comment" class="md-icon-button" ng-click="addingCommentToStory('file', story)">
+                      <md-button aria-label="comment" class="md-icon-button" ng-click="addingCommentToStory('file', story, 'I')">
                         <md-icon md-font-icon="fa fa-image"></md-icon>
+                      </md-button>
+                      <md-button aria-label="comment" class="md-icon-button" ng-click="addingCommentToStory('file', story, 'D')">
+                        <md-icon md-font-icon="fa fa-file-text-o"></md-icon>
+                      </md-button>
+                      <md-button aria-label="comment" class="md-icon-button" ng-click="addingCommentToStory('file', story, 'P')">
+                        <md-icon md-font-icon="fa fa-file-pdf-o"></md-icon>
+                      </md-button>
+                      <md-button aria-label="comment" class="md-icon-button" ng-click="addingCommentToStory('file', story, 'Z')">
+                        <md-icon md-font-icon="fa fa-file-archive-o"></md-icon>
                       </md-button>
                     </md-fab-actions>
                   </md-toolbar>
@@ -203,23 +213,27 @@
                         <span class="with-break-lines" ng-if="!storyComment.file && storyComment.comment" ng-bind="storyComment.comment"></span>
                         <span class="with-break-lines" ng-if="storyComment.link"><a ng-href="{{storyComment.link}}" ng-bind="storyComment.link" target="_blank"></a> </span>
                         <div class="comment-file" ng-if="storyComment.file">
-                          <div class="col-sm-12" ng-if="storyComment.file.name">
+                          <div class="col-sm-12 comment-file-details" ng-if="storyComment.file.name">
                             <div class="col-sm-4">
-                              <label>Name:</label> {{storyComment.file.name}}
+                              <label>Name:</label> <span class="with-break-lines" ng-bind="storyComment.file.name"></span>
                             </div>
                             <div class="col-sm-4">
-                              <label>Size:</label> {{storyComment.file.size}}
+                              <label>Size:</label> <span class="with-break-lines" ng-bind="storyComment.file.size | formatFileSize:2"></span>
                             </div>
                             <div class="col-sm-4">
-                              <label>Type:</label> {{storyComment.file.type}}
+                              <label>Type:</label> <span class="with-break-lines" ng-bind="storyComment.file.type"></span>
                             </div>
                           </div>
-                          <div class="col-sm-5">
-                            <a ng-href="{{storyComment.file}}" target="_blank">
+                          <div class="col-sm-5 comment-filename" ng-if="!storyComment.isDirty">
+                            <a ng-href="{{storyComment.file}}" ng-if="storyComment.fileType === 'I'" target="_blank" title="Click to open {{storyComment.file}}">
                               <img ngf-thumbnail="storyComment.file" />
                             </a>
+                            <a class="btn btn-xs btn-primary" ng-href="{{storyComment.file}}" ng-if="storyComment.fileType !== 'I'" target="{{storyComment.fileType === 'P' ? '_blank' : ''}}" title="Click to download {{storyComment.file}}">
+                              <i class="fa" ng-class="{'fa-file-text-o': storyComment.fileType === 'D', 'fa-file-pdf-o': storyComment.fileType === 'P', 'fa-file-archive-o': storyComment.fileType === 'Z'}"></i>
+                              <span class="filename" ng-bind="storyComment.file | extractFilename"></span>
+                            </a>
                           </div>
-                          <div class="col-sm-7" ng-if="storyComment.comment">
+                          <div class="col-sm-7 comment-file-description" ng-if="storyComment.comment">
                             <label>Description:</label>
                             <span class="with-break-lines" ng-bind="storyComment.comment"></span>
                           </div>
@@ -234,14 +248,14 @@
                   <input ng-model="newComment.link" ng-show="story.newCommentType === 'link'" focus-me="story.newCommentType === 'link'" ng-blur="blurInputCommentField($event, story)" />
                   <div class="new-attachment col-sm-11" ng-show="story.newCommentType === 'file'">
                     <div class="col-sm-5">
-                      <input type="file" ngf-select focus-me="story.newCommentType === 'file'" ng-model="newComment.file" name="commentFile" accept="image/*" ngf-max-size="3MB">
+                      <input type="file" class="form-control story-comments-file" ngf-select focus-me="story.newCommentType === 'file'" ng-model="newComment.file" name="commentFile" accept="{{story.newCommentFileTypeAccept}}" ngf-max-size="30MB">
                     </div>
                     <div class="col-sm-7">
                       <textarea ng-model="newComment.comment" class="form-control comment-textarea" rows="3" placeholder="Attachment Description"></textarea>
                     </div>
                   </div>
                   <button type="button" class="btn btn-success btn-xs btn-add-comment" ng-click="addCommentToStory($event, story)"><i class="fa fa-check"></i></button>
-                  <button type="button" class="btn btn-danger btn-xs btn-remove-comment" ng-click="cancelAddCommentToStory($event)"><i class="fa fa-close"></i></button>
+                  <button type="button" class="btn btn-danger btn-xs btn-remove-comment" ng-click="cancelAddCommentToStory($event, story)"><i class="fa fa-close"></i></button>
                 </li>
               </ul>
             </uib-tab>
