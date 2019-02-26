@@ -171,6 +171,28 @@
         }
       }
 
+      .attach-image{
+        max-height: 150px;
+        max-width: 200px;
+      }
+
+      .list-attachment-item{
+        padding: 8px;
+        margin: 6px;
+        border-radius: 4px;
+        background-color: fade_out(black, 0.9);
+        &:hover{
+          background-color: fade_out(black, 0.8);
+        }
+        .btn-remove-attachment{
+          float: right;
+          top: -43px;
+          left: 9px;
+          position: relative;
+          width: 28px;
+        }
+      }
+
       .list-group-item {
         padding: 0;
         &.stories-group-order {

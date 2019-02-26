@@ -26,55 +26,55 @@
       <textarea ng-model="attachment.comment" class="form-control attachment-textarea" rows="2" ng-show="attachment.editing" focus-me="attachment.editing" ng-blur="toggleEditAttachment(attachment, $event)"></textarea>
       <div ng-if="!attachment.editing">
         <div class="attachment-details">
-          <div class="col-sm-7">
+          <div class="col-md-6">
             Created by: {{attachment.creator.name}}
           </div>
-          <div class="col-sm-5">
+          <div class="col-md-6">
             Created at: {{attachment.createdAt}}
           </div>
+          <button type="button" class="col-md-1 btn btn-danger btn-xs btn-remove-attachment" ng-if="!attachment.editing" ng-click="removeProjectAttachment(attachment, $index)"><i class="fa fa-trash"></i></button>
         </div>
-        <div class="attachment-text col-sm-11">
+        <div class="attachment-text col-md-12">
           <span class="with-break-lines" ng-if="!attachment.file && attachment.comment" ng-bind="attachment.comment"></span>
-          <span class="with-break-lines" ng-if="attachment.link"><a ng-href="{{attachment.link}}" ng-bind="attachment.link" target="_blank"></a> </span>
+          <span class="with-break-lines" ng-if="attachment.link != 'null'"><a ng-href="{{attachment.link}}" ng-bind="attachment.link" target="_blank"></a> </span>
           <div class="attachment-file" ng-if="attachment.file">
-            <div class="col-sm-12 attachment-file-details" ng-if="attachment.file.name">
-              <div class="col-sm-4">
+            <div class="col-md-12 attachment-file-details" ng-if="attachment.file.name">
+              <div class="col-md-4">
                 <label>Name:</label> <span class="with-break-lines" ng-bind="attachment.file.name"></span>
               </div>
-              <div class="col-sm-4">
+              <div class="col-md-4">
                 <label>Size:</label> <span class="with-break-lines" ng-bind="attachment.file.size | formatFileSize:2"></span>
               </div>
-              <div class="col-sm-4">
+              <div class="col-md-4">
                 <label>Type:</label> <span class="with-break-lines" ng-bind="attachment.file.type"></span>
               </div>
             </div>
-            <div class="col-sm-5 attachment-filename" ng-if="!attachment.isDirty">
+            <div class="col-md-6 attachment-filename" ng-if="!attachment.isDirty">
               <a ng-href="{{attachment.file}}" ng-if="attachment.fileType === 'I'" target="_blank" title="Click to open {{attachment.file}}">
-                <img ngf-thumbnail="attachment.file" />
+                <img class="attach-image" ngf-thumbnail="attachment.file" />
               </a>
               <a class="btn btn-xs btn-primary" ng-href="{{attachment.file}}" ng-if="attachment.fileType !== 'I'" target="{{attachment.fileType === 'P' ? '_blank' : ''}}" title="Click to download {{attachment.file}}">
                 <i class="fa" ng-class="{'fa-file-text-o': attachment.fileType === 'D', 'fa-file-pdf-o': attachment.fileType === 'P', 'fa-file-archive-o': attachment.fileType === 'Z'}"></i>
                 <span class="filename" ng-bind="attachment.file | extractFilename"></span>
               </a>
             </div>
-            <div class="col-sm-7 attachment-file-description" ng-if="attachment.comment">
+            <div class="col-md-6 attachment-file-description" ng-if="attachment.comment != 'null'">
               <label>Description:</label>
               <span class="with-break-lines" ng-bind="attachment.comment"></span>
             </div>
           </div>
         </div>
       </div>
-      <button type="button" class="btn btn-danger btn-xs btn-remove-attachment" ng-if="!attachment.editing" ng-click="removeProjectAttachment(attachment, $index)"><i class="fa fa-trash"></i></button>
     </li>
 
     <li class="new-item list-group-item" ng-show="newAttachmentVisible">
       <textarea ng-model="newAttachment.comment" class="form-control attachment-textarea" rows="3" ng-show="newAttachmentType === 'comment'" focus-me="newAttachmentType === 'comment'"></textarea>
       <input ng-model="newAttachment.link" ng-show="newAttachmentType === 'link'" focus-me="newAttachmentType === 'link'" />
-      <div class="new-attachment col-sm-11" ng-show="newAttachmentType === 'file'">
-        <div class="col-sm-5">
+      <div class="new-attachment col-md-11" ng-show="newAttachmentType === 'file'">
+        <div class="col-md-5">
           <input type="file" class="form-control project-attachments-file" ngf-select focus-me="newAttachmentType === 'file'" ng-model="newAttachment.file" name="attachmentFile" accept="{{newAttachmentFileTypeAccept}}" ngf-max-size="50MB">
         </div>
-        <div class="col-sm-7">
+        <div class="col-md-7">
           <textarea ng-model="newAttachment.comment" class="form-control attachment-textarea" rows="3" placeholder="Attachment Description"></textarea>
         </div>
       </div>
