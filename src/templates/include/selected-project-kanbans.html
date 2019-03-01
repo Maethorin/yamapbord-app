@@ -140,8 +140,14 @@
               <li-story-filter porra-angular="kanban.porraAngular" story-filter="kanban.storyFilter" show-iteration="false" stories="kanban.stories" stories-filtered="storiesFiltered"></li-story-filter>
 
               <li class="list-group-item animate-story new-story" ng-repeat="newStory in kanban.newStories" ng-include="'newStoryPanel'"></li>
+            </ul>
 
-              <li class="list-group-item animate-story" ng-if="!selectedProject.loading && !kanban.loading && !kanban.groupedStories" id="project{{selectedProject.id}}Kanban{{kanban.id}}Story{{story.id}}" ng-repeat="story in kanban.stories | orderBy:kanban.porraAngular.orderStoryBy | filter:kanban.storyFilter as storiesFiltered" ng-include="'storyPanel'"></li>
+            <ul class="list-group kanban-stories-list" ng-if="kanban.isOpen" as-sortable="kanbanStorySortableOptions" ng-model="kanban.stories">
+              <li class="list-group-item animate-story" ng-if="!selectedProject.loading && !kanban.loading && !kanban.groupedStories" id="project{{selectedProject.id}}Kanban{{kanban.id}}Story{{story.id}}" ng-repeat="story in kanban.stories | filter:kanban.storyFilter as storiesFiltered" as-sortable-item>
+                <div ng-include="'storyPanel'" as-sortable-item-handle>
+
+                </div>
+              </li>
             </ul>
           </div>
         </div>

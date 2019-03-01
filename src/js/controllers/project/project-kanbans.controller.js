@@ -1,6 +1,6 @@
 'use strict';
 
-scrumInCeresControllers.controller('SelectedProjectKanbansController', ['$rootScope', '$scope', 'Notifier', 'Alert', 'MeService', 'StoryService', 'HollydayService', 'ProjectStory', 'BacklogKanban', function($rootScope, $scope, Notifier, Alert, MeService, StoryService, HollydayService, ProjectStory, BacklogKanban) {
+scrumInCeresControllers.controller('SelectedProjectKanbansController', ['$rootScope', '$scope', 'appConfig', 'Notifier', 'Alert', 'MeService', 'StoryService', 'HollydayService', 'ProjectStory', 'BacklogKanban', function($rootScope, $scope, appConfig, Notifier, Alert, MeService, StoryService, HollydayService, ProjectStory, BacklogKanban) {
   $scope.canAddStoryTo = false;
   $scope.canRemoveStoryFrom = true;
   $scope.removeStoryTitle = 'Remove story from selected kanban (back to Project Icebox)';
@@ -8,7 +8,7 @@ scrumInCeresControllers.controller('SelectedProjectKanbansController', ['$rootSc
   $scope.selectedKanban = null;
   $scope.newKanbans = [];
   $scope.storiesFiltered = [];
-  $scope.storyItemsSortableOptions = { containerPositioning: 'relative' };
+  $scope.kanbanStorySortableOptions = { containerPositioning: 'relative' };
 
   StoryService.prepareScopeToEditStory($scope);
 
@@ -88,6 +88,7 @@ scrumInCeresControllers.controller('SelectedProjectKanbansController', ['$rootSc
     delete kanbanToSend.porraAngular;
     delete kanbanToSend.storyFilter;
     delete kanbanToSend.newStories;
+    delete kanbanToSend.createdAtObj;
 
     kanbanToSend.stories = _.map(kanban.stories, function(story) {
       return {id: story.id, points: story.points};
