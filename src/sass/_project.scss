@@ -758,42 +758,46 @@
                 left: -83px;
               }
             }
-            .sprint-stories-list, .kanban-stories-list {
-              padding: 0;
-              height: auto;
-              overflow: hidden;
-              min-height: 180px;
-
-              .order-form-group, .group-form-group {
-                padding: 0 2px;
-                margin: 0;
-                width: 65%;
-                display: inline-block;
-                float: right;
-                select {
-                  background-color: $gray-dark;
-                  color: $gray-light;
-                  padding: 0;
-                  height: 22px;
-                  font-size: 12px;
-                }
-              }
-
-              .panel-story {
-                .panel-heading {
-                  background-color: $gray-dark;
-                }
-              }
-              .form-story {
-                padding: 5px;
-              }
-            }
           }
         }
       }
     }
     .project-sprint, .project-kanban {
       overflow: initial;
+    }
+    .kanban-story-sortable {
+      padding: 0;
+    }
+  }
+
+  .sprint-stories-list, .kanban-stories-list {
+    padding: 0;
+    height: auto;
+    overflow: hidden;
+    min-height: 180px;
+
+    .order-form-group, .group-form-group {
+      padding: 0 2px;
+      margin: 0;
+      width: 65%;
+      display: inline-block;
+      float: right;
+      select {
+        background-color: $gray-dark;
+        color: $gray-light;
+        padding: 0;
+        height: 22px;
+        font-size: 12px;
+      }
+    }
+
+    .panel-story {
+      .panel-heading {
+        background-color: $gray-dark;
+      }
+    }
+    .form-story {
+      padding: 5px;
     }
   }
 
@@ -899,14 +903,65 @@
         .btn-remove-task, .btn-add-task, .btn-add-merge, .btn-remove-merge {
           display: none;
         }
-        span, input {
+        span {
           font-family: Open Sans,open-sans,EmojiFontFace,helvetica,arial,sans-serif;
           font-size: 12px;
           vertical-align: middle;
         }
+
         input {
           display: none;
         }
+      }
+    }
+  }
+}
+
+.kanban-stories-list {
+  .as-sortable-placeholder {
+    border-radius: 6px;
+    border: 1px dashed #EEE !important;
+    height: 24px !important;
+    width: 442px !important;
+    margin: 3px 2px;
+  }
+
+  &.as-sortable-dragging {
+    &.list-group {
+      background-color: transparent;
+      padding: 0;
+      overflow: hidden;
+
+      .list-group-item {
+        padding: 0;
+      }
+
+      .kanban-story-sortable {
+        padding: 0;
+      }
+
+      .panel-story {
+        padding: 0;
+        margin-bottom: 0;
+      }
+
+      .story-type {
+        width: 16px;
+        display: inline-block;
+        height: 16px;
+        padding: 0;
+        background-position: center center;
+        margin-top: -2px;
+      }
+
+      span {
+        font-family: Open Sans,open-sans,EmojiFontFace,helvetica,arial,sans-serif;
+        font-size: 12px;
+        vertical-align: middle;
+      }
+
+      input, button, .story-chevron, .btn-remove-task, .btn-add-task, .btn-add-merge, .btn-remove-merge {
+        display: none;
       }
     }
   }
