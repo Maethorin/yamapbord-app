@@ -127,6 +127,8 @@
                   Add Story <span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="simple-btn-keyboard-nav">
+                  <li role="menuitem"><a ng-click="addNewStoryToKanban('DRF', kanban)"><i class="fa fa-sticky-note-o"></i> New Draft</a></li>
+                  <li class="divider"></li>
                   <li role="menuitem"><a ng-click="addNewStoryToKanban('FEA', kanban)"><i class="fa fa-star"></i> New Feature</a></li>
                   <li role="menuitem"><a ng-click="addNewStoryToKanban('BUG', kanban)"><i class="fa fa-bug"></i> New BUG</a></li>
                   <li role="menuitem"><a ng-click="addNewStoryToKanban('TEC', kanban)"><i class="fa fa-cog"></i> New Technical</a></li>

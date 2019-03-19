@@ -209,6 +209,7 @@ scrumInCeres.run(['$rootScope', '$timeout', '$q', 'appConfig', 'AuthService', 'M
   $rootScope.currentController = null;
   $rootScope.currentStoryTypeFilter = null;
   $rootScope.storyTypes = [
+    {code: 'DRF', name: 'Draft'},
     {code: 'FEA', name: 'Feature'},
     {code: 'BUG', name: 'Bug'},
     {code: 'CHO', name: 'Chore'},

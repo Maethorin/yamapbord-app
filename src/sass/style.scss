@@ -697,6 +697,7 @@ textarea {
   .select-story-type {
     background-repeat: no-repeat;
     background-position: 9px 7px;
+    background-size: 16px;
     padding-left: 34px;
     @include story-types();
   }
