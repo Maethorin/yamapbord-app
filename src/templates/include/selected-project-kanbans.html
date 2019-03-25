@@ -137,18 +137,16 @@
               </div>
             </div>
             <ul class="list-group kanban-stories-filter" ng-if="kanban.isOpen">
-              <li-story-order-group porra-angular="kanban.porraAngular"></li-story-order-group>
-
-              <li-story-filter porra-angular="kanban.porraAngular" story-filter="kanban.storyFilter" show-iteration="false" stories="kanban.stories" stories-filtered="storiesFiltered"></li-story-filter>
-
               <li class="list-group-item animate-story new-story" ng-repeat="newStory in kanban.newStories" ng-include="'newStoryPanel'"></li>
             </ul>
 
             <ul class="list-group kanban-stories-list" ng-if="kanban.isOpen" as-sortable="kanbanStorySortableOptions" ng-model="kanban.stories">
-              <li class="list-group-item animate-story" ng-if="!selectedProject.loading && !kanban.loading && !kanban.groupedStories" id="project{{selectedProject.id}}Kanban{{kanban.id}}Story{{story.id}}" ng-repeat="story in kanban.stories | filter:kanban.storyFilter as storiesFiltered" as-sortable-item>
-                <div ng-include="'storyPanel'" class="kanban-story-sortable" as-sortable-item-handle>
+              <li-story-order-group porra-angular="kanban.porraAngular"></li-story-order-group>
 
-                </div>
+              <li-story-filter porra-angular="kanban.porraAngular" story-filter="kanban.storyFilter" show-iteration="false" stories="kanban.stories" stories-filtered="storiesFiltered"></li-story-filter>
+
+              <li class="list-group-item animate-story" ng-if="!selectedProject.loading && !kanban.loading && !kanban.groupedStories" id="project{{selectedProject.id}}Kanban{{kanban.id}}Story{{story.id}}" ng-repeat="story in kanban.stories | filter:kanban.storyFilter as storiesFiltered" as-sortable-item>
+                <div ng-include="'storyPanel'" class="kanban-story-sortable" as-sortable-item-handle></div>
               </li>
             </ul>
           </div>

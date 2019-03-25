@@ -14,7 +14,7 @@
         <i class="fa" ng-class="{'fa-spinner fa-spin': story.loading, 'fa-chevron-up': story.isOpen, 'fa-chevron-down': !story.isOpen}"></i>
       </span>
     </div>
-    <div class="panel-body" uib-collapse="!story.isOpen">
+    <div class="panel-body" uib-collapse="!story.isOpen" no-drag>
       <form name="formStory" class="form-story" ng-if="story.isOpen">
         <section class="statement-save">
           <div class="form-group col-sm-11">
@@ -322,7 +322,7 @@
           </div>
           <div class="col-sm-1">
             <button class="btn btn-xs btn-success" type="button" title="Save new story" ng-click="saveStory(newStory, $index, (sprint || kanban))"><i class="fa fa-save"></i></button>
-            <button class="btn btn-xs btn-danger" type="button" title="Cancel new story" ng-click="cancelNewStory($index, sprint)"><i class="fa fa-close"></i></button>
+            <button class="btn btn-xs btn-danger" type="button" title="Cancel new story" ng-click="cancelNewStory($index, sprint || kanban)"><i class="fa fa-close"></i></button>
           </div>
         </section>
         <ul class="list-group story-iterations">
