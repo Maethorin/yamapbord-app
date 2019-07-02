@@ -50,6 +50,7 @@ body {
   border-right: 2px solid #777;
   border-bottom: 2px solid #777;
   background-color: darken(#485952, 15%);
+  overflow: auto;
 
   &.opened {
     left: 0;
