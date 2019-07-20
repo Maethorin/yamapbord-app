@@ -43,6 +43,10 @@ scrumInCeresControllers.controller('SelectedProjectKanbansController', ['$rootSc
     $scope.$emit('projects.selectingKanban', $scope.selectedKanban);
   }
 
+  $scope.openKanbanForm = function(kanban) {
+    kanban.isFormOpen = !kanban.isFormOpen;
+  };
+
   $scope.openKanban = function(kanban) {
     if (kanban.isLoaded) {
       kanban.isOpen = !kanban.isOpen;

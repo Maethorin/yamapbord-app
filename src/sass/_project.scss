@@ -84,6 +84,21 @@
   padding: 10px 0 0 5px;
   transition: margin 0.5s;
 
+  .sprint-chevron, .kanban-chevron, .kanban-form-chevron {
+    float: right;
+    display: inline-block;
+    margin-right: 5px;
+    margin-top: -2px;
+    color: $gray-light;
+    i {
+      font-size: 12px;
+    }
+  }
+
+  .kanban-form-chevron {
+    color: $gray-darker;
+  }
+
   .story-details, .sprint-details, .kanban-details {
     .list-group {
       li {
@@ -119,655 +134,659 @@
     width: 30%;
     margin: 0 0.2%;
     float: left;
+  }
 
-    .panel-heading {
-      .btn-create-sprint, .btn-create-kanban {
-        float: right;
-        padding: 0 5px;
-        i {
-          font-size: 13px;
-        }
-      }
-      .dropdown-add-story {
-        float: right;
+  .project-panel-heading {
+    .btn-create-sprint, .btn-create-kanban {
+      float: right;
+      padding: 0 5px;
+      i {
+        font-size: 13px;
       }
     }
-    .project-stories-list, .project-sprint-list, .project-kanban-list, .project-attachments-list {
-      overflow-y: scroll;
-      height: 85vh;
-      padding-left: 4px;
-      &::-webkit-scrollbar {
-        width: 4px;
-      }
-      &::-webkit-scrollbar-thumb {
-        border-radius: 2px;
-        background-color: #3e7298;
-      }
-      .stories-group-order {
-        &:hover {
-          background-color: transparent;
-        }
-        .order-label, .group-label {
-          font-family: Open Sans,open-sans,EmojiFontFace,helvetica,arial,sans-serif;
-          color: $gray-light;
-          font-size: 10px;
-          display: inline-block;
-          float: left;
-          margin: 5px 0 0;
-        }
-        .order-form-group, .group-form-group {
-          padding: 0 2px;
-          margin: 0;
-          width: 65%;
-          display: inline-block;
-          float: right;
-          select {
-            background-color: $gray-dark;
-            color: $gray-light;
-            padding: 0;
-            height: 22px;
-            font-size: 12px;
-          }
-        }
+    .dropdown-add-story {
+      float: right;
+    }
+  }
+
+  .project-stories-list, .project-sprint-list, .project-kanban-list, .project-attachments-list {
+    overflow-y: scroll;
+    height: 85vh;
+    padding-left: 4px;
+    &::-webkit-scrollbar {
+      width: 4px;
+    }
+    &::-webkit-scrollbar-thumb {
+      border-radius: 2px;
+      background-color: #3e7298;
+    }
+
+    .stories-group-order {
+      &:hover {
+        background-color: transparent;
       }
 
-      .attach-image{
-        max-height: 150px;
-        max-width: 200px;
+      .order-label, .group-label {
+        font-family: Open Sans,open-sans,EmojiFontFace,helvetica,arial,sans-serif;
+        color: $gray-light;
+        font-size: 10px;
+        display: inline-block;
+        float: left;
+        margin: 5px 0 0;
       }
 
-      .list-attachment-item{
-        padding: 8px;
-        margin: 6px;
-        border-radius: 4px;
-        background-color: fade_out(black, 0.9);
-        &:hover{
-          background-color: fade_out(black, 0.8);
-        }
-        .btn-remove-attachment{
-          float: right;
-          top: -43px;
-          left: 9px;
-          position: relative;
-          width: 28px;
-        }
-      }
-
-      .list-group-item {
-        padding: 0;
-        &.stories-group-order {
-          padding: 3px 0;
-        }
-        &.animate-story {
-          &.ng-enter {
-            transition: 0.5s linear all;
-            opacity: 0;
-          }
-
-          &.ng-enter.ng-enter-active {
-            opacity: 1;
-          }
-
-          &.ng-leave {
-            transition: 0.2s linear all;
-            opacity: 1;
-          }
-
-          &.ng-leave.ng-leave-active {
-            opacity: 0;
-          }
-        }
-        &.no-story {
-          padding: 0 5px;
-          font-size: 12px;
-          color: #BBB;
-        }
-      }
-
-      .panel-module {
-        padding: 0;
-        .panel-heading {
-          &.module-heading, &.epic-heading {
-            color: $gray-lighter;
-            background-color: $gray-much-darker;
-            .module-chevron {
-              float: right;
-              display: inline-block;
-              margin-right: 5px;
-              margin-top: -2px;
-              color: $gray-light;
-              i {
-                font-size: 15px;
-              }
-            }
-          }
-          &.epic-heading {
-            background-color: $gray-darker;
-            font-size: 13px;
-          }
-          .grouped-total-stories {
-            font-size: smaller;
-            color: #777;
-          }
-        }
-        .panel-body {
-          padding: 0;
-          .panel-story {
-            .panel-body {
-              padding: 0 5px;
-            }
-          }
-        }
-      }
-
-      .panel-sprint, .panel-kanban, .panel-story {
+      .order-form-group, .group-form-group {
+        padding: 0 2px;
         margin: 0;
-        padding: 0;
-        &:hover {
-          border-color: $gray-dark;
-        }
-
-        .panel-heading {
+        width: 65%;
+        display: inline-block;
+        float: right;
+        select {
           background-color: $gray-dark;
+          color: $gray-light;
+          padding: 0;
+          height: 22px;
+          font-size: 12px;
+        }
+      }
+    }
 
-          .btn-add-to-project, .btn-remove-from {
-            padding: 0 2px;
-            line-height: 13px;
-            border-radius: 2px;
-            i {
-              font-size: 12px;
-            }
-          }
+    .attach-image {
+      max-height: 150px;
+      max-width: 200px;
+    }
 
-          .btn-remove-from {
-            position: absolute;
-            right: 2%;
-            top: 5px;
-          }
+    .list-attachment-item {
+      padding: 8px;
+      margin: 6px;
+      border-radius: 4px;
+      background-color: fade_out(black, 0.9);
 
-          .story-type {
-            background-repeat: no-repeat;
-            background-position: center left;
-            background-size: 13px;
-            display: inline-block;
-            padding: 0;
-            width: 13px;
-            height: 13px;
-          }
+      &:hover {
+        background-color: fade_out(black, 0.8);
+      }
 
-          input {
-            &.story-name, &.sprint-name, &.kanban-name {
-              height: 18px;
-              border: 1px solid $gray;
-              background-color: $gray-dark;
-              border-radius: 1px;
-              font-family: Open Sans,open-sans,EmojiFontFace,helvetica,arial,sans-serif;
-              font-size: 12px;
-              padding: 2px;
-              width: 80%;
-            }
-            &.sprint-name, &.kanban-name {
-              font-size: 16px;
-              background-color: $gray-darker;
-              vertical-align: inherit;
-            }
-          }
+      .btn-remove-attachment {
+        float: right;
+        top: -43px;
+        left: 9px;
+        position: relative;
+        width: 28px;
+      }
+    }
 
-          .story-name {
-            font-size: 12px;
-            vertical-align: middle;
-          }
+    .list-group-item {
+      padding: 0;
+      &.stories-group-order {
+        padding: 3px 0;
+      }
 
-          .story-chevron {
-            position: absolute;
-            right: 7%;
-            top: 2px;
-            display: inline-block;
-            margin-right: 5px;
-            margin-top: -2px;
-            color: $gray-light;
-            i {
-              font-size: 12px;
-            }
-          }
+      &.animate-story {
+        &.ng-enter {
+          transition: 0.5s linear all;
+          opacity: 0;
         }
 
-        .panel-body {
-          background-color: #f1f0ea;
-          padding: 0 5px;
-          .form-sprint, .form-kanban, .form-story{
-            padding: 5px 0;
-            .statement-save, .sprint-save, .kanban-save {
-              overflow: hidden;
-              .btn-success {
-                margin: 5px 0;
-              }
-            }
+        &.ng-enter.ng-enter-active {
+          opacity: 1;
+        }
 
-            .sprint-details, .kanban-details, .story-details, .story-tabs, .story-iterations, .story-date {
-              overflow: hidden;
-              margin-top: 5px;
-              border-top: 1px solid #666;
-            }
+        &.ng-leave {
+          transition: 0.2s linear all;
+          opacity: 1;
+        }
 
-            .list-group {
-              &.col-sm-6 {
-                padding: 0 5px;
-              }
-              .list-group-item {
-                background-color: #f1f0ea;
-                padding: 5px 0;
-                .project-story-iteration, .project-story-date {
-                  color: #666;
-                  font-size: 13px;
-                  vertical-align: middle;
-                  margin-left: 5px;
-                }
-                .story-requester, .story-owner {
-                  float: right;
-                  margin: 0;
-                }
-                .story-owner-name-initials, .story-requester-name-initials {
-                  font-family: Open Sans,open-sans,EmojiFontFace,helvetica,arial,sans-serif;
-                  background-color: #a1a4ad;
-                  font-size: 10px;
-                  display: inline-block;
-                  height: 19px;
-                  width: 19px;
-                  border-radius: 24px;
-                  font-weight: bold;
-                  text-align: center;
-                  line-height: 19px;
-                }
-                .story-owner-name, .story-requester-name {
-                  color: #666;
-                  font-size: 12px;
-                }
-                .form-story-label {
-                  font-family: Open Sans,open-sans,EmojiFontFace,helvetica,arial,sans-serif;
-                  color: $gray-dark;
-                  font-size: 10px;
-                  display: inline-block;
-                  float: left;
-                  margin: 5px 0 0;
-                }
-                .story-requester {
-                  width: 134px;
-                  text-align: right;
-                }
-                .project-story-points {
-                  float: right;
-                  label {
-                    &.btn-xs {
-                      padding: 2px;
-                      font-size: 11px;
-                      font-family: Open Sans,open-sans,EmojiFontFace,helvetica,arial,sans-serif;
-                      &.active {
-                        background-color: #d8f8b7 !important;
-                        color: #666 !important;
-                      }
-                    }
-                  }
-                }
-                .project-story-status {
-                  float: right;
-                  .story-status {
-                      padding: 4px 5px;
-                      border-radius: 2px;
-                      font-size: 12px;
-                      line-height: 14px;
-                  }
-                }
-                .form-group {
-                  display: inline-block;
-                  float: right;
-                  margin: 0;
-                  &.with-select {
-                    padding: 0;
-                    &.with-story-type, &.with-story-status {
-                      width: 67%;
-                    }
-                    &.with-module, &.with-iteration-filter {
-                      width: 73%;
-                    }
-                    &.with-epic, &.with-requester {
-                      width: 82%;
-                      margin-left: 4px;
-                    }
-                    select {
-                      background-color: #FFFAFA;
-                      color: rgb(102, 102, 102);
-                      padding: 0;
-                      height: 22px;
-                      background-position: 3px center;
-                      &.select-story-type {
-                        padding-left: 17px;
-                      }
-                    }
-                  }
-                }
-              }
-            }
-
-            .story-tabs {
-              padding: 5px 0;
-              ul {
-                li {
-                  background-color: transparent;
-                  a {
-                    background-color: transparent;
-                      padding: 0 5px;
-                      font-size: 12px;
-                      text-transform: uppercase;
-                      border-radius: 3px;
-                    &.active {
-                      background-color: transparent;
-                    }
-                  }
-                  .btn-save-task, .btn-remove-task, .btn-add-task, .btn-remove-comment, .btn-add-comment, .btn-add-merge, .btn-remove-merge {
-                    padding: 0 3px;
-                    line-height: 14px;
-                    border-radius: 2px;
-                    i {
-                      font-size: 12px;
-                    }
-                  }
-                }
-              }
-              .tab-content {
-                padding: 0;
-                .tab-pane {
-                  padding: 0;
-                  .fab-story-comments {
-                    position: relative;
-                    width: 171px;
-                    top: -1px;
-                    left: 272px;
-                    .md-fab-toolbar-wrapper {
-                      height: 27px;
-                      md-toolbar {
-                        min-height: 27px;
-                        .md-toolbar-tools {
-                          height: 27px;
-                          min-height: 27px;
-                          .md-fab-action-item {
-                            padding: 0;
-                            width: 23px;
-                            button {
-                              margin: -5px 0 0;
-                              width: 21px;
-                              min-height: 24px;
-                              height: 24px;
-                              padding: 0;
-                              md-icon {
-                                font-size: 15px;
-                              }
-                              .md-ripple-container {
-                                padding: 0;
-                              }
-                            }
-                          }
-                        }
-                      }
-                    }
-                    .md-button {
-                      &.md-fab {
-                        &.md-mini {
-                          width: 20px;
-                          height: 20px;
-                          min-height: 20px;
-                          md-icon {
-                            line-height: 20px;
-                            font-size: 10px;
-                            min-width: 20px;
-                            min-height: 20px;
-                            width: 20px;
-                            height: 20px;
-                            left: -6px;
-                          }
-                        }
-                      }
-                    }
-                  }
-
-                  .list-group {
-                    background-color: transparent;
-                    padding: 0;
-                    min-height: 80px;
-                    &.story-comments {
-                      .comment-textarea {
-                        background-color: transparent;
-                        border-radius: 2px;
-                      }
-                      .comment-details {
-                        font-size: 12px;
-                      }
-                      .comment-text {
-                        padding: 0;
-                        width: 97%;
-                      }
-                      .comment-file {
-                        margin-left: -7px;
-                        padding-left: 0;
-                        font-size: 12px;
-                        overflow: hidden;
-                        .comment-file-details {
-                          padding-left: 0;
-                          border-bottom: 1px solid #DDD;
-                        }
-                        .comment-filename {
-                          padding-left: 0;
-                          width: 45%;
-                          a {
-                            text-transform: none;
-                            text-decoration: none;
-                            font-size: 10px;
-                            color: $gray-dark;
-                            width: 100%;
-                            overflow: hidden;
-                            text-align: left;
-                          }
-                        }
-                        .comment-file-description {
-                          width: 55%;
-                        }
-                      }
-                      .new-attachment {
-                        overflow: hidden;
-                        .story-comments-file {
-                          height: 23px;
-                        }
-                      }
-                      .with-break-lines {
-                        display: block;
-                        a {
-                          text-transform: none;
-                        }
-                      }
-                    }
-
-                    &.story-merge-requests {
-                      .merge-request-details {
-                        font-size: 12px;
-                      }
-                      .with-break-lines {
-                        a {
-                          text-transform: none;
-                        }
-                      }
-                    }
-                    .as-sortable-placeholder {
-                      background-color: #FFF;
-                      border-radius: 6px;
-                      border: 1px dashed #666 !important;
-                      height: 21px !important;
-                      margin: 2px 0 1px;
-                    }
-                    .list-group-item {
-                      padding: 0;
-                      color: #666;
-                      i {
-                        font-size: 14px;
-                        margin-right: 0;
-                        vertical-align: middle;
-                      }
-                      .btn-remove-task, .btn-add-task, .btn-remove-comment, .btn-add-comment, .btn-add-merge, .btn-remove-merge {
-                        float: right;
-                        margin-top: 2px;
-                        padding: 1px;
-                      }
-                      span, input {
-                        font-family: Open Sans,open-sans,EmojiFontFace,helvetica,arial,sans-serif;
-                        font-size: 12px;
-                        vertical-align: middle;
-                      }
-                      input {
-                        background-color: transparent;
-                        padding: 0;
-                        height: 15px;
-                        color: #666;
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-
-          .form-group {
-            .sprint-numeric-label {
-              font-family: Open Sans,open-sans,EmojiFontFace,helvetica,arial,sans-serif;
-              color: $gray-dark;
-              font-size: 14px;
-            }
-            margin: 0;
-          }
-
-          .form-control {
-            font-family: Open Sans,open-sans,EmojiFontFace,helvetica,arial,sans-serif;
-            font-size: 12px;
-            line-height: 18px;
-            border-radius: 2px;
-            border: 1px solid #CCC;
-            padding: 0 5px;
-            background-color: #FFFAFA;
-            color: #666;
-          }
-
-          input {
-            &.form-control {
-              height: 24px;
-            }
-          }
+        &.ng-leave.ng-leave-active {
+          opacity: 0;
         }
       }
 
-      .panel-sprint, .panel-kanban {
-        padding: 0;
-        .panel-heading {
-          background-color: $gray-darker;
-          padding: 4px 5px;
+      &.no-story {
+        padding: 0 5px;
+        font-size: 12px;
+        color: #BBB;
+      }
+    }
 
-          .sprint-name, .kanban-name {
-            font-size: 16px;
-            vertical-align: middle;
-          }
-
-          .sprint-chevron, .kanban-chevron {
+    .panel-module {
+      padding: 0;
+      .panel-heading {
+        &.module-heading, &.epic-heading {
+          color: $gray-lighter;
+          background-color: $gray-much-darker;
+          .module-chevron {
             float: right;
             display: inline-block;
             margin-right: 5px;
             margin-top: -2px;
             color: $gray-light;
             i {
-              font-size: 12px;
+              font-size: 15px;
             }
           }
         }
-        .panel-body {
-          padding: 0;
+        &.epic-heading {
+          background-color: $gray-darker;
+          font-size: 13px;
+        }
+        .grouped-total-stories {
+          font-size: smaller;
+          color: #777;
+        }
+      }
+      .panel-body {
+        padding: 0;
+        .panel-story {
+          .panel-body {
+            padding: 0 5px;
+          }
+        }
+      }
+    }
 
-          .form-sprint, .form-kanban {
-            padding: 5px;
-            .sprint-details, .kanban-details {
-              overflow: unset;
-              height: 120px;
-              .list-group {
-                .list-group-item {
-                  overflow: unset;
-                  height: 30px;
-                  .sprint-date {
-                    width: 53%;
-                    float: right;
-                    .form-control {
-                      text-align: right;
-                      height: 20px;
-                      font-size: 12px;
+    .panel-sprint, .panel-kanban, .panel-story {
+      margin: 0;
+      padding: 0;
+      &:hover {
+        border-color: $gray-dark;
+      }
+
+      .panel-heading {
+        background-color: $gray-dark;
+
+        .btn-add-to-project, .btn-remove-from {
+          padding: 0 2px;
+          line-height: 13px;
+          border-radius: 2px;
+          i {
+            font-size: 12px;
+          }
+        }
+
+        .btn-remove-from {
+          position: absolute;
+          right: 2%;
+          top: 5px;
+        }
+
+        .story-type {
+          background-repeat: no-repeat;
+          background-position: center left;
+          background-size: 13px;
+          display: inline-block;
+          padding: 0;
+          width: 13px;
+          height: 13px;
+        }
+
+        input {
+          &.story-name, &.sprint-name, &.kanban-name {
+            height: 18px;
+            border: 1px solid $gray;
+            background-color: $gray-dark;
+            border-radius: 1px;
+            font-family: Open Sans,open-sans,EmojiFontFace,helvetica,arial,sans-serif;
+            font-size: 12px;
+            padding: 2px;
+            width: 80%;
+          }
+          &.sprint-name, &.kanban-name {
+            font-size: 16px;
+            background-color: $gray-darker;
+            vertical-align: inherit;
+          }
+        }
+
+        .story-name {
+          font-size: 12px;
+          vertical-align: middle;
+        }
+
+        .story-chevron {
+          position: absolute;
+          right: 7%;
+          top: 2px;
+          display: inline-block;
+          margin-right: 5px;
+          margin-top: -2px;
+          color: $gray-light;
+          i {
+            font-size: 12px;
+          }
+        }
+      }
+
+      .panel-body {
+        background-color: #f1f0ea;
+        padding: 0 5px;
+
+        .form-sprint, .form-kanban, .form-story{
+          padding: 5px 0;
+          .statement-save, .sprint-save, .kanban-save {
+            overflow: hidden;
+            .btn-success {
+              margin: 5px 0;
+            }
+          }
+
+          .sprint-details, .kanban-details, .story-details, .story-tabs, .story-iterations, .story-date {
+            overflow: hidden;
+            margin-top: 5px;
+            border-top: 1px solid #666;
+          }
+
+          .list-group {
+            &.col-sm-6 {
+              padding: 0 5px;
+            }
+            .list-group-item {
+              background-color: #f1f0ea;
+              padding: 5px 0;
+              .project-story-iteration, .project-story-date {
+                color: #666;
+                font-size: 13px;
+                vertical-align: middle;
+                margin-left: 5px;
+              }
+              .story-requester, .story-owner {
+                float: right;
+                margin: 0;
+              }
+              .story-owner-name-initials, .story-requester-name-initials {
+                font-family: Open Sans,open-sans,EmojiFontFace,helvetica,arial,sans-serif;
+                background-color: #a1a4ad;
+                font-size: 10px;
+                display: inline-block;
+                height: 19px;
+                width: 19px;
+                border-radius: 24px;
+                font-weight: bold;
+                text-align: center;
+                line-height: 19px;
+              }
+              .story-owner-name, .story-requester-name {
+                color: #666;
+                font-size: 12px;
+              }
+              .form-story-label {
+                font-family: Open Sans,open-sans,EmojiFontFace,helvetica,arial,sans-serif;
+                color: $gray-dark;
+                font-size: 10px;
+                display: inline-block;
+                float: left;
+                margin: 5px 0 0;
+              }
+              .story-requester {
+                width: 134px;
+                text-align: right;
+              }
+              .project-story-points {
+                float: right;
+                label {
+                  &.btn-xs {
+                    padding: 2px;
+                    font-size: 11px;
+                    font-family: Open Sans,open-sans,EmojiFontFace,helvetica,arial,sans-serif;
+                    &.active {
+                      background-color: #d8f8b7 !important;
+                      color: #666 !important;
                     }
-                    .input-group-btn {
-                      .btn-xs {
-                        padding: 0 5px;
-                        line-height: 18px;
-                        i {
-                          font-size: 13px;
+                  }
+                }
+              }
+              .project-story-status {
+                float: right;
+                .story-status {
+                    padding: 4px 5px;
+                    border-radius: 2px;
+                    font-size: 12px;
+                    line-height: 14px;
+                }
+              }
+              .form-group {
+                display: inline-block;
+                float: right;
+                margin: 0;
+                &.with-select {
+                  padding: 0;
+                  &.with-story-type, &.with-story-status {
+                    width: 67%;
+                  }
+                  &.with-module, &.with-iteration-filter {
+                    width: 73%;
+                  }
+                  &.with-epic, &.with-requester {
+                    width: 82%;
+                    margin-left: 4px;
+                  }
+                  select {
+                    background-color: #FFFAFA;
+                    color: rgb(102, 102, 102);
+                    padding: 0;
+                    height: 22px;
+                    background-position: 3px center;
+                    &.select-story-type {
+                      padding-left: 17px;
+                    }
+                  }
+                }
+              }
+            }
+          }
+
+          .story-tabs {
+            padding: 5px 0;
+            ul {
+              li {
+                background-color: transparent;
+                a {
+                  background-color: transparent;
+                    padding: 0 5px;
+                    font-size: 12px;
+                    text-transform: uppercase;
+                    border-radius: 3px;
+                  &.active {
+                    background-color: transparent;
+                  }
+                }
+                .btn-save-task, .btn-remove-task, .btn-add-task, .btn-remove-comment, .btn-add-comment, .btn-add-merge, .btn-remove-merge {
+                  padding: 0 3px;
+                  line-height: 14px;
+                  border-radius: 2px;
+                  i {
+                    font-size: 12px;
+                  }
+                }
+              }
+            }
+            .tab-content {
+              padding: 0;
+              .tab-pane {
+                padding: 0;
+                .fab-story-comments {
+                  position: relative;
+                  width: 171px;
+                  top: -1px;
+                  left: 272px;
+                  .md-fab-toolbar-wrapper {
+                    height: 27px;
+                    md-toolbar {
+                      min-height: 27px;
+                      .md-toolbar-tools {
+                        height: 27px;
+                        min-height: 27px;
+                        .md-fab-action-item {
+                          padding: 0;
+                          width: 23px;
+                          button {
+                            margin: -5px 0 0;
+                            width: 21px;
+                            min-height: 24px;
+                            height: 24px;
+                            padding: 0;
+                            md-icon {
+                              font-size: 15px;
+                            }
+                            .md-ripple-container {
+                              padding: 0;
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                  .md-button {
+                    &.md-fab {
+                      &.md-mini {
+                        width: 20px;
+                        height: 20px;
+                        min-height: 20px;
+                        md-icon {
+                          line-height: 20px;
+                          font-size: 10px;
+                          min-width: 20px;
+                          min-height: 20px;
+                          width: 20px;
+                          height: 20px;
+                          left: -6px;
                         }
                       }
                     }
                   }
                 }
-              }
-              .form-group {
-                .sprint-numeric-label {
-                  padding: 2px 6px;
-                  line-height: 14px;
-                  display: block;
-                  border-radius: 4px;
-                  font-size: 13px;
-                  cursor: default;
-                }
-                .sprint-status {
-                  color: #EEE;
-                  font-weight: bold;
-                }
-                .sprint-team, .kanban-team {
-                  color: #EEE;
-                  background-color: $gray;
-                  font-weight: bold;
-                }
-                .sprint-numeric-label, .kanban-numeric-label {
-                  color: #EEE;
-                  background-color: $gray;
-                  font-weight: bold;
+
+                .list-group {
+                  background-color: transparent;
+                  padding: 0;
+                  min-height: 80px;
+                  &.story-comments {
+                    .comment-textarea {
+                      background-color: transparent;
+                      border-radius: 2px;
+                    }
+                    .comment-details {
+                      font-size: 12px;
+                    }
+                    .comment-text {
+                      padding: 0;
+                      width: 97%;
+                    }
+                    .comment-file {
+                      margin-left: -7px;
+                      padding-left: 0;
+                      font-size: 12px;
+                      overflow: hidden;
+                      .comment-file-details {
+                        padding-left: 0;
+                        border-bottom: 1px solid #DDD;
+                      }
+                      .comment-filename {
+                        padding-left: 0;
+                        width: 45%;
+                        a {
+                          text-transform: none;
+                          text-decoration: none;
+                          font-size: 10px;
+                          color: $gray-dark;
+                          width: 100%;
+                          overflow: hidden;
+                          text-align: left;
+                        }
+                      }
+                      .comment-file-description {
+                        width: 55%;
+                      }
+                    }
+                    .new-attachment {
+                      overflow: hidden;
+                      .story-comments-file {
+                        height: 23px;
+                      }
+                    }
+                    .with-break-lines {
+                      display: block;
+                      a {
+                        text-transform: none;
+                      }
+                    }
+                  }
+
+                  &.story-merge-requests {
+                    .merge-request-details {
+                      font-size: 12px;
+                    }
+                    .with-break-lines {
+                      a {
+                        text-transform: none;
+                      }
+                    }
+                  }
+                  .as-sortable-placeholder {
+                    background-color: #FFF;
+                    border-radius: 6px;
+                    border: 1px dashed #666 !important;
+                    height: 21px !important;
+                    margin: 2px 0 1px;
+                  }
+                  .list-group-item {
+                    padding: 0;
+                    color: #666;
+                    i {
+                      font-size: 14px;
+                      margin-right: 0;
+                      vertical-align: middle;
+                    }
+                    .btn-remove-task, .btn-add-task, .btn-remove-comment, .btn-add-comment, .btn-add-merge, .btn-remove-merge {
+                      float: right;
+                      margin-top: 2px;
+                      padding: 1px;
+                    }
+                    span, input {
+                      font-family: Open Sans,open-sans,EmojiFontFace,helvetica,arial,sans-serif;
+                      font-size: 12px;
+                      vertical-align: middle;
+                    }
+                    input {
+                      background-color: transparent;
+                      padding: 0;
+                      height: 15px;
+                      color: #666;
+                    }
+                  }
                 }
               }
             }
           }
+        }
 
-          .panel-sprint-stories, .panel-kanban-stories {
-            padding: 0;
-            .panel-heading {
-              padding: 2px 5px;
-              background-color: #434e49;
-              .dropdown-add-story {
-                padding: 0 5px;
-                .btn-xs {
-                  padding: 0 5px;
+        .form-group {
+          .sprint-numeric-label {
+            font-family: Open Sans,open-sans,EmojiFontFace,helvetica,arial,sans-serif;
+            color: $gray-dark;
+            font-size: 14px;
+          }
+          margin: 0;
+        }
+
+        .form-control {
+          font-family: Open Sans,open-sans,EmojiFontFace,helvetica,arial,sans-serif;
+          font-size: 12px;
+          line-height: 18px;
+          border-radius: 2px;
+          border: 1px solid #CCC;
+          padding: 0 5px;
+          background-color: #FFFAFA;
+          color: #666;
+        }
+
+        input {
+          &.form-control {
+            height: 24px;
+          }
+        }
+      }
+    }
+
+    .panel-sprint, .panel-kanban {
+      padding: 0;
+
+      .panel-heading {
+        background-color: $gray-darker;
+        padding: 4px 5px;
+
+        .sprint-name, .kanban-name {
+          font-size: 16px;
+          vertical-align: middle;
+        }
+
+      }
+
+      .panel-body {
+        padding: 0;
+
+        .form-sprint, .form-kanban {
+          padding: 5px;
+
+          .sprint-details, .kanban-details {
+            overflow: unset;
+            height: 120px;
+            .list-group {
+              .list-group-item {
+                overflow: unset;
+                height: 30px;
+                .sprint-date {
+                  width: 53%;
+                  float: right;
+                  .form-control {
+                    text-align: right;
+                    height: 20px;
+                    font-size: 12px;
+                  }
+                  .input-group-btn {
+                    .btn-xs {
+                      padding: 0 5px;
+                      line-height: 18px;
+                      i {
+                        font-size: 13px;
+                      }
+                    }
+                  }
                 }
               }
-              .dropdown-menu {
-                left: -83px;
+            }
+            .form-group {
+              .sprint-numeric-label {
+                padding: 2px 6px;
+                line-height: 14px;
+                display: block;
+                border-radius: 4px;
+                font-size: 13px;
+                cursor: default;
               }
+              .sprint-status {
+                color: #EEE;
+                font-weight: bold;
+              }
+              .sprint-team, .kanban-team {
+                color: #EEE;
+                background-color: $gray;
+                font-weight: bold;
+              }
+              .sprint-numeric-label, .kanban-numeric-label {
+                color: #EEE;
+                background-color: $gray;
+                font-weight: bold;
+              }
+            }
+          }
+        }
+
+        .panel-sprint-stories, .panel-kanban-stories {
+          padding: 0;
+          .panel-heading {
+            padding: 2px 5px;
+            background-color: #434e49;
+            .dropdown-add-story {
+              padding: 0 5px;
+              .btn-xs {
+                padding: 0 5px;
+              }
+            }
+            .dropdown-menu {
+              left: -83px;
             }
           }
         }
       }
     }
-    .project-sprint, .project-kanban {
-      overflow: initial;
-    }
-    .kanban-story-sortable {
-      padding: 0;
-    }
+  }
+
+  .project-sprint, .project-kanban {
+    overflow: initial;
+  }
+
+  .kanban-story-sortable {
+    padding: 0;
   }
 
   .sprint-stories-list, .kanban-stories-list {
