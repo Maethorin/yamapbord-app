@@ -56,7 +56,7 @@ scrumInCeresControllers.controller('SelectedProjectKanbansController', ['$rootSc
     kanban.loading = true;
 
     BacklogKanban.get(
-      {id: kanban.id},
+      {id: kanban.id, withArchived: 0},
 
       function(result) {
         kanban.name = result.name;
@@ -93,6 +93,7 @@ scrumInCeresControllers.controller('SelectedProjectKanbansController', ['$rootSc
     delete kanbanToSend.storyFilter;
     delete kanbanToSend.newStories;
     delete kanbanToSend.createdAtObj;
+    delete kanbanToSend.isFormOpen;
 
     kanbanToSend.stories = _.map(kanban.stories, function(story) {
       return {id: story.id, points: story.points};

@@ -20,8 +20,12 @@
                 <textarea name="kanbanDescription" placeholder="Description" ng-model="kanban.description" rows="3" class="form-control"></textarea>
               </div>
               <div class="col-sm-1">
-                <button class="btn btn-xs btn-success" type="button" title="Save kanban changes" ng-click="saveKanban(kanban, $index)"><i class="fa fa-save"></i></button>
-                <button class="btn btn-xs btn-danger" type="button" title="Cancel new kanban" ng-click="cancelNewKanban($index)"><i class="fa fa-close"></i></button>
+                <button class="btn btn-xs btn-success" type="button" title="Save kanban changes" ng-disabled="kanban.updating || kanban.loading" ng-click="saveKanban(kanban, $index)">
+                  <i class="fa" ng-class="{'fa-spinner fa-spin': kanban.updating || kanban.loading, 'fa-save': !kanban.updating && !kanban.loading}"></i>
+                </button>
+                <button class="btn btn-xs btn-danger" type="button" title="Cancel new kanban" ng-disabled="kanban.updating" ng-click="cancelNewKanban($index)">
+                  <i class="fa fa-close"></i>
+                </button>
               </div>
             </section>
             <ul class="list-group story-date">
@@ -56,8 +60,12 @@
                 <textarea name="kanbanDescription" id="kanbanDescription" ng-disabled="!kanban.isPlanned" placeholder="Objective" required ng-model="kanban.description" rows="{{kanban.isFormOpen ? 3 : 2}}" class="form-control"></textarea>
               </div>
               <div ng-class="{'col-sm-1': kanban.isFormOpen, 'col-sm-3': !kanban.isFormOpen}">
-                <button class="btn btn-xs btn-success" type="button" title="Save kanban changes" ng-click="saveKanban(kanban)"><i class="fa fa-save"></i></button>
-                <button class="btn btn-xs btn-warning" ng-if="kanban.id" type="button" title="Undo story changes" ng-click="undoKanbanChanges(kanban)"><i class="fa fa-undo"></i></button>
+                <button class="btn btn-xs btn-success" type="button" title="Save kanban changes" ng-disabled="kanban.updating || kanban.loading" ng-click="saveKanban(kanban)">
+                  <i class="fa" ng-class="{'fa-spinner fa-spin': kanban.updating || kanban.loading, 'fa-save': !kanban.updating && !kanban.loading}"></i>
+                </button>
+                <button class="btn btn-xs btn-warning" ng-if="kanban.id" type="button" title="Undo story changes" ng-disabled="kanban.updating || kanban.loading" ng-click="undoKanbanChanges(kanban)">
+                  <i class="fa" ng-class="{'fa-spinner fa-spin': kanban.updating || kanban.loading, 'fa-undo': !kanban.updating && !kanban.loading}"></i>
+                </button>
                 <button class="btn btn-xs btn-danger" ng-if="!kanban.id" type="button" title="Cancel new story" ng-click="cancelNewKanban($index)"><i class="fa fa-close"></i></button>
                 <span ng-click="openKanbanForm(kanban)" class="kanban-form-chevron">
                   <i class="fa" ng-class="{'fa-chevron-up': kanban.isFormOpen, 'fa-chevron-down': !kanban.isFormOpen}"></i>
