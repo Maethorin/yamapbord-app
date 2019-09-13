@@ -7,7 +7,7 @@ scrumInCeresServices.service('BoardService', ['$rootScope', '$q', 'Board', 'Boar
   var shouldQueryBoardStories = true;
 
   this.timelineFilter = {
-    type: 'sprint',
+    type: 'kanban',
     startDate: moment().add(-12, 'months'),
     endDate: moment().add(4, 'months'),
     team: null,
