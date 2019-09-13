@@ -1,11 +1,19 @@
 'use strict';
 
-scrumInCeresDirectives.directive('liStoryOrderGroup', [function() {
+scrumInCeresDirectives.directive('liStoryOrderGroup', ['$rootScope', function($rootScope) {
   return {
     replace: true,
     scope: {
-      porraAngular: '='
+      porraAngular: '=',
+      useOrder: '='
     },
+
+    link: function($scope) {
+      $scope.selectGroupStory = function() {
+        $scope.$emit('group-story-changed')
+      };
+    },
+
     templateUrl: "templates/directives/li-story-order-group.html"
   };
 }]);

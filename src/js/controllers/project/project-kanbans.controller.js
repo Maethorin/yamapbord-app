@@ -20,7 +20,7 @@ scrumInCeresControllers.controller('SelectedProjectKanbansController', ['$rootSc
 
   $scope.$on('projects.addStoryToSelectedKanban', function(ev, story) {
     $scope.selectedKanban.stories.push(story);
-    // groupStories();
+    groupStories($scope.selectedKanban);
   });
 
   $scope.teams = [];
@@ -66,12 +66,18 @@ scrumInCeresControllers.controller('SelectedProjectKanbansController', ['$rootSc
         kanban.isOpen = true;
         kanban.isLoaded = true;
         kanban.porraAngular = {storyFilterIsOpen: false, storyFilterIteration: null, moduleAcronym: '', orderStoryBy: null, groupStoryBy: null};
+        kanban.groupedStories = false;
+        kanban.storiesGroupOpen = {};
         kanban.newStories = [];
         kanban.storyFilter = {
           name: '',
           statement: ''
         };
         updateSelectedKanban();
+        groupStories(kanban);
+        $scope.$on('group-story-changed', function() {
+          groupStories(kanban);
+        });
         delete kanban.loading;
       },
 
@@ -90,6 +96,8 @@ scrumInCeresControllers.controller('SelectedProjectKanbansController', ['$rootSc
     delete kanbanToSend.isOpen;
     delete kanbanToSend.isLoaded;
     delete kanbanToSend.porraAngular;
+    delete kanbanToSend.groupedStories;
+    delete kanbanToSend.storiesGroupOpen;
     delete kanbanToSend.storyFilter;
     delete kanbanToSend.newStories;
     delete kanbanToSend.createdAtObj;
@@ -118,7 +126,7 @@ scrumInCeresControllers.controller('SelectedProjectKanbansController', ['$rootSc
         function(result) {
           $scope.selectedProject.kanbans.push(result);
           $scope.newKanbans.splice($index, 1);
-          // groupStories();
+          groupStories(kanban);
           Notifier.success('Kanban saved!')
         },
         function(error) {
@@ -156,6 +164,8 @@ scrumInCeresControllers.controller('SelectedProjectKanbansController', ['$rootSc
       statement: ''
     };
     newKanban.newStories = [];
+    newKanban.groupedStories = false;
+    newKanban.storiesGroupOpen = {};
 
     $scope.newKanbans.unshift(newKanban);
   };
@@ -182,7 +192,7 @@ scrumInCeresControllers.controller('SelectedProjectKanbansController', ['$rootSc
       function(result) {
         kanban.stories.push(result);
         kanban.newStories.splice($index, 1);
-        // groupStories();
+        groupStories(kanban);
       },
       function(error) {
       }
@@ -255,27 +265,18 @@ scrumInCeresControllers.controller('SelectedProjectKanbansController', ['$rootSc
     )
   };
 
+  function groupStories(kanban) {
+    kanban.groupedStories = false;
 
-
-
-
-  $scope.groupedStories = false;
-  $scope.storiesGroupOpen = {};
-
-
-  function groupStories() {
-    if (!$scope.selectedProject) {
-      return false;
+    if (kanban.porraAngular.groupStoryBy === 'module') {
+      kanban.groupedStories = _.groupBy($scope.selectedProject.stories, 'moduleId');
     }
-    $scope.groupedStories = false;
-    if ($scope.porraAngular.groupStoryBy === 'module') {
-      $scope.groupedStories = _.groupBy($scope.selectedProject.stories, 'moduleId');
-    }
-    if ($scope.porraAngular.groupStoryBy === 'module-epic') {
-      $scope.groupedStories = [];
-      var tempGroupStories = _.groupBy($scope.selectedProject.stories, 'moduleId');
+
+    if (kanban.porraAngular.groupStoryBy === 'module-epic') {
+      kanban.groupedStories = [];
+      var tempGroupStories = _.groupBy(kanban.stories, 'moduleId');
       _.forEach(tempGroupStories, function(group) {
-        $scope.groupedStories.push(
+        kanban.groupedStories.push(
           {
             id: group[0].moduleId,
             isOpen: false,
@@ -284,14 +285,15 @@ scrumInCeresControllers.controller('SelectedProjectKanbansController', ['$rootSc
         );
       });
     }
-    if ($scope.porraAngular.groupStoryBy === 'type') {
-      $scope.groupedStories = _.groupBy($scope.selectedProject.stories, 'type');
+
+    if (kanban.porraAngular.groupStoryBy === 'type') {
+      kanban.groupedStories = _.groupBy(kanban.stories, 'type');
     }
-    if ($scope.porraAngular.groupStoryBy === 'status') {
-      $scope.groupedStories = _.groupBy($scope.selectedProject.stories, 'status');
+
+    if (kanban.porraAngular.groupStoryBy === 'status') {
+      kanban.groupedStories = _.groupBy(kanban.stories, 'status');
     }
   }
-
 
   $scope.openGroupedStories = function(group) {
     group.isOpen = !group.isOpen;
