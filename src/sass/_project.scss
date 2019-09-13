@@ -1050,4 +1050,14 @@
   .module-heading {
     background-color: #08720a !important;
   }
+
+  .story-filter-text, .grouped-total-stories {
+    color: $gray-lighter !important;
+  }
+}
+
+.kanban-epic-grouped-stories {
+  .epic-heading {
+    background-color: #08880a !important;
+  }
 }

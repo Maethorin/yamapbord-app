@@ -153,9 +153,9 @@
             <ul class="list-group kanban-stories-list" ng-if="kanban.isOpen" as-sortable="kanbanStorySortableOptions" ng-model="kanban.stories">
               <li-story-order-group use-order="false" porra-angular="kanban.porraAngular"></li-story-order-group>
 
-              <li-story-filter porra-angular="kanban.porraAngular" story-filter="kanban.storyFilter" show-iteration="false" stories="kanban.stories" stories-filtered="kanban.storiesFiltered"></li-story-filter>
+              <li-story-filter porra-angular="kanban.porraAngular" story-filter="kanban.storyFilter" show-iteration="false" stories="kanban.stories" stories-filtered="storiesFiltered"></li-story-filter>
 
-              <li class="list-group-item animate-story" ng-if="!selectedProject.loading && !kanban.loading && !kanban.groupedStories" id="project{{selectedProject.id}}Kanban{{kanban.id}}Story{{story.id}}" ng-repeat="story in kanban.stories | filter:kanban.storyFilter" as-sortable-item>
+              <li class="list-group-item animate-story" ng-if="!selectedProject.loading && !kanban.loading && !kanban.groupedStories" id="project{{selectedProject.id}}Kanban{{kanban.id}}Story{{story.id}}" ng-repeat="story in kanban.stories | filter:kanban.storyFilter as storiesFiltered" as-sortable-item>
                 <div ng-include="'storyPanel'" class="kanban-story-sortable" as-sortable-item-handle></div>
               </li>
 
@@ -167,17 +167,56 @@
                         <span ng-if="kanban.porraAngular.groupStoryBy === 'module'">Module: {{modulesNames[stories[0].moduleId]}}</span>
                         <span ng-if="kanban.porraAngular.groupStoryBy === 'type'">Type: {{stories[0].typeName}}</span>
                         <span ng-if="kanban.porraAngular.groupStoryBy === 'status'">Status: {{stories[0].statusName}}</span>
-                        <span class="grouped-total-stories"> - <story-filter-total total-stories="stories.length" filtered-stories="kanban.storiesGrupedFiltered.length"></story-filter-total></span>
+                        <span class="grouped-total-stories"> - <story-filter-total total-stories="stories.length" filtered-stories="storiesGrupedFiltered.length"></story-filter-total></span>
                         <span ng-click="openGroupedStories(kanban.storiesGroupOpen[group])" class="module-chevron">
                           <i class="fa" ng-class="{'fa-chevron-up': kanban.storiesGroupOpen[group].isOpen, 'fa-chevron-down': !kanban.storiesGroupOpen[group].isOpen}"></i>
                         </span>
                       </div>
+
                       <div class="panel-body" uib-collapse="!kanban.storiesGroupOpen[group].isOpen">
                         <ul class="list-group">
-                          <li class="list-group-item animate-story" ng-if="kanban.storiesGrupedFiltered.length === 0">
+                          <li class="list-group-item animate-story" ng-if="storiesGrupedFiltered.length === 0">
                             No stories for filter in group
                           </li>
-                          <li class="list-group-item animate-story" id="project{{selectedProject.id}}Story{{story.id}}" ng-repeat="story in stories | orderBy:kanban.porraAngular.orderStoryBy | filter:kanban.storyFilter" ng-include="'storyPanel'"></li>
+                          <li class="list-group-item animate-story" id="project{{selectedProject.id}}Story{{story.id}}" ng-repeat="story in stories | orderBy:kanban.porraAngular.orderStoryBy | filter:kanban.storyFilter as storiesGrupedFiltered" ng-include="'storyPanel'"></li>
+                        </ul>
+                      </div>
+                    </div>
+                  </li>
+                </ul>
+              </li>
+
+              <li class="list-group-item" ng-if="!selectedProject.loading && !kanban.loading && kanban.groupedStories && kanban.porraAngular.groupStoryBy === 'module-epic'" ng-repeat="(zas, module) in kanban.groupedStories">
+                <ul class="list-group" ng-init="module.isOpen = true">
+                  <li class="list-group-item kanban-grouped-stories">
+                    <div class="panel panel-default panel-module">
+                      <div class="panel-heading module-heading">
+                        <span>Module: {{modulesNames[module.id]}}</span>
+                        <span ng-click="openGroupedStories(module)" class="module-chevron">
+                          <i class="fa" ng-class="{'fa-chevron-up': module.isOpen, 'fa-chevron-down': !module.isOpen}"></i>
+                        </span>
+                      </div>
+                      <div class="panel-body" uib-collapse="!module.isOpen">
+                        <ul class="list-group">
+                          <li class="list-group-item kanban-epic-grouped-stories" ng-repeat="(group, stories) in module.stories">
+                            <div class="panel panel-default panel-module" ng-init="kanban.storiesGroupOpen[group].isOpen = true">
+                              <div class="panel-heading epic-heading">
+                                <span>Epic: {{epicsNames[stories[0].epicId]}}</span>
+                                <span class="grouped-total-stories"> - <story-filter-total total-stories="stories.length" filtered-stories="storiesGrupedEpicFiltered.length"></story-filter-total></span>
+                                <span ng-click="openGroupedStories(kanban.storiesGroupOpen[group])" class="module-chevron">
+                                  <i class="fa" ng-class="{'fa-chevron-up': kanban.storiesGroupOpen[group].isOpen, 'fa-chevron-down': !kanban.storiesGroupOpen[group].isOpen}"></i>
+                                </span>
+                              </div>
+                              <div class="panel-body" uib-collapse="!kanban.storiesGroupOpen[group].isOpen">
+                                <ul class="list-group">
+                                  <li class="list-group-item animate-story no-story" ng-if="storiesGrupedEpicFiltered.length === 0">
+                                    No stories for filter in group
+                                  </li>
+                                  <li class="list-group-item animate-story" id="project{{selectedProject.id}}Story{{story.id}}" ng-repeat="story in stories | orderBy:kanban.porraAngular.orderStoryBy | filter:kanban.storyFilter as storiesGrupedEpicFiltered" ng-include="'storyPanel'"></li>
+                                </ul>
+                              </div>
+                            </div>
+                          </li>
                         </ul>
                       </div>
                     </div>
