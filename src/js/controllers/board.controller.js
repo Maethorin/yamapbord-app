@@ -19,25 +19,35 @@ scrumInCeresControllers.controller('BoardController', ['$rootScope', '$scope', '
   $scope.newTaskVisible = false;
   $scope.boardControlPanelOpen = false;
   $scope.columnExpanded = false;
+  $scope.selectedTab = 0;
 
-  $scope.columns = [
-    {name: 'PLAN', label: 'Planned'},
-    {name: 'STAR', label: 'Started'},
-    {name: 'FINI', label: 'Finished'},
-    {name: 'RTDP', label: 'Ready to Deploy'},
-    {name: 'ITST', label: 'In Test'},
-    {name: 'DPYD', label: 'Deployed'},
-    {name: 'ACCP', label: 'Accepted'},
-    {name: 'REJE', label: 'Rejected'}
+  $scope.devColumns = [
+    {name: 'PLAN', label: 'Planned', colSpan: 3},
+    {name: 'STAR', label: 'Started', colSpan: 3},
+    {name: 'FINI', label: 'Finished', colSpan: 2},
+    {name: 'RTSB', label: 'Ready to Sandbox', colSpan: 2},
+    {name: 'INSB', label: 'In Sandbox', colSpan: 2}
   ];
 
-  $scope.storyTypeSequence = ['PLAN', 'STAR', 'FINI', 'RTDP', 'ITST', 'DPYD', 'ACCP', 'REJE'];
+  $scope.opsColumns = [
+    {name: 'RTST', label: 'Ready to Staging', colSpan: 3},
+    {name: 'INST', label: 'In Staging', colSpan: 3},
+    {name: 'RTDP', label: 'Ready to Deploy', colSpan: 2},
+    {name: 'DPYD', label: 'Deployed', colSpan: 2},
+    {name: 'ACCP', label: 'Accepted', colSpan: 2},
+    {name: 'REJE', label: 'Rejected', colSpan: 2}
+  ];
+
+  $scope.storyTypeSequence = ['PLAN', 'STAR', 'FINI', 'RTSB', 'INSB', 'RTST', 'INST', 'RTDP', 'DPYD', 'ACCP', 'REJE'];
 
   $scope.storyTypeNames = {
     'PLAN': 'Planned',
     'STAR': 'Started',
     'FINI': 'Finished',
-    'ITST': 'In Test',
+    'RTSB': 'Ready to Sandbox',
+    'INSB': 'In Sandbox',
+    'RTST': 'Ready to Staging',
+    'INST': 'In Staging',
     'RTDP': 'Ready to Deploy',
     'DPYD': 'Deployed',
     'ACCP': 'Accepted',
@@ -91,7 +101,10 @@ scrumInCeresControllers.controller('BoardController', ['$rootScope', '$scope', '
           'PLAN': 0,
           'STAR': 0,
           'FINI': 0,
-          'ITST': 0,
+          'RTSB': 0,
+          'INSB': 0,
+          'RTST': 0,
+          'INST': 0,
           'RTDP': 0,
           'DPYD': 0,
           'ACCP': 0,
@@ -102,7 +115,10 @@ scrumInCeresControllers.controller('BoardController', ['$rootScope', '$scope', '
           'PLAN': [],
           'STAR': [],
           'FINI': [],
-          'ITST': [],
+          'RTSB': [],
+          'INSB': [],
+          'RTST': [],
+          'INST': [],
           'RTDP': [],
           'DPYD': [],
           'ACCP': [],
@@ -150,7 +166,10 @@ scrumInCeresControllers.controller('BoardController', ['$rootScope', '$scope', '
         addPointsToColumn('ACCP');
         addPointsToColumn('DPYD');
         addPointsToColumn('RTDP');
-        addPointsToColumn('ITST');
+        addPointsToColumn('INST');
+        addPointsToColumn('RTST');
+        addPointsToColumn('INSB');
+        addPointsToColumn('RTSB');
         addPointsToColumn('FINI');
         addPointsToColumn('STAR');
         addPointsToColumn('PLAN');

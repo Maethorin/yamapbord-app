@@ -21,13 +21,16 @@ $graph-part-width: 20px;
 $imageUrl: "/img/";
 $cor-azul: #3fa0e8;
 $story-types: drf fea bug cho tec;
-$story-statuses: plan star fini itst rtdp dpyd accp reje;
+$story-statuses: plan star fini rtsb insb rtst inst rtdp dpyd accp reje;
 $sprint-statuses: success failure current planned;
 $sprint-statuses-colors: $brand-success $brand-danger $brand-warning $brand-primary;
 $story-statuses-colors:
   #f89411
   #C16E00
   #D7CE00
+  #c5bc00
+  #c5bc00
+  #b0d01e
   #b0d01e
   #0bbd0d
   #719c99

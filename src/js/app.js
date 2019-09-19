@@ -91,9 +91,14 @@ scrumInCeres.constant('appConfig', {
   backendURL: '@@backendURL'
 });
 
-scrumInCeres.config(['$httpProvider', '$stateProvider', '$locationProvider', '$urlRouterProvider', function($httpProvider, $stateProvider, $locationProvider, $urlRouterProvider) {
+scrumInCeres.config(['$httpProvider', '$stateProvider', '$locationProvider', '$urlRouterProvider', '$mdThemingProvider', function($httpProvider, $stateProvider, $locationProvider, $urlRouterProvider, $mdThemingProvider) {
   $httpProvider.interceptors.push('UpdateToken');
   moment.locale('pt-BR');
+  $mdThemingProvider
+    .theme('default')
+    .dark()
+    .primaryPalette('blue-grey')
+    .accentPalette('green');
 
   $locationProvider.hashPrefix('!');
 
@@ -208,6 +213,7 @@ scrumInCeres.run(['$rootScope', '$timeout', '$q', 'appConfig', 'AuthService', 'M
   MeService.getInfo();
   $rootScope.currentController = null;
   $rootScope.currentStoryTypeFilter = null;
+
   $rootScope.storyTypes = [
     {code: 'DRF', name: 'Draft'},
     {code: 'FEA', name: 'Feature'},
@@ -215,11 +221,15 @@ scrumInCeres.run(['$rootScope', '$timeout', '$q', 'appConfig', 'AuthService', 'M
     {code: 'CHO', name: 'Chore'},
     {code: 'TEC', name: 'Technical'}
   ];
+
   $rootScope.storyStatus = [
     {code: "PLAN", name: 'Planned'},
     {code: "STAR", name: 'Started'},
     {code: "FINI", name: 'Finished'},
-    {code: "ITST", name: 'In Test'},
+    {code: "RTSB", name: 'Ready to Sandbox'},
+    {code: "INSB", name: 'In Sandbox'},
+    {code: "RTST", name: 'Ready to Staging'},
+    {code: "INST", name: 'In Staging'},
     {code: "RTDP", name: 'Ready to Deploy'},
     {code: "DPYD", name: 'Deployed'},
     {code: "ACCP", name: 'Accepted'},

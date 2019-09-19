@@ -50,8 +50,14 @@
   </div>
 
   <div class="row board {{selectedSprint.type}}" ng-if="selectedSprint !== null">
-    <ng-include ng-repeat="column in columns" src="columnTemplate"></ng-include>
-
+    <md-tabs md-stretch-tabs="always" md-selected="selectedTab">
+      <md-tab label="DEV" md-tab-class="board-tab">
+        <ng-include ng-repeat="column in devColumns" src="columnTemplate"></ng-include>
+      </md-tab>
+      <md-tab label="OPS" md-tab-class="board-tab">
+        <ng-include ng-repeat="column in opsColumns" src="columnTemplate"></ng-include>
+      </md-tab>
+    </md-tabs>
     <div class="popup-complete-story" ng-class="{'opened': completeStoryPopupOpened}">
       <div class="panel panel-default board-panel-story">
         <div class="panel-heading" title="{{selectedStory.statement}}">
@@ -263,8 +269,7 @@
           <label for="inputStartDate">Start Date from</label>
           <div class="dropdown start date">
             <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-              <datetimepicker ng-model="timelineFilter.startDate"
-                              datetimepicker-config="{dropdownSelector: '#dropdownStartDate', minView:'day'}"/>
+              <datetimepicker ng-model="timelineFilter.startDate" datetimepicker-config="{dropdownSelector: '#dropdownStartDate', minView:'day'}"/>
             </ul>
           </div>
           <a class="date dropdown-toggle" id="dropdownStartDate" role="button" data-toggle="dropdown" data-target=".dropdown.start.date">
@@ -279,8 +284,7 @@
           <label for="inputEndDate">Start date to</label>
           <div class="dropdown end date">
             <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-              <datetimepicker ng-model="timelineFilter.endDate"
-                              datetimepicker-config="{dropdownSelector: '#dropdownEndDate', minView:'day'}"/>
+              <datetimepicker ng-model="timelineFilter.endDate" datetimepicker-config="{dropdownSelector: '#dropdownEndDate', minView:'day'}"/>
             </ul>
           </div>
           <a class="date dropdown-toggle" id="dropdownEndDate" role="button" data-toggle="dropdown" data-target=".dropdown.end.date">

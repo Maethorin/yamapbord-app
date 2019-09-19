@@ -562,7 +562,7 @@ scrumInCeresControllers.controller('BacklogController', ['$rootScope', '$scope',
     }
   };
 
-  $scope.storyStatus = ["plan", "star", "fini", "itst", "rtdp", "dpyd", "accp", "reje"];
+  $scope.storyStatus = ["plan", "star", "fini", "rtsb", "insb", "rtst", "inst", "rtdp", "dpyd", "accp", "reje"];
 
   $scope.filterKanbanStories = {
     status: _.clone($scope.storyStatus)
