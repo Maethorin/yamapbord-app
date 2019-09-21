@@ -44,6 +44,7 @@ scrumInCeresServices.service('BoardService', ['$rootScope', '$q', 'Board', 'Boar
           boardStoriesDefer.resolve(_self.selectedBoard.stories);
         },
         function(error) {
+          boardStoriesDefer.reject(error);
         }
       );
     }

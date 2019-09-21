@@ -479,4 +479,8 @@ scrumInCeresControllers.controller('BoardController', ['$rootScope', '$scope', '
     $scope.boardControlPanelOpen = !$scope.boardControlPanelOpen;
   };
 
+  $scope.getTestPlanUrl = function() {
+    return '{0}/users/me/boards/{1}/stories?testPlan=1&boardType={2}'.format([appConfig.backendURL, $scope.selectedSprint.id, $scope.selectedSprint.type])
+  };
+
 }]);

@@ -3,6 +3,9 @@ h3 {
   font-size: 15px;
   text-transform: uppercase;
   margin: 0;
+  a {
+    text-transform: none;
+  }
 }
 
 h4 {

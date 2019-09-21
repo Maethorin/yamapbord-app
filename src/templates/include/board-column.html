@@ -4,6 +4,7 @@
       <div class="col-md-12">
         <h3>
           <span ng-bind="column.label"></span>
+          <a class="btn btn-xs btn-success" ng-if="column.name === 'INST'" target="_blank" ng-href="{{getTestPlanUrl()}}" ng-click="$event.stopPropagation()"><i class="fa fa-file-excel-o"></i> Test Plan</a>
           <span class="badge {{column.name | lowercase }}" title="Total column points" ng-bind="pointsPerStoryTypeStatus[column.name]"></span>
           <span class="label label-warning stories-length" title="Total column stories" ng-bind="stories[column.name].length"></span>
         </h3>
