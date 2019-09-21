@@ -138,7 +138,7 @@ scrumInCeres.config(['$httpProvider', '$stateProvider', '$locationProvider', '$u
 
     .state({
       name: 'boardState',
-      url: '/board/:boardType/:boardId',
+      url: '/board/:boardType/:boardId/:tabIndex',
       templateUrl: 'templates/board.html',
       controller: 'BoardController',
       cache: false,
@@ -149,7 +149,7 @@ scrumInCeres.config(['$httpProvider', '$stateProvider', '$locationProvider', '$u
 
     .state({
       name: 'storyBoardState',
-      url: '/board/:boardType/:boardId/stories/:storyId',
+      url: '/board/:boardType/:boardId/:tabIndex/stories/:storyId',
       templateUrl: 'templates/board.html',
       controller: 'BoardController',
       cache: false,

@@ -19,7 +19,11 @@ scrumInCeresControllers.controller('BoardController', ['$rootScope', '$scope', '
   $scope.newTaskVisible = false;
   $scope.boardControlPanelOpen = false;
   $scope.columnExpanded = false;
-  $scope.selectedTab = 0;
+  var tabIndex = 0;
+  if ($stateParams.hasOwnProperty('tabIndex')) {
+    tabIndex = parseInt($stateParams.tabIndex);
+  }
+  $scope.selectedTab = tabIndex;
 
   $scope.devColumns = [
     {name: 'PLAN', label: 'Planned', colSpan: 3},

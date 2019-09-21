@@ -51,10 +51,10 @@
 
   <div class="row board {{selectedSprint.type}}" ng-if="selectedSprint !== null">
     <md-tabs md-stretch-tabs="always" md-selected="selectedTab">
-      <md-tab label="DEV" md-tab-class="board-tab">
+      <md-tab label="DEV" md-tab-class="board-tab" md-on-select="selectedTab = 0">
         <ng-include ng-repeat="column in devColumns" src="columnTemplate"></ng-include>
       </md-tab>
-      <md-tab label="OPS" md-tab-class="board-tab">
+      <md-tab label="OPS" md-tab-class="board-tab" md-on-select="selectedTab = 1">
         <ng-include ng-repeat="column in opsColumns" src="columnTemplate"></ng-include>
       </md-tab>
     </md-tabs>
@@ -230,7 +230,7 @@
             <i class="fa fa-chevron-left minus-margin"></i>
             Go Story Back
           </button>
-          <button type="button" class="btn btn-primary" ui-sref="boardState({boardType: selectedSprint.type, boardId: selectedSprint.id})">Close</button>
+          <button type="button" class="btn btn-primary" ui-sref="boardState({boardType: selectedSprint.type, boardId: selectedSprint.id, tabIndex: selectedTab})">Close</button>
           <button type="button" class="btn btn-warning" ng-if="selectedStory.status === 'ACCP'" ng-click="archiveStory(selectedStory, true)">Archive</button>
           <button type="button" class="btn btn-success btn-go-forward-story" ng-click="moveStoryForward(selectedStory)" ng-if="selectedStory.status !== 'REJE'">
             Go Story Forward
