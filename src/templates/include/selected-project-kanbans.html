@@ -52,6 +52,7 @@
           <span ng-click="openKanban(kanban)" class="kanban-chevron">
             <i class="fa" ng-class="{'fa-spinner fa-spin': kanban.loading, 'fa-chevron-up': kanban.isOpen, 'fa-chevron-down': !kanban.isOpen}"></i>
           </span>
+          <a class="open-board" ui-sref="boardState({boardType: kanban.type, boardId: kanban.id, tabIndex: 0})" target="_blank"><i class="fa fa-external-link"></i></a>
         </div>
         <div class="panel-body" uib-collapse="!kanban.isOpen">
           <form name="formKanban" class="form-kanban" ng-if="kanban.isOpen">

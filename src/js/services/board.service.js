@@ -8,8 +8,8 @@ scrumInCeresServices.service('BoardService', ['$rootScope', '$q', 'Board', 'Boar
 
   this.timelineFilter = {
     type: 'kanban',
-    startDate: moment().add(-12, 'months'),
-    endDate: moment().add(4, 'months'),
+    startDate: moment().add(-120, 'months'),
+    endDate: moment().add(80, 'months'),
     team: null,
     status: ['CURR', 'PLAN']
   };

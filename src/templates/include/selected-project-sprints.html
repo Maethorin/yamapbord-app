@@ -110,6 +110,7 @@
           <span ng-click="openSprint(sprint)" class="sprint-chevron">
             <i class="fa" ng-class="{'fa-chevron-up': sprint.isOpen, 'fa-chevron-down': !sprint.isOpen}"></i>
           </span>
+          <a class="open-board" ui-sref="boardState({boardType: sprint.type, boardId: sprint.id, tabIndex: 0})" target="_blank"><i class="fa fa-external-link"></i></a>
         </div>
         <div class="panel-body" uib-collapse="!sprint.isOpen">
           <form name="formSprint" class="form-sprint" ng-if="sprint.isOpen">

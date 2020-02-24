@@ -13,6 +13,7 @@
       <span ng-click="selectStory(story)" class="story-chevron">
         <i class="fa" ng-class="{'fa-spinner fa-spin': story.loading, 'fa-chevron-up': story.isOpen, 'fa-chevron-down': !story.isOpen}"></i>
       </span>
+      <a class="open-board-story" ng-show="(sprint || kanban)" ui-sref="storyBoardState({boardType: (sprint || kanban).type, boardId: (sprint || kanban).id, tabIndex: 0, storyId: story.id})" target="_blank"><i class="fa fa-external-link"></i></a>
     </div>
     <div class="panel-body" uib-collapse="!story.isOpen" no-drag>
       <form name="formStory" class="form-story" ng-if="story.isOpen">

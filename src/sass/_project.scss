@@ -95,6 +95,27 @@
     }
   }
 
+  .open-board {
+    float: right;
+    display: inline-block;
+    margin-right: 13px;
+    color: $gray-light;
+    line-height: 30px;
+  }
+
+  .open-board-story {
+    float: right;
+    display: inline-block;
+    margin-right: 52px;
+    color: $gray-light;
+    line-height: 24px;
+    i {
+      &.fa {
+        font-size: 15px !important;
+      }
+    }
+  }
+
   .kanban-form-chevron {
     color: $gray-darker;
   }
@@ -328,7 +349,7 @@
             font-family: Open Sans,open-sans,EmojiFontFace,helvetica,arial,sans-serif;
             font-size: 12px;
             padding: 2px;
-            width: 80%;
+            width: 70%;
           }
           &.sprint-name, &.kanban-name {
             font-size: 16px;
