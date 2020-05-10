@@ -5,7 +5,7 @@ scrumInCeresControllers.controller('BacklogController', ['$rootScope', '$scope',
   $rootScope.itemsView.mode = 'table';
   $scope.sprints = [];
   $scope.kanbans = [];
-
+  $scope.updateIcebox = false;
   $scope.iterationStatuses = [
     {code: 'PLAN', name: 'Planned'},
     {code: 'SUCC', name: 'Success'},

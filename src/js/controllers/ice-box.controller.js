@@ -27,6 +27,7 @@ scrumInCeresControllers.controller('IceBoxController', ['$rootScope', '$scope', 
   $scope.filterBarExpanded = false;
   $scope.stories = [];
   $scope.fullStories = [];
+  $scope.updateIcebox = true;
   $scope.filter = {
     type: null,
     epic: null,

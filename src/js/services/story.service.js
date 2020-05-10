@@ -81,20 +81,27 @@ scrumInCeresServices.service('StoryService', ['$rootScope', '$q', '$timeout', 'A
     _.forEach($scope.selectedIteration.stories, function(story) {
       $scope.selectedIteration.points += (story.points || 0);
     });
+    $scope.$broadcast('story.addedToIteration');
   }
 
-  function saveStoryAndClosePopup($scope) {
+  function saveStoryAndClosePopup($scope, updateIcebox) {
     if ($scope.addingNewStory) {
-      createStory($scope, function(result) {
-        closingPopup($scope);
-        recalculateSelectedIterationPoints($scope, result.story);
-        if ($scope.selectedIteration) {
-          return;
-        }
-        $scope.stories = result.stories;
-        $scope.fullStories = result.stories;
-        $scope.searchStories();
-      });
+      createStory(
+        $scope,
+
+        function(result) {
+          closingPopup($scope);
+          recalculateSelectedIterationPoints($scope, result);
+          if ($scope.selectedIteration) {
+            return;
+          }
+          $scope.stories = result.stories;
+          $scope.fullStories = result.stories;
+          $scope.searchStories();
+        },
+
+        updateIcebox
+      );
     }
     else {
       updatingStory($scope, function($scope) {
@@ -104,20 +111,26 @@ scrumInCeresServices.service('StoryService', ['$rootScope', '$q', '$timeout', 'A
     }
   }
 
-  function saveStoryAndKeepPopupOpen($scope) {
+  function saveStoryAndKeepPopupOpen($scope, updateIcebox) {
     if ($scope.addingNewStory) {
-      createStory($scope, function(result) {
-        recalculateSelectedIterationPoints($scope, result.story);
-        if (result.story !== null) {
-          $scope.selectedStory = result.story;
-          if ($scope.selectedIteration) {
-            return;
+      createStory(
+        $scope,
+
+        function(result) {
+          recalculateSelectedIterationPoints($scope, result);
+          if (result !== null) {
+            $scope.selectedStory = result;
+            if ($scope.selectedIteration) {
+              return;
+            }
+            $scope.stories.push(result);
+            $scope.fullStories.push(result);
+            $scope.searchStories();
           }
-          $scope.stories.push(result.story);
-          $scope.fullStories.push(result.story);
-          $scope.searchStories();
-        }
-      });
+        },
+
+        updateIcebox
+      );
     }
     else {
       updatingStory($scope, function($scope) {
@@ -126,9 +139,9 @@ scrumInCeresServices.service('StoryService', ['$rootScope', '$q', '$timeout', 'A
     }
   }
 
-  function createStory($scope, success) {
+  function createStory($scope, success, updateIcebox) {
     $scope.addingNewStory = false;
-    self.createNewStory($scope.selectedStory, IceBox, {}, true).then(
+    self.createNewStory($scope.selectedStory, IceBox, {}, updateIcebox).then(
       function(result) {
         success(result);
       },
@@ -451,7 +464,7 @@ scrumInCeresServices.service('StoryService', ['$rootScope', '$q', '$timeout', 'A
       );
     };
 
-    $scope.saveSelectedStory = function(form, saveAndClose) {
+    $scope.saveSelectedStory = function(form, saveAndClose, updateIcebox) {
       if (form.$invalid) {
         Alert.randomErrorMessage('Invalid fields.', 'Invalid fields.');
         return false;
@@ -460,10 +473,10 @@ scrumInCeresServices.service('StoryService', ['$rootScope', '$q', '$timeout', 'A
       Alert.loading();
 
       if (saveAndClose) {
-        saveStoryAndClosePopup($scope);
+        saveStoryAndClosePopup($scope, updateIcebox);
       }
       else {
-        saveStoryAndKeepPopupOpen($scope);
+        saveStoryAndKeepPopupOpen($scope, updateIcebox);
       }
     };
 

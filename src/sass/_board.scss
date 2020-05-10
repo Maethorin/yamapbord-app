@@ -90,8 +90,8 @@ h4 {
   right: 0;
   bottom: 0;
   left: 0;
-  background-color: rgba(100,100,100,0.2);
-  z-index: 99998;
+  background-color: rgba(100, 100, 100, 0.8);
+  z-index: 1046;
 
   &.opened {
    display: block;
@@ -147,7 +147,7 @@ h4 {
     }
     &.expanded {
       position: fixed;
-      z-index: 99999;
+      z-index: 1047;
       top: 10%;
       right: 20%;
       bottom: 10%;

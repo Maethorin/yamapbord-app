@@ -88,7 +88,6 @@ scrumInCeresControllers.controller('SelectedProjectKanbansController', ['$rootSc
     )
   };
 
-
   $scope.saveKanban = function(kanban, $index) {
     Notifier.warning('Saving kanban...');
     var kanbanToSend = _.cloneDeep(kanban);

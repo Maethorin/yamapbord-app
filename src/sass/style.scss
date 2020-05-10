@@ -208,7 +208,7 @@ label {
   display: none;
   background-color: rgba(76,76,76,0.8);
   position: fixed;
-  z-index: $zindex-story;
+  z-index: 1047;
   &.opened {
     display: block;
   }

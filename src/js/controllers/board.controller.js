@@ -13,12 +13,13 @@ scrumInCeresControllers.controller('BoardController', ['$rootScope', '$scope', '
   $scope.selectedSprint = null;
   $scope.selectedStory = null;
   $scope.selectedStoryCurrentTab = 0;
-  $scope.completeStoryPopupOpened = false;
+  $scope.visualizeStoryPopupOpened = false;
   $scope.today = moment();
   $scope.newTask = {task: null};
   $scope.newTaskVisible = false;
   $scope.boardControlPanelOpen = false;
   $scope.columnExpanded = false;
+  $scope.updateIcebox = false;
   var tabIndex = 0;
   if ($stateParams.hasOwnProperty('tabIndex')) {
     tabIndex = parseInt($stateParams.tabIndex);
@@ -409,7 +410,7 @@ scrumInCeresControllers.controller('BoardController', ['$rootScope', '$scope', '
       return false;
     }
     $scope.selectedStory = story;
-    $scope.completeStoryPopupOpened = !$scope.completeStoryPopupOpened;
+    $scope.visualizeStoryPopupOpened = !$scope.visualizeStoryPopupOpened;
   };
 
   $scope.moveStoryBack = function(story) {
@@ -490,5 +491,17 @@ scrumInCeresControllers.controller('BoardController', ['$rootScope', '$scope', '
   $scope.getTestPlanUrl = function() {
     return '{0}/users/me/boards/{1}/stories?testPlan=1&boardType={2}'.format([appConfig.backendURL, $scope.selectedSprint.id, $scope.selectedSprint.type])
   };
+
+  $scope.addNewStoryToCurrentIteration = function(storyType) {
+    $scope.addNewStory(
+      {project: $scope.selectedSprint.project, type: storyType, iterationType: $scope.selectedSprint.type, iteration: $scope.selectedSprint},
+      false
+    );
+  };
+
+  $scope.$on('story.addedToIteration', function() {
+    updateStoryData();
+    Alert.close();
+  });
 
 }]);

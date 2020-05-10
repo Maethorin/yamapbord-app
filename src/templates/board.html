@@ -59,7 +59,7 @@
       </md-tab>
     </md-tabs>
 
-    <div class="popup-complete-story" ng-class="{'opened': completeStoryPopupOpened}">
+    <div class="popup-complete-story" ng-class="{'opened': visualizeStoryPopupOpened}">
       <div class="panel panel-default board-panel-story">
         <div class="panel-heading" title="{{selectedStory.statement}}">
           <div class="col-md-12">
@@ -318,3 +318,6 @@
   </div>
 </div>
 
+<div class="background-modal" ng-class="{'opened': columnExpanded}"></div>
+
+<section ng-include="'templates/include/story-form.html'"></section>
