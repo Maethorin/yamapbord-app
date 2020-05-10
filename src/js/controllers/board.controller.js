@@ -60,7 +60,7 @@ scrumInCeresControllers.controller('BoardController', ['$rootScope', '$scope', '
 
   $scope.teams = [];
 
-  $scope.timelineFilter = BoardService.timelineFilter;
+  $scope.timelineFilter = _.cloneDeep(BoardService.timelineFilter);
 
   Alert.loading();
 
@@ -273,6 +273,10 @@ scrumInCeresControllers.controller('BoardController', ['$rootScope', '$scope', '
 
   });
 
+  $scope.$watch('timelineFilter', function() {
+    $scope.filterTimeline();
+  }, true);
+
   $scope.filterTimeline = function() {
     var filter = {};
     if ($scope.timelineFilter.type !== null) {
@@ -290,15 +294,21 @@ scrumInCeresControllers.controller('BoardController', ['$rootScope', '$scope', '
       });
     }
 
+    var statusSelected = _.map($scope.timelineFilter.status, function(status) {
+      if (status.selected) {
+        return status.filter;
+      }
+    });
+
     if ($scope.timelineFilter.type === '' || $scope.timelineFilter.type === null) {
       $scope.boards = $scope.boards.filter(function(board) {
-        return board.type === 'kanban' || $scope.timelineFilter.status.length === 0 || $scope.timelineFilter.status.indexOf(board.status) > -1;
+        return board.type === 'kanban' || statusSelected.length === 0 || statusSelected.indexOf(board.status) > -1;
       });
     }
 
     if ($scope.timelineFilter.type === 'sprint') {
       $scope.boards = $scope.boards.filter(function(board) {
-        return $scope.timelineFilter.status.length === 0 || $scope.timelineFilter.status.indexOf(board.status) > -1;
+        return statusSelected.length === 0 || statusSelected.indexOf(board.status) > -1;
       });
     }
 
@@ -312,13 +322,7 @@ scrumInCeresControllers.controller('BoardController', ['$rootScope', '$scope', '
 
   $scope.clearFilterTimeline = function() {
     $scope.boards = $scope.fullBoards;
-    $scope.timelineFilter = {
-      type: null,
-      startDate: moment().add(-14, 'days'),
-      endDate: moment().add(4, 'months'),
-      team: null,
-      status: null
-    };
+    $scope.timelineFilter = _.cloneDeep(BoardService.timelineFilter);
   };
 
   $scope.goToCurrentSprintInTimeline = function() {

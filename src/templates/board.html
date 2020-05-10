@@ -254,16 +254,26 @@
     <button type="button" class="list-group-item" data-toggle="collapse" data-target="#filterTimeline" aria-expanded="false" aria-controls="filterTimeline">
       Filter Timeline
     </button>
-    <div id="filterTimeline" class="collapse">
+    <div id="filterTimeline" class="collapse in">
       <div class="well">
 
         <div class="form-group">
-          <label for="type">Type</label>
-          <select name="type" id="type" class="form-control" ng-model="timelineFilter.type">
-            <option value="">All</option>
-            <option value="kanban">Kanban</option>
-            <option value="sprint">Sprint</option>
-          </select>
+          <label>Type: </label>
+          <div>
+            <div class="btn-group">
+              <label class="btn btn-primary" ng-model="timelineFilter.type" uib-btn-radio="'kanban'">Kanbans</label>
+              <label class="btn btn-primary" ng-model="timelineFilter.type" uib-btn-radio="'sprint'">Sprints</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group" ng-show="timelineFilter.type === 'sprint'">
+          <label for="team">Status</label>
+          <div>
+            <div class="btn-group">
+              <label ng-repeat="status in timelineFilter.status" class="btn btn-sm btn-filter-status sprint-{{status.label.toLowerCase()}}" ng-class="{'active': status.selected}" ng-model="status.selected" uib-btn-checkbox ng-bind="status.label"></label>
+            </div>
+          </div>
         </div>
 
         <div class="form-group">
@@ -302,14 +312,7 @@
             <option value="">All</option>
           </select>
         </div>
-
-        <div class="form-group">
-          <label for="team">Status</label>
-          <multiple-autocomplete ng-model="timelineFilter.status" close-after-selected="true" suggestions-arr="['PLAN', 'CURR', 'FAIL', 'SUCC']"></multiple-autocomplete>
-        </div>
-
-        <button class="btn btn-primary" type="button" ng-click="filterTimeline()">Filter</button>
-        <button class="btn btn-secondary" type="button" ng-click="clearFilterTimeline()">Clear</button>
+        <button class="btn btn-warning" type="button" ng-click="clearFilterTimeline()">Reset Filters</button>
       </div>
     </div>
   </div>

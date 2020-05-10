@@ -111,6 +111,16 @@ $story-value-points-colors:
   }
 }
 
+@mixin sprint-status-backgrounds-darken() {
+  $index: 1;
+  @each $sprint-status in $sprint-statuses {
+    &.sprint-#{$sprint-status} {
+      background-color: darken(nth($sprint-statuses-colors, $index), 20%);
+    }
+    $index: $index + 1;
+  }
+}
+
 //** Background color for `<body>`.
 $body-bg: $gray-darker !default;
 //** Global text color on `<body>`.

@@ -7,11 +7,16 @@ scrumInCeresServices.service('BoardService', ['$rootScope', '$q', 'Board', 'Boar
   var shouldQueryBoardStories = true;
 
   this.timelineFilter = {
-    type: 'kanban',
+    type: null,
     startDate: moment().add(-120, 'months'),
     endDate: moment().add(80, 'months'),
     team: null,
-    status: ['CURR', 'PLAN']
+    status: [
+      {filter: 'PLAN', label: 'Planned', selected: true},
+      {filter: 'CURR', label: 'Current', selected: true},
+      {filter: 'SUCC', label: 'Success', selected: false},
+      {filter: 'FAIL', label: 'Failure', selected: false}
+    ]
   };
 
   this.listBoards = function(currentBoardId) {

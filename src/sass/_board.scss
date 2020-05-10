@@ -301,3 +301,10 @@ h4 {
     color: #EEE;
   }
 }
+
+.btn-filter-status {
+  @include sprint-status-backgrounds();
+  &.active {
+    @include sprint-status-backgrounds-darken();
+  }
+}
