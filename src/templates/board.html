@@ -49,7 +49,7 @@
     </div>
   </div>
 
-  <div class="row board {{selectedSprint.type}}" ng-if="selectedSprint !== null">
+  <div class="row board {{selectedSprint.type}}" ng-class="{'column-expanded': columnExpanded}" ng-if="selectedSprint !== null">
     <md-tabs md-stretch-tabs="always" md-selected="selectedTab">
       <md-tab label="DEV" md-tab-class="board-tab" md-on-select="selectedTab = 0">
         <ng-include ng-repeat="column in devColumns" src="columnTemplate"></ng-include>
@@ -318,4 +318,3 @@
   </div>
 </div>
 
-<div class="background-modal" ng-class="{'opened': columnExpanded}"></div>

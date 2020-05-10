@@ -1,12 +1,28 @@
+<div class="background-modal" ng-class="{'opened': columnExpanded}"></div>
 <div class="{{column.name | lowercase}} column-container" ng-class="{'expanded': column.expanded, 'col-md-3': !column.expanded && column.colSpan === 3, 'col-md-2': !column.expanded && column.colSpan === 2}">
   <div class="panel panel-default">
-    <div class="panel-heading" ng-click="toggleExpandColumn(column)">
+    <div class="panel-heading board-column-heading">
       <div class="col-md-12">
         <h3>
-          <span ng-bind="column.label"></span>
+          <span class="board-column-heading-span" ng-bind="column.label"></span>
           <a class="btn btn-xs btn-success" ng-if="column.name === 'INST'" target="_blank" ng-href="{{getTestPlanUrl()}}" ng-click="$event.stopPropagation()"><i class="fa fa-file-excel-o"></i> Test Plan</a>
-          <span class="badge {{column.name | lowercase }}" title="Total column points" ng-bind="pointsPerStoryTypeStatus[column.name]"></span>
-          <span class="label label-warning stories-length" title="Total column stories" ng-bind="stories[column.name].length"></span>
+
+          <button class="btn btn-xs btn-default board-column-heading-buttons" ng-click="toggleExpandColumn(column)"><i class="fa" ng-class="{'fa-expand': !column.expanded, 'fa-compress': column.expanded}"></i></button>
+
+          <div class="btn-group dropdown-add-story" uib-dropdown ng-show="column.name === 'PLAN'">
+            <button type="button" id="addStory" class="btn btn-xs btn-primary" uib-dropdown-toggle>
+              <span class="fa fa-plus"></span> <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="addStory">
+              <li role="menuitem"><a ng-click="addNewStoryToSprint('FEA', selectedSprint)"><i class="fa fa-star"></i> New Feature</a></li>
+              <li role="menuitem"><a ng-click="addNewStoryToSprint('BUG', selectedSprint)"><i class="fa fa-bug"></i> New BUG</a></li>
+              <li role="menuitem"><a ng-click="addNewStoryToSprint('TEC', selectedSprint)"><i class="fa fa-cog"></i> New Technical</a></li>
+              <li role="menuitem"><a ng-click="addNewStoryToSprint('CHO', selectedSprint)"><i class="fa fa-flag"></i> New Chore</a></li>
+            </ul>
+          </div>
+
+          <span class="board-column-heading-span badge {{column.name | lowercase }}" title="Total column points" ng-bind="pointsPerStoryTypeStatus[column.name]"></span>
+          <span class="board-column-heading-span label label-warning stories-length" title="Total column stories" ng-bind="stories[column.name].length"></span>
         </h3>
       </div>
     </div>
