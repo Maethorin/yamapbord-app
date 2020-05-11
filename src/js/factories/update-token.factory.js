@@ -1,9 +1,9 @@
 'use strict';
 
-scrumInCeresFactories.factory('UpdateToken', ['$rootScope', '$q', 'AuthService', function($rootScope, $q, AuthService) {
+scrumInCeresFactories.factory('UpdateToken', ['appConfig', '$q', 'AuthService', function(appConfig, $q, AuthService) {
   return {
     request: function(config) {
-      // config.headers['PUSHER-SOCKET-ID'] = $rootScope.pusherSocketId;
+      config.headers['PUSHER-SOCKET-ID'] = appConfig.pusherSocketId;
       return config;
     },
     responseError: function(response) {

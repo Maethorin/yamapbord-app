@@ -181,6 +181,14 @@ module.exports = function (grunt) {
             {
               match: 'backendURL',
               replacement: '<%= grunt.file.readJSON("config/development.json").backendURL %>'
+            },
+            {
+              match: 'pusherKey',
+              replacement: '<%= grunt.file.readJSON("config/development.json").pusherKey %>'
+            },
+            {
+              match: 'env',
+              replacement: '<%= grunt.file.readJSON("config/development.json").env %>'
             }
           ]
         },
@@ -199,6 +207,14 @@ module.exports = function (grunt) {
             {
               match: 'backendURL',
               replacement: '<%= grunt.file.readJSON("config/sandbox.json").backendURL %>'
+            },
+            {
+              match: 'pusherKey',
+              replacement: '<%= grunt.file.readJSON("config/sandbox.json").pusherKey %>'
+            },
+            {
+              match: 'env',
+              replacement: '<%= grunt.file.readJSON("config/sandbox.json").env %>'
             }
           ]
         },
@@ -217,6 +233,14 @@ module.exports = function (grunt) {
             {
               match: 'backendURL',
               replacement: '<%= grunt.file.readJSON("config/staging.json").backendURL %>'
+            },
+            {
+              match: 'pusherKey',
+              replacement: '<%= grunt.file.readJSON("config/staging.json").pusherKey %>'
+            },
+            {
+              match: 'env',
+              replacement: '<%= grunt.file.readJSON("config/staging.json").env %>'
             }
           ]
         },
@@ -235,6 +259,14 @@ module.exports = function (grunt) {
             {
               match: 'backendURL',
               replacement: '<%= grunt.file.readJSON("config/production.json").backendURL %>'
+            },
+            {
+              match: 'pusherKey',
+              replacement: '<%= grunt.file.readJSON("config/production.json").pusherKey %>'
+            },
+            {
+              match: 'env',
+              replacement: '<%= grunt.file.readJSON("config/production.json").env %>'
             }
           ]
         },

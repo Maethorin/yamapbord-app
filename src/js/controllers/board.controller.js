@@ -1,6 +1,6 @@
 'use strict';
 
-scrumInCeresControllers.controller('BoardController', ['$rootScope', '$scope', '$timeout', '$filter', '$stateParams', 'Upload', 'appConfig', 'MeService', 'StoryService', 'Alert', 'Notifier', 'BoardService', 'BacklogKanban', 'BoardStory', 'HollydayService', function($rootScope, $scope, $timeout, $filter, $stateParams, Upload, appConfig, MeService, StoryService, Alert, Notifier, BoardService, BacklogKanban, BoardStory, HollydayService) {
+scrumInCeresControllers.controller('BoardController', ['$rootScope', '$scope', '$timeout', '$filter', '$stateParams', 'Upload', 'appConfig', 'MeService', 'StoryService', 'Alert', 'Notifier', 'BoardService', 'BoardStory', 'HollydayService', function($rootScope, $scope, $timeout, $filter, $stateParams, Upload, appConfig, MeService, StoryService, Alert, Notifier, BoardService, BoardStory, HollydayService) {
   $rootScope.currentController = 'BoardController';
   $scope.boards = [];
   $scope.fullBoards = [];
@@ -21,6 +21,7 @@ scrumInCeresControllers.controller('BoardController', ['$rootScope', '$scope', '
   $scope.columnExpanded = false;
   $scope.updateIcebox = false;
   $scope.me = null;
+  $scope.boardNeedRefresh = false;
   $scope.storySortableOptions = {
     containerPositioning: 'relative',
     orderChanged: function(event) {
@@ -30,22 +31,20 @@ scrumInCeresControllers.controller('BoardController', ['$rootScope', '$scope', '
         _.forEach(stories, function(story) {
           $scope.selectedSprint.stories.push(story);
         })
-      })
+      });
 
-      BacklogKanban.update(
-        {id: $scope.selectedSprint.id},
-
-        $scope.selectedSprint,
-
+      BoardService.updateBoard($scope.selectedSprint).then(
         function() {
           Notifier.success('Story Moved!');
         },
+
         function(error) {
           Notifier.danger('ERROR! Plz, do that Ctrl+R thing. :_(');
         }
       );
     },
   };
+
   var tabIndex = 0;
   if ($stateParams.hasOwnProperty('tabIndex')) {
     tabIndex = parseInt($stateParams.tabIndex);
@@ -237,6 +236,24 @@ scrumInCeresControllers.controller('BoardController', ['$rootScope', '$scope', '
     $scope.visualizeStoryPopupOpened = !$scope.visualizeStoryPopupOpened;
   }
 
+  $scope.refreshBoard = function() {
+    $scope.boardNeedRefresh = false;
+    Alert.loading();
+    BoardService.loadBoardStories().then(
+     function(response) {
+        $scope.selectedSprint.stories = response;
+        updateStoryData();
+        if ($stateParams.storyId) {
+          toggleCompleteStoryPopup(_.find($scope.selectedSprint.stories, ['id', parseInt($stateParams.storyId)]));
+        }
+        Alert.close();
+      },
+      function(error) {
+        Alert.randomErrorMessage(error);
+      }
+    );
+  }
+
   StoryService.prepareScopeToEditStory($scope);
 
   $rootScope.$on('board.story.moved', function(event, data) {
@@ -303,10 +320,20 @@ scrumInCeresControllers.controller('BoardController', ['$rootScope', '$scope', '
         Notifier.success('Done!')
       },
       function(error) {
+        console.log(error);
         Alert.randomErrorMessage('OHMYGOOODDD!!!!! A Story was updated and I could not get the updated data. Can you please, be sooo nice to refresh your browser before more minions die in despair!');
       }
     );
+  });
 
+  $rootScope.$on('board.story.added', function(event, message) {
+    $scope.boardNeedRefresh = message.iterationId === $scope.selectedSprint.id;
+    $scope.$apply();
+  });
+
+  $rootScope.$on('board.story.orderChanged', function(event, message) {
+    $scope.boardNeedRefresh = message.iterationId === $scope.selectedSprint.id;
+    $scope.$apply();
   });
 
   $scope.$watch('timelineFilter', function() {
@@ -378,20 +405,7 @@ scrumInCeresControllers.controller('BoardController', ['$rootScope', '$scope', '
   $scope.selectSprint = function(sprint) {
     $scope.selectedSprint = sprint;
     BoardService.selectBoard(sprint);
-    Alert.loading();
-    BoardService.loadBoardStories().then(
-     function(response) {
-        $scope.selectedSprint.stories = response;
-        updateStoryData();
-        if ($stateParams.storyId) {
-          toggleCompleteStoryPopup(_.find($scope.selectedSprint.stories, ['id', parseInt($stateParams.storyId)]));
-        }
-        Alert.close();
-      },
-      function(error) {
-        Alert.randomErrorMessage(error);
-      }
-    );
+    $scope.refreshBoard();
   };
 
   $scope.addColumnSize = function(columnName) {

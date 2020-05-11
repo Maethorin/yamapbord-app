@@ -58,4 +58,21 @@ scrumInCeresServices.service('BoardService', ['$rootScope', '$q', 'Board', 'Boar
     }
     return boardStoriesDefer.promise;
   };
+
+  this.updateBoard = function(iteration) {
+    var defer = $q.defer();
+    Board.update(
+      {boardId: iteration.id},
+
+      iteration,
+
+      function() {
+        defer.resolve();
+      },
+      function(error) {
+        defer.reject(error);
+      }
+    );
+    return defer.promise;
+  };
 }]);

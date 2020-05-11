@@ -321,3 +321,17 @@
 <div class="background-modal" ng-class="{'opened': columnExpanded}"></div>
 
 <section ng-include="'templates/include/story-form.html'"></section>
+
+<div class="board-need-refresh" ng-class="{'showed': boardNeedRefresh}">
+  <div class="alert">
+    <p>
+      <strong>WARNING</strong>: this board had been changed in the server. It's highly recommended that you update this board! If you keep doing things this way, bad things could happen and I will not be less pleased to inform you that "I TOLD YOU" when this happen.
+    </p>
+    <p>
+      You can update this board by clicking <button class="btn btn-refresh-board btn-warning" ng-click="refreshBoard()">here</button>, or by the button refresh of the selected board in the Timeline (that thing up above).
+    </p>
+    <p>
+      If you dont trust me, just do that Ctrl+R thing and go... ahn... be happy!
+    </p>
+  </div>
+</div>

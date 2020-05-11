@@ -1,6 +1,0 @@
-{
-  "env": "staging",
-  "backendURL": "http://staging-scruminceres.inceres.com.br/api",
-  "fbiURL": "http://staging-dashboard.inceres.com.br/#!/login"
-
-}

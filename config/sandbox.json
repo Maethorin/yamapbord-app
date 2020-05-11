@@ -1,5 +1,0 @@
-{
-  "env": "sandbox",
-  "backendURL": "http://192.168.0.230:7000",
-  "fbiURL": "http://sandbox-dashboard.inceres.com.br/#!/login"
-}
