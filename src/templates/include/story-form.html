@@ -55,7 +55,7 @@
         </div>
 
         <uib-tabset active="activeJustified" justified="true">
-          <uib-tab index="0" heading="Tasks" select="changeScroll()">
+          <uib-tab index="0" heading="Tasks" select="changeScroll(0)">
             <ul class="list-group story-tasks" as-sortable ng-model="selectedStory.tasks">
               <li class="list-group-item" ng-repeat="task in selectedStory.tasks" ng-click="toggleEditStoryTask(task)" as-sortable-item>
                 <div as-sortable-item-handle>
@@ -72,7 +72,7 @@
               </li>
             </ul>
           </uib-tab>
-          <uib-tab index="1" heading="DoD" select="changeScroll()">
+          <uib-tab index="1" heading="DoD" select="changeScroll(1)">
             <ul class="list-group story-definitions" ng-scrollable="scrollOptions">
               <li class="list-group-item" ng-repeat="definition in selectedStory.definitionOfDone" ng-click="toggleEditStoryDefinition(definition)">
                 <input type="text" ng-model="definition.definition" ng-show="definition.editing" focus-me="definition.editing" ng-blur="toggleEditStoryDefinition(definition)" ng-keypress="toggleEditStoryDefinition(task, $event)" />
@@ -87,7 +87,7 @@
               </li>
             </ul>
           </uib-tab>
-          <uib-tab index="2" heading="Comments" select="changeScroll()">
+          <uib-tab index="2" heading="Comments" select="changeScroll(2)">
             <ul class="list-group story-comments" ng-scrollable="scrollCommentOptions">
               <li class="list-group-item" ng-repeat="storyComment in selectedStory.comments" ng-click="toggleEditStoryComment(storyComment)">
                 <textarea ng-model="storyComment.comment" ng-show="storyComment.editing" focus-me="storyComment.editing" ng-blur="toggleEditStoryComment(storyComment)"></textarea>
