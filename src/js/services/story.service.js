@@ -81,7 +81,6 @@ scrumInCeresServices.service('StoryService', ['$rootScope', '$q', '$timeout', 'A
     _.forEach($scope.selectedIteration.stories, function(story) {
       $scope.selectedIteration.points += (story.points || 0);
     });
-    $scope.$broadcast('story.addedToIteration');
   }
 
   function saveStoryAndClosePopup($scope, updateIcebox) {
@@ -92,6 +91,7 @@ scrumInCeresServices.service('StoryService', ['$rootScope', '$q', '$timeout', 'A
         function(result) {
           closingPopup($scope);
           recalculateSelectedIterationPoints($scope, result);
+          $scope.$broadcast('story.addedToIteration', {closePopup: true, storyId: result.id});
           if ($scope.selectedIteration) {
             return;
           }
@@ -118,15 +118,14 @@ scrumInCeresServices.service('StoryService', ['$rootScope', '$q', '$timeout', 'A
 
         function(result) {
           recalculateSelectedIterationPoints($scope, result);
-          if (result !== null) {
-            $scope.selectedStory = result;
-            if ($scope.selectedIteration) {
-              return;
-            }
-            $scope.stories.push(result);
-            $scope.fullStories.push(result);
-            $scope.searchStories();
+          $scope.$broadcast('story.addedToIteration', {closePopup: false, storyId: result.id});
+          $scope.selectedStory = result;
+          if ($scope.selectedIteration) {
+            return;
           }
+          $scope.stories.push(result);
+          $scope.fullStories.push(result);
+          $scope.searchStories();
         },
 
         updateIcebox

@@ -1,6 +1,6 @@
 'use strict';
 
-scrumInCeresControllers.controller('BoardController', ['$rootScope', '$scope', '$timeout', '$filter', '$stateParams', 'Upload', 'appConfig', 'MeService', 'StoryService', 'Alert', 'Notifier', 'BoardService', 'BoardStory', 'HollydayService', function($rootScope, $scope, $timeout, $filter, $stateParams, Upload, appConfig, MeService, StoryService, Alert, Notifier, BoardService, BoardStory, HollydayService) {
+scrumInCeresControllers.controller('BoardController', ['$rootScope', '$scope', '$timeout', '$filter', '$state', '$stateParams', 'Upload', 'appConfig', 'MeService', 'StoryService', 'Alert', 'Notifier', 'BoardService', 'BoardStory', 'HollydayService', function($rootScope, $scope, $timeout, $filter, $state, $stateParams, Upload, appConfig, MeService, StoryService, Alert, Notifier, BoardService, BoardStory, HollydayService) {
   $rootScope.currentController = 'BoardController';
   $scope.boards = [];
   $scope.fullBoards = [];
@@ -540,8 +540,12 @@ scrumInCeresControllers.controller('BoardController', ['$rootScope', '$scope', '
     );
   };
 
-  $scope.$on('story.addedToIteration', function() {
+  $scope.$on('story.addedToIteration', function(event, result) {
     updateStoryData();
+    if (!result.closePopup) {
+      $scope.completeStoryPopupOpened = false;
+      $state.go('storyBoardState', {boardType: $scope.selectedSprint.type, boardId: $scope.selectedSprint.id, tabIndex: $scope.selectedTab, storyId: result.storyId})
+    }
     Alert.close();
   });
 
