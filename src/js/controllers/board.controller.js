@@ -1,6 +1,6 @@
 'use strict';
 
-scrumInCeresControllers.controller('BoardController', ['$rootScope', '$scope', '$timeout', '$filter', '$stateParams', 'Upload', 'appConfig', 'MeService', 'StoryService', 'Alert', 'Notifier', 'BoardService', 'BoardStory', 'HollydayService', function($rootScope, $scope, $timeout, $filter, $stateParams, Upload, appConfig, MeService, StoryService, Alert, Notifier, BoardService, BoardStory, HollydayService) {
+scrumInCeresControllers.controller('BoardController', ['$rootScope', '$scope', '$timeout', '$filter', '$stateParams', 'Upload', 'appConfig', 'MeService', 'StoryService', 'Alert', 'Notifier', 'BoardService', 'BacklogKanban', 'BoardStory', 'HollydayService', function($rootScope, $scope, $timeout, $filter, $stateParams, Upload, appConfig, MeService, StoryService, Alert, Notifier, BoardService, BacklogKanban, BoardStory, HollydayService) {
   $rootScope.currentController = 'BoardController';
   $scope.boards = [];
   $scope.fullBoards = [];
@@ -20,6 +20,32 @@ scrumInCeresControllers.controller('BoardController', ['$rootScope', '$scope', '
   $scope.boardControlPanelOpen = false;
   $scope.columnExpanded = false;
   $scope.updateIcebox = false;
+  $scope.me = null;
+  $scope.storySortableOptions = {
+    containerPositioning: 'relative',
+    orderChanged: function(event) {
+      Notifier.warning('Moving Story');
+      $scope.selectedSprint.stories = [];
+      _.forEach($scope.stories, function(stories, columnName) {
+        _.forEach(stories, function(story) {
+          $scope.selectedSprint.stories.push(story);
+        })
+      })
+
+      BacklogKanban.update(
+        {id: $scope.selectedSprint.id},
+
+        $scope.selectedSprint,
+
+        function() {
+          Notifier.success('Story Moved!');
+        },
+        function(error) {
+          Notifier.danger('ERROR! Plz, do that Ctrl+R thing. :_(');
+        }
+      );
+    },
+  };
   var tabIndex = 0;
   if ($stateParams.hasOwnProperty('tabIndex')) {
     tabIndex = parseInt($stateParams.tabIndex);
@@ -90,6 +116,7 @@ scrumInCeresControllers.controller('BoardController', ['$rootScope', '$scope', '
 
   MeService.getInfo().then(
     function(info) {
+      $scope.me = info;
       $scope.teams = info.teams;
       if ($scope.teams == null || $scope.teams.length === 0) {
         $scope.teams = [info.team];
@@ -200,6 +227,14 @@ scrumInCeresControllers.controller('BoardController', ['$rootScope', '$scope', '
         delete story.updating;
       }
     );
+  }
+
+  function toggleCompleteStoryPopup(story) {
+    if (story !== null && story.id !== parseInt($stateParams.storyId)) {
+      return false;
+    }
+    $scope.selectedStory = story;
+    $scope.visualizeStoryPopupOpened = !$scope.visualizeStoryPopupOpened;
   }
 
   StoryService.prepareScopeToEditStory($scope);
@@ -349,7 +384,7 @@ scrumInCeresControllers.controller('BoardController', ['$rootScope', '$scope', '
         $scope.selectedSprint.stories = response;
         updateStoryData();
         if ($stateParams.storyId) {
-          $scope.toggleCompleteStoryPopup(_.find($scope.selectedSprint.stories, ['id', parseInt($stateParams.storyId)]));
+          toggleCompleteStoryPopup(_.find($scope.selectedSprint.stories, ['id', parseInt($stateParams.storyId)]));
         }
         Alert.close();
       },
@@ -405,14 +440,6 @@ scrumInCeresControllers.controller('BoardController', ['$rootScope', '$scope', '
     )
   };
 
-  $scope.toggleCompleteStoryPopup = function(story) {
-    if (story !== null && story.id !== parseInt($stateParams.storyId)) {
-      return false;
-    }
-    $scope.selectedStory = story;
-    $scope.visualizeStoryPopupOpened = !$scope.visualizeStoryPopupOpened;
-  };
-
   $scope.moveStoryBack = function(story) {
     var actualStepIndex = $scope.storyTypeSequence.indexOf(story.status);
     if (actualStepIndex === 0) {
@@ -444,7 +471,7 @@ scrumInCeresControllers.controller('BoardController', ['$rootScope', '$scope', '
         story.archived = true;
         Notifier.success('Story archived...');
         if (closePopup) {
-          $scope.toggleCompleteStoryPopup(null);
+          toggleCompleteStoryPopup(null);
         }
       },
       function(error) {
