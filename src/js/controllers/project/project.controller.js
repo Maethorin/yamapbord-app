@@ -117,7 +117,7 @@ scrumInCeresControllers.controller('ProjectController', ['$rootScope', '$scope',
         project.showIcebox = project.showIcebox === undefined ? true : project.showIcebox;
         project.showSprints = project.showSprints === undefined ? true : project.showSprints;
         project.showKanbans = project.showKanbans === undefined ? true : project.showKanbans;
-        project.showAttachment = project.showAttachment === undefined ? true : project.showAttachment;
+        project.showAttachment = project.showAttachment === undefined ? false : project.showAttachment;
         project.isOpen = true;
         project.loading = false;
         $scope.$broadcast('projects.selectedProject', $scope.selectedProject);

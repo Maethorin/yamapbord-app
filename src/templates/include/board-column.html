@@ -25,11 +25,11 @@
         </h3>
       </div>
     </div>
-    <div class="panel-body column {{column.name | lowercase}}" as-sortable="storySortableOptions" is-disabled="!me.isPo" ng-model="stories[column.name]">
+    <div class="panel-body column {{column.name | lowercase}}" as-sortable="storySortableOptions" is-disabled="!loggedUser.isPo" ng-model="stories[column.name]">
       <div ng-repeat="story in stories[column.name] | filter:{archived: false}" class="panel panel-default story" as-sortable-item>
         <div class="panel-heading" title="{{story.statement}}">
           <div class="col-md-12">
-            <span class="btn btn-xs btn-default move-story" ng-if="me.isPo && selectedSprint.type === 'kanban'" as-sortable-item-handle><i class="fa fa-arrows-v"></i></span>
+            <span class="btn btn-xs btn-default move-story" ng-if="loggedUser.isPo && selectedSprint.type === 'kanban'" as-sortable-item-handle><i class="fa fa-arrows-v"></i></span>
             <span class="story-type" ng-class="story.type | lowercase " title="{{story.typeName}}"></span>
             <span class="story-name" ng-bind="story.name|limitWithEllipsis:22"></span>
             <button class="btn btn-xs btn-default board-column-heading-buttons" ui-sref="storyBoardState({boardType: selectedSprint.type, boardId: selectedSprint.id, tabIndex: selectedTab, storyId: story.id})"><i class="fa fa-expand"></i></button>

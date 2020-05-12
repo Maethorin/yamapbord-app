@@ -171,7 +171,7 @@ scrumInCeresControllers.controller('IceBoxController', ['$rootScope', '$scope', 
 
   $rootScope.$on('icebox.story.created', function(event, data) {
     IceBox.get(
-      {id: data.storyId},
+      {storyId: data.storyId},
       function(response) {
         Notifier.warning('Story created');
         $scope.fullStories.push(response);
@@ -185,7 +185,7 @@ scrumInCeresControllers.controller('IceBoxController', ['$rootScope', '$scope', 
 
   $rootScope.$on('icebox.story.updated', function(event, data) {
     IceBox.get(
-      {id: data.storyId},
+      {storyId: data.storyId},
       function(response) {
         Notifier.warning('Story updated');
         var index = _.findIndex($scope.stories, ['id', data.storyId]);

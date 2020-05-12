@@ -7,7 +7,6 @@ scrumInCeresControllers.controller('IceboxProjectController', ['$rootScope', '$s
   $scope.iceboxStories = [];
   $scope.iceboxLoading = true;
   $scope.selectedProject = null;
-
   $scope.porraAngular = {storyFilterIsOpen: false, storyFilterIteration: null, moduleAcronym: '', orderStoryBy: null, groupStoryBy: null};
   $scope.storyFilter = {
     name: '',
@@ -18,7 +17,7 @@ scrumInCeresControllers.controller('IceboxProjectController', ['$rootScope', '$s
   $scope.newStories = [];
   $scope.groupedStories = false;
   $scope.storiesGroupOpen = {};
-
+  $scope.storyResource = {resource: IceBox, urlData: {}};
   $scope.$on('projects.selectedProject', function(event, selectedProject) {
     $scope.selectedProject = selectedProject;
     $scope.addStoryTitle = "Add story to {name}'s Icebox".format(selectedProject);
@@ -82,36 +81,7 @@ scrumInCeresControllers.controller('IceboxProjectController', ['$rootScope', '$s
   };
 
   $scope.selectStory = function(story) {
-    $scope.selectingStory(story, IceBox, {id: story.id});
-
-    // if (story.isLoaded) {
-    //   story.isOpen = !story.isOpen;
-    //   return;
-    // }
-    // story.loading = true;
-    // IceBox.get(
-    //   {id: story.id},
-    //
-    //   function(result) {
-    //     story.isOpen = true;
-    //     story.isLoaded = true;
-    //     story.currentTab = story.currentTab ? story.currentTab : 0;
-    //     story.newTaskVisible = false;
-    //     story.newDefinitionVisible = false;
-    //     story.newCommentVisible = false;
-    //     story.newCommentType = null;
-    //     story.newMergeRequestVisible = false;
-    //     story.name = result.name;
-    //     story.statement = result.statement;
-    //     story.type = result.type;
-    //     story.typeName = result.typeName;
-    //     story.points = result.points;
-    //     story.valuePoints = result.valuePoints;
-    //
-    //     delete story.loading;
-    //     StoryService.turnCompactStoryAsComplete(story, result);
-    //   }
-    // )
+    $scope.selectingStory(story, IceBox, {storyId: story.id});
   };
 
   $scope.undoStoryChanges = function(story) {
@@ -121,7 +91,7 @@ scrumInCeresControllers.controller('IceboxProjectController', ['$rootScope', '$s
 
   $scope.saveStory = function(story, $index) {
     if (story.id) {
-      StoryService.updateStory(story, IceBox, {id: story.id});
+      StoryService.updateStory(story, IceBox, {storyId: story.id});
       return;
     }
     StoryService.createNewStory(story, IceBox, {}).then(
@@ -168,7 +138,7 @@ scrumInCeresControllers.controller('IceboxProjectController', ['$rootScope', '$s
     Notifier.warning("Adding story to {name}'s Icebox...".format($scope.selectedProject));
     story.updating = true;
     IceBox.update(
-      {id: story.id},
+      {storyId: story.id},
 
       {projectId: $scope.selectedProject.id},
 
@@ -226,6 +196,12 @@ scrumInCeresControllers.controller('IceboxProjectController', ['$rootScope', '$s
       statement: ''
     };
   };
+
+  $scope.$on('projects.storyDeleted', function(event, storyDeleted) {
+    const indexFull = _.findIndex($scope.iceboxStories, ['id', storyDeleted.id]);
+    $scope.iceboxStories.splice(indexFull, 1);
+    groupStories();
+  });
 
   $scope.closeIcebox = function() {
     $scope.$emit('projects.toggleIceboxStoriesVisible');

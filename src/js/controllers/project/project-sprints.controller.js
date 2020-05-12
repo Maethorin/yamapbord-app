@@ -9,19 +9,19 @@ scrumInCeresControllers.controller('SelectedProjectSprintsController', ['$rootSc
   $scope.newSprints = [];
   $scope.storiesFiltered = [];
   $scope.storyItemsSortableOptions = { containerPositioning: 'relative' };
+  $scope.storyResource = {resource: ProjectStory, urlData: {projectId: null}};
 
   StoryService.prepareScopeToEditStory($scope);
 
   $scope.$on('projects.selectedProject', function(event, selectedProject) {
     $scope.selectedProject = selectedProject;
+    $scope.storyResource.urlData.projectId = selectedProject.id;
     $scope.columnName = "{name}'s Sprints".format(selectedProject);
-    // groupStories();
   });
 
   $scope.$on('projects.addStoryToSelectedSprint', function(ev, story) {
     $scope.selectedSprint.stories.push(story);
     updateWorkingDays($scope.selectedSprint)
-    // groupStories();
   });
 
   $scope.teams = [];
@@ -183,7 +183,6 @@ scrumInCeresControllers.controller('SelectedProjectSprintsController', ['$rootSc
         function(result) {
           $scope.selectedProject.sprints.push(result);
           $scope.newSprints.splice($index, 1);
-          // groupStories();
           Notifier.success('Sprint saved!')
         },
         function(error) {
@@ -261,7 +260,6 @@ scrumInCeresControllers.controller('SelectedProjectSprintsController', ['$rootSc
         sprint.stories.push(result);
         sprint.newStories.splice($index, 1);
         updateWorkingDays(sprint);
-        // groupStories();
       },
       function(error) {
       }
@@ -279,34 +277,6 @@ scrumInCeresControllers.controller('SelectedProjectSprintsController', ['$rootSc
 
   $scope.selectStory = function(story) {
     $scope.selectingStory(story, ProjectStory, {projectId: $scope.selectedProject.id, storyId: story.id});
-    // if (story.isLoaded) {
-    //   story.isOpen = !story.isOpen;
-    //   return;
-    // }
-    // story.loading = true;
-    // ProjectStory.get(
-    //   {projectId: $scope.selectedProject.id, storyId: story.id},
-    //
-    //   function(result) {
-    //     story.isOpen = true;
-    //     story.isLoaded = true;
-    //     story.currentTab = story.currentTab ? story.currentTab : 0;
-    //     story.newTaskVisible = false;
-    //     story.newDefinitionVisible = false;
-    //     story.newCommentVisible = false;
-    //     story.newCommentType = null;
-    //     story.newMergeRequestVisible = false;
-    //     story.name = result.name;
-    //     story.statement = result.statement;
-    //     story.type = result.type;
-    //     story.typeName = result.typeName;
-    //     story.points = result.points;
-    //     story.valuePoints = result.valuePoints;
-    //
-    //     delete story.loading;
-    //     StoryService.turnCompactStoryAsComplete(story, result);
-    //   }
-    // )
   };
 
   $scope.changeStoryTab = function(story, tabIndex) {
@@ -362,46 +332,11 @@ scrumInCeresControllers.controller('SelectedProjectSprintsController', ['$rootSc
     )
   };
 
-
-
-
-
-  $scope.groupedStories = false;
-  $scope.storiesGroupOpen = {};
-
-
-  function groupStories() {
-    if (!$scope.selectedProject) {
-      return false;
-    }
-    $scope.groupedStories = false;
-    if ($scope.porraAngular.groupStoryBy === 'module') {
-      $scope.groupedStories = _.groupBy($scope.selectedProject.stories, 'moduleId');
-    }
-    if ($scope.porraAngular.groupStoryBy === 'module-epic') {
-      $scope.groupedStories = [];
-      var tempGroupStories = _.groupBy($scope.selectedProject.stories, 'moduleId');
-      _.forEach(tempGroupStories, function(group) {
-        $scope.groupedStories.push(
-          {
-            id: group[0].moduleId,
-            isOpen: false,
-            stories: _.groupBy(group, 'epicId')
-          }
-        );
-      });
-    }
-    if ($scope.porraAngular.groupStoryBy === 'type') {
-      $scope.groupedStories = _.groupBy($scope.selectedProject.stories, 'type');
-    }
-    if ($scope.porraAngular.groupStoryBy === 'status') {
-      $scope.groupedStories = _.groupBy($scope.selectedProject.stories, 'status');
-    }
-  }
-
-
-  $scope.openGroupedStories = function(group) {
-    group.isOpen = !group.isOpen;
-  };
+  $scope.$on('projects.storyDeleted', function(event, storyDeleted) {
+    var selectedSprint = _.find($scope.selectedProject.sprints, ['id', storyDeleted.sprintId]);
+    const indexFull = _.findIndex(selectedSprint.stories, ['id', storyDeleted.id]);
+    selectedSprint.stories.splice(indexFull, 1);
+    updateWorkingDays(selectedSprint)
+  });
 
 }]);

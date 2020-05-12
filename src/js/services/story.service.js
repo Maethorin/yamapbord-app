@@ -165,13 +165,13 @@ scrumInCeresServices.service('StoryService', ['$rootScope', '$q', '$timeout', 'A
   }
 
   function deleteStoryAndClosePopup($scope) {
-    deleteStory($scope, function($scope) {
+    deletingStory($scope, function($scope) {
       recalculateSelectedIterationPoints($scope);
       closingPopup($scope)
     });
   }
 
-  function deleteStory($scope, success) {
+  function deletingStory($scope, success) {
     self.deleteInIceLog($scope.selectedStory).then(
       function() {
         if (success) {
@@ -251,7 +251,7 @@ scrumInCeresServices.service('StoryService', ['$rootScope', '$q', '$timeout', 'A
       resource = IceBox;
     }
     if (!urlData) {
-      urlData = {id: story.id};
+      urlData = {storyId: story.id};
     }
     var result = $q.defer();
     var toSend = prepateStoryToSave(story);
@@ -275,7 +275,7 @@ scrumInCeresServices.service('StoryService', ['$rootScope', '$q', '$timeout', 'A
   this.deleteInIceLog = function(story) {
     var result = $q.defer();
     IceBox.delete(
-      {id: story.id},
+      {storyId: story.id},
       story,
       function() {
         result.resolve();
@@ -290,7 +290,7 @@ scrumInCeresServices.service('StoryService', ['$rootScope', '$q', '$timeout', 'A
   this.getFullStory = function(storyId) {
     var result = $q.defer();
     IceBox.get(
-      {id: storyId},
+      {storyId: storyId},
       function(response) {
         result.resolve(response);
       },
@@ -320,6 +320,30 @@ scrumInCeresServices.service('StoryService', ['$rootScope', '$q', '$timeout', 'A
     compact.sprint = complete.sprint;
     compact.kanban = complete.kanban;
   };
+
+  this.deletingStory = function(story, caller) {
+    var result = $q.defer();
+    var data = {storyId: story.id, hardDelete: true}
+    _.forEach(caller.urlData, function(value, key) {
+      data[key] = value;
+    })
+    var resource = caller.resource;
+    if (resource === null) {
+      resource = IceBox;
+    }
+    resource.delete(
+      data,
+
+      function() {
+        result.resolve();
+      },
+
+      function(error) {
+        result.reject(error);
+      }
+    );
+    return result.promise;
+  }
 
   this.prepareScopeToEditStory = function($scope) {
     $scope.completeStoryPopupOpened = false;
@@ -845,5 +869,32 @@ scrumInCeresServices.service('StoryService', ['$rootScope', '$q', '$timeout', 'A
         }
       );
     };
+
+    $scope.deleteStory = function(story) {
+      Alert.warning(
+        'Watch Out!', 'Are you cleary wanting to start deleting this story?',
+
+        function(result) {
+          if (!result.value) {
+            return;
+          }
+
+          var notififyContainer = Notifier.warning('Deleting Story. Plz, wait a second... or several...', '', 'TOO-DAMN-HIGH');
+          story.updating = true
+          self.deletingStory(story, $scope.storyResource).then(
+            function() {
+              Notifier.close(notififyContainer);
+              $scope.$emit('projects.storyDeleted', story);
+              Notifier.success('Its done! I hope you dont miss it.')
+            },
+
+            function(error) {
+              Notifier.close(notififyContainer);
+              Alert.randomErrorMessage(error);
+            }
+          );
+        }
+      );
+    }
   }
 }]);

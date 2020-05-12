@@ -232,6 +232,7 @@
             Go Story Back
           </button>
           <button type="button" class="btn btn-primary" ui-sref="boardState({boardType: selectedSprint.type, boardId: selectedSprint.id, tabIndex: selectedTab})">Close</button>
+          <button type="button" class="btn btn-danger" ng-if="selectedStory.status === 'PLAN' && selectedStory.requesterId === loggedUser.id" title="Completely, irrevocably, delete this story!" ng-click="deleteStory(selectedStory)">DELETE</button>
           <button type="button" class="btn btn-warning" ng-if="selectedStory.status === 'ACCP'" ng-click="archiveStory(selectedStory, true)">Archive</button>
           <button type="button" class="btn btn-success btn-go-forward-story" ng-click="moveStoryForward(selectedStory)" ng-if="selectedStory.status !== 'REJE'">
             Go Story Forward

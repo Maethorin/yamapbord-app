@@ -9,7 +9,10 @@ scrumInCeresServices.service('Notifier', ['$timeout', function($timeout) {
   var notificationPositions = [];
 
   return {
-    notify: function(message, title, type) {
+    notify: function(message, title, type, time) {
+      if (time === undefined) {
+        time = config.defaultTimeout;
+      }
       notificationCount += 1;
       var notification = document.createElement('div');
       notification.className = 'notifier-box {0}'.format([type]);
@@ -52,11 +55,21 @@ scrumInCeresServices.service('Notifier', ['$timeout', function($timeout) {
         container.className = 'notifier-container show-in';
       }, 0.5);
 
+      if (time !== 'TOO-DAMN-HIGH') {
+        this.close(container, time);
+      }
+
+      return container;
+    },
+    close: function(container, time) {
+      if (time === undefined) {
+        time = 100;
+      }
       $timeout(
         function() {
           container.className = 'notifier-container';
         },
-        config.defaultTimeout
+        time
       ).then(
         function() {
           $timeout(
@@ -70,16 +83,16 @@ scrumInCeresServices.service('Notifier', ['$timeout', function($timeout) {
       );
     },
     info: function(message, title) {
-      this.notify(message, title, 'info');
+      return this.notify(message, title, 'info');
     },
-    warning: function(message, title) {
-      this.notify(message, title, 'warning');
+    warning: function(message, title, time) {
+      return this.notify(message, title, 'warning', time);
     },
     success: function(message, title) {
-      this.notify(message, title, 'success');
+      return this.notify(message, title, 'success');
     },
     danger: function(message, title) {
-      this.notify(message, title, 'danger');
+      return this.notify(message, title, 'danger');
     }
   };
 }]);

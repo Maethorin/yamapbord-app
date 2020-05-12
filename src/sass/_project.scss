@@ -381,12 +381,12 @@
         background-color: #f1f0ea;
         padding: 0 5px;
 
-        .form-sprint, .form-kanban, .form-story{
+        .form-sprint, .form-kanban, .form-story {
           padding: 5px 0;
           .statement-save, .sprint-save, .kanban-save {
             overflow: hidden;
-            .btn-success {
-              margin: 5px 0;
+            .btn-xs {
+              margin: 5px 0 0;
             }
           }
 

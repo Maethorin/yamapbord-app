@@ -6,8 +6,11 @@ scrumInCeresControllers.controller('SelectedProjectStoriesController', ['$rootSc
   $scope.addStoryTitle = 'Add story to selected sprint';
   $scope.selectedProject = null;
   $scope.selectedSprint = null;
+  $scope.storyResource = {resource: ProjectStory, urlData: {projectId: null}};
+
   $scope.$on('projects.selectedProject', function(event, selectedProject) {
     $scope.selectedProject = selectedProject;
+    $scope.storyResource.urlData.projectId = selectedProject.id;
     $scope.columnName = "{name}'s Stories in Icebox".format(selectedProject);
     $scope.removeStoryTitle = 'Remove story from {name} (back to Icebox)'.format($scope.selectedProject);
     groupStories();
@@ -85,34 +88,6 @@ scrumInCeresControllers.controller('SelectedProjectStoriesController', ['$rootSc
 
   $scope.selectStory = function(story) {
     $scope.selectingStory(story, ProjectStory, {projectId: $scope.selectedProject.id, storyId: story.id});
-    // if (story.isLoaded) {
-    //   story.isOpen = !story.isOpen;
-    //   return;
-    // }
-    // story.loading = true;
-    // ProjectStory.get(
-    //   {projectId: $scope.selectedProject.id, storyId: story.id},
-    //
-    //   function(result) {
-    //     story.isOpen = true;
-    //     story.isLoaded = true;
-    //     story.currentTab = story.currentTab ? story.currentTab : 0;
-    //     story.newTaskVisible = false;
-    //     story.newDefinitionVisible = false;
-    //     story.newCommentVisible = false;
-    //     story.newCommentType = null;
-    //     story.newMergeRequestVisible = false;
-    //     story.name = result.name;
-    //     story.statement = result.statement;
-    //     story.type = result.type;
-    //     story.typeName = result.typeName;
-    //     story.points = result.points;
-    //     story.valuePoints = result.valuePoints;
-    //
-    //     delete story.loading;
-    //     StoryService.turnCompactStoryAsComplete(story, result);
-    //   }
-    // )
   };
 
   $scope.undoStoryChanges = function(story) {
@@ -233,4 +208,11 @@ scrumInCeresControllers.controller('SelectedProjectStoriesController', ['$rootSc
       }
     );
   };
+
+  $scope.$on('projects.storyDeleted', function(event, storyDeleted) {
+    const indexFull = _.findIndex($scope.selectedProject.stories, ['id', storyDeleted.id]);
+    $scope.selectedProject.stories.splice(indexFull, 1);
+    groupStories();
+  });
+
 }]);

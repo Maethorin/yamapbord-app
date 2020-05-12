@@ -15,15 +15,17 @@
       </span>
       <a class="open-board-story" ng-show="(sprint || kanban)" ui-sref="storyBoardState({boardType: (sprint || kanban).type, boardId: (sprint || kanban).id, tabIndex: 0, storyId: story.id})" target="_blank"><i class="fa fa-external-link"></i></a>
     </div>
+
     <div class="panel-body" uib-collapse="!story.isOpen" no-drag>
       <form name="formStory" class="form-story" ng-if="story.isOpen">
         <section class="statement-save">
           <div class="form-group col-sm-11">
-            <textarea name="storyStatement" id="storyStatement" placeholder="Statement" required ng-model="story.statement" rows="3" class="form-control"></textarea>
+            <textarea name="storyStatement" id="storyStatement" placeholder="Statement" required ng-model="story.statement" rows="5" class="form-control"></textarea>
           </div>
           <div class="col-sm-1">
             <button class="btn btn-xs btn-success" type="button" title="Save story changes" ng-click="saveStory(story, $index, (sprint || kanban))"><i class="fa fa-save"></i></button>
-            <button class="btn btn-xs btn-warning" ng-if="story.id" type="button" title="Undo story changes" ng-click="undoStoryChanges(story)"><i class="fa fa-undo"></i></button>
+            <button class="btn btn-xs btn-warning" type="button" title="Reload story! Undo any change made" ng-click="undoStoryChanges(story)"><i class="fa fa-undo"></i></button>
+            <button class="btn btn-xs btn-danger" type="button" title="Completely, irrevocably, delete this story!" ng-if="story.status === 'PLAN' && story.requesterId === loggedUser.id" ng-click="deleteStory(story)"><i class="fa fa-times"></i></button>
           </div>
         </section>
         <ul class="list-group story-date">

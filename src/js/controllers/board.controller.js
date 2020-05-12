@@ -20,8 +20,8 @@ scrumInCeresControllers.controller('BoardController', ['$rootScope', '$scope', '
   $scope.boardControlPanelOpen = false;
   $scope.columnExpanded = false;
   $scope.updateIcebox = false;
-  $scope.me = null;
   $scope.boardNeedRefresh = false;
+  $scope.storyResource = {resource: null, urlData: {}};
   $scope.storySortableOptions = {
     containerPositioning: 'relative',
     orderChanged: function(event) {
@@ -42,7 +42,7 @@ scrumInCeresControllers.controller('BoardController', ['$rootScope', '$scope', '
           Notifier.danger('ERROR! Plz, do that Ctrl+R thing. :_(');
         }
       );
-    },
+    }
   };
 
   var tabIndex = 0;
@@ -115,7 +115,6 @@ scrumInCeresControllers.controller('BoardController', ['$rootScope', '$scope', '
 
   MeService.getInfo().then(
     function(info) {
-      $scope.me = info;
       $scope.teams = info.teams;
       if ($scope.teams == null || $scope.teams.length === 0) {
         $scope.teams = [info.team];
@@ -214,7 +213,7 @@ scrumInCeresControllers.controller('BoardController', ['$rootScope', '$scope', '
     story.updating = true;
     Alert.loading();
     BoardStory.update(
-      {boardId: $scope.selectedSprint.id, id: story.id},
+      {boardId: $scope.selectedSprint.id, storyId: story.id},
       {'status': story.status},
       function(response) {
         delete story.updating;
@@ -312,7 +311,7 @@ scrumInCeresControllers.controller('BoardController', ['$rootScope', '$scope', '
     Notifier.warning('Story data changed. Updating...');
     var story = _.find($scope.selectedSprint.stories, ['id', data.storyId]);
     BoardStory.get(
-      {boardId: $scope.selectedSprint.id, id: story.id},
+      {boardId: $scope.selectedSprint.id, storyId: story.id},
       function(response) {
         story.comments = response.comments;
         story.mergeRequests = response.mergeRequests;
@@ -422,7 +421,7 @@ scrumInCeresControllers.controller('BoardController', ['$rootScope', '$scope', '
     }
     task.changing = true;
     BoardStory.update(
-      {boardId: $scope.selectedSprint.id, id: story.id},
+      {boardId: $scope.selectedSprint.id, storyId: story.id},
       {'toggleTask': $index},
       function(response) {
         task.changing = false;
@@ -441,7 +440,7 @@ scrumInCeresControllers.controller('BoardController', ['$rootScope', '$scope', '
     }
     definition.changing = true;
     BoardStory.update(
-      {boardId: $scope.selectedSprint.id, id: story.id},
+      {boardId: $scope.selectedSprint.id, storyId: story.id},
       {'toggleDefinition': $index},
       function(response) {
         definition.changing = false;
@@ -479,7 +478,7 @@ scrumInCeresControllers.controller('BoardController', ['$rootScope', '$scope', '
   $scope.archiveStory = function(story, closePopup) {
     Notifier.warning('Archiving story...');
     BoardStory.update(
-      {boardId: $scope.selectedSprint.id, id: story.id},
+      {boardId: $scope.selectedSprint.id, storyId: story.id},
       {'archived': true},
       function(response) {
         story.archived = true;
@@ -504,7 +503,7 @@ scrumInCeresControllers.controller('BoardController', ['$rootScope', '$scope', '
     $scope.saveSelectedStoryComments(
       $scope.selectedStory,
       BoardStory,
-      {boardId: $scope.selectedSprint.id, id: $scope.selectedStory.id},
+      {boardId: $scope.selectedSprint.id, storyId: $scope.selectedStory.id},
       '{0}/users/me/boards/{1}/stories/{2}'.format([appConfig.backendURL, $scope.selectedSprint.id, $scope.selectedStory.id])
     );
   };
@@ -513,7 +512,7 @@ scrumInCeresControllers.controller('BoardController', ['$rootScope', '$scope', '
     $scope.saveSelectedStoryMergeRequests(
       $scope.selectedStory,
       BoardStory,
-      {boardId: $scope.selectedSprint.id, id: $scope.selectedStory.id}
+      {boardId: $scope.selectedSprint.id, storyId: $scope.selectedStory.id}
     );
   };
 
@@ -521,7 +520,7 @@ scrumInCeresControllers.controller('BoardController', ['$rootScope', '$scope', '
     $scope.saveSelectedStoryTasks(
       $scope.selectedStory,
       BoardStory,
-      {boardId: $scope.selectedSprint.id, id: $scope.selectedStory.id}
+      {boardId: $scope.selectedSprint.id, storyId: $scope.selectedStory.id}
     );
   };
 
@@ -549,4 +548,10 @@ scrumInCeresControllers.controller('BoardController', ['$rootScope', '$scope', '
     Alert.close();
   });
 
+  $scope.$on('projects.storyDeleted', function(event, storyDeleted) {
+    const indexFull = _.findIndex($scope.selectedSprint.stories, ['id', storyDeleted.id]);
+    $scope.selectedSprint.stories.splice(indexFull, 1);
+    updateStoryData();
+    $state.go('boardState', {boardType: $scope.selectedSprint.type, boardId: $scope.selectedSprint.id, tabIndex: $scope.selectedTab});
+  });
 }]);

@@ -9,13 +9,14 @@ scrumInCeresControllers.controller('SelectedProjectKanbansController', ['$rootSc
   $scope.newKanbans = [];
   $scope.storiesFiltered = [];
   $scope.kanbanStorySortableOptions = { containerPositioning: 'relative' };
+  $scope.storyResource = {resource: ProjectStory, urlData: {projectId: null}};
 
   StoryService.prepareScopeToEditStory($scope);
 
   $scope.$on('projects.selectedProject', function(event, selectedProject) {
     $scope.selectedProject = selectedProject;
+    $scope.storyResource.urlData.projectId = selectedProject.id;
     $scope.columnName = "{name}'s Kanbans".format(selectedProject);
-    // groupStories();
   });
 
   $scope.$on('projects.addStoryToSelectedKanban', function(ev, story) {
@@ -252,7 +253,6 @@ scrumInCeresControllers.controller('SelectedProjectKanbansController', ['$rootSc
           stories.splice(indexGroup, 1);
         }
         delete story.updating;
-        updateWorkingDays(kanban);
         $scope.$emit('projects.storyRemovedFromKanban', story);
         Notifier.success('Story removed!');
       },
@@ -298,4 +298,10 @@ scrumInCeresControllers.controller('SelectedProjectKanbansController', ['$rootSc
     group.isOpen = !group.isOpen;
   };
 
+  $scope.$on('projects.storyDeleted', function(event, storyDeleted) {
+    var selectedKanban = _.find($scope.selectedProject.kanbans, ['id', storyDeleted.kanbanId]);
+    const indexFull = _.findIndex(selectedKanban.stories, ['id', storyDeleted.id]);
+    selectedKanban.stories.splice(indexFull, 1);
+    groupStories(selectedKanban);
+  });
 }]);
