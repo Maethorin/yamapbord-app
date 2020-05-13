@@ -637,8 +637,12 @@ scrumInCeresServices.service('StoryService', ['$rootScope', '$q', '$timeout', 'A
       $event.stopPropagation();
     };
 
-    $scope.talkToMe = function($event, definition) {
+    $scope.talkToMe = function($event, definition, currentButton) {
       $event.stopPropagation();
+      if ($scope.shhImSpeaking) {
+        window.speechSynthesis.cancel();
+        return;
+      }
       var msg = new SpeechSynthesisUtterance(definition);
       msg.lang = "pt-BR";
       $scope.shhImSpeaking = true;

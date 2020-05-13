@@ -21,7 +21,7 @@
         <section class="statement-save">
           <div class="form-group col-sm-11">
             <textarea name="storyStatement" id="storyStatement" placeholder="Statement" required ng-model="story.statement" rows="5" class="form-control"></textarea>
-            <button type="button" class="btn btn-primary btn-xs btn-talk-to-me talk-statement" ng-disabled="shhImSpeaking" ng-if="!definition.editing" ng-click="talkToMe($event, story.statement)"><i class="fa" ng-class="{'fa-hourglass': shhImSpeaking, 'fa-play': !shhImSpeaking}"></i></button>
+            <button type="button" class="btn btn-primary btn-xs btn-talk-to-me talk-statement" ng-if="!definition.editing" ng-click="talkToMe($event, story.statement)"><i class="fa" ng-class="{'fa-stop': shhImSpeaking, 'fa-play': !shhImSpeaking}"></i></button>
           </div>
           <div class="col-sm-1">
             <button class="btn btn-xs btn-success" type="button" title="Save story changes" ng-click="saveStory(story, $index, (sprint || kanban))"><i class="fa fa-save"></i></button>
@@ -128,7 +128,7 @@
                     <input type="text" ng-model="task.task" ng-show="task.editing" focus-me="task.editing" ng-blur="toggleEditStoryTask(task)" ng-keypress="toggleEditStoryTask(task, $event)"/>
                     <span ng-bind="task.task|limitWithEllipsis:60" ng-if="!task.editing" title="{{task.task}}"></span>
                     <button type="button" class="btn btn-danger btn-xs btn-remove-task" ng-if="!task.editing" ng-click="removeStoryTask(story, $index)"><i class="fa fa-trash"></i></button>
-                    <button type="button" class="btn btn-primary btn-xs btn-talk-to-me" ng-disabled="shhImSpeaking" ng-if="!definition.editing" ng-click="talkToMe($event, task.task)"><i class="fa" ng-class="{'fa-hourglass': shhImSpeaking, 'fa-play': !shhImSpeaking}"></i></button>
+                    <button type="button" class="btn btn-primary btn-xs btn-talk-to-me" ng-if="!definition.editing" ng-click="talkToMe($event, task.task)"><i class="fa" ng-class="{'fa-stop': shhImSpeaking, 'fa-play': !shhImSpeaking}"></i></button>
                   </div>
                 </li>
                 <li class="new-item list-group-item" ng-click="addingTaskToStory(story)">
@@ -152,7 +152,7 @@
                     <input type="text" ng-model="definition.definition" ng-show="definition.editing" focus-me="definition.editing" ng-blur="toggleEditStoryDefinition(definition)" ng-keypress="toggleEditStoryDefinition(definition, $event)"/>
                     <span ng-bind="definition.definition|limitWithEllipsis:60" ng-if="!definition.editing" title="{{definition.definition}}"></span>
                     <button type="button" class="btn btn-danger btn-xs btn-remove-task" ng-if="!definition.editing" ng-click="removeStoryDefinition(story, $index)"><i class="fa fa-trash"></i></button>
-                    <button type="button" class="btn btn-primary btn-xs btn-talk-to-me" ng-disabled="shhImSpeaking" ng-if="!definition.editing" ng-click="talkToMe($event, definition.definition)"><i class="fa" ng-class="{'fa-hourglass': shhImSpeaking, 'fa-play': !shhImSpeaking}"></i></button>
+                    <button type="button" class="btn btn-primary btn-xs btn-talk-to-me" ng-if="!definition.editing" ng-click="talkToMe($event, definition.definition)"><i class="fa" ng-class="{'fa-stop': shhImSpeaking, 'fa-play': !shhImSpeaking}"></i></button>
                   </div>
                 </li>
                 <li class="new-item list-group-item" ng-click="addingDefinitionToStory(story)">
