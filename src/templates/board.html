@@ -90,6 +90,7 @@
                     <input type="text" ng-model="task.task" ng-show="task.editing" focus-me="task.editing" ng-blur="toggleEditStoryTask(task)" ng-keypress="toggleEditStoryTask(task, $event)"/>
                     <span ng-bind="task.task" ng-if="!task.editing"></span>
                     <button type="button" class="btn btn-default btn-xs btn-remove-item" ng-if="!task.editing" ng-click="removeStoryTask(selectedStory, $index)"><i class="fa fa-trash"></i></button>
+                    <button type="button" class="btn btn-primary btn-xs btn-talk-to-me" ng-disabled="shhImSpeaking" ng-click="talkToMe($event, task.task)"><i class="fa" ng-class="{'fa-hourglass': shhImSpeaking, 'fa-play': !shhImSpeaking}"></i></button>
                   </div>
                 </li>
                 <li class="new-item list-group-item" ng-click="addingTaskToStory()">
@@ -106,6 +107,7 @@
                 <li class="list-group-item" ng-class="{'list-group-item-success': definition.done, 'list-group-item-warning': !definition.done }" ng-repeat="definition in selectedStory.definitionOfDone">
                   <i class="fa fa-fw" ng-click="changeDefinitionStatus(definition, $index, selectedStory)" ng-class="{'fa-square-o': !definition.changing && !definition.done, 'fa-spinner fa-spin': definition.changing, 'fa-check-square-o': !definition.changing && definition.done}"></i>
                   {{ definition.definition }}
+                  <button type="button" class="btn btn-primary btn-xs btn-talk-to-me" ng-disabled="shhImSpeaking" ng-click="talkToMe($event, definition.definition)"><i class="fa" ng-class="{'fa-hourglass': shhImSpeaking, 'fa-play': !shhImSpeaking}"></i></button>
                 </li>
               </ul>
             </uib-tab>

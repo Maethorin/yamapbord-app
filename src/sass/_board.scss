@@ -392,3 +392,29 @@ h4 {
     background-color: transparentize(darken($brand-warning, 10%), 0.1);
   }
 }
+
+.story-task {
+  &:hover {
+    .talk-in-board {
+      display: block;
+    }
+  }
+}
+
+.talk-in-board {
+  display: none;
+  position: absolute;
+  top: 9px;
+  right: 5px;
+}
+
+.story-tasks, .story-definitions {
+  .btn-talk-to-me {
+    padding: 6px 9px;
+    margin-top: -5px;
+
+    i {
+      font-size: 15px !important;
+    }
+  }
+}
