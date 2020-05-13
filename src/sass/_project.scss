@@ -385,8 +385,21 @@
           padding: 5px 0;
           .statement-save, .sprint-save, .kanban-save {
             overflow: hidden;
+
+            .talk-statement {
+              display: none;
+              position: absolute;
+              bottom: 5px;
+              right: 15px;
+            }
             .btn-xs {
               margin: 5px 0 0;
+            }
+
+            &:hover {
+              .talk-statement {
+                display: block;
+              }
             }
           }
 
@@ -940,7 +953,7 @@
           margin-right: 0;
           vertical-align: middle;
         }
-        .btn-remove-task, .btn-add-task, .btn-add-merge, .btn-remove-merge {
+        .btn-remove-task, .btn-add-task, .btn-add-merge, .btn-remove-merge, .btn-talk-to-me {
           display: none;
         }
         span {
@@ -1000,7 +1013,7 @@
         vertical-align: middle;
       }
 
-      input, button, .story-chevron, .btn-remove-task, .btn-add-task, .btn-add-merge, .btn-remove-merge {
+      input, button, .story-chevron, .btn-remove-task, .btn-add-task, .btn-add-merge, .btn-remove-merge, .btn-talk-to-me {
         display: none;
       }
     }
@@ -1080,5 +1093,18 @@
 .kanban-epic-grouped-stories {
   .epic-heading {
     background-color: #08880a !important;
+  }
+}
+
+.btn-talk-to-me {
+  float: right;
+  margin-right: 2px;
+  margin-top: 2px;
+  line-height: 16px;
+  border-radius: 2px;
+  padding: 0 3px 1px;
+
+  i {
+    font-size: 11px !important;
   }
 }

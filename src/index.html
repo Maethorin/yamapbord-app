@@ -59,6 +59,9 @@
           </ul>
 
           <ul class="nav navbar-nav navbar-right">
+            <li>
+              <button type="button" class="btn btn-primary navbar-btn" title="Talk to me Goose!!!" ng-click="toggleTalkinkNotifier()"><i class="fa" ng-class="{'fa-volume-up': talkingNotifier, 'fa-volume-off': !talkingNotifier}"></i></button>
+            </li>
             <li class="dropdown">
               <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Hello {{loggedUser.name}} <span class="caret"></span></a>
               <ul class="dropdown-menu">

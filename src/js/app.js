@@ -234,6 +234,17 @@ scrumInCeres.run(['$rootScope', '$timeout', '$q', 'appConfig', 'AuthService', 'M
   $rootScope.currentController = null;
   $rootScope.currentStoryTypeFilter = null;
 
+  $rootScope.talkingNotifier = sessionStorage.getItem('scrumInCeresTalkingNotifier') === 'true';
+  if (sessionStorage.getItem('scrumInCeresTalkingNotifier') === null) {
+    $rootScope.talkingNotifier = true;
+    sessionStorage.setItem('scrumInCeresTalkingNotifier', $rootScope.talkingNotifier);
+  }
+
+  $rootScope.toggleTalkinkNotifier = function() {
+    $rootScope.talkingNotifier = !$rootScope.talkingNotifier;
+    sessionStorage.setItem('scrumInCeresTalkingNotifier', $rootScope.talkingNotifier);
+  };
+
   $rootScope.storyTypes = [
     {code: 'DRF', name: 'Draft'},
     {code: 'FEA', name: 'Feature'},

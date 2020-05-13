@@ -365,6 +365,7 @@ scrumInCeresServices.service('StoryService', ['$rootScope', '$q', '$timeout', 'A
     $scope.newMergeRequestVisible = false;
     $scope.scrollMergeRequestOptions = {scrollX: 'none', scrollY: 'right', preventWheelEvents: false, preventKeyEvents: false};
     $scope.saveAndClose = false;
+    $scope.shhImSpeaking = false;
 
     $scope.addNewStory = function(data, forProject) {
       $scope.addingNewStory = true;
@@ -635,6 +636,18 @@ scrumInCeresServices.service('StoryService', ['$rootScope', '$q', '$timeout', 'A
       $scope.newDefinition = {definition: null};
       $event.stopPropagation();
     };
+
+    $scope.talkToMe = function($event, definition) {
+      $event.stopPropagation();
+      var msg = new SpeechSynthesisUtterance(definition);
+      msg.lang = "pt-BR";
+      $scope.shhImSpeaking = true;
+      msg.addEventListener('end', function() {
+        $scope.shhImSpeaking = false;
+        $scope.$apply();
+      });
+      window.speechSynthesis.speak(msg);
+    }
 
     $scope.removeStoryDefinition = function(story, $index) {
       story.definitionOfDone.splice($index, 1);

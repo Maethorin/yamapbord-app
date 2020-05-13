@@ -1,6 +1,6 @@
 'use strict';
 
-scrumInCeresServices.service('Notifier', ['$timeout', function($timeout) {
+scrumInCeresServices.service('Notifier', ['$rootScope', '$timeout', function($rootScope, $timeout) {
   var config = {
     defaultTimeout: 3000
   };
@@ -10,6 +10,12 @@ scrumInCeresServices.service('Notifier', ['$timeout', function($timeout) {
 
   return {
     notify: function(message, title, type, time) {
+
+      if ($rootScope.talkingNotifier) {
+        var msg = new SpeechSynthesisUtterance(message);
+        window.speechSynthesis.speak(msg);
+      }
+
       if (time === undefined) {
         time = config.defaultTimeout;
       }
