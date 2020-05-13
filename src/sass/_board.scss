@@ -410,11 +410,13 @@ h4 {
 
 .story-tasks, .story-definitions {
   .btn-talk-to-me {
-    padding: 6px 9px;
-    margin-top: -5px;
+    &.story-popup {
+      padding: 6px 9px;
+      margin-top: -5px;
 
-    i {
-      font-size: 15px !important;
+      i {
+        font-size: 15px !important;
+      }
     }
   }
 }
