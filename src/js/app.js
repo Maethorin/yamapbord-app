@@ -116,7 +116,6 @@ scrumInCeres.config(['$httpProvider', '$stateProvider', '$locationProvider', '$u
 
   pusher.connection.bind('connected', function() {
     appConfig.pusherSocketId = pusher.connection.socket_id;
-    console.log(1, appConfig.pusherSocketId)
   });
   appConfig.channel = pusher.subscribe('scruminceres');
 
