@@ -165,6 +165,23 @@ scrumInCeresControllers.controller('SelectedProjectStoriesController', ['$rootSc
     )
   };
 
+  $rootScope.shouldReopenLateralMenu = false;
+  $scope.toggleExpandStoryPanel = function() {
+    $scope.selectedProject.storyPanelExpanded = !$scope.selectedProject.storyPanelExpanded;
+    if ($scope.selectedProject.storyPanelExpanded) {
+      if ($rootScope.lateralMenuOpen) {
+        $rootScope.lateralMenuOpen = false;
+        $rootScope.shouldReopenLateralMenu = true;
+      }
+    }
+    else {
+      if ($rootScope.shouldReopenLateralMenu) {
+        $rootScope.lateralMenuOpen = true;
+        $rootScope.shouldReopenLateralMenu = false;
+      }
+    }
+  }
+
   $scope.addingExistingStoryToSelectedProject = function() {
     $scope.$emit('projects.toggleIceboxStoriesVisible');
   };

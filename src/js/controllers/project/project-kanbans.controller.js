@@ -146,6 +146,23 @@ scrumInCeresControllers.controller('SelectedProjectKanbansController', ['$rootSc
     $scope.openKanban(kanban);
   };
 
+  $rootScope.shouldReopenLateralMenu = false;
+  $scope.toggleExpandKanbanPanel = function() {
+    $scope.selectedProject.kanbanPanelExpanded = !$scope.selectedProject.kanbanPanelExpanded;
+    if ($scope.selectedProject.kanbanPanelExpanded) {
+      if ($rootScope.lateralMenuOpen) {
+        $rootScope.lateralMenuOpen = false;
+        $rootScope.shouldReopenLateralMenu = true;
+      }
+    }
+    else {
+      if ($rootScope.shouldReopenLateralMenu) {
+        $rootScope.lateralMenuOpen = true;
+        $rootScope.shouldReopenLateralMenu = false;
+      }
+    }
+  }
+
   $scope.addNewKanbanToSelectedProject = function() {
     var newKanban = {
       name: null,

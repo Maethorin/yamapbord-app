@@ -202,6 +202,23 @@ scrumInCeresControllers.controller('SelectedProjectSprintsController', ['$rootSc
     $scope.openSprint(sprint);
   };
 
+  $rootScope.shouldReopenLateralMenu = false;
+  $scope.toggleExpandSprintPanel = function() {
+    $scope.selectedProject.sprintPanelExpanded = !$scope.selectedProject.sprintPanelExpanded;
+    if ($scope.selectedProject.sprintPanelExpanded) {
+      if ($rootScope.lateralMenuOpen) {
+        $rootScope.lateralMenuOpen = false;
+        $rootScope.shouldReopenLateralMenu = true;
+      }
+    }
+    else {
+      if ($rootScope.shouldReopenLateralMenu) {
+        $rootScope.lateralMenuOpen = true;
+        $rootScope.shouldReopenLateralMenu = false;
+      }
+    }
+  }
+
   $scope.addNewSprintToSelectedProject = function() {
     var newSprint = {
       name: null,

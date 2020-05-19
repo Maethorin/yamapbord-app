@@ -1,6 +1,10 @@
-<div class="panel panel-default panel-project" ng-controller="SelectedProjectStoriesController">
+<div class="panel panel-default panel-project" ng-controller="SelectedProjectStoriesController" ng-class="{'expanded': selectedProject.storyPanelExpanded}">
   <div class="panel-heading project-panel-heading">
     <span ng-bind="columnName"></span>
+
+    <button class="btn btn-xs btn-default btn-maximize" ng-click="toggleExpandStoryPanel()" type="button">
+      <i class="fa" ng-class="{'fa-window-restore': selectedProject.storyPanelExpanded, 'fa-window-maximize': !selectedProject.storyPanelExpanded}"></i>
+    </button>
 
     <div class="btn-group dropdown-add-story" uib-dropdown>
       <button id="simple-btn-keyboard-nav" type="button" class="btn btn-xs btn-primary" uib-dropdown-toggle>

@@ -1,6 +1,9 @@
-<div class="panel panel-default panel-project" ng-controller="SelectedProjectSprintsController">
+<div class="panel panel-default panel-project" ng-controller="SelectedProjectSprintsController" ng-class="{'expanded': selectedProject.sprintPanelExpanded}">
   <div class="panel-heading project-panel-heading">
     <span ng-bind="columnName"></span>
+    <button class="btn btn-xs btn-default btn-maximize" ng-click="toggleExpandSprintPanel()" type="button">
+      <i class="fa" ng-class="{'fa-window-restore': selectedProject.sprintPanelExpanded, 'fa-window-maximize': !selectedProject.sprintPanelExpanded}"></i>
+    </button>
     <button class="btn btn-xs btn-primary btn-create-sprint" ng-click="addNewSprintToSelectedProject()" type="button"><i class="fa fa-plus"></i></button>
   </div>
   <ul class="list-group project-sprint-list">

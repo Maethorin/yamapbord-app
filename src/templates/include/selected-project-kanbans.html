@@ -1,6 +1,9 @@
-<div class="panel panel-default panel-project" ng-controller="SelectedProjectKanbansController">
+<div class="panel panel-default panel-project" ng-controller="SelectedProjectKanbansController" ng-class="{'expanded': selectedProject.kanbanPanelExpanded}">
   <div class="panel-heading project-panel-heading">
     <span ng-bind="columnName"></span>
+    <button class="btn btn-xs btn-default btn-maximize" ng-click="toggleExpandKanbanPanel()" type="button">
+      <i class="fa" ng-class="{'fa-window-restore': selectedProject.kanbanPanelExpanded, 'fa-window-maximize': !selectedProject.kanbanPanelExpanded}"></i>
+    </button>
     <button class="btn btn-xs btn-primary btn-create-kanban" ng-click="addNewKanbanToSelectedProject()" type="button"><i class="fa fa-plus"></i></button>
   </div>
   <ul class="list-group project-kanban-list">

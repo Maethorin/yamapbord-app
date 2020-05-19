@@ -155,10 +155,19 @@
     width: 30%;
     margin: 0 0.2%;
     float: left;
+    &.expanded {
+      position: fixed;
+      width: auto;
+      top: 70px;
+      left: 5px;
+      right: 5px;
+      bottom: 10px;
+      z-index: 1;
+    }
   }
 
   .project-panel-heading {
-    .btn-create-sprint, .btn-create-kanban {
+    .btn-create-sprint, .btn-create-kanban, .btn-maximize {
       float: right;
       padding: 0 5px;
       i {
@@ -167,6 +176,9 @@
     }
     .dropdown-add-story {
       float: right;
+    }
+    .btn-maximize {
+      margin-left: 5px;
     }
   }
 
