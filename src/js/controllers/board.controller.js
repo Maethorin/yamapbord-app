@@ -434,7 +434,8 @@ scrumInCeresControllers.controller('BoardController', ['$rootScope', '$scope', '
     );
   };
 
-  $scope.changeDefinitionStatus = function(definition, $index, story) {
+  $scope.changeDefinitionStatus = function($event, definition, $index, story) {
+    $event.stopPropagation();
     if (definition.changing) {
       return false;
     }
@@ -495,6 +496,9 @@ scrumInCeresControllers.controller('BoardController', ['$rootScope', '$scope', '
   };
 
   $scope.changeScroll = function(tabIndex) {
+    if (isNaN(tabIndex)) {
+      tabIndex = 0;
+    }
     $scope.selectedStoryCurrentTab = tabIndex;
     $scope.$broadcast('content.changed');
   };
@@ -518,6 +522,14 @@ scrumInCeresControllers.controller('BoardController', ['$rootScope', '$scope', '
 
   $scope.saveSelectedBoardStoryTasks = function() {
     $scope.saveSelectedStoryTasks(
+      $scope.selectedStory,
+      BoardStory,
+      {boardId: $scope.selectedSprint.id, storyId: $scope.selectedStory.id}
+    );
+  };
+
+  $scope.saveSelectedBoardStoryDoDs = function() {
+    $scope.saveSelectedStoryDefinitionOfDone(
       $scope.selectedStory,
       BoardStory,
       {boardId: $scope.selectedSprint.id, storyId: $scope.selectedStory.id}

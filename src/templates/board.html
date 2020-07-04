@@ -90,25 +90,49 @@
                     <i class="fa fa-fw" ng-click="changeTaskStatus($event, task, $index, selectedStory)" ng-class="{'fa-square-o': !task.changing && !task.complete, 'fa-spinner fa-spin': task.changing, 'fa-check-square-o': !task.changing && task.complete}"></i>
                     <input type="text" ng-model="task.task" ng-show="task.editing" focus-me="task.editing" ng-blur="toggleEditStoryTask(task)" ng-keypress="toggleEditStoryTask(task, $event)"/>
                     <span ng-bind="task.task" ng-if="!task.editing"></span>
-                    <button type="button" class="btn btn-default btn-xs btn-remove-item" ng-if="!task.editing" ng-click="removeStoryTask(selectedStory, $index)"><i class="fa fa-trash"></i></button>
+                    <button type="button" class="btn btn-danger btn-xs btn-remove-item" ng-if="!task.editing" ng-click="removeStoryTask(selectedStory, $index)"><i class="fa fa-trash"></i></button>
                     <button type="button" class="btn btn-primary btn-xs btn-talk-to-me story-popup" ng-click="talkToMe($event, task.task)"><i class="fa" ng-class="{'fa-stop': shhImSpeaking, 'fa-play': !shhImSpeaking}"></i></button>
                   </div>
                 </li>
                 <li class="new-item list-group-item" ng-click="addingTaskToStory()">
                   <span ng-show="!newTaskVisible">Add a task</span>
                   <input type="text" ng-model="newTask.task" ng-show="newTaskVisible" focus-me="newTaskVisible" ng-blur="blurInputTaskField($event, selectedStory)"/>
-                  <button type="button" class="btn btn-primary btn-xs btn-add-item" ng-show="newTaskVisible" ng-click="addTaskToStory($event, selectedStory)">Add</button>
-                  <button type="button" class="btn btn-default btn-xs btn-remove-item" ng-show="newTaskVisible" ng-click="cancelAddTaskToStory($event)"><i class="fa fa-close"></i></button>
+                  <button type="button" class="btn btn-danger btn-xs btn-remove-item" ng-show="newTaskVisible" ng-click="cancelAddTaskToStory($event)"><i class="fa fa-close"></i></button>
+                  <button type="button" class="btn btn-success btn-xs btn-add-item" ng-show="newTaskVisible" ng-click="addTaskToStory($event, selectedStory)">Add</button>
                 </li>
               </ul>
             </uib-tab>
 
-            <uib-tab index="1" heading="DoD" select="changeScroll(1)">
+            <uib-tab index="4" heading="DoD" select="changeScroll(4)" ng-if="!loggedUser.isPo">
               <ul class="list-group story-definitions" ng-scrollable>
                 <li class="list-group-item" ng-class="{'list-group-item-success': definition.done, 'list-group-item-warning': !definition.done }" ng-repeat="definition in selectedStory.definitionOfDone">
                   <i class="fa fa-fw" ng-click="changeDefinitionStatus(definition, $index, selectedStory)" ng-class="{'fa-square-o': !definition.changing && !definition.done, 'fa-spinner fa-spin': definition.changing, 'fa-check-square-o': !definition.changing && definition.done}"></i>
                   {{ definition.definition }}
                   <button type="button" class="btn btn-primary btn-xs btn-talk-to-me story-popup" ng-click="talkToMe($event, definition.definition)"><i class="fa" ng-class="{'fa-stop': shhImSpeaking, 'fa-play': !shhImSpeaking}"></i></button>
+                </li>
+              </ul>
+            </uib-tab>
+
+            <uib-tab index="1" select="changeScroll(1)" ng-if="loggedUser.isPo">
+              <uib-tab-heading>
+                DoD
+                <button ng-if="selectedStoryCurrentTab === 1" type="button" class="btn btn-success btn-sm btn-save-task" ng-click="saveSelectedBoardStoryDoDs()"><i class="fa fa-save"></i></button>
+              </uib-tab-heading>
+              <ul class="list-group story-definitions" as-sortable ng-model="selectedStory.definitionOfDone">
+                <li class="list-group-item" ng-class="{'list-group-item-success': definition.done, 'list-group-item-warning': !definition.done }" ng-repeat="definition in selectedStory.definitionOfDone" ng-click="toggleEditStoryDefinition(definition)" as-sortable-item>
+                  <div as-sortable-item-handle>
+                    <i class="fa fa-fw" ng-click="changeDefinitionStatus($event, definition, $index, selectedStory)" ng-class="{'fa-square-o': !definition.changing && !definition.done, 'fa-spinner fa-spin': definition.changing, 'fa-check-square-o': !definition.changing && definition.done}"></i>
+                    <input type="text" ng-model="definition.definition" ng-show="definition.editing" focus-me="definition.editing" ng-blur="toggleEditStoryDefinition(definition)" ng-keypress="toggleEditStoryDefinition(definition, $event)"/>
+                    <span ng-bind="definition.definition" ng-if="!definition.editing" title="{{definition.definition}}"></span>
+                    <button type="button" class="btn btn-danger btn-xs btn-remove-item" ng-if="!definition.editing" ng-click="removeStoryDefinition(selectedStory, $index)"><i class="fa fa-trash"></i></button>
+                    <button type="button" class="btn btn-primary btn-xs btn-talk-to-me story-popup" ng-click="talkToMe($event, definition.definition)"><i class="fa" ng-class="{'fa-stop': shhImSpeaking, 'fa-play': !shhImSpeaking}"></i></button>
+                  </div>
+                </li>
+                <li class="new-item list-group-item" ng-click="addingDefinitionToStory()">
+                  <span ng-show="!newDefinitionVisible">Add a DoD</span>
+                  <input type="text" ng-model="newDefinition.definition" ng-show="newDefinitionVisible" focus-me="newDefinitionVisible" ng-blur="blurInputDefinitionField($event, selectedStory)"/>
+                  <button type="button" class="btn btn-danger btn-xs btn-remove-item" ng-show="newDefinitionVisible" ng-click="cancelAddDefinitionToStory($event)"><i class="fa fa-close"></i></button>
+                  <button type="button" class="btn btn-success btn-xs btn-add-item" ng-show="newDefinitionVisible" ng-click="addDefinitionToStory($event, selectedStory)">Add</button>
                 </li>
               </ul>
             </uib-tab>
