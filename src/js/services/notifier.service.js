@@ -11,11 +11,6 @@ scrumInCeresServices.service('Notifier', ['$rootScope', '$timeout', function($ro
   return {
     notify: function(message, title, type, time) {
 
-      if ($rootScope.talkingNotifier) {
-        var msg = new SpeechSynthesisUtterance(message);
-        window.speechSynthesis.speak(msg);
-      }
-
       if (time === undefined) {
         time = config.defaultTimeout;
       }
