@@ -123,7 +123,7 @@
                   <div as-sortable-item-handle>
                     <i class="fa fa-fw" ng-click="changeDefinitionStatus($event, definition, $index, selectedStory)" ng-class="{'fa-square-o': !definition.changing && !definition.done, 'fa-spinner fa-spin': definition.changing, 'fa-check-square-o': !definition.changing && definition.done}"></i>
                     <input type="text" ng-model="definition.definition" ng-show="definition.editing" focus-me="definition.editing" ng-blur="toggleEditStoryDefinition(definition)" ng-keypress="toggleEditStoryDefinition(definition, $event)"/>
-                    <span ng-bind="definition.definition" ng-if="!definition.editing" title="{{definition.definition}}"></span>
+                    <span class="story-definition-text" ng-bind="definition.definition" ng-if="!definition.editing" title="{{definition.definition}}"></span>
                     <button type="button" class="btn btn-danger btn-xs btn-remove-item" ng-if="!definition.editing" ng-click="removeStoryDefinition(selectedStory, $index)"><i class="fa fa-trash"></i></button>
                     <button type="button" class="btn btn-primary btn-xs btn-talk-to-me story-popup" ng-click="talkToMe($event, definition.definition)"><i class="fa" ng-class="{'fa-stop': shhImSpeaking, 'fa-play': !shhImSpeaking}"></i></button>
                   </div>
@@ -349,6 +349,8 @@
 <div class="background-modal" ng-class="{'opened': columnExpanded}"></div>
 
 <section ng-if="completeStoryPopupOpened" ng-include="'templates/include/story-form.html'"></section>
+
+<section ng-include="'templates/include/modal-add-dod.html'"></section>
 
 <div class="board-need-refresh" ng-class="{'showed': boardNeedRefresh}">
   <div class="alert">

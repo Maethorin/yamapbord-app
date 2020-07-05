@@ -353,7 +353,7 @@ scrumInCeresServices.service('StoryService', ['$rootScope', '$q', '$timeout', 'A
     $scope.selectedStoryIndex = null;
     $scope.newTask = {task: null};
     $scope.newTaskVisible = false;
-    $scope.newDefinition = {definition: null};
+    $scope.newDefinition = {definition: null, composed: {givens: [{value: null}], whens: [{value: null}], thens: [{value: null}]}};
     $scope.newDefinitionVisible = false;
     $scope.newComment = {comment: null, file: null, fileType: null, link: null, creator: null, createdAt: null};
     $scope.newCommentVisible = false;
@@ -608,12 +608,24 @@ scrumInCeresServices.service('StoryService', ['$rootScope', '$q', '$timeout', 'A
       $scope.newDefinitionVisible = true;
     };
 
+    $scope.addGivenToNewDoD = function() {
+      $scope.newDefinition.composed.givens.push({value: null});
+    };
+
+    $scope.addWhenToNewDoD = function() {
+      $scope.newDefinition.composed.whens.push({value: null});
+    };
+
+    $scope.addThenToNewDoD = function() {
+      $scope.newDefinition.composed.thens.push({value: null});
+    };
+
     $scope.cancelAddDefinitionToStory = function($event, story) {
       if (story) {
         story.newDefinitionVisible = false;
       }
       $scope.newDefinitionVisible = false;
-      $scope.newDefinition = {definition: null};
+      $scope.newDefinition = {definition: null, composed: {givens: [{value: null}], whens: [{value: null}], thens: [{value: null}]}};
       $event.stopPropagation();
     };
 
@@ -626,14 +638,56 @@ scrumInCeresServices.service('StoryService', ['$rootScope', '$q', '$timeout', 'A
       );
     };
 
-    $scope.addDefinitionToStory = function($event, story) {
+    $scope.addDefinitionToStory = function($event, story, fromPopup) {
+      if (fromPopup) {
+        var givens = [];
+        var whens = [];
+        var thens = [];
+        _.forEach($scope.newDefinition.composed.givens, function(given, index) {
+          if (given.value === null) {
+            return;
+          }
+          var start = 'Dado que';
+          if (index > 0) {
+            start = ', e dado que'
+          }
+          givens.push('{0} {1}'.format([start, given.value]));
+        });
+        givens = givens.join('');
+
+        _.forEach($scope.newDefinition.composed.whens, function(when, index) {
+          if (when.value === null) {
+            return;
+          }
+          var start = 'quando';
+          if (index > 0) {
+            start = ', e quando'
+          }
+          whens.push('{0} {1}'.format([start, when.value]));
+        });
+        whens = whens.join('');
+
+        _.forEach($scope.newDefinition.composed.thens, function(then, index) {
+          if (then.value === null) {
+            return;
+          }
+          var start = 'então';
+          if (index > 0) {
+            start = ', e então'
+          }
+          thens.push('{0} {1}'.format([start, then.value]));
+        });
+        thens = thens.join('');
+
+        $scope.newDefinition.definition = '{0}; {1}; {2}.'.format([givens, whens, thens]);
+      }
       if ($scope.newDefinition.definition === null) {
         return false;
       }
       story.definitionOfDone.push({definition: $scope.newDefinition.definition, done: false});
       story.newDefinitionVisible = false;
       $scope.newDefinitionVisible = false;
-      $scope.newDefinition = {definition: null};
+      $scope.newDefinition = {definition: null, composed: {givens: [{value: null}], whens: [{value: null}], thens: [{value: null}]}};
       $event.stopPropagation();
     };
 
