@@ -6,6 +6,7 @@
     </button>
     <button class="btn btn-xs btn-primary btn-create-kanban" ng-click="addNewKanbanToSelectedProject()" type="button"><i class="fa fa-plus"></i></button>
   </div>
+
   <ul class="list-group project-kanban-list">
     <li class="list-group-item" ng-if="selectedProject.loading">
       <md-progress-linear md-mode="query"></md-progress-linear>
@@ -233,4 +234,6 @@
       </div>
     </li>
   </ul>
+
+  <section ng-include="'templates/include/modal-add-dod.html'"></section>
 </div>

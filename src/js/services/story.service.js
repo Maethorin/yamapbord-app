@@ -366,6 +366,11 @@ scrumInCeresServices.service('StoryService', ['$rootScope', '$q', '$timeout', 'A
     $scope.scrollMergeRequestOptions = {scrollX: 'none', scrollY: 'right', preventWheelEvents: false, preventKeyEvents: false};
     $scope.saveAndClose = false;
     $scope.shhImSpeaking = false;
+    $scope.modalDoDSortableOptions = {
+      accept: function (sourceItemHandleScope, destSortableScope) {
+        return sourceItemHandleScope.itemScope.sortableScope.$id === destSortableScope.$id;
+      }
+    };
 
     $scope.addNewStory = function(data, forProject) {
       $scope.addingNewStory = true;
@@ -603,6 +608,7 @@ scrumInCeresServices.service('StoryService', ['$rootScope', '$q', '$timeout', 'A
 
     $scope.addingDefinitionToStory = function(story) {
       if (story) {
+        $scope.selectedStory = story;
         story.newDefinitionVisible = true;
       }
       $scope.newDefinitionVisible = true;
@@ -681,9 +687,11 @@ scrumInCeresServices.service('StoryService', ['$rootScope', '$q', '$timeout', 'A
 
         $scope.newDefinition.definition = '{0}; {1}; {2}.'.format([givens, whens, thens]);
       }
+
       if ($scope.newDefinition.definition === null) {
         return false;
       }
+
       story.definitionOfDone.push({definition: $scope.newDefinition.definition, done: false});
       story.newDefinitionVisible = false;
       $scope.newDefinitionVisible = false;

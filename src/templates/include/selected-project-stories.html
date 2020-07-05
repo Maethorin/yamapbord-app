@@ -20,6 +20,7 @@
       </ul>
     </div>
   </div>
+
   <ul class="list-group project-stories-list">
     <li class="list-group-item" ng-if="selectedProject.loading">
       <md-progress-linear md-mode="query"></md-progress-linear>
@@ -98,4 +99,6 @@
       </ul>
     </li>
   </ul>
+
+  <section ng-include="'templates/include/modal-add-dod.html'"></section>
 </div>

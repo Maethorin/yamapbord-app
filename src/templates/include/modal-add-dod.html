@@ -5,7 +5,7 @@
     </div>
 
     <div class="panel-body">
-      <ul class="list-group story-definition-parts" as-sortable ng-model="newDefinition.composed.givens">
+      <ul id="definitionPartGivens" class="list-group story-definition-parts" as-sortable="modalDoDSortableOptions" ng-model="newDefinition.composed.givens">
         <li class="list-group-item" ng-repeat="given in newDefinition.composed.givens" as-sortable-item>
           <div class="definition-part">
             <span class="definition-part-title" ng-show="$index === 0">Dado que</span>
@@ -19,9 +19,9 @@
         </li>
       </ul>
 
-      <ul class="list-group story-definition-parts" as-sortable ng-model="newDefinition.composed.whens">
+      <ul id="definitionPartWhens" class="list-group story-definition-parts" as-sortable="modalDoDSortableOptions" ng-model="newDefinition.composed.whens">
         <li class="list-group-item" ng-repeat="when in newDefinition.composed.whens" as-sortable-item>
-          <div as-sortable-item-handle>
+          <div class="definition-part">
             <span class="definition-part-title" ng-show="$index === 0">quando</span>
             <span class="definition-part-title" ng-show="$index !== 0">e quando</span>
             <input class="definition-part-value" type="text" ng-model="when.value" />
@@ -29,12 +29,13 @@
           <button type="button" class="btn btn-xs btn-primary btn-add-definition-part" ng-show="$index === newDefinition.composed.whens.length - 1" ng-click="addWhenToNewDoD()">
             <i class="fa fa-plus"></i>
           </button>
+          <span class="btn btn-xs btn-default move-definition-part" as-sortable-item-handle><i class="fa fa-arrows-v"></i></span>
         </li>
       </ul>
 
-      <ul class="list-group story-definition-parts" as-sortable ng-model="newDefinition.composed.thens">
+      <ul id="definitionPartThens" class="list-group story-definition-parts" as-sortable="modalDoDSortableOptions" ng-model="newDefinition.composed.thens">
         <li class="list-group-item" ng-repeat="_then in newDefinition.composed.thens" as-sortable-item>
-          <div as-sortable-item-handle>
+          <div class="definition-part">
             <span class="definition-part-title" ng-show="$index === 0">então</span>
             <span class="definition-part-title" ng-show="$index !== 0">e então</span>
             <input class="definition-part-value" type="text" ng-model="_then.value" />
@@ -42,6 +43,7 @@
           <button type="button" class="btn btn-xs btn-primary btn-add-definition-part" ng-show="$index === newDefinition.composed.thens.length - 1" ng-click="addThenToNewDoD()">
             <i class="fa fa-plus"></i>
           </button>
+          <span class="btn btn-xs btn-default move-definition-part" as-sortable-item-handle><i class="fa fa-arrows-v"></i></span>
         </li>
       </ul>
     </div>

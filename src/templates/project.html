@@ -29,11 +29,13 @@
             <button class="btn btn-xs btn-danger" type="button" title="Completely, irrevocably, delete this story!" ng-if="story.status === 'PLAN' && story.requesterId === loggedUser.id" ng-click="deleteStory(story)"><i class="fa fa-times"></i></button>
           </div>
         </section>
+
         <ul class="list-group story-date">
           <li class="list-group-item">
             <span class="form-story-label">CREATED AT:</span> <span class="project-story-date" ng-bind="story.createdAt|formatDateString"></span>
           </li>
         </ul>
+
         <ul class="list-group story-iterations">
           <li class="list-group-item" ng-if="!story.sprint && !story.kanban">
             <span class="form-story-label">NO ITERATION:</span> <span class="project-story-iteration">Story in Icebox (brrrr... it's freeeeezing!)</span>
@@ -45,6 +47,7 @@
             <span class="form-story-label">KANBAN:</span> <span class="project-story-iteration" ng-bind="story.kanban.name"></span>
           </li>
         </ul>
+
         <section class="story-details">
           <ul class="list-group col-sm-6">
             <li class="list-group-item">
@@ -114,6 +117,7 @@
             </li>
           </ul>
         </section>
+
         <section class="story-tabs">
           <uib-tabset>
             <uib-tab index="0" select="changeStoryTab(story, 0)">
@@ -150,7 +154,7 @@
                   <div as-sortable-item-handle>
                     <i class="fa fa-fw" ng-click="changeDefinitionStatus(definition, $index, story)" ng-class="{'fa-square-o': !definition.changing && !definition.done, 'fa-spinner fa-spin': definition.changing, 'fa-check-square-o': !definition.changing && definition.done}"></i>
                     <input type="text" ng-model="definition.definition" ng-show="definition.editing" focus-me="definition.editing" ng-blur="toggleEditStoryDefinition(definition)" ng-keypress="toggleEditStoryDefinition(definition, $event)"/>
-                    <span ng-bind="definition.definition|limitWithEllipsis:60" ng-if="!definition.editing" title="{{definition.definition}}"></span>
+                    <span class="story-definition-text in-project" ng-class="{'expanded': selectedProject.sprintPanelExpanded || selectedProject.kanbanPanelExpanded || selectedProject.storyPanelExpanded}" ng-bind="definition.definition" ng-if="!definition.editing" title="{{definition.definition}}"></span>
                     <button type="button" class="btn btn-danger btn-xs btn-remove-task" ng-if="!definition.editing" ng-click="removeStoryDefinition(story, $index)"><i class="fa fa-trash"></i></button>
                     <button type="button" class="btn btn-primary btn-xs btn-talk-to-me" ng-if="!definition.editing" ng-click="talkToMe($event, definition.definition)"><i class="fa" ng-class="{'fa-stop': shhImSpeaking, 'fa-play': !shhImSpeaking}"></i></button>
                   </div>

@@ -426,11 +426,17 @@ label {
   overflow: auto;
 }
 
-
 .story-definition-text {
   display: inline-block;
   width: 91%;
   vertical-align: middle;
+
+  &.in-project {
+    width: 86%;
+    &.expanded {
+      width: 96%;
+    }
+  }
 }
 
 .story-definition-parts {
