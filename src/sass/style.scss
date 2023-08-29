@@ -11,6 +11,7 @@
 @import "backlog";
 @import "modules-epics";
 @import "project";
+@import "me";
 
 body {
   overflow-y: hidden;
@@ -818,4 +819,16 @@ textarea {
   border-radius: 5px;
   cursor: not-allowed;
   z-index: 1000;
+}
+
+.has-success {
+  .message-error {
+    display: none;
+  }
+}
+
+.has-error {
+  .message-error {
+    display: block;
+  }
 }

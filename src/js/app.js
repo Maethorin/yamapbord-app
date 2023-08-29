@@ -134,6 +134,17 @@ scrumInCeres.config(['$httpProvider', '$stateProvider', '$locationProvider', '$u
     })
 
     .state({
+      name: 'meState',
+      url: '/me',
+      templateUrl: 'templates/me.html',
+      controller: 'MeController',
+      cache: false,
+      headers: {
+        'Cache-Control' : 'no-cache'
+      }
+    })
+
+    .state({
       name: 'boardsState',
       url: '/board',
       templateUrl: 'templates/board.html',
@@ -316,10 +327,6 @@ scrumInCeres.run(['$rootScope', '$timeout', '$q', 'appConfig', 'AuthService', 'M
     if ($event.keyCode === 13) {
       $rootScope.searchStories();
     }
-  };
-
-  $rootScope.showMyInfo = function() {
-    Alert.itsOpenSourceDude();
   };
 
   appConfig.channel.bind('board', function(data) {

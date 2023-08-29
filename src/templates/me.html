@@ -1,0 +1,80 @@
+<div class="container-fluid me" ng-class="{'lateral-menu-open': lateralMenuOpen}">
+  <div class="row">
+    <form name="formUser">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          My Infos
+        </div>
+
+        <div class="panel-body">
+          <div class="form-group col-md-4">
+            <label for="userName">Name:</label>
+            <input type="text" id="userName" name="userName" class="form-control" ng-model="loggedUser.name" />
+          </div>
+          <div class="form-group col-md-4">
+            <label for="userEmail">Email:</label>
+            <input type="text" id="userEmail" name="userEmail" class="form-control" ng-value="loggedUser.email" disabled />
+          </div>
+          <div class="form-group col-md-4">
+            <label for="userTeam">Team:</label>
+            <input type="text" id="userTeam" name="userTeam" class="form-control" ng-value="loggedUser.team.name" disabled />
+          </div>
+        </div>
+
+        <div class="panel-footer">
+          <button type="submit" class="btn btn-success">Save</button>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <div class="row">
+    <form name="formPassword">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          Change Password
+        </div>
+
+        <div class="panel-body">
+          <div class="form-group col-md-4">
+            <label for="currentPassword">Current Password:</label>
+            <div class="input-group">
+              <input type="{{ passwordFieldType }}" id="currentPassword" name="currentPassword" class="form-control" ng-model="passwordChange.currentPassword" required />
+              <span class="input-group-btn">
+                <button type="button" class="btn btn-default" ng-click="togglePasswordFieldType()"><i class="fa" ng-class="{'fa-eye-slash': passwordFieldType === 'text', 'fa-eye': passwordFieldType === 'password'}"></i></button>
+              </span>
+            </div>
+            <div ng-show="formPassword.currentPassword.$error.required" class="message-error">cannot be blank</div>
+          </div>
+
+          <div class="form-group col-md-4">
+            <label for="newPassword">New Password:</label>
+            <div class="input-group">
+              <input type="{{ passwordFieldType }}" id="newPassword" name="newPassword" class="form-control" ng-model="passwordChange.newPassword" required />
+              <span class="input-group-btn">
+                <button type="button" class="btn btn-default" ng-click="togglePasswordFieldType()"><i class="fa" ng-class="{'fa-eye-slash': passwordFieldType === 'text', 'fa-eye': passwordFieldType === 'password'}"></i></button>
+              </span>
+            </div>
+            <div ng-show="formPassword.newPassword.$error.required" class="message-error">cannot be blank</div>
+          </div>
+
+          <div class="form-group col-md-4">
+            <label for="confirmPassword">Confirm Password:</label>
+            <div class="input-group">
+              <input type="{{ passwordFieldType }}" id="confirmPassword" name="confirmPassword" class="form-control" ng-model="passwordChange.confirmPassword" password-match="newPassword" required />
+              <span class="input-group-btn">
+                <button type="button" class="btn btn-default" ng-click="togglePasswordFieldType()"><i class="fa" ng-class="{'fa-eye-slash': passwordFieldType === 'text', 'fa-eye': passwordFieldType === 'password'}"></i></button>
+              </span>
+            </div>
+            <div ng-show="formPassword.confirmPassword.$error.required" class="message-error">cannot be blank</div>
+            <div ng-show="formPassword.confirmPassword.$error.passwordMatch" class="message-error">passwords don't match</div>
+          </div>
+        </div>
+
+        <div class="panel-footer">
+          <button type="submit" class="btn btn-success">Change</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

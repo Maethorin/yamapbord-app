@@ -36,7 +36,7 @@ module.exports = function (grunt) {
   var minAppFile        = '{0}/app.min.js'.format([wwwJsFolder]);
   var serverPort        = 3102;
   var liveReload        = 32701;
-  var serverHost        = "localhost";
+  var serverHost        = "local-scrum.inceres.com.br";
 
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
@@ -176,7 +176,7 @@ module.exports = function (grunt) {
           patterns: [
             {
               match: 'liveReload',
-              replacement: '<script src="//localhost:{0}/livereload.js"></script>'.format([liveReload])
+              replacement: '<script src="//{0}:{1}/livereload.js"></script>'.format([serverHost, liveReload])
             },
             {
               match: 'backendURL',

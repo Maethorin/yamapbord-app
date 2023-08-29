@@ -1,0 +1,10 @@
+.container-fluid {
+  &.me {
+    margin-top: 60px;
+    padding: 20px 10%;
+
+    .panel-footer {
+      text-align: right;
+    }
+  }
+}
