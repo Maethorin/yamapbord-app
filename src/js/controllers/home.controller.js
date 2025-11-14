@@ -1,5 +1,5 @@
 'use strict';
 
-scrumInCeresControllers.controller('HomeController', ['$rootScope', '$scope', function($rootScope, $scope) {
+yamapBordControllers.controller('HomeController', ['$rootScope', '$scope', function($rootScope, $scope) {
   $rootScope.currentController = 'HomeController';
 }]);

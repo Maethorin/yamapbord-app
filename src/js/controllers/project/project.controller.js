@@ -1,6 +1,6 @@
 'use strict';
 
-scrumInCeresControllers.controller('ProjectController', ['$rootScope', '$scope', '$uibModal', 'Notifier', 'Alert', 'HollydayService', 'Project', function($rootScope, $scope, $uibModal, Notifier, Alert, HollydayService, Project) {
+yamapBordControllers.controller('ProjectController', ['$rootScope', '$scope', '$uibModal', 'Notifier', 'Alert', 'HollydayService', 'Project', function($rootScope, $scope, $uibModal, Notifier, Alert, HollydayService, Project) {
   $rootScope.currentController = 'ProjectController';
   $rootScope.lateralMenuOpen = true;
 

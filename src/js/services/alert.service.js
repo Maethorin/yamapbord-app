@@ -1,6 +1,6 @@
 'use strict';
 
-scrumInCeresServices.service('Alert', ['sweetAlert', function(SweetAlert) {
+yamapBordServices.service('Alert', ['sweetAlert', function(SweetAlert) {
 
   this.itsOpenSourceDude = function() {
     return SweetAlert.swal({

@@ -9,10 +9,10 @@
 * Quantidade de estórias por ponto
 
 
-https://scrum.inceres.com.br/css/style.css
-https://scrum.inceres.com.br/templates/ice-box.html
-https://scrum.inceres.com.br/templates/board.html
-https://scrum.inceres.com.br/templates/backlog.html
-https://scrum.inceres.com.br/index.html
-https://scrum.inceres.com.br/js/componentes.min.js
-https://scrum.inceres.com.br/js/app.min.js
+https://scrum.vai-mudar.com.br/css/style.css
+https://scrum.vai-mudar.com.br/templates/ice-box.html
+https://scrum.vai-mudar.com.br/templates/board.html
+https://scrum.vai-mudar.com.br/templates/backlog.html
+https://scrum.vai-mudar.com.br/index.html
+https://scrum.vai-mudar.com.br/js/componentes.min.js
+https://scrum.vai-mudar.com.br/js/app.min.js

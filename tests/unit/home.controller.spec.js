@@ -18,7 +18,7 @@ var Pusher = function() {
 describe('Home Controller', function() {
   var $scope, $rootScope, $httpBackend, Alert;
 
-  beforeEach(module('scrumInCeres'));
+  beforeEach(module('yamapBord'));
 
   beforeEach(inject(function(_$controller_, _$rootScope_, _$httpBackend_) {
 		$scope = _$rootScope_.$new();

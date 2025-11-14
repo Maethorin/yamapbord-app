@@ -1,6 +1,6 @@
 'use strict';
 
-scrumInCeresControllers.controller('ModulesEpicsController', ['$rootScope', '$scope', '$uibModal', 'Alert', 'Module', 'Epic', function($rootScope, $scope, $uibModal, Alert, Module, Epic) {
+yamapBordControllers.controller('ModulesEpicsController', ['$rootScope', '$scope', '$uibModal', 'Alert', 'Module', 'Epic', function($rootScope, $scope, $uibModal, Alert, Module, Epic) {
   $rootScope.currentController = 'ModulesEpicsController';
 
   Alert.loading();
@@ -177,7 +177,7 @@ scrumInCeresControllers.controller('ModulesEpicsController', ['$rootScope', '$sc
   };
 }]);
 
-scrumInCeresControllers.controller('AddModuleController', ['$scope', '$uibModalInstance', 'Alert', 'Module', function($scope, $uibModalInstance, Alert, Module) {
+yamapBordControllers.controller('AddModuleController', ['$scope', '$uibModalInstance', 'Alert', 'Module', function($scope, $uibModalInstance, Alert, Module) {
   $scope.isModule = true;
   $scope.model = {
     name: null,
@@ -206,7 +206,7 @@ scrumInCeresControllers.controller('AddModuleController', ['$scope', '$uibModalI
   };
 }]);
 
-scrumInCeresControllers.controller('AddEpicController', ['$scope', '$uibModalInstance', 'Alert', 'Epic', function($scope, $uibModalInstance, Alert, Epic) {
+yamapBordControllers.controller('AddEpicController', ['$scope', '$uibModalInstance', 'Alert', 'Epic', function($scope, $uibModalInstance, Alert, Epic) {
   $scope.isModule = false;
   $scope.model = {
     name: null

@@ -1,6 +1,6 @@
 'use strict';
 
-scrumInCeresDirectives.directive('ownerName', [function() {
+yamapBordDirectives.directive('ownerName', [function() {
   return {
     restrict: 'E',
     replace: true,

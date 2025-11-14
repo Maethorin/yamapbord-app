@@ -1,6 +1,6 @@
 'use strict';
 
-scrumInCeresControllers.controller('SelectedProjectKanbansController', ['$rootScope', '$scope', 'appConfig', 'Notifier', 'Alert', 'MeService', 'StoryService', 'HollydayService', 'ProjectStory', 'BacklogKanban', function($rootScope, $scope, appConfig, Notifier, Alert, MeService, StoryService, HollydayService, ProjectStory, BacklogKanban) {
+yamapBordControllers.controller('SelectedProjectKanbansController', ['$rootScope', '$scope', 'appConfig', 'Notifier', 'Alert', 'MeService', 'StoryService', 'HollydayService', 'ProjectStory', 'BacklogKanban', function($rootScope, $scope, appConfig, Notifier, Alert, MeService, StoryService, HollydayService, ProjectStory, BacklogKanban) {
   $scope.canAddStoryTo = false;
   $scope.canRemoveStoryFrom = true;
   $scope.removeStoryTitle = 'Remove story from selected kanban (back to Project Icebox)';

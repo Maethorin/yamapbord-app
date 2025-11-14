@@ -1,6 +1,6 @@
 'use strict';
 
-scrumInCeresResources.factory('BacklogSprint', ['$resource', 'appConfig', function ($resource, appConfig) {
+yamapBordResources.factory('BacklogSprint', ['$resource', 'appConfig', function ($resource, appConfig) {
   return $resource(
     '{backendURL}/users/me/backlog/sprints/:id'.format(appConfig),
     null,

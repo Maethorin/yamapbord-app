@@ -1,6 +1,6 @@
 'use strict';
 
-scrumInCeresServices.service('MeService', ['$rootScope', '$q', '$window', 'AuthService', '$location', '$stateParams', 'Redirect', 'Alert', 'Me', function ($rootScope, $q, $window, AuthService, $location, $stateParams, Redirect, Alert, Me) {
+yamapBordServices.service('MeService', ['$rootScope', '$q', '$window', 'AuthService', '$location', '$stateParams', 'Redirect', 'Alert', 'Me', function ($rootScope, $q, $window, AuthService, $location, $stateParams, Redirect, Alert, Me) {
   var info = null;
   var loading = false;
 

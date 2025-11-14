@@ -1,6 +1,6 @@
 'use strict';
 
-scrumInCeresDirectives.directive('dateStamp', [function() {
+yamapBordDirectives.directive('dateStamp', [function() {
   return {
     replace: true,
     scope: {

@@ -1,6 +1,6 @@
 'use strict';
 
-scrumInCeresServices.service('Redirect', ['$window', '$location', 'AuthService', 'Alert', function ($window, $location, AuthService, Alert) {
+yamapBordServices.service('Redirect', ['$window', '$location', 'AuthService', 'Alert', function ($window, $location, AuthService, Alert) {
   this.toLogin = function() {
     AuthService.clear();
     var currentPath = $location.absUrl();

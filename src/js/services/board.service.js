@@ -1,6 +1,6 @@
 'use strict';
 
-scrumInCeresServices.service('BoardService', ['$rootScope', '$q', 'Board', 'BoardStory', function($rootScope, $q, Board, BoardStory) {
+yamapBordServices.service('BoardService', ['$rootScope', '$q', 'Board', 'BoardStory', function($rootScope, $q, Board, BoardStory) {
   this.boards = [];
   this.selectedBoard = null;
   var _self = this;

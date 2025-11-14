@@ -1,6 +1,6 @@
 'use strict';
 
-scrumInCeresControllers.controller('SelectedProjectSprintsController', ['$rootScope', '$scope', 'appConfig', 'Notifier', 'Alert', 'MeService', 'StoryService', 'HollydayService', 'ProjectStory', 'BacklogSprint', function($rootScope, $scope, appConfig, Notifier, Alert, MeService, StoryService, HollydayService, ProjectStory, BacklogSprint) {
+yamapBordControllers.controller('SelectedProjectSprintsController', ['$rootScope', '$scope', 'appConfig', 'Notifier', 'Alert', 'MeService', 'StoryService', 'HollydayService', 'ProjectStory', 'BacklogSprint', function($rootScope, $scope, appConfig, Notifier, Alert, MeService, StoryService, HollydayService, ProjectStory, BacklogSprint) {
   $scope.canAddStoryTo = false;
   $scope.canRemoveStoryFrom = true;
   $scope.removeStoryTitle = 'Remove story from selected sprint (back to Project Icebox)';

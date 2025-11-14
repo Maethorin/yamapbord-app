@@ -1,6 +1,6 @@
 'use strict';
 
-scrumInCeresControllers.controller('SelectedProjectStoriesController', ['$rootScope', '$scope', 'appConfig', 'Notifier', 'Alert', 'StoryService', 'ProjectStory', function($rootScope, $scope, appConfig, Notifier, Alert, StoryService, ProjectStory) {
+yamapBordControllers.controller('SelectedProjectStoriesController', ['$rootScope', '$scope', 'appConfig', 'Notifier', 'Alert', 'StoryService', 'ProjectStory', function($rootScope, $scope, appConfig, Notifier, Alert, StoryService, ProjectStory) {
   $scope.canAddStoryTo = false;
   $scope.canRemoveStoryFrom = true;
   $scope.addStoryTitle = 'Add story to selected sprint';

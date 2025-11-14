@@ -53,15 +53,15 @@ Number.prototype.paddingLeft = function(size, char) {
 };
 
 
-var scrumInCeresServices  = angular.module('scrumInCeres.services', []);
-var scrumInCeresFactories  = angular.module('scrumInCeres.factories', []);
-var scrumInCeresResources  = angular.module('scrumInCeres.resources', []);
-var scrumInCeresDirectives  = angular.module('scrumInCeres.directives', []);
-var scrumInCeresFilters  = angular.module('scrumInCeres.filters', []);
-var scrumInCeresControllers  = angular.module('scrumInCeres.controllers', []);
+var yamapBordServices  = angular.module('yamapBord.services', []);
+var yamapBordFactories  = angular.module('yamapBord.factories', []);
+var yamapBordResources  = angular.module('yamapBord.resources', []);
+var yamapBordDirectives  = angular.module('yamapBord.directives', []);
+var yamapBordFilters  = angular.module('yamapBord.filters', []);
+var yamapBordControllers  = angular.module('yamapBord.controllers', []);
 
-var scrumInCeres = angular.module(
-  'scrumInCeres', [
+var yamapBord = angular.module(
+  'yamapBord', [
     'ngResource',
     'ngAria',
     'ngAnimate',
@@ -78,16 +78,16 @@ var scrumInCeres = angular.module(
     '19degrees.ngSweetAlert2',
     'ngMaterial',
     'multipleSelect',
-    'scrumInCeres.services',
-    'scrumInCeres.factories',
-    'scrumInCeres.resources',
-    'scrumInCeres.directives',
-    'scrumInCeres.filters',
-    'scrumInCeres.controllers'
+    'yamapBord.services',
+    'yamapBord.factories',
+    'yamapBord.resources',
+    'yamapBord.directives',
+    'yamapBord.filters',
+    'yamapBord.controllers'
   ]
 );
 
-scrumInCeres.constant('appConfig', {
+yamapBord.constant('appConfig', {
   backendURL: '@@backendURL',
   pusherKey: '@@pusherKey',
   env: '@@env',
@@ -95,7 +95,7 @@ scrumInCeres.constant('appConfig', {
   pusher: null
 });
 
-scrumInCeres.config(['$httpProvider', '$stateProvider', '$locationProvider', '$urlRouterProvider', '$mdThemingProvider', 'appConfig', function($httpProvider, $stateProvider, $locationProvider, $urlRouterProvider, $mdThemingProvider, appConfig) {
+yamapBord.config(['$httpProvider', '$stateProvider', '$locationProvider', '$urlRouterProvider', '$mdThemingProvider', 'appConfig', function($httpProvider, $stateProvider, $locationProvider, $urlRouterProvider, $mdThemingProvider, appConfig) {
   $httpProvider.interceptors.push('UpdateToken');
   moment.locale('pt-BR');
   $mdThemingProvider
@@ -117,7 +117,7 @@ scrumInCeres.config(['$httpProvider', '$stateProvider', '$locationProvider', '$u
   pusher.connection.bind('connected', function() {
     appConfig.pusherSocketId = pusher.connection.socket_id;
   });
-  appConfig.channel = pusher.subscribe('scruminceres');
+  appConfig.channel = pusher.subscribe('yamapbord');
 
   $locationProvider.hashPrefix('!');
 
@@ -229,7 +229,7 @@ scrumInCeres.config(['$httpProvider', '$stateProvider', '$locationProvider', '$u
   $urlRouterProvider.when('', '/');
 }]);
 
-scrumInCeres.run(['$rootScope', '$timeout', '$q', 'appConfig', 'AuthService', 'MeService', 'Alert', 'Requester', 'Epic', 'Module', function($rootScope, $timeout, $q, appConfig, AuthService, MeService, Alert, Requester, Epic, Module) {
+yamapBord.run(['$rootScope', '$timeout', '$q', 'appConfig', 'AuthService', 'MeService', 'Alert', 'Requester', 'Epic', 'Module', function($rootScope, $timeout, $q, appConfig, AuthService, MeService, Alert, Requester, Epic, Module) {
   AuthService.update();
   $rootScope.lateralMenuOpen = false;
 

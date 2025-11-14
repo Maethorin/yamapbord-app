@@ -1,6 +1,6 @@
 'use strict';
 
-scrumInCeresControllers.controller('LoginController', ['$rootScope', '$scope', '$window', '$location', '$state','$timeout', 'AuthService', 'Login',
+yamapBordControllers.controller('LoginController', ['$rootScope', '$scope', '$window', '$location', '$state','$timeout', 'AuthService', 'Login',
 function($rootScope, $scope, $window, $location, $state, $timeout, AuthService, Login) {
   $rootScope.currentController = 'LoginController';
 
@@ -48,7 +48,7 @@ function($rootScope, $scope, $window, $location, $state, $timeout, AuthService, 
 }]);
 
 
-scrumInCeresControllers.controller('LogoutController', ['$rootScope', '$window', 'AuthService', 'Login', function($rootScope, $window, AuthService, Login) {
+yamapBordControllers.controller('LogoutController', ['$rootScope', '$window', 'AuthService', 'Login', function($rootScope, $window, AuthService, Login) {
   AuthService.clear();
   $window.location.href = '/';
 }]);

@@ -1,6 +1,6 @@
 'use strict';
 
-scrumInCeresServices.service('HollydayService', ['$window', '$q', 'Hollyday', function ($window, $q, Hollyday) {
+yamapBordServices.service('HollydayService', ['$window', '$q', 'Hollyday', function ($window, $q, Hollyday) {
   var self = this;
   var hollydays = [];
   var loading = false;

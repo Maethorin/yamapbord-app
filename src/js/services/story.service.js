@@ -1,6 +1,6 @@
 'use strict';
 
-scrumInCeresServices.service('StoryService', ['$rootScope', '$q', '$timeout', 'Alert', 'Notifier', 'IceBox', 'Upload', function($rootScope, $q, $timeout, Alert, Notifier, IceBox, Upload) {
+yamapBordServices.service('StoryService', ['$rootScope', '$q', '$timeout', 'Alert', 'Notifier', 'IceBox', 'Upload', function($rootScope, $q, $timeout, Alert, Notifier, IceBox, Upload) {
   var self = this;
   var filter = {};
   this.filterByType = function(type) {

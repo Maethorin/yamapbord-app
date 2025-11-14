@@ -1,6 +1,6 @@
 'use strict';
 
-scrumInCeresDirectives.directive('epicTitle', function(){
+yamapBordDirectives.directive('epicTitle', function(){
   return {
     restrict: 'E',
     link: function(scope, element, attrs) {

@@ -1,6 +1,6 @@
 'use strict';
 
-scrumInCeresDirectives.directive('passwordMatch', function() {
+yamapBordDirectives.directive('passwordMatch', function() {
   return {
     require: 'ngModel',
     link: function(scope, elm, attrs, ctrl) {

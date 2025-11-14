@@ -1,17 +1,17 @@
 'use strict';
 
-scrumInCeresServices.service('AuthService', ['$rootScope', '$cookies', function($rootScope, $cookies) {
+yamapBordServices.service('AuthService', ['$rootScope', '$cookies', function($rootScope, $cookies) {
   this.token = null;
   this.username = null;
 
   this.update = function() {
-    this.token = $cookies.get('scruminceresUserToken');
-    this.username = $cookies.get('scruminceresUserName');
+    this.token = $cookies.get('yamapbordUserToken');
+    this.username = $cookies.get('yamapbordUserName');
   };
 
   this.clear = function(){
-    $cookies.remove('scruminceresUserToken', {path: '/', domain: 'inceres.com.br'});
-    $cookies.remove('scruminceresUserName', {path: '/', domain: 'inceres.com.br'});
+    $cookies.remove('yamapbordUserToken', {path: '/', domain: 'vai-mudar.com.br'});
+    $cookies.remove('yamapbordUserName', {path: '/', domain: 'vai-mudar.com.br'});
     this.update();
   };
 

@@ -1,6 +1,6 @@
 'use strict';
 
-scrumInCeresDirectives.directive('storyFilterTotal', [function() {
+yamapBordDirectives.directive('storyFilterTotal', [function() {
   return {
     replace: true,
     scope: {

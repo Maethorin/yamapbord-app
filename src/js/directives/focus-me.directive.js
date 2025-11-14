@@ -1,6 +1,6 @@
 'use strict';
 
-scrumInCeresDirectives.directive('focusMe', ['$timeout', function($timeout) {
+yamapBordDirectives.directive('focusMe', ['$timeout', function($timeout) {
   return {
     link: function(scope, element, attrs) {
       scope.$watch(attrs.focusMe, function(value) {

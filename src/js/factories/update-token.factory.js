@@ -1,6 +1,6 @@
 'use strict';
 
-scrumInCeresFactories.factory('UpdateToken', ['appConfig', '$q', 'AuthService', function(appConfig, $q, AuthService) {
+yamapBordFactories.factory('UpdateToken', ['appConfig', '$q', 'AuthService', function(appConfig, $q, AuthService) {
   return {
     request: function(config) {
       config.headers['PUSHER-SOCKET-ID'] = appConfig.pusherSocketId;

@@ -1,6 +1,6 @@
 'use strict';
 
-scrumInCeresControllers.controller('BacklogController', ['$rootScope', '$scope', '$timeout', '$filter', 'Alert', 'MeService', 'StoryService', 'HollydayService', 'Notifier', 'BacklogSprint', 'BacklogKanban', function($rootScope, $scope, $timeout, $filter, Alert, MeService, StoryService, HollydayService, Notifier, BacklogSprint, BacklogKanban) {
+yamapBordControllers.controller('BacklogController', ['$rootScope', '$scope', '$timeout', '$filter', 'Alert', 'MeService', 'StoryService', 'HollydayService', 'Notifier', 'BacklogSprint', 'BacklogKanban', function($rootScope, $scope, $timeout, $filter, Alert, MeService, StoryService, HollydayService, Notifier, BacklogSprint, BacklogKanban) {
   $rootScope.currentController = 'BacklogController';
   $rootScope.itemsView.mode = 'table';
   $scope.sprints = [];

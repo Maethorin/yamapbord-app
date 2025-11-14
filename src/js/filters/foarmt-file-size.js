@@ -1,6 +1,6 @@
 'use strict';
 
-scrumInCeresFilters.filter('formatFileSize', function() {
+yamapBordFilters.filter('formatFileSize', function() {
   var units = ["B", "kB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"];
   return function(bytes, precision) {
     if (isNaN(parseFloat(bytes))) {

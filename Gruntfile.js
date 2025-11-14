@@ -36,7 +36,7 @@ module.exports = function (grunt) {
   var minAppFile        = '{0}/app.min.js'.format([wwwJsFolder]);
   var serverPort        = 3102;
   var liveReload        = 32701;
-  var serverHost        = "local-scrum.inceres.com.br";
+  var serverHost        = "local-yamapbord.vai-mudar.com.br";
 
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),

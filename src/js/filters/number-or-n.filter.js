@@ -1,6 +1,6 @@
 'use strict';
 
-scrumInCeresFilters.filter('numberOrText', function() {
+yamapBordFilters.filter('numberOrText', function() {
   return function(number, text) {
     if (!text) {
       text = 'N'

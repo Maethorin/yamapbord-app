@@ -1,6 +1,6 @@
 'use strict';
 
-scrumInCeresServices.service('Notifier', ['$rootScope', '$timeout', function($rootScope, $timeout) {
+yamapBordServices.service('Notifier', ['$rootScope', '$timeout', function($rootScope, $timeout) {
   var config = {
     defaultTimeout: 3000
   };

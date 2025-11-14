@@ -10,3 +10,4 @@ src/lib/
 .idea/
 www/
 .sass-cache/
+package-lock.json

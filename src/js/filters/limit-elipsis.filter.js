@@ -1,6 +1,6 @@
 'use strict';
 
-scrumInCeresFilters.filter('limitWithEllipsis', function() {
+yamapBordFilters.filter('limitWithEllipsis', function() {
   return function(text, quantity) {
     if (text === null || text === undefined) {
       return '';

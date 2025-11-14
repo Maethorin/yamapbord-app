@@ -1,6 +1,6 @@
 'use strict';
 
-scrumInCeresResources.factory('BacklogKanban', ['$resource', 'appConfig', function ($resource, appConfig) {
+yamapBordResources.factory('BacklogKanban', ['$resource', 'appConfig', function ($resource, appConfig) {
   return $resource(
     '{backendURL}/users/me/backlog/kanbans/:id'.format(appConfig),
     null,

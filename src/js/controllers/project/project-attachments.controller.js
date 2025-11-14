@@ -1,6 +1,6 @@
 'use strict';
 
-scrumInCeresControllers.controller('SelectedProjectAttachmentsController', ['$rootScope', '$scope', '$timeout', 'appConfig', 'Notifier', 'Alert', 'ProjectAttachment', 'Upload', function($rootScope, $scope, $timeout, appConfig, Notifier, Alert, ProjectAttachment, Upload) {
+yamapBordControllers.controller('SelectedProjectAttachmentsController', ['$rootScope', '$scope', '$timeout', 'appConfig', 'Notifier', 'Alert', 'ProjectAttachment', 'Upload', function($rootScope, $scope, $timeout, appConfig, Notifier, Alert, ProjectAttachment, Upload) {
   $scope.theButtonWasCliked = false;
   $scope.newAttachment = {comment: null, file: null, fileType: 'I', link: null, creator: null, createdAt: null};
 

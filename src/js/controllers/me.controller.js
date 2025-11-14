@@ -1,6 +1,6 @@
 'use strict';
 
-scrumInCeresControllers.controller('MeController', ['$rootScope', '$scope', function($rootScope, $scope) {
+yamapBordControllers.controller('MeController', ['$rootScope', '$scope', function($rootScope, $scope) {
   $rootScope.currentController = 'MeController';
   $scope.passwordFieldType = 'password';
 

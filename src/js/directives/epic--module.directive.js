@@ -1,6 +1,6 @@
 'use strict';
 
-scrumInCeresDirectives.directive('moduleEpic', ['$rootScope', function($rootScope) {
+yamapBordDirectives.directive('moduleEpic', ['$rootScope', function($rootScope) {
   return {
     replace: true,
     scope: {

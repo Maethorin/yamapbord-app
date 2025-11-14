@@ -1,6 +1,6 @@
 'use strict';
 
-scrumInCeresDirectives.directive('liStoryFilter', ['$rootScope', function($rootScope) {
+yamapBordDirectives.directive('liStoryFilter', ['$rootScope', function($rootScope) {
   return {
     replace: true,
     scope: {

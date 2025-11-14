@@ -1,6 +1,6 @@
 'use strict';
 
-scrumInCeresControllers.controller('IceboxProjectController', ['$rootScope', '$scope', 'Notifier', 'Alert', 'StoryService', 'ProjectStory', 'IceBox', function($rootScope, $scope, Notifier, Alert, StoryService, ProjectStory, IceBox) {
+yamapBordControllers.controller('IceboxProjectController', ['$rootScope', '$scope', 'Notifier', 'Alert', 'StoryService', 'ProjectStory', 'IceBox', function($rootScope, $scope, Notifier, Alert, StoryService, ProjectStory, IceBox) {
   $scope.canAddStoryTo = true;
   $scope.canRemoveStoryFrom = false;
   $scope.addStoryTitle = "Add story to Selected Project's Icebox";

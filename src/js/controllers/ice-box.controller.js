@@ -1,6 +1,6 @@
 'use strict';
 
-scrumInCeresControllers.controller('IceBoxController', ['$rootScope', '$scope', '$filter', 'Alert', 'Notifier', 'StoryService', 'IceBox', function($rootScope, $scope, $filter, Alert, Notifier, StoryService, IceBox) {
+yamapBordControllers.controller('IceBoxController', ['$rootScope', '$scope', '$filter', 'Alert', 'Notifier', 'StoryService', 'IceBox', function($rootScope, $scope, $filter, Alert, Notifier, StoryService, IceBox) {
   $rootScope.currentController = 'IceBoxController';
   $rootScope.itemsView.mode = 'table';
   $scope.storyFilterTextTypes = {
