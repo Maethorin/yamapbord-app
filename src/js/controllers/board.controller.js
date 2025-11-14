@@ -1,10 +1,10 @@
 'use strict';
 
-yamapBordControllers.controller('BoardController', ['$rootScope', '$scope', '$timeout', '$filter', '$state', '$stateParams', 'Upload', 'appConfig', 'MeService', 'StoryService', 'Alert', 'Notifier', 'BoardService', 'BoardStory', 'HollydayService', function($rootScope, $scope, $timeout, $filter, $state, $stateParams, Upload, appConfig, MeService, StoryService, Alert, Notifier, BoardService, BoardStory, HollydayService) {
+yamapBordControllers.controller('BoardController', ['$rootScope', '$scope', '$timeout', '$filter', '$state', '$stateParams', 'Upload', 'appConfig', 'MeService', 'StoryService', 'Alert', 'Notifier', 'BoardService', 'BoardStory', 'HolidayService', function($rootScope, $scope, $timeout, $filter, $state, $stateParams, Upload, appConfig, MeService, StoryService, Alert, Notifier, BoardService, BoardStory, HolidayService) {
   $rootScope.currentController = 'BoardController';
   $scope.boards = [];
   $scope.fullBoards = [];
-  $scope.hollydays = [];
+  $scope.holidays = [];
   $scope.timeline = null;
   $scope.scrollOptions = {scrollX: 'bottom', scrollY: 'none', useBothWheelAxes: true, scrollPosX: 0, preventWheelEvents: true};
   $scope.currentTimelineSprintLeftPosition = null;
@@ -125,7 +125,7 @@ yamapBordControllers.controller('BoardController', ['$rootScope', '$scope', '$ti
   );
 
   function updateStoryData() {
-    HollydayService.getHollydays().then(
+    HolidayService.getHolidays().then(
       function() {
         $scope.pointsPerStoryTypeStatus = {
           'PLAN': 0,
@@ -167,7 +167,7 @@ yamapBordControllers.controller('BoardController', ['$rootScope', '$scope', '$ti
         $scope.devDays = [];
         for (var dayNumber = start.date(); dayNumber <= days; dayNumber++) {
           start.date(start.date() + 1);
-          if (start.day() !== 0 && start.day() !== 6 && !HollydayService.dateIsHollyday(start)) {
+          if (start.day() !== 0 && start.day() !== 6 && !HolidayService.dateIsHoliday(start)) {
             var passed = $scope.today.month() > start.month() || ($scope.today.date() > start.date() && $scope.today.month() === start.month());
             var isToday = $scope.today.month() === start.month() && $scope.today.date() === start.date();
             $scope.devDays.push({

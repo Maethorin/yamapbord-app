@@ -1,5 +1,5 @@
 'use strict';
 
-yamapBordResources.factory('Hollyday', ['$resource', 'appConfig', function ($resource, appConfig) {
-  return $resource('{0}/me/hollydays'.format([appConfig.backendURL]));
+yamapBordResources.factory('Holiday', ['$resource', 'appConfig', function ($resource, appConfig) {
+  return $resource('{0}/me/holidays'.format([appConfig.backendURL]));
 }]);

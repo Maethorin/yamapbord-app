@@ -1,6 +1,6 @@
 'use strict';
 
-yamapBordControllers.controller('ProjectController', ['$rootScope', '$scope', '$uibModal', 'Notifier', 'Alert', 'HollydayService', 'Project', function($rootScope, $scope, $uibModal, Notifier, Alert, HollydayService, Project) {
+yamapBordControllers.controller('ProjectController', ['$rootScope', '$scope', '$uibModal', 'Notifier', 'Alert', 'HolidayService', 'Project', function($rootScope, $scope, $uibModal, Notifier, Alert, HolidayService, Project) {
   $rootScope.currentController = 'ProjectController';
   $rootScope.lateralMenuOpen = true;
 
@@ -21,7 +21,7 @@ yamapBordControllers.controller('ProjectController', ['$rootScope', '$scope', '$
       function(projects) {
         $scope.projects = projects;
         _.forEach($scope.projects, function(project) {
-          HollydayService.setWorkingDays(project);
+          HolidayService.setWorkingDays(project);
         });
         Alert.close();
       },
@@ -58,7 +58,7 @@ yamapBordControllers.controller('ProjectController', ['$rootScope', '$scope', '$
     });
     addModal.result.then(
       function(result) {
-        HollydayService.setWorkingDays(result);
+        HolidayService.setWorkingDays(result);
         $scope.projects.push(result);
         $scope.projects = _.orderBy($scope.projects, ['startDate'], ['asc']);
         Alert.randomSuccessMessage();
@@ -89,7 +89,7 @@ yamapBordControllers.controller('ProjectController', ['$rootScope', '$scope', '$
         project.startDate = result.startDate;
         project.endDate = result.endDate;
         project.description = result.description;
-        HollydayService.setWorkingDays(project);
+        HolidayService.setWorkingDays(project);
         $scope.projects = _.orderBy($scope.projects, ['startDate'], ['asc']);
         Alert.randomSuccessMessage();
       },

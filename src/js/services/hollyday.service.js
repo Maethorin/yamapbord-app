@@ -1,29 +1,29 @@
 'use strict';
 
-yamapBordServices.service('HollydayService', ['$window', '$q', 'Hollyday', function ($window, $q, Hollyday) {
+yamapBordServices.service('HolidayService', ['$window', '$q', 'Holiday', function ($window, $q, Holiday) {
   var self = this;
-  var hollydays = [];
+  var holidays = [];
   var loading = false;
 
-  this.dateIsHollyday = function(date) {
-    var dateIndex = _.findIndex(hollydays, function(hollyday) {
-      return hollyday.date === date.format('YYYY-MM-DD');
+  this.dateIsHoliday = function(date) {
+    var dateIndex = _.findIndex(holidays, function(holiday) {
+      return holiday.date === date.format('YYYY-MM-DD');
     });
     return dateIndex > -1;
   };
 
   var defer = $q.defer();
-  this.getHollydays = function() {
-    if (hollydays.length > 0) {
-      defer.resolve(hollydays);
+  this.getHolidays = function() {
+    if (holidays.length > 0) {
+      defer.resolve(holidays);
       return defer.promise;
     }
     if (!loading) {
       loading = true;
-      Hollyday.query(
+      Holiday.query(
         function(response) {
-          hollydays = response;
-          defer.resolve(hollydays);
+          holidays = response;
+          defer.resolve(holidays);
         }
       );
     }
@@ -32,13 +32,13 @@ yamapBordServices.service('HollydayService', ['$window', '$q', 'Hollyday', funct
 
   this.setWorkingDays = function(component) {
     var defer = $q.defer();
-    self.getHollydays().then(
+    self.getHolidays().then(
       function() {
         var startDate = moment(component.startDate).startOf('day');
         var endDate = moment(component.endDate).startOf('day');
         component.workingDays = 1;
         while (startDate.add(1, 'days').diff(endDate) < 0) {
-          if (startDate.weekday() !== 6 && startDate.weekday() !== 7 && !self.dateIsHollyday(startDate)) {
+          if (startDate.weekday() !== 6 && startDate.weekday() !== 7 && !self.dateIsHoliday(startDate)) {
             component.workingDays += 1;
           }
         }

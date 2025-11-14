@@ -1,6 +1,6 @@
 'use strict';
 
-yamapBordControllers.controller('SelectedProjectSprintsController', ['$rootScope', '$scope', 'appConfig', 'Notifier', 'Alert', 'MeService', 'StoryService', 'HollydayService', 'ProjectStory', 'BacklogSprint', function($rootScope, $scope, appConfig, Notifier, Alert, MeService, StoryService, HollydayService, ProjectStory, BacklogSprint) {
+yamapBordControllers.controller('SelectedProjectSprintsController', ['$rootScope', '$scope', 'appConfig', 'Notifier', 'Alert', 'MeService', 'StoryService', 'HolidayService', 'ProjectStory', 'BacklogSprint', function($rootScope, $scope, appConfig, Notifier, Alert, MeService, StoryService, HolidayService, ProjectStory, BacklogSprint) {
   $scope.canAddStoryTo = false;
   $scope.canRemoveStoryFrom = true;
   $scope.removeStoryTitle = 'Remove story from selected sprint (back to Project Icebox)';
@@ -35,7 +35,7 @@ yamapBordControllers.controller('SelectedProjectSprintsController', ['$rootScope
   );
 
   function updateWorkingDays(sprint) {
-    HollydayService.setWorkingDays(sprint).then(
+    HolidayService.setWorkingDays(sprint).then(
       function() {
         sprint.sumStoriesPoints = _.sumBy(sprint.stories, function(story) {
           return story.points || 0;

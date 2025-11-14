@@ -1,6 +1,6 @@
 'use strict';
 
-yamapBordControllers.controller('FormProjectController', ['$scope', '$uibModalInstance', 'HollydayService', 'Alert', 'Project', 'projectModel', function($scope, $uibModalInstance, HollydayService, Alert, Project, projectModel) {
+yamapBordControllers.controller('FormProjectController', ['$scope', '$uibModalInstance', 'HolidayService', 'Alert', 'Project', 'projectModel', function($scope, $uibModalInstance, HolidayService, Alert, Project, projectModel) {
   $scope.project = projectModel;
 
   $scope.$watch('project.name', function(newValue) {
@@ -16,12 +16,12 @@ yamapBordControllers.controller('FormProjectController', ['$scope', '$uibModalIn
 
   $scope.startDateOnSetTime = function() {
     $scope.$broadcast('start-date-changed');
-    HollydayService.setWorkingDays($scope.project);
+    HolidayService.setWorkingDays($scope.project);
   };
 
   $scope.endDateOnSetTime = function() {
     $scope.$broadcast('end-date-changed');
-    HollydayService.setWorkingDays($scope.project);
+    HolidayService.setWorkingDays($scope.project);
   };
 
   $scope.startDateBeforeRender = function($dates) {
