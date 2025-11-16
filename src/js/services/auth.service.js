@@ -1,6 +1,6 @@
 'use strict';
 
-yamapBordServices.service('AuthService', ['$rootScope', '$cookies', function($rootScope, $cookies) {
+yamapBordServices.service('AuthService', ['$rootScope', '$cookies', 'appConfig', function($rootScope, $cookies, appConfig) {
   this.token = null;
   this.username = null;
 
@@ -10,8 +10,8 @@ yamapBordServices.service('AuthService', ['$rootScope', '$cookies', function($ro
   };
 
   this.clear = function(){
-    $cookies.remove('yamapbordUserToken', {path: '/', domain: 'vai-mudar.com.br'});
-    $cookies.remove('yamapbordUserName', {path: '/', domain: 'vai-mudar.com.br'});
+    $cookies.remove('yamapbordUserToken', {path: '/', domain: appConfig.hostDomain});
+    $cookies.remove('yamapbordUserName', {path: '/', domain: appConfig.hostDomain});
     this.update();
   };
 

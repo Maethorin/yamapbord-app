@@ -1,0 +1,6 @@
+{
+  "backendURL": "http://local-bord.mae42.com.br/api",
+  "hostDomain": "mae42.com.br",
+  "pusherKey": "cf7366082066d84f2706",
+  "env": "production"
+}

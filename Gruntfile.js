@@ -36,7 +36,7 @@ module.exports = function (grunt) {
   var minAppFile        = '{0}/app.min.js'.format([wwwJsFolder]);
   var serverPort        = 3102;
   var liveReload        = 32701;
-  var serverHost        = "local-yamapbord.vai-mudar.com.br";
+  var serverHost        = "local-bord.mae42.com.br";
 
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
@@ -183,6 +183,10 @@ module.exports = function (grunt) {
               replacement: '<%= grunt.file.readJSON("config/development.json").backendURL %>'
             },
             {
+              match: 'hostDomain',
+              replacement: '<%= grunt.file.readJSON("config/development.json").hostDomain %>'
+            },
+            {
               match: 'pusherKey',
               replacement: '<%= grunt.file.readJSON("config/development.json").pusherKey %>'
             },
@@ -207,6 +211,10 @@ module.exports = function (grunt) {
             {
               match: 'backendURL',
               replacement: '<%= grunt.file.readJSON("config/sandbox.json").backendURL %>'
+            },
+            {
+              match: 'hostDomain',
+              replacement: '<%= grunt.file.readJSON("config/sandbox.json").hostDomain %>'
             },
             {
               match: 'pusherKey',
@@ -235,6 +243,10 @@ module.exports = function (grunt) {
               replacement: '<%= grunt.file.readJSON("config/staging.json").backendURL %>'
             },
             {
+              match: 'hostDomain',
+              replacement: '<%= grunt.file.readJSON("config/staging.json").hostDomain %>'
+            },
+            {
               match: 'pusherKey',
               replacement: '<%= grunt.file.readJSON("config/staging.json").pusherKey %>'
             },
@@ -259,6 +271,10 @@ module.exports = function (grunt) {
             {
               match: 'backendURL',
               replacement: '<%= grunt.file.readJSON("config/production.json").backendURL %>'
+            },
+            {
+              match: 'hostDomain',
+              replacement: '<%= grunt.file.readJSON("config/production.json").hostDomain %>'
             },
             {
               match: 'pusherKey',

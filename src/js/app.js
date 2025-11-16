@@ -89,6 +89,7 @@ var yamapBord = angular.module(
 
 yamapBord.constant('appConfig', {
   backendURL: '@@backendURL',
+  hostDomain: '@@hostDomain',
   pusherKey: '@@pusherKey',
   env: '@@env',
   pusherSocketId: null,
