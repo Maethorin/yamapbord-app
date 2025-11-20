@@ -12,3 +12,4 @@ src/lib/
 www/
 .sass-cache/
 package-lock.json
+Gemfile.lock
